@@ -1068,10 +1068,52 @@ Blog Area
     <!-- Main Js File -->
     <script src="assets/js/main.js"></script>
 
+<!-- 🔸 POPUP INFORMATIVO AL INGRESAR 🔸 -->
+<div id="popup" style="
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  z-index:9999;
+  justify-content:center;
+  align-items:center;">
+  
+  <div style="position:relative; max-width:90%; text-align:center;">
+    <!-- 🖼️ Imagen informativa -->
+    <img src="assets/img/aviso-preventa.webp" 
+         alt="Preventa Proyecto Escolar 2026 – Grupo Nostradamus"
+         style="max-width:100%; height:auto; border-radius:12px; box-shadow:0 0 30px rgba(0,0,0,0.6);">
+
+    <!-- Botón de cierre -->
+    <button onclick="cerrarPopup()" 
+            style="position:absolute; top:10px; right:10px;
+            background:#f97316; color:#fff;
+            border:none; font-size:18px;
+            padding:6px 12px; border-radius:8px;
+            cursor:pointer; box-shadow:0 0 10px rgba(0,0,0,0.4);">
+      ✕
+    </button>
+  </div>
+</div>
+
+<script>
+  // Mostrar popup al cargar la página
+  window.addEventListener("load", () => {
+    const popup = document.getElementById("popup");
+    popup.style.display = "flex";
+  });
+
+  // Función para cerrar el popup
+  function cerrarPopup() {
+    document.getElementById("popup").style.display = "none";
+  }
+</script>
+
 </body>
 
 
 <!-- Mirrored from gruponostradamus.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 13 Oct 2025 16:50:32 GMT -->
 
 </html>
+
 
