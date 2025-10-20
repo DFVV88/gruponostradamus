@@ -82,6 +82,17 @@
   0%   { opacity: 1;   box-shadow: 0 0 9px rgba(255,70,0,.7), 0 0 18px rgba(255,120,80,.35); }
   100% { opacity: .82; box-shadow: 0 0 22px rgba(255,90,60,1), 0 0 36px rgba(255,140,80,.55); }
 }
+/* ✨ Efecto de cambio suave de color en el texto */
+.header-top .dropdown-link .btn-live {
+  animation: live-blink 1.6s infinite alternate, colorPulse 3s infinite alternate;
+}
+
+@keyframes colorPulse {
+  0% { color: #ffffff; }      /* Blanco puro */
+  50% { color: #ffe6e6; }     /* Blanco rosado */
+  100% { color: #fff0f0; }    /* Blanco cálido */
+}
+	
 </style>
 </head>
 
@@ -1174,6 +1185,7 @@ Blog Area
 <!-- Mirrored from gruponostradamus.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 13 Oct 2025 16:50:32 GMT -->
 
 </html>
+
 
 
 
