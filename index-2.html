@@ -52,8 +52,36 @@
     <!-- Nice Select -->
     <link rel="stylesheet" href="assets/css/nice-select.min.css">
     <!-- Theme Custom CSS -->
-    <link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/style.css">
 
+<!-- 🔴 BOTÓN CLASES EN VIVO - EFECTO TRANSMISIÓN EN VIVO -->
+<style>
+.header-top .dropdown-link .btn-live {
+  background: linear-gradient(90deg, #ff1e00, #ff4500);
+  color: #fff !important;
+  font-weight: 800;
+  padding: 8px 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 0 14px rgba(255, 70, 0, 0.65);
+  animation: live-blink 1.6s infinite alternate;
+  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+  letter-spacing: .3px;
+  line-height: 1;
+}
+.header-top .dropdown-link .btn-live:hover {
+  transform: scale(1.07);
+  box-shadow: 0 0 22px rgba(255, 70, 0, .9);
+  filter: saturate(1.15);
+}
+@keyframes live-blink {
+  0%   { opacity: 1;   box-shadow: 0 0 9px rgba(255,70,0,.7), 0 0 18px rgba(255,120,80,.35); }
+  100% { opacity: .82; box-shadow: 0 0 22px rgba(255,90,60,1), 0 0 36px rgba(255,140,80,.55); }
+}
+</style>
 </head>
 
 <body>
@@ -160,9 +188,9 @@
                             <ul>
                                 <li class="d-none d-lg-inline-block">
                                     <div class="dropdown-link">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink1"
-                                            data-bs-toggle="dropdown" aria-expanded="false"> <i class="fa fa-user"></i>
-                                            CLASES EN VIVO </a>                       <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
+                                     <a class="dropdown-toggle btn-live" href="#" role="button" id="dropdownMenuLink1"
+  data-bs-toggle="dropdown" aria-expanded="false">🔴 CLASES EN VIVO</a>
+                       <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
     <li>
         <a href="https://teams.microsoft.com" target="_blank" rel="noopener">
             Iniciar sesión
@@ -1096,6 +1124,7 @@ Blog Area
 <!-- Mirrored from gruponostradamus.com/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 13 Oct 2025 16:50:36 GMT -->
 
 </html>
+
 
 
 
