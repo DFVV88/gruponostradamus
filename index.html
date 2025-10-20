@@ -94,6 +94,61 @@
 }
 	
 </style>
+	<style>
+/* 🔴 BOTÓN CLASES EN VIVO - VERSIÓN MÓVIL CON EFECTO DE COLOR SUAVE */
+.btn-live-mobile {
+  background: linear-gradient(90deg, #ff1e00, #ff4500);
+  color: #fff !important;
+  font-weight: 800;
+  padding: 12px 22px;
+  border-radius: 12px;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 0 14px rgba(255, 70, 0, 0.65);
+  animation: live-blink-mobile 1.6s infinite alternate, colorPulseMobile 3s infinite alternate;
+  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+  letter-spacing: .5px;
+  width: 80%;
+}
+.btn-live-mobile:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 25px rgba(255, 70, 0, .9);
+  filter: saturate(1.15);
+}
+
+/* Texto guía debajo del botón (solo móvil) */
+.live-help-text {
+  margin-top: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+}
+
+/* 💫 Pulso de brillo */
+@keyframes live-blink-mobile {
+  0%   { opacity: 1;   box-shadow: 0 0 9px rgba(255,70,0,.7), 0 0 18px rgba(255,120,80,.35); }
+  100% { opacity: .82; box-shadow: 0 0 22px rgba(255,90,60,1), 0 0 36px rgba(255,140,80,.55); }
+}
+
+/* ✨ Transición de color suave en el texto */
+@keyframes colorPulseMobile {
+  0% { color: #ffffff; }      /* Blanco puro */
+  50% { color: #fff8c2; }     /* Amarillo cálido */
+  100% { color: #fff0a3; }    /* Amarillo más intenso */
+}
+
+/* Mostrar SOLO en móvil (ocultar en desktop) */
+.only-mobile-live { display: none; }
+@media (max-width: 991.98px) {  /* breakpoint del menú móvil */
+  .only-mobile-live { display: block; }
+}
+
+/* Respetar usuarios que reducen movimiento */
+@media (prefers-reduced-motion: reduce) {
+  .btn-live-mobile { animation: none; }
+}
+</style>
+
 </head>
 
 <body>
@@ -135,6 +190,15 @@
             </div>
             <div class="th-mobile-menu">
                 <ul>
+					<!-- 🔴 Botón CLASES EN VIVO (solo móvil) -->
+<li class="only-mobile-live" style="margin:12px 0; text-align:center;">
+  <a href="https://teams.microsoft.com" target="_blank" rel="noopener" class="btn-live-mobile">
+    🔴 CLASES EN VIVO
+  </a>
+  <!-- Texto guía opcional debajo -->
+  <p class="live-help-text">Haz clic para ingresar a tus clases virtuales 🎓</p>
+</li>
+
                     <li><a href="index-2.html">Inicio</a></li>                    <li class="menu-item-has-children">
                         <a href="ciclos.html">Ciclos</a>                        <ul class="sub-menu">                            <li><a href="ciclo-anual-uni.html">Anual UNI</a></li>
                             <li><a href="ciclo-semianual-uni.html">Semianual UNI</a></li>
@@ -1185,6 +1249,7 @@ Blog Area
 <!-- Mirrored from gruponostradamus.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 13 Oct 2025 16:50:32 GMT -->
 
 </html>
+
 
 
 
