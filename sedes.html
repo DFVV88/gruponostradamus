@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>NOSTRADAMUS - GRUPO DE ESTUDIOS UNI</title>
+    <title>NOSTRADAMUS - GRUPO DE ESTUDIO UNI</title>
     <meta name="author" content="Rolfer™ DigitalRolfer™ Digital">
     <meta name="description" content="Grupo de estudio Nostradamus, 15 años formando a futuros ingenieros de la UNI, Universidad Nacional de Ingeniería, con los mejores profesionalesGrupo de estudio Nostradamus, 15 años formando a futuros ingenieros de la UNI, Universidad Nacional de Ingeniería, con los mejores profesionales">
     <meta name="keywords" content="Grupo de estudio Nostradamus, 15 años formando a futuros ingenieros de la UNI, Universidad Nacional de Ingeniería, con los mejores profesionalesGrupo de estudio Nostradamus, 15 años formando a futuros ingenieros de la UNI, Universidad Nacional de Ingeniería, con los mejores profesionales">
@@ -44,6 +44,99 @@
     <!-- Theme Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
 
+	<!-- 🔴 BOTÓN CLASES EN VIVO - EFECTO TRANSMISIÓN EN VIVO -->
+<style>
+.header-top .dropdown-link .btn-live {
+  background: linear-gradient(90deg, #ff1e00, #ff4500);
+  color: #fff !important;
+  font-weight: 800;
+  padding: 8px 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 0 14px rgba(255, 70, 0, 0.65);
+  animation: live-blink 1.6s infinite alternate;
+  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+  letter-spacing: .3px;
+  line-height: 1;
+}
+.header-top .dropdown-link .btn-live:hover {
+  transform: scale(1.07);
+  box-shadow: 0 0 22px rgba(255, 70, 0, .9);
+  filter: saturate(1.15);
+}
+@keyframes live-blink {
+  0%   { opacity: 1;   box-shadow: 0 0 9px rgba(255,70,0,.7), 0 0 18px rgba(255,120,80,.35); }
+  100% { opacity: .82; box-shadow: 0 0 22px rgba(255,90,60,1), 0 0 36px rgba(255,140,80,.55); }
+}
+/* ✨ Efecto de cambio suave de color en el texto */
+.header-top .dropdown-link .btn-live {
+  animation: live-blink 1.6s infinite alternate, colorPulse 3s infinite alternate;
+}
+
+@keyframes colorPulse {
+  0% { color: #ffffff; }      /* Blanco puro */
+  50% { color: #ffe6e6; }     /* Blanco rosado */
+  100% { color: #fff0f0; }    /* Blanco cálido */
+}
+	
+</style>
+	<style>
+/* 🔴 BOTÓN CLASES EN VIVO - VERSIÓN MÓVIL CON EFECTO DE COLOR SUAVE */
+.btn-live-mobile {
+  background: linear-gradient(90deg, #ff1e00, #ff4500);
+  color: #fff !important;
+  font-weight: 800;
+  padding: 12px 22px;
+  border-radius: 12px;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 0 14px rgba(255, 70, 0, 0.65);
+  animation: live-blink-mobile 1.6s infinite alternate, colorPulseMobile 3s infinite alternate;
+  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+  letter-spacing: .5px;
+  width: 80%;
+}
+.btn-live-mobile:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 25px rgba(255, 70, 0, .9);
+  filter: saturate(1.15);
+}
+
+/* Texto guía debajo del botón (solo móvil) */
+.live-help-text {
+  margin-top: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+}
+
+/* 💫 Pulso de brillo */
+@keyframes live-blink-mobile {
+  0%   { opacity: 1;   box-shadow: 0 0 9px rgba(255,70,0,.7), 0 0 18px rgba(255,120,80,.35); }
+  100% { opacity: .82; box-shadow: 0 0 22px rgba(255,90,60,1), 0 0 36px rgba(255,140,80,.55); }
+}
+
+/* ✨ Transición de color suave en el texto */
+@keyframes colorPulseMobile {
+  0% { color: #ffffff; }      /* Blanco puro */
+  50% { color: #fff8c2; }     /* Amarillo cálido */
+  100% { color: #fff0a3; }    /* Amarillo más intenso */
+}
+
+/* Mostrar SOLO en móvil (ocultar en desktop) */
+.only-mobile-live { display: none; }
+@media (max-width: 991.98px) {  /* breakpoint del menú móvil */
+  .only-mobile-live { display: block; }
+}
+
+/* Respetar usuarios que reducen movimiento */
+@media (prefers-reduced-motion: reduce) {
+  .btn-live-mobile { animation: none; }
+}
+</style>
 </head>
 
 <body>
@@ -73,6 +166,11 @@
             </div>
             <div class="th-mobile-menu">
                 <ul>
+					<!-- 🔴 Botón CLASES EN VIVO (solo móvil) -->
+<li class="only-mobile-live" style="margin:12px 0; text-align:center;">
+  <a href="https://teams.microsoft.com" target="_blank" rel="noopener" class="btn-live-mobile">
+    🔴 CLASES EN VIVO
+  </a>
                     <li><a href="index-2.html">Inicio</a></li>
                     <li class="menu-item-has-children">
                         <a href="ciclos.html">Ciclos</a>
@@ -136,15 +234,19 @@
                             <ul>
                                 <li class="d-none d-lg-inline-block">
                                     <div class="dropdown-link">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink1"
-                                            data-bs-toggle="dropdown" aria-expanded="false"> <i class="fa fa-user"></i>
-                                            Mi Cuenta</a>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
-                                            <li>
-                                                <a href="https://gruponostradamus.q10.com/">Iniciar
-                                                    sesión</a>
-                                                <a href="https://gruponostradamus.q10.com/">Configuración</a>
-                                                <a href="https://site2.q10.com/RecuperarContrasena?aplentId=4fc1d7ba-ccfb-459e-b3b4-9e4549f4db3b">Cambiar contraseña</a>
+                                         <a class="dropdown-toggle btn-live" href="#" role="button" id="dropdownMenuLink1"
+  data-bs-toggle="dropdown" aria-expanded="false">🔴 CLASES EN VIVO</a>
+<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
+    <li>
+        <a href="https://teams.microsoft.com" target="_blank" rel="noopener">
+            Iniciar sesión
+        </a>
+        <a href="https://portal.office.com/account" target="_blank" rel="noopener">
+            Configuración
+        </a>
+        <a href="https://mysignins.microsoft.com/security-info" target="_blank" rel="noopener">
+            Cambiar contraseña
+        </a>
                                             </li>
                                         </ul>
                                     </div>
@@ -551,3 +653,4 @@
 
 </body>
 </html>
+
