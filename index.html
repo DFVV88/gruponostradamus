@@ -1259,11 +1259,12 @@ Blog Area
       return;
     }
 
-    const mensaje = `¡Hola! Quiero información 👇
-🧑 Nombre: ${nombre}
-📧 Correo: ${correo}
-📱 Teléfono: ${telefono}
-📘 Ciclo: ${curso}`;
+const mensaje = "¡Hola! Quiero información 👇\n"
+  + "🧍 Nombre: " + nombre + "\n"
+  + "✉️ Correo: " + correo + "\n"
+  + "📞 Teléfono: " + telefono + "\n"
+  + "📚 Ciclo: " + curso;
+
 
     const url = `https://wa.me/51993750351?text=${encodeURIComponent(mensaje)}`;
     window.open(url, "_blank");
@@ -1274,6 +1275,7 @@ Blog Area
 </body>
 
 </html>
+
 
 
 
