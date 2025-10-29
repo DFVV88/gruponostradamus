@@ -153,7 +153,7 @@
 
 
     <!--[if lte IE 9]>
-    	<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+    	<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy/">upgrade your browser</a> to improve your experience and security.</p>
   <![endif]-->
 
 
@@ -979,7 +979,8 @@ Blog Area
                     <p class="mb-30 text-light">Asegura tu lugar y comienza tu camino hacia el éxito con nosotros.
                         ¡Inscríbete ahora!.</p>
 					
-                    <form class="course-form mb-2 contact-form ajax-contact" action="https://gruponostradamus.com/mail.php" method="POST">
+                    <form class="course-form mb-2 contact-form ajax-contact" id="formNostra">
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group"><input type="text" class="form-control" name="name" id="name" placeholder="Nombre"></div>
@@ -992,7 +993,7 @@ Blog Area
                             </div>
 
                             <div class="col-lg-6">
-                                <div class="form-group"><input type="text" class="form-control" name="course" id="course" placeholder="Curso"></div>
+                                <div class="form-group"><input type="text" class="form-control" name="course" id="course" placeholder="Ciclo"></div>
                             </div>
 							
                                 <div class="form-btn col-12 mt-10">
@@ -1239,9 +1240,41 @@ Blog Area
   }
 </script>
 
+<!-- SCRIPT DE ENVÍO A WHATSAPP -->
+<script>
+(function () {
+  const form = document.getElementById("formNostra");
+  if (!form) return;
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const nombre = document.getElementById("name").value.trim();
+    const correo = document.getElementById("email").value.trim();
+    const telefono = document.getElementById("number").value.trim();
+    const curso = document.getElementById("course").value.trim();
+
+    if (!nombre || !correo || !telefono || !curso) {
+      alert("Por favor completa todos los campos antes de enviar.");
+      return;
+    }
+
+    const mensaje = `¡Hola! Quiero información 👇
+🧑 Nombre: ${nombre}
+📧 Correo: ${correo}
+📱 Teléfono: ${telefono}
+📘 Ciclo: ${curso}`;
+
+    const url = `https://wa.me/51993750351?text=${encodeURIComponent(mensaje)}`;
+    window.open(url, "_blank");
+  });
+})();
+</script>
+
 </body>
 
 </html>
+
 
 
 
