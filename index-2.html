@@ -965,7 +965,7 @@ Blog Area
                     <p class="mb-30 text-light">Asegura tu lugar y comienza tu camino hacia el éxito con nosotros.
                         ¡Inscríbete ahora!.</p>
 					
-                    <form class="course-form mb-2 contact-form ajax-contact" action="https://gruponostradamus.com/mail.php" method="POST">
+                    <form class="course-form mb-2 contact-form ajax-contact" id="formNostra">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group"><input type="text" class="form-control" name="name" id="name" placeholder="Nombre"></div>
@@ -974,11 +974,11 @@ Blog Area
                                 <div class="form-group"><input type="email" class="form-control" name="email" id="email" placeholder="Correo"></div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group"><input type="tel" class="form-control" name="number" id="number" placeholder="Telefono"></div>
+                                <div class="form-group"><input type="tel" class="form-control" name="number" id="number" placeholder="Teléfono"></div>
                             </div>
 
                             <div class="col-lg-6">
-                                <div class="form-group"><input type="text" class="form-control" name="course" id="course" placeholder="Curso"></div>
+                                <div class="form-group"><input type="text" class="form-control" name="course" id="course" placeholder="Ciclo"></div>
                             </div>
 							
                                 <div class="form-btn col-12 mt-10">
@@ -1173,9 +1173,41 @@ Blog Area
     <!-- Main Js File -->
     <script src="assets/js/main.js"></script>
 
+<!-- SCRIPT DE ENVÍO A WHATSAPP -->
+<script>
+(function () {
+  const form = document.getElementById("formNostra");
+  if (!form) return;
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const nombre = document.getElementById("name").value.trim();
+    const correo = document.getElementById("email").value.trim();
+    const telefono = document.getElementById("number").value.trim();
+    const curso = document.getElementById("course").value.trim();
+
+    if (!nombre || !correo || !telefono || !curso) {
+      alert("Por favor completa todos los campos antes de enviar.");
+      return;
+    }
+
+const mensaje = "¡Hola! Quiero información sobre el Grupo Nostradamus\n"
+  + "Nombre: " + nombre + "\n"
+  + "Correo: " + correo + "\n"
+  + "Teléfono: " + telefono + "\n"
+  + "Ciclo: " + curso;
+
+
+    const url = `https://wa.me/51993750351?text=${encodeURIComponent(mensaje)}`;
+    window.open(url, "_blank");
+  });
+})();
+</script>
 </body>
 
 </html>
+
 
 
 
