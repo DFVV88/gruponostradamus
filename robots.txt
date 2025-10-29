@@ -1,0 +1,5 @@
+# robots.txt para https://gruponostradamus.edu.pe
+User-agent: *
+Allow: /
+
+Sitemap: https://gruponostradamus.edu.pe/sitemap.xml
