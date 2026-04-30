@@ -74,15 +74,6 @@
   box-shadow: 0 0 30px rgba(8, 134, 152, 0.45);
 }
 
-.nostra-future-hero h1 {
-  font-size: clamp(38px, 6vw, 78px);
-  line-height: 1.02;
-  font-weight: 900;
-  color: #ffffff;
-  text-shadow:
-    0 0 18px rgba(8,134,152,0.75),
-    0 18px 45px rgba(0,0,0,0.55);
-}
 
 .nostra-future-hero p {
   color: rgba(255,255,255,0.96);
@@ -108,11 +99,7 @@
     padding: 45px 0;
   }
 
-  .nostra-future-hero h1 {
-    font-size: 34px;
-  }
-
-  .nostra-future-hero p {
+   .nostra-future-hero p {
     font-size: 16px;
   }
 
@@ -172,9 +159,6 @@
     0 0 20px rgba(8,134,152,0.4);
 }
 /* ===== FIX HERO ===== */
-.nostra-future-hero h1 {
-  font-size: clamp(28px, 4vw, 56px);
-}
 
 .nostra-future-hero {
   max-width: 700px;
@@ -229,16 +213,15 @@
 /* TEXTO HERO CON BORDE (STROKE) + SOMBRA PRO */
 
 .nostra-future-hero h1 {
+  font-size: clamp(28px, 4vw, 56px);
+  line-height: 1.1;
+  font-weight: 900;
   color: #ffffff;
 
-  /* borde negro */
-  -webkit-text-stroke: 1.5px rgba(0,0,0,0.7);
-
-  /* sombra profunda */
   text-shadow:
-    0 2px 6px rgba(0,0,0,0.8),
-    0 0 12px rgba(0,0,0,0.6),
-    0 0 20px rgba(8,134,152,0.6);
+    0 3px 8px rgba(0,0,0,0.9),
+    0 0 12px rgba(0,0,0,0.7),
+    0 0 25px rgba(8,134,152,0.6);
 }
 .nostra-future-hero p {
   color: #ffffff;
