@@ -1,0 +1,229 @@
+/* ==================================================
+   GRUPO NOSTRADAMUS - ESTILO FUTURISTA INSTITUCIONAL
+   Paleta basada en el logo: turquesa/teal + negro + blanco metalico.
+   Esta hoja se carga desde JS para no tocar la estructura HTML base.
+================================================== */
+
+:root{
+  --nostra-teal:#078c95;
+  --nostra-teal-2:#00c2d1;
+  --nostra-dark:#0a0708;
+  --nostra-navy:#061426;
+  --nostra-silver:#e8edf2;
+  --nostra-metal:#b8c2cc;
+  --nostra-white:#ffffff;
+  --nostra-glow:rgba(0,194,209,.55);
+}
+
+html{scroll-behavior:smooth;}
+body{
+  background:
+    radial-gradient(circle at top left, rgba(0,194,209,.12), transparent 34%),
+    linear-gradient(180deg,#ffffff 0%,#f4f8fa 36%,#eef4f7 100%);
+}
+
+/* Fondo futurista general por secciones */
+.bg-smoke,
+.space.bg-smoke{
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.96),rgba(232,240,244,.92)),
+    radial-gradient(circle at top right,rgba(0,194,209,.22),transparent 34%) !important;
+}
+
+/* Header mas institucional */
+.header-top{
+  background:linear-gradient(90deg,var(--nostra-dark),#06242e,var(--nostra-teal)) !important;
+}
+.menu-area,
+.sticky-wrapper.sticky .menu-area{
+  background:rgba(255,255,255,.96) !important;
+  backdrop-filter:blur(14px);
+  box-shadow:0 12px 35px rgba(0,0,0,.12);
+}
+.main-menu a{
+  font-weight:800 !important;
+  letter-spacing:.2px;
+}
+.main-menu a:hover{color:var(--nostra-teal)!important;}
+
+/* Topbar PRO con paleta del logo */
+.nostra-pro-topbar{
+  background:linear-gradient(90deg,var(--nostra-dark) 0%,#07323a 36%,var(--nostra-teal) 100%) !important;
+  color:#fff !important;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  box-shadow:0 0 28px rgba(0,194,209,.38);
+}
+
+/* HERO futurista metalico */
+.th-hero-wrapper,
+.hero-6{
+  background:linear-gradient(135deg,#02070d 0%,#061426 45%,#062c34 100%);
+}
+.th-hero-slide::before{
+  background:
+    radial-gradient(circle at 18% 20%, rgba(0,194,209,.30), transparent 28%),
+    linear-gradient(90deg,rgba(3,7,18,.88),rgba(3,7,18,.58),rgba(3,7,18,.86)) !important;
+}
+.nostra-home-hero .hero-subtitle{
+  background:linear-gradient(90deg,rgba(7,140,149,.38),rgba(255,255,255,.10)) !important;
+  border:1px solid rgba(255,255,255,.28) !important;
+  box-shadow:0 0 30px rgba(0,194,209,.45), inset 0 0 18px rgba(255,255,255,.06) !important;
+  color:#fff !important;
+  text-transform:uppercase;
+}
+.nostra-home-hero h1,
+.nostra-future-hero h1{
+  font-style:italic;
+  text-transform:uppercase;
+  letter-spacing:-1.4px;
+  background:linear-gradient(180deg,#fff 0%,#f2f7fb 22%,#9aa8b5 45%,#fff 60%,#6f7b86 84%,#15191f 100%) !important;
+  -webkit-background-clip:text !important;
+  background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+  filter:drop-shadow(0 4px 0 rgba(0,0,0,.45)) drop-shadow(0 0 18px rgba(0,194,209,.42));
+}
+.nostra-home-hero p,
+.nostra-future-hero p{
+  color:#f8fbff !important;
+  text-shadow:0 3px 8px rgba(0,0,0,.9),0 0 16px rgba(0,194,209,.25) !important;
+}
+.nostra-alert{
+  background:linear-gradient(90deg,rgba(7,140,149,.28),rgba(0,0,0,.28)) !important;
+  border:1px solid rgba(0,194,209,.7) !important;
+  box-shadow:0 0 24px rgba(0,194,209,.45) !important;
+}
+
+/* Botones metal neon */
+.th-btn.style3,
+.th-btn.style6,
+.nostra-floating-whatsapp{
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  font-weight:900 !important;
+}
+.th-btn.style3{
+  background:linear-gradient(135deg,var(--nostra-teal) 0%,#03333c 48%,var(--nostra-dark) 100%) !important;
+  border:1px solid rgba(255,255,255,.36) !important;
+  color:#fff !important;
+  box-shadow:0 0 20px rgba(0,194,209,.45), inset 0 1px 0 rgba(255,255,255,.3) !important;
+}
+.th-btn.style3::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg,transparent 0%,rgba(255,255,255,.32) 45%,transparent 58%);
+  transform:translateX(-120%);
+  transition:transform .7s ease;
+  z-index:-1;
+}
+.th-btn.style3:hover::after{transform:translateX(120%);}
+.th-btn.style6{
+  background:linear-gradient(180deg,#ffffff,#cdd8df 52%,#8b99a4) !important;
+  color:#061426 !important;
+  border:1px solid rgba(6,20,38,.22) !important;
+  box-shadow:0 0 18px rgba(255,255,255,.45) !important;
+}
+
+/* Titulos de seccion metalicos */
+.sec-title,
+.title-area .sec-title{
+  color:transparent !important;
+  background:linear-gradient(180deg,#07111f 0%,#0d3e48 45%,#078c95 62%,#0a0708 100%) !important;
+  -webkit-background-clip:text !important;
+  background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+  text-transform:uppercase;
+  font-style:italic;
+  letter-spacing:-.7px;
+  filter:drop-shadow(0 2px 0 rgba(255,255,255,.55));
+}
+.sub-title{
+  color:var(--nostra-teal)!important;
+  font-weight:900!important;
+  text-transform:uppercase;
+  letter-spacing:.9px;
+}
+
+/* Cards futuristas */
+.course-box2,
+.about-grid3,
+.counter-card,
+.nostra-pro-trust-card{
+  border-radius:20px !important;
+  border:1px solid rgba(7,140,149,.25) !important;
+  box-shadow:0 18px 40px rgba(0,0,0,.15),0 0 24px rgba(0,194,209,.12) !important;
+}
+.course-box2{
+  background:linear-gradient(180deg,#ffffff,#eef5f7) !important;
+}
+.course-content{
+  background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(232,239,243,.92)) !important;
+  border-top:3px solid var(--nostra-teal) !important;
+}
+.course-title a{
+  color:#061426 !important;
+  font-weight:900 !important;
+  text-transform:uppercase;
+  font-style:italic;
+}
+.course-box2:hover{
+  transform:translateY(-10px) scale(1.025) !important;
+  box-shadow:0 22px 50px rgba(0,0,0,.26),0 0 36px rgba(0,194,209,.35) !important;
+}
+
+/* Franja de confianza */
+.nostra-pro-trust{
+  background:linear-gradient(135deg,#02070d 0%,#062a32 48%,#078c95 100%) !important;
+}
+.nostra-pro-trust-card strong{
+  color:transparent !important;
+  background:linear-gradient(180deg,#fff,#aebbc5 55%,#fff 70%,#078c95) !important;
+  -webkit-background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+  font-style:italic;
+  filter:drop-shadow(0 0 12px rgba(0,194,209,.38));
+}
+
+/* Contadores */
+.counter-card{
+  background:linear-gradient(135deg,#05080d 0%,#102331 55%,#078c95 100%) !important;
+}
+.counter-card_number{
+  color:transparent !important;
+  background:linear-gradient(180deg,#fff,#b9c4cd 45%,#00c2d1 100%) !important;
+  -webkit-background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+  font-style:italic;
+}
+
+/* WhatsApp flotante integrado */
+.nostra-floating-whatsapp{
+  background:linear-gradient(135deg,var(--nostra-teal),#063139,var(--nostra-dark)) !important;
+  border:1px solid rgba(255,255,255,.3);
+  box-shadow:0 18px 44px rgba(0,194,209,.42) !important;
+}
+.nostra-floating-whatsapp .nostra-wa-icon{
+  background:rgba(255,255,255,.18) !important;
+  box-shadow:inset 0 0 12px rgba(255,255,255,.18);
+}
+
+/* Detalle diagonal inspirado en el logo */
+.nostra-pro-topbar::after,
+.title-area::after{
+  content:"";
+  display:block;
+  width:110px;
+  height:4px;
+  margin:10px auto 0;
+  background:linear-gradient(90deg,transparent,var(--nostra-teal),transparent);
+  transform:skewX(-18deg);
+  box-shadow:0 0 18px rgba(0,194,209,.5);
+}
+.title-area::after{margin-top:14px;}
+
+@media(max-width:767px){
+  .nostra-home-hero h1,
+  .nostra-future-hero h1{font-size:clamp(32px,10vw,44px)!important;}
+  .sec-title{font-size:clamp(26px,8vw,38px)!important;}
+}
