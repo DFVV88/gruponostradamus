@@ -222,8 +222,66 @@ body{
 }
 .title-area::after{margin-top:14px;}
 
+/* ==================================================
+   CICLOS EN GRILLA COMPACTA
+   3 por fila en escritorio, 2 en tablet, 1 en celular.
+================================================== */
+#course-sec .filter-active{
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:24px;
+  height:auto !important;
+}
+#course-sec .filter-active::before,
+#course-sec .filter-active::after{display:none !important;}
+#course-sec .filter-active > .filter-item{
+  position:relative !important;
+  left:auto !important;
+  top:auto !important;
+  transform:none !important;
+  width:100% !important;
+  max-width:100% !important;
+  padding:0 !important;
+  margin:0 !important;
+}
+#course-sec .course-box2{
+  height:100%;
+  display:flex;
+  flex-direction:column;
+}
+#course-sec .course-img img{
+  width:100%;
+  height:210px;
+  object-fit:cover;
+  border-radius:14px 14px 0 0;
+}
+#course-sec .course-content{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:20px 16px 22px !important;
+}
+#course-sec .course-title{
+  font-size:clamp(20px,2vw,28px) !important;
+  line-height:1.05 !important;
+  margin-bottom:12px !important;
+}
+#course-sec .course-content p{
+  font-size:14px !important;
+  line-height:1.55 !important;
+}
+#course-sec .course-content .th-btn{
+  white-space:nowrap;
+}
+
+@media(max-width:1199.98px){
+  #course-sec .filter-active{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
 @media(max-width:767px){
   .nostra-home-hero h1,
   .nostra-future-hero h1{font-size:clamp(32px,10vw,44px)!important;}
   .sec-title{font-size:clamp(26px,8vw,38px)!important;}
+  #course-sec .filter-active{grid-template-columns:1fr;gap:22px;}
+  #course-sec .course-img img{height:220px;}
 }
