@@ -262,3 +262,32 @@
     0 8px 20px rgba(0,0,0,0.5),
     0 0 15px rgba(0,200,255,0.3);
 }
+/* ===== FORZAR ESTILO METÁLICO ===== */
+
+.nostra-home-hero h1,
+.nostra-future-hero h1 {
+  font-weight: 900 !important;
+  letter-spacing: -1px !important;
+
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #d1d5db 25%,
+    #9ca3af 50%,
+    #f9fafb 75%,
+    #6b7280 100%
+  ) !important;
+
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+
+  color: transparent !important;
+
+  text-shadow:
+    0 2px 4px rgba(0,0,0,0.6),
+    0 8px 20px rgba(0,0,0,0.5),
+    0 0 15px rgba(0,200,255,0.3) !important;
+}
+.nostra-home-hero h1 {
+  filter: contrast(1.1) brightness(1.05);
+}
