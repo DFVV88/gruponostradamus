@@ -8,10 +8,10 @@
      crossorigin="anonymous"></script>
 	
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>NOSTRADAMUS - GRUPO DE ESTUDIO UNI</title>
-    <meta name="author" content="Rolfer™ DigitalRolfer™ Digital">
-    <meta name="description" content="Grupo de estudio Nostradamus, 15 años formando a futuros ingenieros de la UNI, Universidad Nacional de Ingeniería, con los mejores profesionalesGrupo de estudio Nostradamus, 15 años formando a futuros ingenieros de la UNI, Universidad Nacional de Ingeniería, con los mejores profesionales">
-    <meta name="keywords" content="Grupo de estudio Nostradamus, 15 años formando a futuros ingenieros de la UNI, Universidad Nacional de Ingeniería, con los mejores profesionalesGrupo de estudio Nostradamus, 15 años formando a futuros ingenieros de la UNI, Universidad Nacional de Ingeniería, con los mejores profesionales">
+    <title>Grupo Nostradamus | Preparación UNI y Proyecto Escolar</title>
+    <meta name="author" content="Grupo Nostradamus">
+    <meta name="description" content="Grupo Nostradamus: 16 años formando ingresantes a la UNI y fortaleciendo la base académica de estudiantes escolares. Ciclos UNI, Proyecto Escolar, simulacros y acompañamiento académico.">
+    <meta name="keywords" content="Grupo Nostradamus, preparación UNI, academia UNI, ingresantes UNI, Proyecto Escolar, ciclos UNI, simulacros UNI, preparación preuniversitaria">
     <meta name="robots" content="INDEX,FOLLOW">
 
     <!-- Mobile Specific Metas -->
@@ -51,7 +51,6 @@
     <link rel="stylesheet" href="assets/css/nice-select.min.css">
     <!-- Theme Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
-<link rel="stylesheet" href="assets/css/style.css">
 
 <!-- 🔴 BOTÓN CLASES EN VIVO - EFECTO TRANSMISIÓN EN VIVO -->
 <style>
@@ -144,6 +143,119 @@
 /* Respetar usuarios que reducen movimiento */
 @media (prefers-reduced-motion: reduce) {
   .btn-live-mobile { animation: none; }
+}
+</style>
+
+
+<!-- MODERNIZACIÓN NOSTRADAMUS - RESPONSIVE -->
+<style>
+:root {
+  --nostra-primary: #088698;
+  --nostra-dark: #0F2239;
+  --nostra-gold: #FFB539;
+  --nostra-light: #F3F7FB;
+  --nostra-text: #334155;
+  --nostra-shadow: 0 18px 45px rgba(15, 34, 57, 0.14);
+}
+body { color: var(--nostra-text); letter-spacing: .1px; }
+p { font-size: 17px; line-height: 1.78; }
+.th-btn {
+  border-radius: 16px !important;
+  font-weight: 800 !important;
+  letter-spacing: .25px;
+  box-shadow: 0 12px 28px rgba(15, 34, 57, .16);
+  transition: transform .25s ease, box-shadow .25s ease !important;
+}
+.th-btn:hover { transform: translateY(-3px); box-shadow: 0 18px 38px rgba(15, 34, 57, .22); }
+.th-btn.style3 { background: linear-gradient(135deg, var(--nostra-primary), #0aa8bd) !important; border: 0 !important; }
+.header-top { background: linear-gradient(90deg, var(--nostra-dark), #12395d) !important; }
+.header-links li, .header-links a, .social-title { color: #fff !important; }
+.sec-title { color: var(--nostra-dark); font-weight: 900; letter-spacing: -.7px; }
+.sub-title { color: var(--nostra-primary) !important; font-weight: 900; }
+.about-grid3, .counter-card, .course-box2, .th-blog, .accordion-card {
+  border-radius: 24px !important;
+  box-shadow: 0 12px 32px rgba(15, 34, 57, .10);
+  transition: transform .25s ease, box-shadow .25s ease;
+  overflow: hidden;
+}
+.about-grid3:hover, .counter-card:hover, .course-box2:hover, .th-blog:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--nostra-shadow);
+}
+.counter-card_number { color: var(--nostra-dark) !important; font-weight: 900; }
+.counter-card_text strong { color: var(--nostra-primary); }
+.nostra-home-hero {
+  position: relative;
+  z-index: 3;
+  max-width: 860px;
+  padding: 70px 0;
+}
+.nostra-home-hero .hero-subtitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.18);
+  color: #fff;
+  font-weight: 900;
+  letter-spacing: .4px;
+  margin-bottom: 18px;
+}
+.nostra-home-hero h1 {
+  color: #fff;
+  font-size: clamp(40px, 6vw, 78px);
+  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  text-shadow: 0 18px 45px rgba(0,0,0,.38);
+}
+.nostra-home-hero p {
+  color: rgba(255,255,255,.96);
+  font-size: 20px;
+  line-height: 1.7;
+  max-width: 760px;
+  margin-bottom: 28px;
+  text-shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+.nostra-home-actions { display: flex; flex-wrap: wrap; gap: 14px; }
+.nostra-rutas-card {
+  height: 100%;
+  padding: 34px;
+  background: #fff;
+  border: 1px solid rgba(8,134,152,.12);
+  border-radius: 24px;
+  box-shadow: 0 12px 32px rgba(15, 34, 57, .10);
+}
+.nostra-rutas-card h4 { font-size: 28px; font-weight: 900; margin-bottom: 14px; color: var(--nostra-dark); }
+.nostra-rutas-card p { margin-bottom: 24px; }
+.th-hero-slide { position: relative; }
+.th-hero-slide:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(15,34,57,.74), rgba(8,134,152,.20));
+  z-index: 1;
+  pointer-events: none;
+}
+.th-hero-slide .container { position: relative; z-index: 2; }
+@media (max-width: 991px) {
+  .th-menu-area { background: linear-gradient(180deg, var(--nostra-dark), #0b2c45) !important; }
+  .th-mobile-menu a { font-weight: 800; }
+}
+@media (max-width: 767px) {
+  .nostra-home-hero { padding: 34px 0; text-align: center; }
+  .nostra-home-hero h1 { font-size: 38px; line-height: 1.08; }
+  .nostra-home-hero p { font-size: 16px; line-height: 1.6; }
+  .nostra-home-actions .th-btn { width: 100%; text-align: center; justify-content: center; }
+  .nostra-rutas-card { padding: 24px; text-align: center; }
+  .sec-title { font-size: 30px; line-height: 1.18; }
+  p { font-size: 16px; }
+  .header-logo img { max-width: 165px; }
+}
+@media (max-width: 420px) {
+  .nostra-home-hero h1 { font-size: 32px; }
+  .nostra-home-hero .hero-subtitle { font-size: 13px; }
 }
 </style>
 
@@ -402,8 +514,14 @@
                 </div>
                 <!--CONTENIDO-->
                 <div class="container">
-                    <div class="hero-style6 vacio-to-slider contenido-min-slider">
-                        <h1></h1>
+                    <div class="hero-style6 nostra-home-hero">
+                        <span class="hero-subtitle">Grupo Nostradamus</span>
+                        <h1>16 años formando ingresantes a la UNI</h1>
+                        <p>Miles de ingresantes y egresados respaldan nuestra trayectoria. Preparamos postulantes para la UNI y fortalecemos la base académica de estudiantes escolares con exigencia, método y acompañamiento real.</p>
+                        <div class="nostra-home-actions">
+                            <a href="https://wa.me/51993750351?text=Hola%20Nostradamus,%20quiero%20informes%20sobre%20los%20ciclos%20UNI" target="_blank" rel="noopener" class="th-btn style3">📲 Quiero ingresar a la UNI</a>
+                            <a href="#rutas" class="th-btn style6">Ver programas</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -463,6 +581,33 @@
     <!--==============================-->
 
 
+    <section class="space bg-smoke" id="rutas">
+        <div class="container">
+            <div class="title-area text-center">
+                <span class="sub-title"><i class="fal fa-route me-2"></i> Elige tu camino</span>
+                <h2 class="sec-title">Preparación UNI y formación escolar con resultados</h2>
+                <p>Dos rutas académicas diseñadas para estudiantes que buscan una preparación seria, exigente y orientada a resultados.</p>
+            </div>
+            <div class="row gy-4">
+                <div class="col-md-6">
+                    <div class="nostra-rutas-card">
+                        <h4>🎯 Ruta UNI</h4>
+                        <p>Ciclos especializados para postulantes a la Universidad Nacional de Ingeniería, con teoría, práctica intensiva, simulacros tipo admisión y seguimiento académico.</p>
+                        <a href="ciclos.html" class="th-btn style3">Ver ciclos UNI</a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="nostra-rutas-card">
+                        <h4>📘 Ruta Escolar</h4>
+                        <p>Programa académico para estudiantes de colegio que desean fortalecer su base en Matemáticas, Ciencias y Aptitud Académica desde etapas tempranas.</p>
+                        <a href="ciclo-proyecto-escolar.html" class="th-btn style3">Ver Proyecto Escolar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
     <div class="overflow-hidden overflow-hidden gr-bg1 space" id="about-sec" data-bg-src="assets/img/bg/about-5-bg.html">
         <div class="container">
             <div class="row">
@@ -472,7 +617,7 @@
                             <img class="tilt-active" src="assets/img/nosotros/nosotros-1-375x493.jpg" alt="Grupo de estudio Nostradamus, 15 años formando a futuros ingenieros de la UNI, Universidad Nacional de Ingeniería, con los mejores profesionales">
                         </div>
                         <div class="about-grid">
-                            <h3 class="about-grid_year"><span class="counter-number">15</span> años</h3>
+                            <h3 class="about-grid_year"><span class="counter-number">16</span> años</h3>
                             <p class="about-grid_text">Preparando a los futuros ingenieros del Perú</p>
                         </div>
                         <div class="img2">
@@ -486,18 +631,17 @@
                 <div class="col-xl-6" id="nosotros">
                     <div class="title-area mb-35">
                         <span class="sub-title"><i class="fal fa-book me-2"></i> Nosotros</span>
-                        <h2 class="sec-title">Experiencia y Pasión por la Educación</h2>
+                        <h2 class="sec-title">Resultados, exigencia y acompañamiento real</h2>
                     </div>
-                    <p class="mt-n2 mb-25">Formamos a los futuros líderes del país con programas educativos innovadores
-                        y de calidad adaptados a las necesidades actuales.</p>
+                    <p class="mt-n2 mb-25">Durante 16 años hemos acompañado a miles de estudiantes en su camino académico, formando ingresantes a la UNI y fortaleciendo la base de alumnos escolares con una preparación seria y orientada a resultados.</p>
                     <div class="row mb-35 gy-4">
                         <div class="col-lg-6">
                             <div class="about-grid3">
                                 <div class="about-grid-icon"><img src="assets/img/icon/about-grid-icon2-1.svg"
                                         alt="icon"></div>
                                 <div class="details">
-                                    <h5>Brillo compartido</h5>
-                                    <p>Descubre cómo nuestros alumnos brillan con el apoyo de profesores dedicados</p>
+                                    <h5>Preparación con resultados</h5>
+                                    <p>Entrenamos a nuestros alumnos con práctica constante, evaluación y enfoque en el examen de admisión UNI.</p>
                                 </div>
                             </div>
                         </div>
@@ -505,8 +649,8 @@
                             <div class="about-grid3">
                                 <div class="icon"><img src="assets/img/icon/about-grid-icon2-2.svg" alt="Grupo de estudio Nostradamus, 15 años formando a futuros ingenieros de la UNI, Universidad Nacional de Ingeniería, con los mejores profesionales"></div>
                                 <div class="details">
-                                    <h5>Éxito en Conexión</h5>
-                                    <p>Conectamos a alumnos y profesores para alcanzar el éxito educativo juntos.</p>
+                                    <h5>Seguimiento académico</h5>
+                                    <p>Acompañamos el avance del estudiante para reforzar debilidades y sostener una mejora continua.</p>
                                 </div>
                             </div>
                         </div>
@@ -548,30 +692,27 @@
             <div class="row justify-content-between">
                 <div class="col-sm-6 col-xl-3 counter-card-wrap">
                     <div class="counter-card">
-                        <h2 class="counter-card_number"><span class="counter-number">2.5</span>k<span
+                        <h2 class="counter-card_number"><span class="counter-number">16</span><span
                                 class="fw-normal">+</span></h2>
-                        <p class="counter-card_text"><strong>Egresados</strong> Satisfechos</p>
+                        <p class="counter-card_text"><strong>Años</strong> en el mercado</p>
                     </div>
                 </div>
                 <div class="col-sm-6 col-xl-3 counter-card-wrap">
                     <div class="counter-card">
-                        <h2 class="counter-card_number"><span class="counter-number">109.5</span>k<span
-                                class="fw-normal">+</span></h2>
-                        <p class="counter-card_text"><strong>Clases</strong> Completadas</p>
+                        <h2 class="counter-card_number">Miles</h2>
+                        <p class="counter-card_text"><strong>Ingresantes</strong> y egresados</p>
                     </div>
                 </div>
                 <div class="col-sm-6 col-xl-3 counter-card-wrap">
                     <div class="counter-card">
-                        <h2 class="counter-card_number"><span class="counter-number">90</span>%<span
-                                class="fw-normal">+</span></h2>
-                        <p class="counter-card_text"><strong>Satisfaccion</strong> Porcentual</p>
+                        <h2 class="counter-card_number">UNI</h2>
+                        <p class="counter-card_text"><strong>Preparación</strong> especializada</p>
                     </div>
                 </div>
                 <div class="col-sm-6 col-xl-3 counter-card-wrap">
                     <div class="counter-card">
-                        <h2 class="counter-card_number"><span class="counter-number">3.1</span>k<span
-                                class="fw-normal">+</span></h2>
-                        <p class="counter-card_text"><strong>Estudiantes</strong> Satisfechos</p>
+                        <h2 class="counter-card_number">Escolar</h2>
+                        <p class="counter-card_text"><strong>Base</strong> académica sólida</p>
                     </div>
                 </div>
             </div>
@@ -589,7 +730,7 @@ About Area
         <div class="container">
             <div class="title-area mb-35 text-center">
                 <span class="sub-title"><i class="fal fa-book me-2"></i>Nuestros ciclos</span>
-                <h2 class="sec-title">Explora Nuestros Ciclos Académicos</h2>
+                <h2 class="sec-title">Ciclos diseñados para avanzar con estrategia</h2>
             </div>
 
             <div class="row gy-4 filter-active">
@@ -974,10 +1115,9 @@ Blog Area
             <div class="row justify-content-end">
                 <div class="col-xl-6">
                     <div class="title-area mb-30"><span class="sub-title">Reserva tu matrícula ahora</span>
-                        <h2 class="sec-title fw-medium text-white">Garantiza tu Futuro</h2>
+                        <h2 class="sec-title fw-medium text-white">Da el primer paso hacia tu meta académica</h2>
                     </div>
-                    <p class="mb-30 text-light">Asegura tu lugar y comienza tu camino hacia el éxito con nosotros.
-                        ¡Inscríbete ahora!.</p>
+                    <p class="mb-30 text-light">Solicita información y recibe orientación para elegir el ciclo ideal según tu nivel, objetivo y etapa académica.</p>
 					
                     <form class="course-form mb-2 contact-form ajax-contact" id="formNostra">
 
