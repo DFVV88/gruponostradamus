@@ -9,9 +9,9 @@
 	
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>NOSTRADAMUS - GRUPO DE ESTUDIO UNI</title>
-    <meta name="author" content="Rolfer™ DigitalRolfer™ Digital">
-    <meta name="description" content="Grupo de estudio Nostradamus, 15 años formando a futuros ingenieros de la UNI, Universidad Nacional de Ingeniería, con los mejores profesionalesGrupo de estudio Nostradamus, 15 años formando a futuros ingenieros de la UNI, Universidad Nacional de Ingeniería, con los mejores profesionales">
-    <meta name="keywords" content="Grupo de estudio Nostradamus, 15 años formando a futuros ingenieros de la UNI, Universidad Nacional de Ingeniería, con los mejores profesionalesGrupo de estudio Nostradamus, 15 años formando a futuros ingenieros de la UNI, Universidad Nacional de Ingeniería, con los mejores profesionales">
+    <meta name="author" content="Grupo de Estudio Nostradamus">
+    <meta name="description" content="Grupo de Estudio Nostradamus: preparación UNI con 16 años de experiencia, ciclos académicos, simulacros tipo admisión y acompañamiento para futuros ingenieros.">
+    <meta name="keywords" content="Grupo Nostradamus, preparación UNI, academia UNI, ciclos UNI, simulacros UNI, preparación preuniversitaria, Universidad Nacional de Ingeniería">
     <meta name="robots" content="INDEX,FOLLOW">
 
     <!-- Mobile Specific Metas -->
@@ -21,9 +21,9 @@
     <link rel="shortcut icon" href="assets/img/favicons/iocon-ostradamus.png" type="image/x-icon">
     <link rel="icon" href="assets/img/favicons/iocon-ostradamus.png" type="image/x-icon">
 	
-    <link rel="manifest" href="assets/img/favicons/manifest.html">
+    <link rel="manifest" href="assets/img/favicons/manifest.json">
     <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="assets/img/favicons/ms-icon-144x144.html">
+    <meta name="msapplication-TileImage" content="assets/img/favicons/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
 
     <!--==============================
@@ -53,100 +53,6 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/nostra-modern.css">
     <link rel="stylesheet" href="assets/css/nostra-home.css">
-
-<!-- 🔴 BOTÓN CLASES EN VIVO - EFECTO TRANSMISIÓN EN VIVO -->
-<style>
-.header-top .dropdown-link .btn-live {
-  background: linear-gradient(90deg, #ff1e00, #ff4500);
-  color: #fff !important;
-  font-weight: 800;
-  padding: 8px 16px;
-  border-radius: 10px;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 0 14px rgba(255, 70, 0, 0.65);
-  animation: live-blink 1.6s infinite alternate;
-  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
-  letter-spacing: .3px;
-  line-height: 1;
-}
-.header-top .dropdown-link .btn-live:hover {
-  transform: scale(1.07);
-  box-shadow: 0 0 22px rgba(255, 70, 0, .9);
-  filter: saturate(1.15);
-}
-@keyframes live-blink {
-  0%   { opacity: 1;   box-shadow: 0 0 9px rgba(255,70,0,.7), 0 0 18px rgba(255,120,80,.35); }
-  100% { opacity: .82; box-shadow: 0 0 22px rgba(255,90,60,1), 0 0 36px rgba(255,140,80,.55); }
-}
-/* ✨ Efecto de cambio suave de color en el texto */
-.header-top .dropdown-link .btn-live {
-  animation: live-blink 1.6s infinite alternate, colorPulse 3s infinite alternate;
-}
-
-@keyframes colorPulse {
-  0% { color: #ffffff; }      /* Blanco puro */
-  50% { color: #ffe6e6; }     /* Blanco rosado */
-  100% { color: #fff0f0; }    /* Blanco cálido */
-}
-	
-</style>
-	<style>
-/* 🔴 BOTÓN CLASES EN VIVO - VERSIÓN MÓVIL CON EFECTO DE COLOR SUAVE */
-.btn-live-mobile {
-  background: linear-gradient(90deg, #ff1e00, #ff4500);
-  color: #fff !important;
-  font-weight: 800;
-  padding: 12px 22px;
-  border-radius: 12px;
-  text-decoration: none;
-  display: inline-block;
-  box-shadow: 0 0 14px rgba(255, 70, 0, 0.65);
-  animation: live-blink-mobile 1.6s infinite alternate, colorPulseMobile 3s infinite alternate;
-  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
-  letter-spacing: .5px;
-  width: 80%;
-}
-.btn-live-mobile:hover {
-  transform: scale(1.08);
-  box-shadow: 0 0 25px rgba(255, 70, 0, .9);
-  filter: saturate(1.15);
-}
-
-/* Texto guía debajo del botón (solo móvil) */
-.live-help-text {
-  margin-top: 6px;
-  font-weight: 600;
-  font-size: 14px;
-  color: #fff;
-}
-
-/* 💫 Pulso de brillo */
-@keyframes live-blink-mobile {
-  0%   { opacity: 1;   box-shadow: 0 0 9px rgba(255,70,0,.7), 0 0 18px rgba(255,120,80,.35); }
-  100% { opacity: .82; box-shadow: 0 0 22px rgba(255,90,60,1), 0 0 36px rgba(255,140,80,.55); }
-}
-
-/* ✨ Transición de color suave en el texto */
-@keyframes colorPulseMobile {
-  0% { color: #ffffff; }      /* Blanco puro */
-  50% { color: #fff8c2; }     /* Amarillo cálido */
-  100% { color: #fff0a3; }    /* Amarillo más intenso */
-}
-
-/* Mostrar SOLO en móvil (ocultar en desktop) */
-.only-mobile-live { display: none; }
-@media (max-width: 991.98px) {  /* breakpoint del menú móvil */
-  .only-mobile-live { display: block; }
-}
-
-/* Respetar usuarios que reducen movimiento */
-@media (prefers-reduced-motion: reduce) {
-  .btn-live-mobile { animation: none; }
-}
-</style>
 
 </head>
 
@@ -287,13 +193,13 @@
                                 <li>
                                     <div class="header-social">
                                         <span class="social-title">Síguenos en:</span>
-                                        <a href="https://www.facebook.com/gruponostradamus"><i
+                                        <a href="https://www.facebook.com/gruponostradamus" aria-label="Facebook"><i
                                                 class="fab fa-facebook-f"></i></a>
-                                        <a href="https://www.instagram.com/gruponostradamus/"><i
+                                        <a href="https://www.instagram.com/gruponostradamus/" aria-label="Instagram"><i
                                                 class="fab fa-instagram"></i></a>
-                                        <a href="https://www.tiktok.com/@grupo_nostradamus"><i
+                                        <a href="https://www.tiktok.com/@grupo_nostradamus" aria-label="TikTok"><i
                                                 class="fab fa-tiktok"></i></a>
-                                        <a href="https://www.youtube.com/@GrupoNostradamus"><i
+                                        <a href="https://www.youtube.com/@GrupoNostradamus" aria-label="YouTube"><i
                                                 class="fab fa-youtube"></i></a>
                                     </div>
                                 </li>
@@ -589,7 +495,7 @@
                     <div class="counter-card">
                         <h2 class="counter-card_number"><span class="counter-number">90</span>%<span
                                 class="fw-normal">+</span></h2>
-                        <p class="counter-card_text"><strong>Satisfaccion</strong> Porcentual</p>
+                        <p class="counter-card_text"><strong>Satisfacción</strong> Porcentual</p>
                     </div>
                 </div>
                 <div class="col-sm-6 col-xl-3 counter-card-wrap">
@@ -635,7 +541,7 @@ About Area
 
     <div style="text-align:center;">
         <a href="https://wa.me/51993750351?text=Hola%20quiero%20informes%20sobre%20el%20ciclo%20Anual%20UNI"
-           target="_blank"
+           target="_blank" rel="noopener"
            class="th-btn style3"
            style="padding:8px 18px; font-size:14px;">
            🔥 QUIERO INGRESAR
@@ -705,7 +611,7 @@ Programa de alto rendimiento para alumnos que buscan máxima exigencia y competi
 
 <div style="text-align:center;">
   <a href="https://wa.me/51993750351?text=Hola%20quiero%20informes%20sobre%20el%20ciclo%20Élite%20UNI"
-     target="_blank"
+     target="_blank" rel="noopener"
      class="th-btn style3"
      style="padding:8px 18px; font-size:14px;">
      🚀 POSTULAR AL ÉLITE
@@ -774,7 +680,7 @@ Repaso intensivo final enfocado en simulacros, resolución de problemas y estrat
 
 <div style="text-align:center;">
   <a href="https://wa.me/51993750351?text=Hola%20quiero%20informes%20sobre%20Repaso%20UNI"
-     target="_blank"
+     target="_blank" rel="noopener"
      class="th-btn style3"
      style="padding:8px 18px; font-size:14px;">
      ⚡ ÚLTIMO EMPUJÓN
@@ -991,7 +897,7 @@ Blog Area
                 <div class="row align-items-center justify-content-between">
                     <div class="col-md-8">
                         <div class="title-area mb-md-0">
-                            <span class="sub-title"><i class="fal fa-book me-2"></i> Noticias Academicas</span>
+                            <span class="sub-title"><i class="fal fa-book me-2"></i> Noticias Académicas</span>
                             <h2 class="sec-title">Explora Nuestro Mundo Académico</h2>
                         </div>
                     </div>
@@ -1125,18 +1031,18 @@ Blog Area
                                     <a href="index.html"><img src="assets/img/logo-nostradamus-1.png" alt="Grupo de estudio Nostradamus, 15 años formando a futuros ingenieros de la UNI, Universidad Nacional de Ingeniería, con los mejores profesionales"></a>
                                 </div>
 
-                                <p class="about-text" style="color: black">Somos un grupo de estudio especialista en
+                                <p class="about-text">Somos un grupo de estudio especialista en
                                     preparación para la UNI (Universidad Nacional de Ingeniería)</p>
 
                                 <div class="th-social">
                                     <h6 class="title">Síguenos en:</h6>
-                                    <a href="https://www.facebook.com/gruponostradamus"><i
+                                    <a href="https://www.facebook.com/gruponostradamus" aria-label="Facebook"><i
                                             class="fab fa-facebook-f"></i></a>
-                                    <a href="https://www.instagram.com/gruponostradamus/"><i
+                                    <a href="https://www.instagram.com/gruponostradamus/" aria-label="Instagram"><i
                                             class="fab fa-instagram"></i></a>
-                                    <a href="https://www.tiktok.com/@grupo_nostradamus"><i
+                                    <a href="https://www.tiktok.com/@grupo_nostradamus" aria-label="TikTok"><i
                                             class="fab fa-tiktok"></i></a>
-                                    <a href="https://www.youtube.com/@GrupoNostradamus"><i
+                                    <a href="https://www.youtube.com/@GrupoNostradamus" aria-label="YouTube"><i
                                             class="fab fa-youtube"></i></a>
 
                                 </div>
@@ -1188,29 +1094,29 @@ Blog Area
                     <div class="col-md-6 col-xxl-3 col-xl-3">
                         <div class="widget widget_contact footer-widget">
                             <h3 class="widget_title">Matricúlate ahora!</h3>
-                            <p class="contact-text" style="color:black">Empieza el camino que te llevara al exito
+                            <p class="contact-text">Empieza el camino que te llevara al exito
                                 profesional.</p>
                             <div class="th-widget-contact">
                                 <div class="info-box-wrap">
                                     <div class="info-box_icon">
                                         <i class="fas fa-location-dot"></i>
                                     </div>
-                                    <p class="info-box_text" style="color:black">
-                                        <a href="https://maps.app.goo.gl/XUF3vLuP6svEMZzj7" style="color:black">Gerardo Unger 193, Lima, Peru, Lima 15102</a>
+                                    <p class="info-box_text">
+                                        <a href="https://maps.app.goo.gl/XUF3vLuP6svEMZzj7">Gerardo Unger 193, Lima, Peru, Lima 15102</a>
                                     </p>
                                 </div>
                                 <div class="info-box-wrap">
                                     <div class="info-box_icon">
                                         <i class="fas fa-envelope"></i>
                                     </div>
-                                    <a href="index.html#contacto" class="info-box_link" style="color:black">informes@gruponostradamus.edu.pe</a>
+                                    <a href="index.html#contacto" class="info-box_link">informes@gruponostradamus.edu.pe</a>
                                 </div>
                                 <div class="info-box-wrap">
                                     <div class="info-box_icon">
                                         <i class="fas fa-phone"></i>
                                     </div>
                                    <a href="https://wa.me/51993750351?text=Hola%20Nostradamus,%20quiero%20informes%20sobre%20los%20ciclos%20de%20preparaci%C3%B3n." 
-   target="_blank" rel="noopener" class="info-box_link" style="color:black">
+   target="_blank" rel="noopener" class="info-box_link">
    +51 993 750 351
 </a>
 
@@ -1311,7 +1217,7 @@ Blog Area
     </button>
 
     <!-- 🟩 Botón de acción (debajo de la imagen) -->
-    <a href="https://wa.me/51993750351?text=Hola%20Nostradamus,%20quiero%20informes%20sobre%20los%20ciclos%20de%20preparaci%C3%B3n." target="_blank"
+    <a href="https://wa.me/51993750351?text=Hola%20Nostradamus,%20quiero%20informes%20sobre%20los%20ciclos%20de%20preparaci%C3%B3n." target="_blank" rel="noopener"
        style="display:inline-block; margin-top:15px;
        background:#25D366; color:#fff; font-weight:700;
        padding:10px 20px; border-radius:10px;
@@ -1323,15 +1229,21 @@ Blog Area
 </div>
 
 <script>
-  // Mostrar popup al cargar la página
+  // Mostrar popup solo una vez por sesión
   window.addEventListener("load", () => {
     const popup = document.getElementById("popup");
-    popup.style.display = "flex";
+    if (!popup) return;
+
+    if (!sessionStorage.getItem("popupMostrado")) {
+      popup.style.display = "flex";
+      sessionStorage.setItem("popupMostrado", "true");
+    }
   });
 
   // Cerrar popup manualmente
   function cerrarPopup() {
-    document.getElementById("popup").style.display = "none";
+    const popup = document.getElementById("popup");
+    if (popup) popup.style.display = "none";
   }
 </script>
 
@@ -1370,7 +1282,6 @@ const mensaje = "¡Hola! Quiero información sobre el Grupo Nostradamus\n"
 </body>
 
 </html>
-
 
 
 
