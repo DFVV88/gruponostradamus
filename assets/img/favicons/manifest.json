@@ -1,0 +1,21 @@
+{
+  "name": "Grupo Nostradamus",
+  "short_name": "Nostradamus",
+  "description": "Grupo de Estudio Nostradamus - Preparación UNI",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "assets/img/favicons/iocon-ostradamus.png",
+      "sizes": "any",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/img/favicons/ms-icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    }
+  ]
+}
