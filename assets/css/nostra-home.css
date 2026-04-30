@@ -154,11 +154,15 @@
 }
 /* EFECTO VIDRIO */
 
-.counter-card,
 .course-content {
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.92);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid rgba(8,134,152,0.18);
+}
+
+.counter-card {
+  background: transparent;
+  border: none;
 }
 /* TEXTO CON GLOW */
 
