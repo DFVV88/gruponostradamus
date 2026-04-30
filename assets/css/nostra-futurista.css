@@ -356,3 +356,43 @@ body{
   #course-sec .filter-active{grid-template-columns:1fr;gap:22px;}
   #course-sec .course-img img{height:220px;}
 }
+
+/* ==================================================
+   HERO TITULO PREMIUM LEGIBLE
+   Mantiene estilo metálico, pero evita que las zonas negras se pierdan.
+================================================== */
+.nostra-home-hero h1,
+.nostra-future-hero h1{
+  background:linear-gradient(180deg,
+    #ffffff 0%,
+    #f6fbff 22%,
+    #c7d2db 43%,
+    #ffffff 56%,
+    #aab6c1 78%,
+    #eef7ff 100%) !important;
+  -webkit-background-clip:text !important;
+  background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+  filter:
+    drop-shadow(0 2px 0 rgba(0,0,0,.82))
+    drop-shadow(0 5px 8px rgba(0,0,0,.72))
+    drop-shadow(0 0 14px rgba(0,194,209,.36)) !important;
+  text-shadow:none !important;
+}
+
+.nostra-home-hero,
+.nostra-future-hero{
+  position:relative;
+  z-index:2;
+}
+
+.nostra-home-hero::before,
+.nostra-future-hero::before{
+  content:"";
+  position:absolute;
+  inset:-22px -26px;
+  z-index:-1;
+  border-radius:28px;
+  background:radial-gradient(circle at center, rgba(0,0,0,.34), rgba(0,0,0,.12) 52%, transparent 74%);
+  pointer-events:none;
+}
