@@ -1,7 +1,7 @@
 /* ==================================================
    Grupo Nostradamus - Corrección definitiva grilla de ciclos
    Objetivo: 3 ciclos por fila en escritorio y laptop, 1 en celular.
-   Neutraliza Isotope, estilos inline y clases Bootstrap que estaban forzando una columna.
+   Corrige además el HTML roto: algunos ciclos quedaron fuera del contenedor .filter-active.
 ================================================== */
 (function () {
   function getColumns() {
@@ -26,6 +26,9 @@
         height:auto !important;
         position:relative !important;
         align-items:stretch !important;
+        width:100% !important;
+        margin-left:auto !important;
+        margin-right:auto !important;
       }
       #course-sec .filter-active:before,
       #course-sec .filter-active:after{
@@ -80,11 +83,26 @@
     document.head.appendChild(style);
   }
 
+  function collectBrokenCourseItems(grid) {
+    var section = document.querySelector('#course-sec');
+    if (!section || !grid) return;
+
+    var allItems = Array.prototype.slice.call(section.querySelectorAll('.filter-item'));
+    if (allItems.length <= 1) return;
+
+    allItems.forEach(function (item) {
+      if (item.parentElement !== grid) {
+        grid.appendChild(item);
+      }
+    });
+  }
+
   function fixCourseGrid() {
     var grid = document.querySelector('#course-sec .filter-active');
     if (!grid) return;
 
     injectCourseGridCSS();
+    collectBrokenCourseItems(grid);
 
     if (window.jQuery && window.jQuery.fn && window.jQuery.fn.isotope) {
       try {
@@ -103,8 +121,9 @@
     grid.style.setProperty('gap', '22px', 'important');
     grid.style.setProperty('height', 'auto', 'important');
     grid.style.setProperty('position', 'relative', 'important');
+    grid.style.setProperty('width', '100%', 'important');
 
-    var items = grid.querySelectorAll('.filter-item');
+    var items = grid.querySelectorAll(':scope > .filter-item');
     items.forEach(function (item) {
       item.classList.remove('col-md-6', 'col-xl-4', 'col-lg-4', 'col-sm-6');
       item.removeAttribute('style');
@@ -136,9 +155,9 @@
   });
 
   document.addEventListener('DOMContentLoaded', function () {
-    var grid = document.querySelector('#course-sec .filter-active');
-    if (grid) {
-      observer.observe(grid, { attributes:true, childList:true, subtree:true, attributeFilter:['style','class'] });
+    var section = document.querySelector('#course-sec');
+    if (section) {
+      observer.observe(section, { attributes:true, childList:true, subtree:true, attributeFilter:['style','class'] });
     }
   });
 })();
