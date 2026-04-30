@@ -1,20 +1,28 @@
 /* ==================================================
-   Grupo Nostradamus - Corrección fuerte grilla de ciclos
-   Objetivo: 3 ciclos por fila en escritorio, 2 en tablet y 1 en móvil.
+   Grupo Nostradamus - Corrección definitiva grilla de ciclos
+   Objetivo: 3 ciclos por fila en escritorio y laptop, 1 en celular.
    Neutraliza Isotope, estilos inline y clases Bootstrap que estaban forzando una columna.
 ================================================== */
 (function () {
+  function getColumns() {
+    return window.innerWidth >= 768 ? 'repeat(3,minmax(0,1fr))' : '1fr';
+  }
+
   function injectCourseGridCSS() {
-    if (document.getElementById('nostra-course-grid-force-style')) return;
+    var oldStyle = document.getElementById('nostra-course-grid-force-style');
+    if (oldStyle) oldStyle.remove();
 
     var style = document.createElement('style');
     style.id = 'nostra-course-grid-force-style';
     style.textContent = `
+      #course-sec .container{
+        max-width:1320px !important;
+      }
       #course-sec .filter-active,
       #course-sec .filter-active.nostra-course-grid-fixed{
         display:grid !important;
         grid-template-columns:repeat(3,minmax(0,1fr)) !important;
-        gap:24px !important;
+        gap:22px !important;
         height:auto !important;
         position:relative !important;
         align-items:stretch !important;
@@ -46,22 +54,26 @@
       }
       #course-sec .course-img img{
         width:100% !important;
-        height:210px !important;
+        height:190px !important;
         object-fit:cover !important;
       }
       #course-sec .course-content{
         flex:1 !important;
+        padding:18px 14px 20px !important;
       }
-      @media(max-width:1199.98px){
-        #course-sec .filter-active,
-        #course-sec .filter-active.nostra-course-grid-fixed{
-          grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-        }
+      #course-sec .course-title{
+        font-size:24px !important;
+      }
+      #course-sec .course-content p{
+        font-size:13.5px !important;
       }
       @media(max-width:767.98px){
         #course-sec .filter-active,
         #course-sec .filter-active.nostra-course-grid-fixed{
           grid-template-columns:1fr !important;
+        }
+        #course-sec .course-img img{
+          height:220px !important;
         }
       }
     `;
@@ -87,14 +99,14 @@
     grid.classList.add('nostra-course-grid-fixed');
     grid.removeAttribute('style');
     grid.style.setProperty('display', 'grid', 'important');
-    grid.style.setProperty('grid-template-columns', window.innerWidth >= 1200 ? 'repeat(3,minmax(0,1fr))' : (window.innerWidth >= 768 ? 'repeat(2,minmax(0,1fr))' : '1fr'), 'important');
-    grid.style.setProperty('gap', '24px', 'important');
+    grid.style.setProperty('grid-template-columns', getColumns(), 'important');
+    grid.style.setProperty('gap', '22px', 'important');
     grid.style.setProperty('height', 'auto', 'important');
     grid.style.setProperty('position', 'relative', 'important');
 
     var items = grid.querySelectorAll('.filter-item');
     items.forEach(function (item) {
-      item.classList.remove('col-md-6', 'col-xl-4');
+      item.classList.remove('col-md-6', 'col-xl-4', 'col-lg-4', 'col-sm-6');
       item.removeAttribute('style');
       item.style.setProperty('position', 'relative', 'important');
       item.style.setProperty('left', 'auto', 'important');
@@ -109,7 +121,7 @@
 
   function scheduleFixes() {
     fixCourseGrid();
-    [100, 300, 700, 1200, 2000, 3500].forEach(function (delay) {
+    [50, 150, 300, 700, 1200, 2000, 3500, 5000].forEach(function (delay) {
       setTimeout(fixCourseGrid, delay);
     });
   }
