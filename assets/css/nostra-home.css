@@ -274,3 +274,29 @@ text-shadow:
 .nostra-home-hero h1 {
   letter-spacing: -0.8px;
 }
+/* ===== FIX FOOTER TEXTO ===== */
+
+.footer-area,
+.footer-area p,
+.footer-area li,
+.footer-area a {
+  color: rgba(255,255,255,0.85) !important;
+}
+
+/* títulos del footer */
+.footer-title {
+  color: #ffffff !important;
+}
+
+/* iconos */
+.footer-area i {
+  color: #22d3ee !important;
+}
+
+/* hover enlaces */
+.footer-area a:hover {
+  color: #22d3ee !important;
+}
+.footer-area {
+  background: linear-gradient(135deg, #0f172a, #0a2540);
+}
