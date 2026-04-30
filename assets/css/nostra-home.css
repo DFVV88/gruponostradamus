@@ -237,3 +237,13 @@
 .th-hero-slide {
   transition: all 1s ease !important;
 }
+/* ===== FIX FINAL HERO ESTABLE ===== */
+.nostra-home-hero.nostra-future-hero h1 {
+  font-size: clamp(28px, 4vw, 56px) !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.5px !important;
+}
+
+.nostra-home-hero.nostra-future-hero {
+  max-width: 760px !important;
+}
