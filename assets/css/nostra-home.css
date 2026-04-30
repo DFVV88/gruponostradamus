@@ -166,11 +166,11 @@
 
 /* ===== FIX CONTADORES ===== */
 .counter-card_number {
-  color: #ffffff !important;
+  color: #00e5ff !important; /* celeste neón */
 }
 
 .counter-card_text {
-  color: #ffffff !important;
+  color: #e2e8f0 !important;
 }
 
 .counter-card_text strong {
@@ -178,21 +178,24 @@
 }
 
 /* ===== FIX FONDO CONTADOR ===== */
+/* CONTADORES PREMIUM (CONTRASTE REAL) */
+
 .counter-card {
-  background: linear-gradient(135deg, #0aa7b4, #0f2239);
+  background: linear-gradient(135deg, #0f172a, #1e293b); /* azul oscuro elegante */
   border-radius: 18px;
   padding: 30px;
   box-shadow:
-    0 10px 30px rgba(0,0,0,0.3),
-    0 0 20px rgba(0,200,255,0.3);
+    0 10px 30px rgba(0,0,0,0.4),
+    0 0 20px rgba(0,200,255,0.2);
   transition: all 0.3s ease;
+  border: 1px solid rgba(255,255,255,0.08);
 }
 
 .counter-card:hover {
   transform: translateY(-6px);
   box-shadow:
-    0 20px 40px rgba(0,0,0,0.4),
-    0 0 30px rgba(0,200,255,0.6);
+    0 20px 40px rgba(0,0,0,0.6),
+    0 0 30px rgba(0,200,255,0.5);
 }
 /* OSCURECER FONDO DEL HERO */
 
