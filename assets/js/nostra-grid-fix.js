@@ -2,6 +2,7 @@
    Grupo Nostradamus - Corrección definitiva grilla de ciclos
    Objetivo: 3 ciclos por fila en escritorio y laptop, 1 en celular.
    Corrige además el HTML roto: algunos ciclos quedaron fuera del contenedor .filter-active.
+   Incluye corrección de hover para botones de ciclos.
 ================================================== */
 (function () {
   function getColumns() {
@@ -70,6 +71,32 @@
       #course-sec .course-content p{
         font-size:13.5px !important;
       }
+
+      /* Corrección: el hover no debe volver blanco el botón ni ocultar el texto */
+      #course-sec .course-content .th-btn.style3,
+      #course-sec .course-content .th-btn.style3:visited{
+        color:#ffffff !important;
+        background:linear-gradient(135deg,#078c95 0%,#03333c 48%,#0a0708 100%) !important;
+        border:1px solid rgba(255,255,255,.34) !important;
+      }
+      #course-sec .course-content .th-btn.style3:hover,
+      #course-sec .course-content .th-btn.style3:focus,
+      #course-sec .course-content .th-btn.style3:active{
+        color:#ffffff !important;
+        background:linear-gradient(135deg,#00aab7 0%,#05606a 45%,#0a0708 100%) !important;
+        border:1px solid rgba(255,255,255,.42) !important;
+        box-shadow:0 0 24px rgba(0,194,209,.55), inset 0 1px 0 rgba(255,255,255,.28) !important;
+      }
+      #course-sec .course-content .th-btn.style3::before,
+      #course-sec .course-content .th-btn.style3::after{
+        opacity:.22 !important;
+        background:linear-gradient(120deg,transparent 0%,rgba(255,255,255,.20) 45%,transparent 58%) !important;
+      }
+      #course-sec .course-content .th-btn.style3:hover::before,
+      #course-sec .course-content .th-btn.style3:hover::after{
+        opacity:.18 !important;
+      }
+
       @media(max-width:767.98px){
         #course-sec .filter-active,
         #course-sec .filter-active.nostra-course-grid-fixed{
