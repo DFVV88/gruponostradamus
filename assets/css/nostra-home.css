@@ -386,3 +386,16 @@
     animation: none;
   }
 }
+
+/* ==================================================
+   NOSTRADAMUS PRO CONVERSION LAYER
+   Mejora de conversion: barra superior, WhatsApp flotante
+   y bloque de confianza en la home.
+================================================== */
+.nostra-pro-topbar{width:100%;position:relative;z-index:99;background:linear-gradient(90deg,#07182f 0%,#0b5b78 50%,#07182f 100%);color:#fff;text-align:center;padding:10px 16px;font-weight:800;letter-spacing:.2px;box-shadow:0 8px 24px rgba(0,0,0,.22)}
+.nostra-pro-topbar a{color:#fff!important;text-decoration:underline;text-underline-offset:3px;font-weight:900}
+.nostra-pro-trust{background:linear-gradient(135deg,#07182f 0%,#0f2f4f 55%,#062033 100%);color:#fff;padding:34px 0;position:relative;overflow:hidden}
+.nostra-pro-trust:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at top left,rgba(34,211,238,.24),transparent 35%),radial-gradient(circle at bottom right,rgba(255,255,255,.12),transparent 30%);pointer-events:none}
+.nostra-pro-trust .container{position:relative;z-index:2}.nostra-pro-trust-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.nostra-pro-trust-card{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);border-radius:18px;padding:20px 16px;text-align:center;backdrop-filter:blur(8px)}.nostra-pro-trust-card strong{display:block;font-size:28px;line-height:1;color:#22d3ee;margin-bottom:8px}.nostra-pro-trust-card span{display:block;color:rgba(255,255,255,.88);font-weight:700;font-size:14px}
+.nostra-floating-whatsapp{position:fixed;right:22px;bottom:22px;z-index:9999;display:inline-flex;align-items:center;gap:10px;padding:14px 18px;border-radius:999px;background:linear-gradient(135deg,#25d366,#128c7e);color:#fff!important;font-weight:900;text-decoration:none!important;box-shadow:0 14px 34px rgba(18,140,126,.42);transition:transform .25s ease,box-shadow .25s ease}.nostra-floating-whatsapp:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 18px 44px rgba(18,140,126,.55);color:#fff!important}.nostra-floating-whatsapp .nostra-wa-icon{width:30px;height:30px;display:inline-grid;place-items:center;border-radius:50%;background:rgba(255,255,255,.18);font-size:18px}.nostra-floating-whatsapp .nostra-wa-text{display:flex;flex-direction:column;line-height:1.05}.nostra-floating-whatsapp .nostra-wa-text small{font-size:11px;font-weight:700;opacity:.9}.nostra-floating-whatsapp .nostra-wa-text b{font-size:14px}
+@media(max-width:991.98px){.nostra-pro-trust-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:575.98px){.nostra-pro-topbar{font-size:13px;line-height:1.35;padding:9px 12px}.nostra-pro-trust{padding:24px 0}.nostra-pro-trust-card{padding:16px 10px}.nostra-pro-trust-card strong{font-size:23px}.nostra-floating-whatsapp{left:14px;right:14px;bottom:14px;justify-content:center;border-radius:16px}}

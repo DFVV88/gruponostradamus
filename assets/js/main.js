@@ -1337,3 +1337,35 @@
     //   }
     
 })(jQuery);
+/* ==================================================
+   NOSTRADAMUS PRO CONVERSION LAYER
+   Inserta elementos comerciales sin tocar la maqueta base.
+================================================== */
+(function () {
+  'use strict';
+  function ready(fn){if(document.readyState!=='loading'){fn();}else{document.addEventListener('DOMContentLoaded',fn);}}
+  ready(function(){
+    var whatsappUrl='https://wa.me/51993750351?text=Hola%20Nostradamus%2C%20quiero%20informes%20para%20matricularme%20en%20un%20ciclo%20UNI.';
+    if(!document.querySelector('.nostra-pro-topbar')){
+      var topbar=document.createElement('div');
+      topbar.className='nostra-pro-topbar';
+      topbar.innerHTML='🚀 Nuevos ciclos UNI disponibles · Cupos limitados · <a href="'+whatsappUrl+'" target="_blank" rel="noopener noreferrer">Solicitar informes por WhatsApp</a>';
+      document.body.insertBefore(topbar,document.body.firstChild);
+    }
+    var hero=document.querySelector('#hero');
+    if(hero && !document.querySelector('.nostra-pro-trust')){
+      var trust=document.createElement('section');
+      trust.className='nostra-pro-trust';
+      trust.innerHTML='<div class="container"><div class="nostra-pro-trust-grid"><div class="nostra-pro-trust-card"><strong>16+</strong><span>años preparando postulantes</span></div><div class="nostra-pro-trust-card"><strong>UNI</strong><span>entrenamiento enfocado en admisión</span></div><div class="nostra-pro-trust-card"><strong>Simulacros</strong><span>tipo examen de admisión</span></div><div class="nostra-pro-trust-card"><strong>Q10</strong><span>clases grabadas y seguimiento</span></div></div></div>';
+      hero.insertAdjacentElement('afterend',trust);
+    }
+    if(!document.querySelector('.nostra-floating-whatsapp')){
+      var wa=document.createElement('a');
+      wa.className='nostra-floating-whatsapp';
+      wa.href=whatsappUrl;wa.target='_blank';wa.rel='noopener noreferrer';
+      wa.setAttribute('aria-label','Solicitar informes por WhatsApp');
+      wa.innerHTML='<span class="nostra-wa-icon">☎</span><span class="nostra-wa-text"><small>Informes y matrícula</small><b>WhatsApp ahora</b></span>';
+      document.body.appendChild(wa);
+    }
+  });
+})();

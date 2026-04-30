@@ -21,3 +21,11 @@
 3. Revisar textos repetidos de `alt` en imágenes.
 4. Separar estilos inline repetidos hacia archivos CSS.
 5. Validar visualmente la web antes de reemplazar la versión publicada.
+
+## Mejora PRO de conversión aplicada
+
+- Se añadió una barra superior comercial para destacar cupos e informes.
+- Se añadió botón flotante de WhatsApp visible en escritorio y móvil.
+- Se añadió una franja de confianza debajo del hero con años de experiencia, enfoque UNI, simulacros y plataforma Q10.
+- Los cambios se insertan por JavaScript para no romper la estructura original del HTML.
+- Los estilos se agregaron al CSS existente `assets/css/nostra-home.css`.
