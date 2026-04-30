@@ -57,3 +57,67 @@
   .nostra-home-actions .th-btn { width: 100%; text-align: center; }
   .nostra-rutas-card { padding: 24px; }
 }
+/* ===============================
+   NOSTRADAMUS FUTURE HERO
+================================ */
+
+.nostra-future-hero {
+  max-width: 900px;
+  padding: 80px 0;
+}
+
+.nostra-future-hero .hero-subtitle {
+  background: rgba(8, 134, 152, 0.22);
+  border: 1px solid rgba(255,255,255,0.35);
+  backdrop-filter: blur(12px);
+  color: #ffffff;
+  box-shadow: 0 0 30px rgba(8, 134, 152, 0.45);
+}
+
+.nostra-future-hero h1 {
+  font-size: clamp(38px, 6vw, 78px);
+  line-height: 1.02;
+  font-weight: 900;
+  color: #ffffff;
+  text-shadow:
+    0 0 18px rgba(8,134,152,0.75),
+    0 18px 45px rgba(0,0,0,0.55);
+}
+
+.nostra-future-hero p {
+  color: rgba(255,255,255,0.96);
+  font-size: 20px;
+  max-width: 780px;
+}
+
+.nostra-future-hero .nostra-alert {
+  display: inline-block;
+  margin-bottom: 24px;
+  padding: 10px 18px;
+  border-radius: 14px;
+  background: rgba(255, 77, 77, 0.18);
+  border: 1px solid rgba(255, 77, 77, 0.55);
+  color: #ffffff;
+  font-weight: 900;
+  box-shadow: 0 0 22px rgba(255, 77, 77, 0.35);
+}
+
+@media (max-width: 767px) {
+  .nostra-future-hero {
+    text-align: center;
+    padding: 45px 0;
+  }
+
+  .nostra-future-hero h1 {
+    font-size: 34px;
+  }
+
+  .nostra-future-hero p {
+    font-size: 16px;
+  }
+
+  .nostra-home-actions .th-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
