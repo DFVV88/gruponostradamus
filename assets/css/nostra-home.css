@@ -171,3 +171,31 @@
     0 0 10px rgba(8,134,152,0.6),
     0 0 20px rgba(8,134,152,0.4);
 }
+/* ===== FIX HERO ===== */
+.nostra-future-hero h1 {
+  font-size: clamp(28px, 4vw, 56px);
+}
+
+.nostra-future-hero {
+  max-width: 700px;
+}
+
+/* ===== FIX CONTADORES ===== */
+.counter-card_number {
+  color: #ffffff !important;
+}
+
+.counter-card_text {
+  color: #ffffff !important;
+}
+
+.counter-card_text strong {
+  color: #ffffff !important;
+}
+
+/* ===== FIX FONDO CONTADOR ===== */
+.counter-card {
+  background: rgba(0, 150, 160, 0.85) !important;
+  border-radius: 16px;
+  padding: 30px;
+}
