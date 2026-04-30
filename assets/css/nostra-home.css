@@ -146,11 +146,7 @@
 }
 /* TEXTO CON GLOW */
 
-.sec-title {
-  text-shadow:
-    0 0 10px rgba(8,134,152,0.6),
-    0 0 20px rgba(8,134,152,0.4);
-}
+
 /* ===== FIX HERO ===== */
 
 .nostra-future-hero {
@@ -239,9 +235,10 @@
 }
 /* ===== TITULO METÁLICO LIMPIO ===== */
 
+/* ===== TITULO METÁLICO LIMPIO ===== */
+
 .nostra-home-hero h1,
-.nostra-future-hero h1,
-.sec-title {
+.nostra-future-hero h1 {
   font-size: clamp(28px, 4vw, 56px);
   font-weight: 900;
   line-height: 1.1;
@@ -252,18 +249,28 @@
 background: linear-gradient(
   180deg,
   #ffffff 0%,
-  #f8fafc 20%,
-  #cbd5f5 40%,
-  #94a3b8 55%,
-  #e2e8f0 70%,
-  #64748b 100%
+  #f1f5f9 15%,
+  #cbd5e1 30%,
+  #94a3b8 45%,
+  #e2e8f0 60%,
+  #64748b 75%,
+  #0f172a 100%
 );
 
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 
-  text-shadow:
-    0 2px 4px rgba(0,0,0,0.7),
-    0 10px 25px rgba(0,0,0,0.6),
-    0 0 12px rgba(0,200,255,0.25);
+text-shadow:
+  0 1px 2px rgba(0,0,0,0.5),
+  0 4px 10px rgba(0,0,0,0.3);
+}
+/* TITULOS NORMALES LIMPIOS */
+.sec-title {
+  color: #0f2239 !important;
+  background: none !important;
+  -webkit-text-fill-color: initial !important;
+  text-shadow: none !important;
+}
+.nostra-home-hero h1 {
+  letter-spacing: -0.8px;
 }
