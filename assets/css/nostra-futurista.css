@@ -46,6 +46,45 @@ body{
 }
 .main-menu a:hover{color:var(--nostra-teal)!important;}
 
+/* Corrección menú: enlaces visibles sin depender del hover */
+.main-menu > ul > li > a,
+.main-menu ul li a{
+  color:#061426 !important;
+  opacity:1 !important;
+  visibility:visible !important;
+}
+.main-menu > ul > li > a:hover,
+.main-menu ul li a:hover{
+  color:var(--nostra-teal)!important;
+}
+.dropdown-menu{
+  background:#ffffff !important;
+  border:1px solid rgba(7,140,149,.22) !important;
+  box-shadow:0 18px 42px rgba(0,0,0,.18),0 0 18px rgba(0,194,209,.12) !important;
+}
+.dropdown-menu a,
+.header-links .dropdown-menu a,
+.dropdown-link .dropdown-menu a{
+  color:#061426 !important;
+  background:#ffffff !important;
+  display:block !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  font-weight:800 !important;
+  padding:10px 18px !important;
+  text-transform:none !important;
+}
+.dropdown-menu a:hover,
+.header-links .dropdown-menu a:hover,
+.dropdown-link .dropdown-menu a:hover{
+  color:#ffffff !important;
+  background:linear-gradient(90deg,var(--nostra-teal),#063139) !important;
+}
+.btn-live,
+.header-links .btn-live{
+  color:#ffffff !important;
+}
+
 /* Topbar PRO con paleta del logo */
 .nostra-pro-topbar{
   background:linear-gradient(90deg,var(--nostra-dark) 0%,#07323a 36%,var(--nostra-teal) 100%) !important;
