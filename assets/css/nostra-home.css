@@ -1,0 +1,59 @@
+/* Portada moderna - Grupo Nostradamus */
+.nostra-home-hero {
+  position: relative;
+  z-index: 3;
+  max-width: 820px;
+  padding: 60px 0;
+}
+.nostra-home-hero .hero-subtitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.16);
+  color: #fff;
+  font-weight: 900;
+  letter-spacing: .4px;
+  margin-bottom: 18px;
+}
+.nostra-home-hero h1 {
+  color: #fff;
+  font-size: clamp(42px, 6vw, 78px);
+  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  text-shadow: 0 18px 45px rgba(0,0,0,.38);
+}
+.nostra-home-hero p {
+  color: rgba(255,255,255,.94);
+  font-size: 20px;
+  line-height: 1.7;
+  max-width: 760px;
+  margin-bottom: 28px;
+}
+.nostra-home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.nostra-rutas-card {
+  height: 100%;
+  padding: 34px;
+  background: #fff;
+  border: 1px solid rgba(8,134,152,.12);
+}
+.nostra-rutas-card h4 {
+  font-size: 28px;
+  font-weight: 900;
+  margin-bottom: 14px;
+}
+.nostra-rutas-card p {
+  margin-bottom: 24px;
+}
+@media (max-width: 767px) {
+  .nostra-home-hero { padding: 30px 0; }
+  .nostra-home-hero p { font-size: 16px; }
+  .nostra-home-actions .th-btn { width: 100%; text-align: center; }
+  .nostra-rutas-card { padding: 24px; }
+}
