@@ -121,3 +121,49 @@
     text-align: center;
   }
 }
+/* BOTÓN FUTURISTA NEÓN */
+
+.th-btn.style3 {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  background: linear-gradient(90deg, #0aa7b4, #0f2239);
+  border: 1px solid rgba(255,255,255,0.3);
+  box-shadow: 0 0 15px rgba(0, 180, 255, 0.4);
+}
+
+.th-btn.style3:hover {
+  box-shadow:
+    0 0 25px rgba(0, 200, 255, 0.8),
+    0 0 50px rgba(0, 200, 255, 0.5);
+  transform: translateY(-2px) scale(1.03);
+}
+/* TARJETAS FUTURISTAS */
+
+.course-box2 {
+  transition: all 0.3s ease;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.course-box2:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow:
+    0 15px 40px rgba(0,0,0,0.3),
+    0 0 25px rgba(8,134,152,0.4);
+}
+/* EFECTO VIDRIO */
+
+.counter-card,
+.course-content {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+/* TEXTO CON GLOW */
+
+.sec-title {
+  text-shadow:
+    0 0 10px rgba(8,134,152,0.6),
+    0 0 20px rgba(8,134,152,0.4);
+}
