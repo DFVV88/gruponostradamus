@@ -199,3 +199,19 @@
   border-radius: 16px;
   padding: 30px;
 }
+/* OSCURECER FONDO DEL HERO */
+
+.th-hero-slide::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 1;
+}
+
+/* ASEGURAR QUE EL TEXTO QUEDE ENCIMA */
+
+.nostra-future-hero {
+  position: relative;
+  z-index: 2;
+}
