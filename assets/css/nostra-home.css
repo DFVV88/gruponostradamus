@@ -195,9 +195,20 @@
 
 /* ===== FIX FONDO CONTADOR ===== */
 .counter-card {
-  background: rgba(0, 150, 160, 0.85) !important;
-  border-radius: 16px;
+  background: linear-gradient(135deg, #0aa7b4, #0f2239);
+  border-radius: 18px;
   padding: 30px;
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.3),
+    0 0 20px rgba(0,200,255,0.3);
+  transition: all 0.3s ease;
+}
+
+.counter-card:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 20px 40px rgba(0,0,0,0.4),
+    0 0 30px rgba(0,200,255,0.6);
 }
 /* OSCURECER FONDO DEL HERO */
 
