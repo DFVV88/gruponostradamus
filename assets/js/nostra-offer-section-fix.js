@@ -28,9 +28,9 @@
         overflow:hidden !important;
         padding:78px 0 !important;
         background:
-          radial-gradient(circle at 15% 22%, rgba(0,194,209,.28), transparent 32%),
-          radial-gradient(circle at 92% 30%, rgba(255,255,255,.10), transparent 28%),
-          linear-gradient(135deg,#061426 0%,#02070d 52%,#083943 100%) !important;
+          radial-gradient(circle at 18% 28%, rgba(0,194,209,.26), transparent 32%),
+          radial-gradient(circle at 82% 42%, rgba(0,194,209,.16), transparent 34%),
+          linear-gradient(135deg,#061426 0%,#02070d 52%,#061426 100%) !important;
         border-top:1px solid rgba(0,194,209,.30) !important;
         border-bottom:1px solid rgba(0,194,209,.30) !important;
       }
@@ -40,7 +40,8 @@
         position:absolute !important;
         inset:0 !important;
         background:
-          linear-gradient(120deg,transparent 0%,rgba(255,255,255,.07) 44%,transparent 58%),
+          linear-gradient(90deg,rgba(2,7,13,.82) 0%,rgba(2,7,13,.72) 48%,rgba(2,7,13,.62) 100%),
+          linear-gradient(120deg,transparent 0%,rgba(255,255,255,.06) 44%,transparent 58%),
           repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0 1px,transparent 1px 90px) !important;
         pointer-events:none !important;
       }
@@ -69,16 +70,59 @@
         z-index:2 !important;
       }
 
+      .nostra-offer-section-fixed .container{
+        max-width:1240px !important;
+      }
+
       .nostra-offer-section-fixed .row{
         align-items:center !important;
+        min-height:520px !important;
       }
 
       .nostra-offer-section-fixed .title-area,
       .nostra-offer-section-fixed .cta-content,
       .nostra-offer-section-fixed .discount-content,
       .nostra-offer-section-fixed .offer-content{
-        max-width:760px !important;
+        max-width:680px !important;
         padding:28px 0 !important;
+      }
+
+      .nostra-offer-section-fixed .row > [class*='col']{
+        background:transparent !important;
+      }
+
+      .nostra-offer-section-fixed [style*='background'],
+      .nostra-offer-section-fixed [class*='bg']{
+        background-color:transparent !important;
+      }
+
+      .nostra-offer-section-fixed .row > [class*='col']:last-child{
+        position:relative !important;
+        min-height:460px !important;
+        display:flex !important;
+        align-items:flex-end !important;
+        justify-content:center !important;
+      }
+
+      .nostra-offer-section-fixed .row > [class*='col']:last-child::before{
+        content:'' !important;
+        position:absolute !important;
+        inset:46px 18px 0 18px !important;
+        border-radius:34px !important;
+        background:
+          radial-gradient(circle at center,rgba(0,194,209,.22),transparent 46%),
+          linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.025)) !important;
+        border:1px solid rgba(0,194,209,.18) !important;
+        box-shadow:0 0 34px rgba(0,194,209,.16), inset 0 1px 0 rgba(255,255,255,.08) !important;
+        z-index:-1 !important;
+      }
+
+      .nostra-offer-section-fixed img{
+        position:relative !important;
+        z-index:2 !important;
+        max-height:470px !important;
+        object-fit:contain !important;
+        filter:drop-shadow(0 24px 34px rgba(0,0,0,.52)) drop-shadow(0 0 18px rgba(0,194,209,.20)) !important;
       }
 
       .nostra-offer-section-fixed .sub-title,
@@ -97,11 +141,11 @@
         color:#ffffff !important;
         -webkit-text-fill-color:initial !important;
         background:none !important;
-        font-size:clamp(34px,5vw,68px) !important;
-        line-height:1.02 !important;
+        font-size:clamp(34px,4.4vw,62px) !important;
+        line-height:1.03 !important;
         font-style:italic !important;
         text-transform:uppercase !important;
-        letter-spacing:-1.5px !important;
+        letter-spacing:-1.3px !important;
         text-shadow:
           0 3px 0 rgba(0,0,0,.58),
           0 10px 18px rgba(0,0,0,.55),
@@ -114,9 +158,9 @@
       .nostra-offer-section-fixed .desc{
         color:rgba(255,255,255,.90) !important;
         -webkit-text-fill-color:rgba(255,255,255,.90) !important;
-        font-size:clamp(16px,1.5vw,21px) !important;
+        font-size:clamp(16px,1.45vw,20px) !important;
         line-height:1.65 !important;
-        max-width:720px !important;
+        max-width:650px !important;
         text-shadow:0 3px 10px rgba(0,0,0,.65) !important;
         opacity:1 !important;
         visibility:visible !important;
@@ -128,7 +172,7 @@
 
       .nostra-offer-section-fixed .shape-mockup,
       .nostra-offer-section-fixed [class*='shape']{
-        opacity:.28 !important;
+        opacity:.18 !important;
       }
 
       .nostra-offer-section-fixed .col-xl-6:empty,
@@ -158,12 +202,21 @@
           padding:60px 0 !important;
           text-align:center !important;
         }
+        .nostra-offer-section-fixed .row{
+          min-height:auto !important;
+        }
         .nostra-offer-section-fixed .title-area,
         .nostra-offer-section-fixed .cta-content,
         .nostra-offer-section-fixed .discount-content,
         .nostra-offer-section-fixed .offer-content{
           margin-left:auto !important;
           margin-right:auto !important;
+        }
+        .nostra-offer-section-fixed .row > [class*='col']:last-child{
+          min-height:340px !important;
+        }
+        .nostra-offer-section-fixed img{
+          max-height:330px !important;
         }
       }
 
@@ -177,6 +230,12 @@
         .nostra-offer-section-fixed .title{
           font-size:clamp(30px,10vw,44px) !important;
           letter-spacing:-.8px !important;
+        }
+        .nostra-offer-section-fixed .row > [class*='col']:last-child{
+          min-height:260px !important;
+        }
+        .nostra-offer-section-fixed img{
+          max-height:260px !important;
         }
       }
     `;
