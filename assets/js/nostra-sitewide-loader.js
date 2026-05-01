@@ -9,7 +9,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-04';
+  var VERSION = '2026-05';
 
   function assetAlreadyLoaded(urlPart) {
     return !!document.querySelector('link[href*="' + urlPart + '"], script[src*="' + urlPart + '"]');
@@ -99,7 +99,7 @@
     loadJS('assets/js/nostra-content-polish.js?v=' + VERSION);
     loadJS('assets/js/nostra-page-polish.js?v=' + VERSION);
     loadJS('assets/js/nostra-mobile-menu-pro.js?v=' + VERSION);
-     loadJS('assets/js/nostra-performance-pro.js?v=' + VERSION);
+    loadJS('assets/js/nostra-performance-pro.js?v=' + VERSION);
   }
 
   if (document.readyState === 'loading') {
