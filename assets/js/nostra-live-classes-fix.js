@@ -1,7 +1,7 @@
 /* ==================================================
-   Grupo Nostradamus - Fix Clases en Vivo
+   Grupo Nostradamus - Fix Clases en Vivo PRO
    Hace que todo botón/enlace de CLASES EN VIVO abra Teams directamente.
-   Corrige dropdowns que antes impedían navegar.
+   Corrige enlaces con href="#", Q10 y dropdowns Bootstrap.
    No afecta iq100.html.
 ================================================== */
 (function () {
@@ -19,73 +19,84 @@
       .trim();
   }
 
-  function isLiveClassesLink(link) {
-    var text = normalizeText(link.textContent);
-    var href = (link.getAttribute('href') || '').toLowerCase();
-    var cls = normalizeText(link.className || '');
-    var id = normalizeText(link.id || '');
+  function isLiveElement(el) {
+    if (!el) return false;
+    var text = normalizeText(el.textContent || '');
+    var href = normalizeText(el.getAttribute && el.getAttribute('href') || '');
+    var cls = normalizeText(el.className || '');
+    var id = normalizeText(el.id || '');
 
     return (
       text.indexOf('clases en vivo') !== -1 ||
       text.indexOf('clase en vivo') !== -1 ||
       cls.indexOf('btn-live') !== -1 ||
-      cls.indexOf('live') !== -1 ||
+      cls.indexOf('live') !== -1 && text.indexOf('clases') !== -1 ||
       id.indexOf('dropdownmenulink') !== -1 && text.indexOf('clases') !== -1 ||
       href.indexOf('q10.com') !== -1 && (text.indexOf('clases') !== -1 || text.indexOf('iniciar sesion') !== -1)
     );
   }
 
-  function makeTeamsDirectLink(link, label) {
-    link.setAttribute('href', TEAMS_URL);
-    link.setAttribute('target', '_blank');
-    link.setAttribute('rel', 'noopener noreferrer');
-    link.setAttribute('data-nostra-live-fixed', 'teams-direct');
-
-    // Evita que Bootstrap trate el botón como dropdown y bloquee la navegación.
+  function cleanDropdownBehavior(link) {
     link.removeAttribute('data-bs-toggle');
     link.removeAttribute('data-toggle');
     link.removeAttribute('aria-expanded');
     link.removeAttribute('role');
     link.classList.remove('dropdown-toggle');
+  }
+
+  function makeTeamsDirectLink(link, label) {
+    if (!link) return;
+
+    link.setAttribute('href', TEAMS_URL);
+    link.setAttribute('target', '_blank');
+    link.setAttribute('rel', 'noopener noreferrer');
+    link.setAttribute('data-nostra-live-fixed', 'teams-direct');
+    link.style.cursor = 'pointer';
+    cleanDropdownBehavior(link);
 
     if (label) link.innerHTML = label;
-
-    if (!link.dataset.nostraLiveClickBound) {
-      link.dataset.nostraLiveClickBound = '1';
-      link.addEventListener('click', function (event) {
-        event.preventDefault();
-        event.stopPropagation();
-        window.open(TEAMS_URL, '_blank', 'noopener,noreferrer');
-      }, true);
-    }
   }
 
   function fixLiveLinks() {
-    document.querySelectorAll('a[href], a.btn-live, a.btn-live-mobile, .dropdown-link > a').forEach(function (link) {
-      var text = normalizeText(link.textContent);
-      if (isLiveClassesLink(link)) {
-        var label = (text.indexOf('clases') !== -1 || link.classList.contains('btn-live') || link.classList.contains('btn-live-mobile'))
-          ? '🔴 CLASES EN VIVO'
-          : null;
-        makeTeamsDirectLink(link, label);
+    document.querySelectorAll('a, button, .btn-live, .btn-live-mobile, .dropdown-link > a').forEach(function (el) {
+      if (isLiveElement(el)) {
+        if (el.tagName && el.tagName.toLowerCase() === 'a') {
+          makeTeamsDirectLink(el, '🔴 CLASES EN VIVO');
+        } else {
+          el.setAttribute('data-nostra-live-fixed', 'teams-direct');
+          el.style.cursor = 'pointer';
+        }
       }
     });
 
-    // En el menú desplegable, las opciones internas también deben ir a Teams si son de acceso.
     document.querySelectorAll('.dropdown-menu a, .sub-menu a').forEach(function (link) {
       var text = normalizeText(link.textContent);
-      var href = (link.getAttribute('href') || '').toLowerCase();
+      var href = normalizeText(link.getAttribute('href') || '');
       if (href.indexOf('q10') !== -1 && (text.indexOf('iniciar') !== -1 || text.indexOf('clases') !== -1 || text.indexOf('vivo') !== -1)) {
         makeTeamsDirectLink(link, 'Iniciar sesión');
       }
     });
   }
 
+  // Captura global: aunque Bootstrap intente abrir dropdown, este click abre Teams.
+  document.addEventListener('click', function (event) {
+    var target = event.target && event.target.closest ? event.target.closest('a, button, .btn-live, .btn-live-mobile, .dropdown-link > a') : null;
+    if (!target) return;
+
+    if (isLiveElement(target) || target.getAttribute('data-nostra-live-fixed') === 'teams-direct') {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      window.open(TEAMS_URL, '_blank', 'noopener,noreferrer');
+      return false;
+    }
+  }, true);
+
   function init() {
     fixLiveLinks();
-    setTimeout(fixLiveLinks, 300);
-    setTimeout(fixLiveLinks, 900);
-    setTimeout(fixLiveLinks, 1800);
+    setTimeout(fixLiveLinks, 250);
+    setTimeout(fixLiveLinks, 800);
+    setTimeout(fixLiveLinks, 1600);
     setTimeout(fixLiveLinks, 3000);
   }
 
