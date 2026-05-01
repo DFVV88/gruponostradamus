@@ -9,7 +9,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-02';
+  var VERSION = '2026-04';
 
   function assetAlreadyLoaded(urlPart) {
     return !!document.querySelector('link[href*="' + urlPart + '"], script[src*="' + urlPart + '"]');
@@ -96,9 +96,9 @@
     loadJS('assets/js/nostra-footer-pro.js?v=' + VERSION);
     loadJS('assets/js/nostra-button-fix.js?v=' + VERSION);
     loadJS('assets/js/nostra-whatsapp-inscripcion.js?v=' + VERSION);
-     loadJS('assets/js/nostra-content-polish.js?v=' + VERSION);
-     loadJS('assets/js/nostra-page-polish.js?v=' + VERSION);
-     loadJS('assets/js/nostra-mobile-menu-pro.js?v=' + VERSION);
+    loadJS('assets/js/nostra-content-polish.js?v=' + VERSION);
+    loadJS('assets/js/nostra-page-polish.js?v=' + VERSION);
+    loadJS('assets/js/nostra-mobile-menu-pro.js?v=' + VERSION);
   }
 
   if (document.readyState === 'loading') {
