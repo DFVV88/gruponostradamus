@@ -9,7 +9,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-10';
+  var VERSION = '2026-11';
 
   function assetAlreadyLoaded(urlPart) {
     return !!document.querySelector('link[href*="' + urlPart + '"], script[src*="' + urlPart + '"]');
