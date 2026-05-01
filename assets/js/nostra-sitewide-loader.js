@@ -98,6 +98,7 @@
     loadJS('assets/js/nostra-whatsapp-inscripcion.js?v=' + VERSION);
      loadJS('assets/js/nostra-content-polish.js?v=' + VERSION);
      loadJS('assets/js/nostra-page-polish.js?v=' + VERSION);
+     loadJS('assets/js/nostra-mobile-menu-pro.js?v=' + VERSION);
   }
 
   if (document.readyState === 'loading') {
