@@ -9,7 +9,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-11';
+  var VERSION = '2026-13';
 
   function assetAlreadyLoaded(urlPart) {
     return !!document.querySelector('link[href*="' + urlPart + '"], script[src*="' + urlPart + '"]');
@@ -105,6 +105,7 @@
     loadJS('assets/js/nostra-offer-uniform-override.js?v=' + VERSION);
     loadJS('assets/js/nostra-header-footer-premium.js?v=' + VERSION);
     loadJS('assets/js/nostra-live-classes-fix.js?v=' + VERSION);
+    loadJS('assets/js/nostra-offer-hard-uniform.js?v=' + VERSION);
   }
 
   if (document.readyState === 'loading') {
