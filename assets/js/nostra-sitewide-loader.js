@@ -100,6 +100,7 @@
     loadJS('assets/js/nostra-page-polish.js?v=' + VERSION);
     loadJS('assets/js/nostra-mobile-menu-pro.js?v=' + VERSION);
     loadJS('assets/js/nostra-performance-pro.js?v=' + VERSION);
+     loadJS('assets/js/nostra-social-seo.js?v=' + VERSION);
   }
 
   if (document.readyState === 'loading') {
