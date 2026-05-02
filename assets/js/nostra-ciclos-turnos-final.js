@@ -1,7 +1,7 @@
 /* ==================================================
    Grupo Nostradamus - Turnos FINAL para ciclos.html
    Convierte los horarios antiguos en bloques verticales premium.
-   Se ejecuta al final para evitar que otros estilos lo sobrescriban.
+   Oculta cualquier versión anterior para evitar duplicados.
 ================================================== */
 (function () {
   var path = window.location.pathname.toLowerCase();
@@ -29,16 +29,25 @@
     var style = document.createElement('style');
     style.id = 'nostra-ciclos-turnos-final-style';
     style.textContent = `
+      body #course-sec .nostra-turns-grid,
+      body #course-sec .nostra-turn-source,
+      body #course-sec .nostra-turn-source.row,
+      body #course-sec .price-card.nostra-turn-source,
       body #course-sec .nostra-turnos-final-source,
       body #course-sec .nostra-turnos-final-source.row,
-      body #course-sec .price-card.nostra-turnos-final-hidden{
+      body #course-sec .price-card.nostra-turnos-final-hidden,
+      body #course-sec .row.nostra-turnos-original-hidden{
         display:none !important;
         visibility:hidden !important;
         height:0 !important;
         min-height:0 !important;
+        max-height:0 !important;
         margin:0 !important;
         padding:0 !important;
+        border:0 !important;
         overflow:hidden !important;
+        opacity:0 !important;
+        pointer-events:none !important;
       }
 
       body #course-sec .nostra-turnos-final{
@@ -150,31 +159,63 @@
     document.head.appendChild(style);
   }
 
+  function collectTurnosFromPane(pane) {
+    var turnos = [];
+
+    pane.querySelectorAll('.price-card').forEach(function (card) {
+      var titleNode = card.querySelector('.price-card_title');
+      if (!titleNode) return;
+
+      var title = normalizeText(titleNode.textContent);
+      var lines = Array.from(card.querySelectorAll('.price-card_price')).map(function (node) {
+        return normalizeText(node.textContent);
+      }).filter(Boolean);
+
+      if (!title || !lines.length) return;
+      turnos.push({ title: title, lines: lines });
+    });
+
+    if (turnos.length) return turnos;
+
+    pane.querySelectorAll('.nostra-turn-card').forEach(function (card) {
+      var titleNode = card.querySelector('.nostra-turn-title');
+      if (!titleNode) return;
+      var title = normalizeText(titleNode.textContent);
+      var lines = Array.from(card.querySelectorAll('.nostra-turn-line')).map(function (node) {
+        return normalizeText(node.textContent);
+      }).filter(Boolean);
+      if (!title || !lines.length) return;
+      turnos.push({ title: title, lines: lines });
+    });
+
+    return turnos;
+  }
+
+  function hideOldTurnos(pane) {
+    pane.querySelectorAll('.nostra-turns-grid').forEach(function (el) {
+      el.classList.add('nostra-turn-source');
+      el.style.display = 'none';
+    });
+
+    pane.querySelectorAll('.price-card').forEach(function (card) {
+      card.classList.add('nostra-turnos-final-hidden');
+      var row = card.closest('.row');
+      if (row) {
+        row.classList.add('nostra-turnos-original-hidden');
+        row.style.display = 'none';
+      }
+    });
+  }
+
   function buildTurnos() {
     document.querySelectorAll('#course-sec .tab-pane').forEach(function (pane) {
-      if (pane.querySelector('.nostra-turnos-final')) return;
-
-      var cards = Array.from(pane.querySelectorAll('.price-card')).filter(function (card) {
-        return !card.classList.contains('nostra-turnos-final-hidden');
-      });
-      if (!cards.length) return;
-
-      var turnos = [];
-      cards.forEach(function (card) {
-        var titleNode = card.querySelector('.price-card_title');
-        if (!titleNode) return;
-
-        var title = normalizeText(titleNode.textContent);
-        var lines = Array.from(card.querySelectorAll('.price-card_price')).map(function (node) {
-          return normalizeText(node.textContent);
-        }).filter(Boolean);
-
-        if (!title || !lines.length) return;
-        turnos.push({ title: title, lines: lines });
-        card.classList.add('nostra-turnos-final-hidden');
-      });
+      var turnos = collectTurnosFromPane(pane);
+      hideOldTurnos(pane);
 
       if (!turnos.length) return;
+
+      var existing = pane.querySelector('.nostra-turnos-final');
+      if (existing) return;
 
       var wrap = document.createElement('div');
       wrap.className = 'nostra-turnos-final';
@@ -186,11 +227,9 @@
           '</div></div>';
       }).join('');
 
-      var firstHidden = pane.querySelector('.price-card.nostra-turnos-final-hidden');
-      var row = firstHidden ? firstHidden.closest('.row') : null;
-      if (row && row.parentNode) {
-        row.parentNode.insertBefore(wrap, row);
-        row.classList.add('nostra-turnos-final-source');
+      var hiddenRow = pane.querySelector('.row.nostra-turnos-original-hidden, .row.nostra-turnos-final-source');
+      if (hiddenRow && hiddenRow.parentNode) {
+        hiddenRow.parentNode.insertBefore(wrap, hiddenRow);
       } else {
         pane.appendChild(wrap);
       }
