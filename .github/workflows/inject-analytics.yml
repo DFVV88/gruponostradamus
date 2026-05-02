@@ -16,12 +16,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Inject GA4 and conversion tracking
+      - name: Correct GA4 ID and inject conversion tracking
         shell: python
         run: |
           from pathlib import Path
 
-          GA_ID = "G-SHGP6KM962"
+          OLD_GA_ID = "G-SHGP6KM962"
+          GA_ID = "G-SHGP6KW962"
 
           ga = f'''<!-- Google Analytics - Grupo Nostradamus -->
           <script async src="https://www.googletagmanager.com/gtag/js?id={GA_ID}"></script>
@@ -62,10 +63,15 @@ jobs:
                   continue
               text = path.read_text(encoding='utf-8', errors='ignore')
               original = text
+
+              text = text.replace(OLD_GA_ID, GA_ID)
+
               if GA_ID not in text and '</head>' in text:
                   text = text.replace('</head>', ga + '\n</head>', 1)
+
               if 'Conversion tracking - Grupo Nostradamus' not in text and '</body>' in text:
                   text = text.replace('</body>', tracking + '\n</body>', 1)
+
               if text != original:
                   path.write_text(text, encoding='utf-8')
                   changed.append(str(path))
@@ -81,6 +87,6 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
             git add *.html
-            git commit -m "Inject Google Analytics into HTML pages"
+            git commit -m "Correct Google Analytics measurement ID"
             git push
           fi
