@@ -7,7 +7,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-18';
+  var VERSION = '2026-19';
 
   function assetAlreadyLoaded(urlPart) {
     return !!document.querySelector('script[src*="' + urlPart + '"]');
