@@ -1,10 +1,10 @@
 name: Inject Google Analytics
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 permissions:
   contents: write
@@ -16,105 +16,61 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Inject GA4 and conversion tracking into HTML files
-        shell: bash
+      - name: Inject GA4 and conversion tracking
+        shell: python
         run: |
-          set -e
+          from pathlib import Path
 
-          GA_SNIPPET='<!-- Google Analytics - Grupo Nostradamus -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-SHGP6KM962"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag("js", new Date());
-  gtag("config", "G-SHGP6KM962", { anonymize_ip: true });
-</script>
-<!-- /Google Analytics - Grupo Nostradamus -->'
+          GA_ID = "G-SHGP6KM962"
 
-          TRACKING_SNIPPET='<!-- Conversion tracking - Grupo Nostradamus -->
-<script>
-(function(){
-  function cleanText(value){return (value || "").replace(/\s+/g," ").trim().slice(0,120);}
-  function pageName(){var p=location.pathname||"/";return (p==="/"||p.endsWith("/"))?"home":(p.split("/").pop().replace(".html","")||"home");}
-  function sendEvent(name, params){
-    if(typeof window.gtag!=="function") return;
-    window.gtag("event", name, Object.assign({
-      page_name: pageName(),
-      page_path: location.pathname,
-      page_url: location.href
-    }, params || {}));
-  }
-  document.addEventListener("click", function(event){
-    var link = event.target && event.target.closest ? event.target.closest("a") : null;
-    if(!link || !link.href) return;
-    var href = link.href.toLowerCase();
-    var text = (link.textContent || "").toLowerCase();
-    var label = cleanText(link.getAttribute("aria-label") || link.textContent || link.href || "sin_texto");
-    if(href.indexOf("wa.me") !== -1 || href.indexOf("whatsapp") !== -1){
-      sendEvent("click_whatsapp", {event_category:"lead", event_label:label, link_url:link.href, conversion_type:"whatsapp"});
-      return;
-    }
-    if(href.indexOf("clases-en-vivo.html") !== -1 || href.indexOf("teams.microsoft.com") !== -1 || text.indexOf("clases en vivo") !== -1){
-      sendEvent("click_clases_en_vivo", {event_category:"engagement", event_label:label, link_url:link.href});
-      return;
-    }
-    if(text.indexOf("matric") !== -1 || text.indexOf("informes") !== -1 || text.indexOf("vacante") !== -1 || text.indexOf("quiero ingresar") !== -1 || href.indexOf("ingresa-uni.html") !== -1){
-      sendEvent("click_comercial", {event_category:"conversion", event_label:label, link_url:link.href});
-    }
-  }, true);
-})();
-</script>
-<!-- /Conversion tracking - Grupo Nostradamus -->'
+          ga = f'''<!-- Google Analytics - Grupo Nostradamus -->
+          <script async src="https://www.googletagmanager.com/gtag/js?id={GA_ID}"></script>
+          <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){{dataLayer.push(arguments);}}
+            gtag("js", new Date());
+            gtag("config", "{GA_ID}", {{ anonymize_ip: true }});
+          </script>
+          <!-- /Google Analytics - Grupo Nostradamus -->'''
 
-          python3 - <<'PY'
-from pathlib import Path
+          tracking = '''<!-- Conversion tracking - Grupo Nostradamus -->
+          <script>
+          (function(){
+            function cleanText(value){return (value || "").replace(/\s+/g," ").trim().slice(0,120);}
+            function pageName(){var p=location.pathname||"/";return (p==="/"||p.endsWith("/"))?"home":(p.split("/").pop().replace(".html","")||"home");}
+            function sendEvent(name, params){
+              if(typeof window.gtag!=="function") return;
+              window.gtag("event", name, Object.assign({page_name: pageName(), page_path: location.pathname, page_url: location.href}, params || {}));
+            }
+            document.addEventListener("click", function(event){
+              var link = event.target && event.target.closest ? event.target.closest("a") : null;
+              if(!link || !link.href) return;
+              var href = link.href.toLowerCase();
+              var text = (link.textContent || "").toLowerCase();
+              var label = cleanText(link.getAttribute("aria-label") || link.textContent || link.href || "sin_texto");
+              if(href.indexOf("wa.me") !== -1 || href.indexOf("whatsapp") !== -1){sendEvent("click_whatsapp", {event_category:"lead", event_label:label, link_url:link.href, conversion_type:"whatsapp"}); return;}
+              if(href.indexOf("clases-en-vivo.html") !== -1 || href.indexOf("teams.microsoft.com") !== -1 || text.indexOf("clases en vivo") !== -1){sendEvent("click_clases_en_vivo", {event_category:"engagement", event_label:label, link_url:link.href}); return;}
+              if(text.indexOf("matric") !== -1 || text.indexOf("informes") !== -1 || text.indexOf("vacante") !== -1 || text.indexOf("quiero ingresar") !== -1 || href.indexOf("ingresa-uni.html") !== -1){sendEvent("click_comercial", {event_category:"conversion", event_label:label, link_url:link.href});}
+            }, true);
+          })();
+          </script>
+          <!-- /Conversion tracking - Grupo Nostradamus -->'''
 
-ga = '''<!-- Google Analytics - Grupo Nostradamus -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-SHGP6KM962"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag("js", new Date());
-  gtag("config", "G-SHGP6KM962", { anonymize_ip: true });
-</script>
-<!-- /Google Analytics - Grupo Nostradamus -->'''
+          changed = []
+          for path in Path('.').glob('*.html'):
+              if path.name.lower() == 'iq100.html':
+                  continue
+              text = path.read_text(encoding='utf-8', errors='ignore')
+              original = text
+              if GA_ID not in text and '</head>' in text:
+                  text = text.replace('</head>', ga + '\n</head>', 1)
+              if 'Conversion tracking - Grupo Nostradamus' not in text and '</body>' in text:
+                  text = text.replace('</body>', tracking + '\n</body>', 1)
+              if text != original:
+                  path.write_text(text, encoding='utf-8')
+                  changed.append(str(path))
 
-tracking = '''<!-- Conversion tracking - Grupo Nostradamus -->
-<script>
-(function(){
-  function cleanText(value){return (value || "").replace(/\s+/g," ").trim().slice(0,120);}
-  function pageName(){var p=location.pathname||"/";return (p==="/"||p.endsWith("/"))?"home":(p.split("/").pop().replace(".html","")||"home");}
-  function sendEvent(name, params){
-    if(typeof window.gtag!=="function") return;
-    window.gtag("event", name, Object.assign({page_name: pageName(), page_path: location.pathname, page_url: location.href}, params || {}));
-  }
-  document.addEventListener("click", function(event){
-    var link = event.target && event.target.closest ? event.target.closest("a") : null;
-    if(!link || !link.href) return;
-    var href = link.href.toLowerCase();
-    var text = (link.textContent || "").toLowerCase();
-    var label = cleanText(link.getAttribute("aria-label") || link.textContent || link.href || "sin_texto");
-    if(href.indexOf("wa.me") !== -1 || href.indexOf("whatsapp") !== -1){sendEvent("click_whatsapp", {event_category:"lead", event_label:label, link_url:link.href, conversion_type:"whatsapp"}); return;}
-    if(href.indexOf("clases-en-vivo.html") !== -1 || href.indexOf("teams.microsoft.com") !== -1 || text.indexOf("clases en vivo") !== -1){sendEvent("click_clases_en_vivo", {event_category:"engagement", event_label:label, link_url:link.href}); return;}
-    if(text.indexOf("matric") !== -1 || text.indexOf("informes") !== -1 || text.indexOf("vacante") !== -1 || text.indexOf("quiero ingresar") !== -1 || href.indexOf("ingresa-uni.html") !== -1){sendEvent("click_comercial", {event_category:"conversion", event_label:label, link_url:link.href});}
-  }, true);
-})();
-</script>
-<!-- /Conversion tracking - Grupo Nostradamus -->'''
-
-for path in Path('.').glob('*.html'):
-    if path.name.lower() == 'iq100.html':
-        continue
-    text = path.read_text(encoding='utf-8', errors='ignore')
-    original = text
-    if 'G-SHGP6KM962' not in text and '</head>' in text:
-        text = text.replace('</head>', ga + '\n</head>', 1)
-    if 'Conversion tracking - Grupo Nostradamus' not in text and '</body>' in text:
-        text = text.replace('</body>', tracking + '\n</body>', 1)
-    if text != original:
-        path.write_text(text, encoding='utf-8')
-        print(f'Updated {path}')
-PY
+          print('Updated files:', changed)
 
       - name: Commit changes
         shell: bash
