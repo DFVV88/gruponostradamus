@@ -1,0 +1,83 @@
+name: Clean old campus references
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  clean-sedes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Remove Los Olivos and Chorrillos from HTML pages
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          changed = []
+
+          patterns = [
+              # Remove full sede cards when they contain old campus names
+              re.compile(r'\n\s*<div\s+class="col-sm-6\s+col-lg-4\s+process-card2-wrap">\s*<div\s+class="process-card2">(?:(?!<div\s+class="col-sm-6\s+col-lg-4\s+process-card2-wrap">).)*?(?:Sede\s+Chorrillos|Sede\s+Los\s+Olivos|Chorrillos|Los\s+Olivos)(?:(?!<div\s+class="col-sm-6\s+col-lg-4\s+process-card2-wrap">).)*?</div>\s*</div>\s*</div>', re.I | re.S),
+              # Remove list/menu items that mention old campuses
+              re.compile(r'\n\s*<li>\s*<a[^>]*>[^<]*(?:Los\s+Olivos|Chorrillos)[^<]*</a>\s*</li>', re.I | re.S),
+              # Remove commented blocks that still contain old campuses
+              re.compile(r'\n\s*<!--(?:(?!-->).)*(?:Los\s+Olivos|Chorrillos)(?:(?!-->).)*-->', re.I | re.S),
+          ]
+
+          replacements = {
+              'Encuentra tu<span class="text-theme fw-light ms-3">sede ideal</span>': 'Visita nuestra <span class="text-theme fw-light ms-3">sede UNI</span>',
+              'Encuentra tusede ideal': 'Visita nuestra sede UNI',
+              'Nuestras sedes': 'Nuestra sede',
+              'Nuestras Sedes': 'Nuestra Sede',
+              'Sedes': 'Sede',
+              'sedes Grupo Nostradamus': 'sede Grupo Nostradamus',
+          }
+
+          for path in Path('.').glob('*.html'):
+              text = path.read_text(encoding='utf-8', errors='ignore')
+              original = text
+
+              for pattern in patterns:
+                  text = pattern.sub('', text)
+
+              for old, new in replacements.items():
+                  text = text.replace(old, new)
+
+              # Normalize any desktop/mobile campus submenu to only UNI when it points to sedes.html
+              text = re.sub(
+                  r'(<a\s+href="sedes\.html">Sede</a>\s*<ul\s+class="sub-menu">)(.*?)(</ul>)',
+                  r'\1\n                                                        <li><a href="sedes.html">UNI</a></li>\n                                                    \3',
+                  text,
+                  flags=re.I | re.S
+              )
+
+              # Remove accidental empty commented leftovers
+              text = re.sub(r'\n\s*<!--\s*-->', '', text)
+
+              if text != original:
+                  path.write_text(text, encoding='utf-8')
+                  changed.append(str(path))
+
+          print('Updated files:', changed)
+
+      - name: Commit changes
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No changes to commit"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add *.html
+            git commit -m "Remove old campus references and keep only UNI campus"
+            git push
+          fi
