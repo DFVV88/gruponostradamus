@@ -97,7 +97,7 @@
       '<br><br><strong>NIVEL: ' + data.nivel + '</strong>' +
       '<br><span class="nostra-copy-ideal">' + data.ideal + '</span>';
 
-    card.dataset.nostraCopyPro = '2';
+    card.dataset.nostraCopyPro = '3';
   }
 
   function injectStyles() {
@@ -112,7 +112,9 @@
         font-size:15px !important;
         line-height:1.68 !important;
         font-weight:560 !important;
-        text-align:left !important;
+        text-align:justify !important;
+        text-justify:inter-word !important;
+        hyphens:auto !important;
         letter-spacing:.01em !important;
       }
 
@@ -128,6 +130,8 @@
         font-size:14.5px !important;
         font-weight:950 !important;
         line-height:1.38 !important;
+        text-align:justify !important;
+        text-justify:inter-word !important;
       }
 
       body #course-sec .nostra-copy-ideal{
@@ -141,11 +145,23 @@
         font-size:14px !important;
         font-weight:850 !important;
         line-height:1.42 !important;
+        text-align:justify !important;
+        text-justify:inter-word !important;
+        hyphens:auto !important;
         box-shadow:0 8px 18px rgba(6,20,38,.045) !important;
       }
 
       body #course-sec .nostra-copy-ideal:before{
         content:'🎯 ';
+      }
+
+      @media(max-width:575px){
+        body #course-sec .course-description p,
+        body #course-sec .course-description p strong,
+        body #course-sec .nostra-copy-ideal{
+          text-align:left !important;
+          hyphens:none !important;
+        }
       }
     `;
     document.head.appendChild(style);
