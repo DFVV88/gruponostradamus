@@ -1,10 +1,13 @@
 /* ==================================================
    Grupo Nostradamus - Horario correcto Paralelo CEPRE UNI
-   Corrige el horario mostrado en ciclos.html para el ciclo Paralelo CEPRE UNI.
+   Corrige el horario mostrado en ciclos.html y en ciclo-paralelo-cepre-uni.html.
 ================================================== */
 (function () {
   var path = window.location.pathname.toLowerCase();
-  if (path.indexOf('ciclos.html') === -1 && path !== '/ciclos') return;
+  var file = path.split('/').pop() || '';
+  var isCiclos = path.indexOf('ciclos.html') !== -1 || path === '/ciclos';
+  var isParaleloPage = file === 'ciclo-paralelo-cepre-uni.html';
+  if (!isCiclos && !isParaleloPage) return;
 
   function normalize(text) {
     return (text || '')
@@ -16,7 +19,8 @@
   }
 
   function isParaleloCard(card) {
-    var title = card.querySelector('.course-title');
+    if (isParaleloPage) return true;
+    var title = card.querySelector('.course-title, .breadcumb-title');
     return title && normalize(title.textContent).indexOf('ciclo paralelo cepre uni') !== -1;
   }
 
@@ -36,27 +40,58 @@
       '</div>';
   }
 
+  function injectStyles() {
+    if (document.getElementById('nostra-paralelo-horario-page-style')) return;
+    var style = document.createElement('style');
+    style.id = 'nostra-paralelo-horario-page-style';
+    style.textContent = `
+      body .nostra-paralelo-old-hidden{
+        display:none !important;
+        visibility:hidden !important;
+        height:0 !important;
+        min-height:0 !important;
+        max-height:0 !important;
+        margin:0 !important;
+        padding:0 !important;
+        border:0 !important;
+        overflow:hidden !important;
+        opacity:0 !important;
+        pointer-events:none !important;
+      }
+      body .nostra-paralelo-horario-ok{
+        width:100% !important;
+        margin:18px 0 0 !important;
+        display:grid !important;
+        grid-template-columns:1fr !important;
+        gap:12px !important;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
   function hideOldSchedules(card) {
     card.querySelectorAll('.nostra-turnos-final:not(.nostra-paralelo-horario-ok), .nostra-turns-grid, .price-card').forEach(function (el) {
+      el.classList.add('nostra-paralelo-old-hidden');
       el.style.display = 'none';
       el.style.visibility = 'hidden';
       el.style.height = '0';
       el.style.margin = '0';
       el.style.padding = '0';
       el.style.overflow = 'hidden';
-      el.classList.add('nostra-paralelo-old-hidden');
     });
 
     card.querySelectorAll('.row').forEach(function (row) {
       if (row.querySelector('.price-card, .nostra-turns-grid')) {
-        row.style.display = 'none';
         row.classList.add('nostra-paralelo-old-hidden');
+        row.style.display = 'none';
       }
     });
   }
 
   function applyFix() {
-    document.querySelectorAll('#course-sec .course-single').forEach(function (card) {
+    injectStyles();
+
+    document.querySelectorAll('.course-single').forEach(function (card) {
       if (!isParaleloCard(card)) return;
 
       hideOldSchedules(card);
