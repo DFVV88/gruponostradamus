@@ -3,6 +3,7 @@
    - Ciclos en 2 columnas en web.
    - 1 columna en tablet/móvil.
    - Beneficios y características legibles, sin texto vertical.
+   - Turnos/horarios horizontales y legibles.
 ================================================== */
 (function () {
   var path = window.location.pathname.toLowerCase();
@@ -58,7 +59,6 @@
         flex:1 1 auto !important;
       }
 
-      /* Imagen más proporcionada para que las tarjetas no se alarguen demasiado */
       body #course-sec .course-single-top .course-img{
         aspect-ratio:16/8.6 !important;
         margin-bottom:18px !important;
@@ -76,7 +76,6 @@
         min-height:auto !important;
       }
 
-      /* Tabs más compactos dentro de cada miniatura */
       body #course-sec .course-tab{
         display:grid !important;
         grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
@@ -99,7 +98,6 @@
         white-space:normal !important;
       }
 
-      /* Bloques internos: una sola columna para evitar texto partido */
       body #course-sec .checklist ul{
         display:grid !important;
         grid-template-columns:1fr !important;
@@ -129,32 +127,86 @@
         text-orientation:mixed !important;
       }
 
-      /* Horarios: solo 2 tarjetas, pero con ancho cómodo */
-      body #course-sec .tab-pane .row.gy-4,
-      body #course-sec .course-description .row.gy-4{
+      /* FIX TURNOS EN DESCRIPCIÓN - CICLOS */
+      body #course-sec .course-description .row.gy-4,
+      body #course-sec .tab-pane .row.gy-4{
         display:grid !important;
-        grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+        grid-template-columns:repeat(2, minmax(230px, 1fr)) !important;
         gap:18px !important;
+        align-items:stretch !important;
+        justify-content:center !important;
+        width:100% !important;
       }
 
-      body #course-sec .tab-pane .row.gy-4 > [class*="col-"],
-      body #course-sec .course-description .row.gy-4 > [class*="col-"]{
+      body #course-sec .course-description .row.gy-4 > [class*="col-"],
+      body #course-sec .tab-pane .row.gy-4 > [class*="col-"]{
         width:100% !important;
         max-width:100% !important;
         min-width:0 !important;
         flex:none !important;
+        display:block !important;
+      }
+
+      body #course-sec .price-card{
+        width:100% !important;
+        min-width:0 !important;
+        min-height:auto !important;
+        height:100% !important;
+        border-radius:20px !important;
+        overflow:hidden !important;
+      }
+
+      body #course-sec .price-card_top{
+        padding:18px 16px !important;
+        display:flex !important;
+        flex-direction:column !important;
+        align-items:center !important;
+        justify-content:center !important;
+        gap:12px !important;
+        text-align:center !important;
+      }
+
+      body #course-sec .price-card_title{
+        display:inline-flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        width:auto !important;
+        max-width:100% !important;
+        min-width:0 !important;
+        min-height:42px !important;
+        padding:10px 14px !important;
+        writing-mode:horizontal-tb !important;
+        text-orientation:mixed !important;
+        white-space:normal !important;
+        word-break:normal !important;
+        overflow-wrap:break-word !important;
+        text-align:center !important;
+        line-height:1.15 !important;
+        font-size:14px !important;
       }
 
       body #course-sec .price-card_price,
       body #course-sec .horario-ciclo{
+        display:block !important;
+        width:100% !important;
+        max-width:100% !important;
         white-space:normal !important;
         word-break:normal !important;
         overflow-wrap:break-word !important;
         writing-mode:horizontal-tb !important;
         text-orientation:mixed !important;
+        text-align:center !important;
+        line-height:1.45 !important;
+        font-size:16px !important;
+        font-weight:800 !important;
+        letter-spacing:normal !important;
       }
 
-      /* CTA más compacto en tarjetas de 2 columnas */
+      body #course-sec .horario-ciclo{
+        margin-top:6px !important;
+        color:#008b96 !important;
+      }
+
       body #course-sec .nostra-cycle-cta{
         padding:14px !important;
       }
@@ -178,8 +230,8 @@
       }
 
       @media(max-width:767px){
-        body #course-sec .tab-pane .row.gy-4,
-        body #course-sec .course-description .row.gy-4{
+        body #course-sec .course-description .row.gy-4,
+        body #course-sec .tab-pane .row.gy-4{
           grid-template-columns:1fr !important;
         }
         body #course-sec .course-description p{
@@ -218,6 +270,14 @@
       item.style.maxWidth = '100%';
       item.style.margin = '0';
       item.style.opacity = '1';
+    });
+
+    document.querySelectorAll('#course-sec .price-card_price, #course-sec .horario-ciclo, #course-sec .price-card_title').forEach(function (el) {
+      el.style.writingMode = 'horizontal-tb';
+      el.style.textOrientation = 'mixed';
+      el.style.whiteSpace = 'normal';
+      el.style.wordBreak = 'normal';
+      el.style.overflowWrap = 'break-word';
     });
   }
 
