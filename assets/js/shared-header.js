@@ -1,6 +1,6 @@
 /* ==================================================
    Grupo Nostradamus - Encabezado compartido
-   Hace que todas las subpáginas usen el mismo encabezado visual del index.
+   Subpáginas con el mismo encabezado visual del index.
    No reemplaza index.html ni iq100.html.
 ================================================== */
 (function () {
@@ -55,135 +55,116 @@
         display:none !important;
       }
 
+      .nostra-index-header-clone,
+      .nostra-index-header-clone *{
+        box-sizing:border-box;
+      }
       .nostra-index-header-clone{
         width:100%;
         position:relative;
         z-index:9999;
         background:#fff;
-        font-family:inherit;
+        font-family:'Jost', Arial, sans-serif !important;
       }
-
       .nostra-index-header-clone a{text-decoration:none;}
 
       .nostra-top-alert{
-        background:linear-gradient(90deg,#02090d 0%,#063f48 52%,#098e96 100%);
+        background:linear-gradient(90deg,#02070d 0%,#053f49 52%,#098c94 100%);
         color:#fff;
         text-align:center;
-        padding:10px 14px;
+        min-height:36px;
+        padding:8px 14px;
         font-size:15px;
-        line-height:1.25;
+        line-height:1.2;
         font-weight:900;
         letter-spacing:.65px;
         text-transform:uppercase;
       }
       .nostra-top-alert a{color:#fff;}
-      .nostra-top-alert span{text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:2px;}
+      .nostra-top-alert span{text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px;}
 
       .nostra-info-row{
-        background:linear-gradient(90deg,#052432 0%,#063e4d 45%,#098e96 100%);
+        background:linear-gradient(90deg,#062335 0%,#063e4b 46%,#098c94 100%);
         color:#fff;
       }
       .nostra-info-inner{
-        max-width:1520px;
-        min-height:76px;
+        max-width:1460px;
+        min-height:54px;
         margin:0 auto;
-        padding:0 42px;
+        padding:0 38px;
         display:flex;
         align-items:center;
         justify-content:space-between;
-        gap:28px;
+        gap:20px;
+        flex-wrap:nowrap;
       }
       .nostra-info-left,
       .nostra-info-right{
         display:flex;
         align-items:center;
-        gap:24px;
-        flex-wrap:wrap;
+        gap:18px;
+        flex-wrap:nowrap;
+        min-width:0;
       }
       .nostra-info-link,
       .nostra-social-title{
-        color:#fff;
-        font-size:20px;
-        font-weight:800;
+        color:#fff !important;
+        font-size:14px;
+        font-weight:700;
         line-height:1;
         white-space:nowrap;
       }
-      .nostra-info-link i{margin-right:11px;font-size:20px;vertical-align:middle;}
-      .nostra-info-sep{width:1px;height:22px;background:#4f8dff;opacity:.85;display:inline-block;}
+      .nostra-info-link i{margin-right:8px;font-size:14px;vertical-align:middle;}
+      .nostra-info-sep{width:1px;height:18px;background:#3c8fff;opacity:.9;display:inline-block;flex:0 0 auto;}
       .nostra-live{
         display:inline-flex;
         align-items:center;
         justify-content:center;
-        gap:10px;
+        gap:8px;
         min-height:40px;
-        padding:10px 22px;
-        border-radius:15px;
-        background:linear-gradient(135deg,#ff1737,#ff5a17);
+        padding:9px 20px;
+        border-radius:10px;
+        background:linear-gradient(135deg,#ff1635,#ff5718);
         color:#fff !important;
-        font-size:18px;
+        font-size:14px;
         font-weight:900;
-        box-shadow:0 0 28px rgba(255,66,25,.72),0 0 52px rgba(255,66,25,.42);
+        box-shadow:0 0 24px rgba(255,66,25,.65),0 0 42px rgba(255,66,25,.32);
+        white-space:nowrap;
       }
       .nostra-live:before{
         content:'';
-        width:18px;
-        height:18px;
+        width:14px;
+        height:14px;
         border-radius:50%;
         background:linear-gradient(135deg,#ff4d73,#ad67ff);
         box-shadow:0 0 10px rgba(255,255,255,.35) inset;
       }
-      .nostra-social{display:flex;align-items:center;gap:17px;}
-      .nostra-social a{color:#fff;font-size:18px;line-height:1;}
+      .nostra-social{display:flex;align-items:center;gap:14px;white-space:nowrap;}
+      .nostra-social a{color:#fff !important;font-size:14px;line-height:1;}
 
       .nostra-main-row{
         background:#fff;
         position:relative;
-        overflow:hidden;
+        overflow:visible;
       }
       .nostra-main-inner{
-        max-width:1520px;
-        min-height:182px;
+        max-width:1460px;
+        min-height:138px;
         margin:0 auto;
-        padding:24px 48px;
+        padding:22px 38px;
         display:flex;
         align-items:center;
         justify-content:space-between;
-        gap:38px;
+        gap:32px;
         position:relative;
       }
-      .nostra-main-inner:after{
-        content:'IQ 100';
-        position:absolute;
-        right:50px;
-        bottom:32px;
-        color:#1da9ce;
-        font-size:42px;
-        font-weight:950;
-        line-height:1;
-        pointer-events:none;
-        opacity:.95;
-      }
-      .nostra-main-inner:before{
-        content:'GRUPO DE ESTUDIO';
-        position:absolute;
-        right:60px;
-        bottom:14px;
-        padding:2px 8px;
-        border-radius:2px;
-        background:#1da9ce;
-        color:#fff;
-        font-size:9px;
-        font-weight:900;
-        letter-spacing:.3px;
-        pointer-events:none;
-      }
       .nostra-logo{display:inline-flex;align-items:center;position:relative;z-index:2;flex:0 0 auto;}
-      .nostra-logo img{width:202px;max-width:202px;height:auto;display:block;}
+      .nostra-logo img{width:185px;max-width:185px;height:auto;display:block;}
       .nostra-nav{
         display:flex;
         align-items:center;
         justify-content:center;
-        gap:42px;
+        gap:32px;
         flex:1 1 auto;
         position:relative;
         z-index:4;
@@ -192,27 +173,28 @@
       .nostra-nav-link{
         display:inline-flex;
         align-items:center;
-        gap:7px;
-        color:#071326;
-        font-size:21px;
+        gap:6px;
+        color:#071326 !important;
+        font-size:16px;
         font-weight:900;
-        letter-spacing:.2px;
+        letter-spacing:.25px;
         text-transform:uppercase;
-        padding:22px 0;
+        padding:18px 0;
         white-space:nowrap;
+        line-height:1;
       }
       .nostra-nav-link.active,
-      .nostra-nav-link:hover{color:#008b96;}
+      .nostra-nav-link:hover{color:#008b96 !important;}
       .nostra-submenu{
         position:absolute;
         top:100%;
         left:-18px;
-        min-width:240px;
+        min-width:235px;
         padding:12px;
         margin:0;
         list-style:none;
         background:#fff;
-        border-radius:14px;
+        border-radius:12px;
         box-shadow:0 18px 45px rgba(0,0,0,.14);
         opacity:0;
         visibility:hidden;
@@ -222,49 +204,58 @@
       .nostra-nav-item:hover .nostra-submenu{opacity:1;visibility:visible;transform:translateY(0);}
       .nostra-submenu a{
         display:block;
-        color:#071326;
+        color:#071326 !important;
         font-size:14px;
         font-weight:800;
         padding:10px 12px;
         border-radius:10px;
       }
-      .nostra-submenu a:hover{background:#eefbfd;color:#008b96;}
+      .nostra-submenu a:hover{background:#eefbfd;color:#008b96 !important;}
       .nostra-cta{
         display:inline-flex;
         align-items:center;
         justify-content:center;
-        gap:12px;
-        min-height:68px;
-        padding:16px 34px;
-        border-radius:19px;
+        gap:10px;
+        min-height:52px;
+        padding:13px 24px;
+        border-radius:16px;
         background:linear-gradient(135deg,#098e96 0%,#051427 100%);
         color:#fff !important;
-        font-size:19px;
+        font-size:13px;
         font-weight:950;
         letter-spacing:.35px;
         text-transform:uppercase;
-        box-shadow:0 14px 34px rgba(0,137,150,.25),0 0 0 4px rgba(255,255,255,.88) inset;
+        box-shadow:0 14px 32px rgba(0,137,150,.25),0 0 0 3px rgba(255,255,255,.84) inset;
         white-space:nowrap;
         position:relative;
         z-index:5;
       }
-      .nostra-cta i:last-child{font-size:19px;}
+      .nostra-cta i:last-child{font-size:14px;}
+      .nostra-iq{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        position:relative;
+        z-index:1;
+        flex:0 0 auto;
+      }
+      .nostra-iq img{width:118px;max-width:118px;height:auto;display:block;}
       .nostra-mobile-toggle{
         display:none;
-        width:48px;
-        height:48px;
+        width:46px;
+        height:46px;
         border:0;
-        border-radius:13px;
+        border-radius:12px;
         background:linear-gradient(135deg,#098e96,#051427);
         color:#fff;
-        font-size:24px;
+        font-size:22px;
         position:relative;
         z-index:6;
       }
       .nostra-mobile-panel{display:none;background:linear-gradient(180deg,#061426,#02070d);padding:14px;}
       .nostra-mobile-panel a{
         display:block;
-        color:#fff;
+        color:#fff !important;
         font-size:14px;
         font-weight:900;
         text-transform:uppercase;
@@ -278,28 +269,29 @@
       .nostra-mobile-panel.open{display:block;}
 
       @media(max-width:1399px){
-        .nostra-info-link,.nostra-social-title{font-size:16px;}
+        .nostra-info-link,.nostra-social-title{font-size:13px;}
         .nostra-nav{gap:24px;}
-        .nostra-nav-link{font-size:17px;}
-        .nostra-logo img{width:180px;max-width:180px;}
-        .nostra-cta{font-size:15px;padding:14px 22px;min-height:58px;}
+        .nostra-nav-link{font-size:14px;}
+        .nostra-logo img{width:170px;max-width:170px;}
+        .nostra-cta{font-size:12px;padding:12px 18px;min-height:48px;}
+        .nostra-iq img{width:105px;max-width:105px;}
       }
       @media(max-width:1199px){
-        .nostra-info-inner{padding:0 24px;}
-        .nostra-main-inner{padding:20px 24px;gap:20px;min-height:130px;}
-        .nostra-nav{gap:18px;}
-        .nostra-nav-link{font-size:15px;}
-        .nostra-info-left{gap:14px;}
+        .nostra-info-inner{padding:0 22px;gap:12px;}
+        .nostra-info-left,.nostra-info-right{gap:12px;}
+        .nostra-info-link,.nostra-social-title{font-size:12px;}
+        .nostra-main-inner{padding:18px 22px;gap:18px;min-height:112px;}
+        .nostra-nav{gap:16px;}
+        .nostra-nav-link{font-size:13px;}
+        .nostra-iq{display:none;}
       }
       @media(max-width:991px){
         .nostra-info-row{display:none;}
-        .nostra-top-alert{font-size:12px;line-height:1.35;padding:9px 12px;}
-        .nostra-main-inner{min-height:90px;padding:14px 18px;}
+        .nostra-top-alert{font-size:12px;line-height:1.35;padding:9px 12px;min-height:auto;}
+        .nostra-main-inner{min-height:88px;padding:14px 18px;}
         .nostra-logo img{width:150px;max-width:150px;}
-        .nostra-nav,.nostra-cta{display:none;}
+        .nostra-nav,.nostra-cta,.nostra-iq{display:none;}
         .nostra-mobile-toggle{display:inline-flex;align-items:center;justify-content:center;}
-        .nostra-main-inner:after{font-size:30px;right:18px;bottom:22px;opacity:.28;}
-        .nostra-main-inner:before{display:none;}
       }
     `;
     document.head.appendChild(style);
@@ -394,6 +386,7 @@
             <a class="nostra-logo" href="index.html"><img src="assets/img/logo.png" alt="Grupo Nostradamus"></a>
             ${navDesktop()}
             <a class="nostra-cta" href="https://wa.me/51993750351?text=Hola%20quiero%20informes%20sobre%20la%20matr%C3%ADcula%20en%20el%20Grupo%20Nostradamus" target="_blank" rel="noopener"><i class="fas fa-mobile-alt"></i> SOLICITAR INFORMES <i class="fas fa-arrow-right"></i></a>
+            <a class="nostra-iq" href="iq100.html"><img src="assets/img/logo-iq100.png" alt="IQ100 Grupo de Estudio"></a>
             <button class="nostra-mobile-toggle" type="button" aria-label="Abrir menú"><i class="far fa-bars"></i></button>
           </div>
         </div>
