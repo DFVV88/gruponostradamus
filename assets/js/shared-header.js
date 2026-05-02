@@ -1,7 +1,7 @@
 /* ==================================================
-   Grupo Nostradamus - Header premium compartido
-   Subpáginas con la misma línea visual del index, sin ser idénticas.
-   No afecta index.html ni iq100.html.
+   Grupo Nostradamus - Encabezado compartido
+   Hace que todas las subpáginas usen el mismo encabezado visual del index.
+   No reemplaza index.html ni iq100.html.
 ================================================== */
 (function () {
   var currentPath = window.location.pathname.toLowerCase();
@@ -10,30 +10,27 @@
   var isIq100 = currentPath.indexOf('iq100.html') !== -1;
 
   if (isIndex || isIq100) return;
-  if (document.querySelector('.nostra-premium-header')) return;
+  if (document.querySelector('.nostra-index-header-clone')) return;
 
-  var navItems = [
-    { label: 'INICIO', url: 'index.html', key: 'index' },
-    { label: 'CICLOS', url: 'ciclos.html', key: 'ciclos' },
-    { label: 'DOCENTES', url: 'docentes.html', key: 'docentes' },
-    { label: 'CACHIMBOS', url: 'cachimbos.html', key: 'cachimbos' },
-    { label: 'SEDE', url: 'sedes.html', key: 'sedes' },
-    { label: 'NOTICIAS', url: 'blog.html', key: 'blog' },
-    { label: 'CONTACTO', url: 'contacto.html', key: 'contacto' }
+  var ciclos = [
+    ['Anual UNI', 'ciclo-anual-uni.html'],
+    ['Semianual UNI', 'ciclo-semianual-uni.html'],
+    ['Semestral UNI', 'ciclo-semestral-uni.html'],
+    ['Élite UNI', 'ciclo-elite-uni.html'],
+    ['IEN', 'ciclo-ien.html'],
+    ['Proyecto Escolar', 'ciclo-proyecto-escolar.html'],
+    ['Repaso UNI', 'ciclo-repaso-uni.html'],
+    ['Paralelo CEPRE UNI', 'ciclo-paralelo-cepre-uni.html'],
+    ['Ciclo Verano UNI', 'ciclo-verano-uni.html']
   ];
 
-  var cicloPages = [
-    'ciclo-anual-uni.html', 'ciclo-semianual-uni.html', 'ciclo-semestral-uni.html',
-    'ciclo-repaso-uni.html', 'ciclo-elite-uni.html', 'ciclo-ien.html',
-    'ciclo-paralelo-cepre-uni.html', 'ciclo-proyecto-escolar.html', 'ciclo-verano-uni.html'
-  ];
+  var cicloPages = ciclos.map(function (item) { return item[1]; });
 
-  function isActive(item) {
-    if (item.key === 'ciclos' && (fileName === 'ciclos.html' || cicloPages.indexOf(fileName) !== -1)) return 'active';
-    if (item.key === 'sedes' && (fileName === 'sedes.html' || currentPath.indexOf('sede') !== -1)) return 'active';
-    if (item.key === 'blog' && (fileName === 'blog.html' || currentPath.indexOf('blog') !== -1 || currentPath.indexOf('noticia') !== -1)) return 'active';
-    if (currentPath.indexOf(item.key) !== -1) return 'active';
-    return '';
+  function active(page, group) {
+    if (group === 'ciclos' && (fileName === 'ciclos.html' || cicloPages.indexOf(fileName) !== -1)) return ' active';
+    if (group === 'sedes' && (fileName === 'sedes.html' || currentPath.indexOf('sede') !== -1)) return ' active';
+    if (group === 'blog' && (fileName === 'blog.html' || currentPath.indexOf('blog') !== -1 || currentPath.indexOf('noticia') !== -1)) return ' active';
+    return fileName === page ? ' active' : '';
   }
 
   function injectStyles() {
@@ -42,245 +39,317 @@
     var style = document.createElement('style');
     style.id = 'nostra-shared-header-style';
     style.textContent = `
-      body.nostra-subpage-with-premium-header .th-header,
-      body.nostra-subpage-with-premium-header header.th-header,
-      body.nostra-subpage-with-premium-header .header-layout1,
-      body.nostra-subpage-with-premium-header .header-layout2,
-      body.nostra-subpage-with-premium-header .header-default,
-      body.nostra-subpage-with-premium-header .sticky-wrapper,
-      body.nostra-subpage-with-premium-header .header-top,
-      body.nostra-subpage-with-premium-header .header-links,
-      body.nostra-subpage-with-premium-header .header-notice,
-      body.nostra-subpage-with-premium-header .top-area,
-      body.nostra-subpage-with-premium-header .main-menu-area{
+      body.nostra-subpage-index-header .th-header,
+      body.nostra-subpage-index-header header.th-header,
+      body.nostra-subpage-index-header .header-layout1,
+      body.nostra-subpage-index-header .header-layout2,
+      body.nostra-subpage-index-header .header-default,
+      body.nostra-subpage-index-header .header-layout6,
+      body.nostra-subpage-index-header .header-top,
+      body.nostra-subpage-index-header .sticky-wrapper,
+      body.nostra-subpage-index-header .menu-area,
+      body.nostra-subpage-index-header .main-menu-area,
+      body.nostra-subpage-index-header .top-area,
+      body.nostra-subpage-index-header .th-menu-wrapper,
+      body.nostra-subpage-index-header .popup-search-box{
         display:none !important;
       }
 
-      body.nostra-subpage-with-premium-header > .text-center,
-      body.nostra-subpage-with-premium-header > .marquee,
-      body.nostra-subpage-with-premium-header > .announcement-bar{
-        display:none !important;
-      }
-
-      .nostra-premium-header{
+      .nostra-index-header-clone{
         width:100%;
         position:relative;
         z-index:9999;
         background:#fff;
-        box-shadow:0 10px 30px rgba(0,0,0,.075);
         font-family:inherit;
       }
 
-      .nostra-promo-bar{
-        background:linear-gradient(90deg,#02070d 0%,#053b44 46%,#008b96 100%);
+      .nostra-index-header-clone a{text-decoration:none;}
+
+      .nostra-top-alert{
+        background:linear-gradient(90deg,#02090d 0%,#063f48 52%,#098e96 100%);
         color:#fff;
         text-align:center;
-        padding:10px 16px;
-        font-size:14px;
-        font-weight:950;
-        letter-spacing:.65px;
+        padding:10px 14px;
+        font-size:15px;
         line-height:1.25;
+        font-weight:900;
+        letter-spacing:.65px;
+        text-transform:uppercase;
       }
+      .nostra-top-alert a{color:#fff;}
+      .nostra-top-alert span{text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:2px;}
 
-      .nostra-promo-bar a{color:#fff;text-decoration:none;}
-      .nostra-promo-bar span{text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:2px;}
-
-      .nostra-info-bar{
-        background:linear-gradient(90deg,#062033 0%,#003d4d 46%,#008b96 100%);
+      .nostra-info-row{
+        background:linear-gradient(90deg,#052432 0%,#063e4d 45%,#098e96 100%);
         color:#fff;
       }
-
       .nostra-info-inner{
-        max-width:1460px;
+        max-width:1520px;
+        min-height:76px;
         margin:0 auto;
-        min-height:54px;
+        padding:0 42px;
         display:flex;
         align-items:center;
         justify-content:space-between;
-        gap:22px;
-        padding:11px 38px;
-        font-size:13.5px;
-        font-weight:830;
+        gap:28px;
       }
-
-      .nostra-info-bar a{color:#fff;text-decoration:none;}
-      .nostra-info-left,.nostra-info-right{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
-      .nostra-info-left span,.nostra-info-left a{white-space:nowrap;}
-
-      .nostra-live-btn{
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
-        gap:8px;
-        min-height:38px;
-        padding:9px 20px;
-        border-radius:999px;
-        background:linear-gradient(135deg,#ff2020,#ff5b1f);
-        color:#fff !important;
-        font-weight:950;
-        box-shadow:0 0 24px rgba(255,60,30,.44);
-        white-space:nowrap;
-      }
-
-      .nostra-live-btn:before{
-        content:'';
-        width:10px;
-        height:10px;
-        border-radius:50%;
-        background:#ff7ca4;
-        box-shadow:0 0 12px rgba(255,124,164,.95);
-      }
-
-      .nostra-main-header{
-        background:#fff;
-        position:relative;
-        overflow:hidden;
-      }
-
-      .nostra-main-inner{
-        max-width:1460px;
-        min-height:118px;
-        margin:0 auto;
+      .nostra-info-left,
+      .nostra-info-right{
         display:flex;
         align-items:center;
-        justify-content:space-between;
-        gap:30px;
-        padding:20px 38px;
-        position:relative;
+        gap:24px;
+        flex-wrap:wrap;
       }
-
-      .nostra-main-inner:after{
-        content:'N100';
-        position:absolute;
-        right:34px;
-        bottom:10px;
-        color:rgba(0,137,150,.12);
-        font-size:70px;
-        font-weight:950;
+      .nostra-info-link,
+      .nostra-social-title{
+        color:#fff;
+        font-size:20px;
+        font-weight:800;
         line-height:1;
-        pointer-events:none;
-      }
-
-      .nostra-logo{display:inline-flex;align-items:center;position:relative;z-index:2;flex:0 0 auto;}
-      .nostra-logo img{width:188px;max-width:188px;height:auto;display:block;}
-
-      .nostra-nav{
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        gap:30px;
-        flex:1 1 auto;
-        position:relative;
-        z-index:2;
-      }
-
-      .nostra-nav a{
-        position:relative;
-        padding:10px 0;
-        color:#061426;
-        font-size:14.5px;
-        font-weight:950;
-        letter-spacing:.45px;
-        text-decoration:none;
         white-space:nowrap;
       }
-
-      .nostra-nav a:after{
-        content:'';
-        position:absolute;
-        left:0;
-        bottom:0;
-        width:0;
-        height:3px;
-        border-radius:999px;
-        background:#00c2d1;
-        transition:width .25s ease;
-      }
-
-      .nostra-nav a:hover:after,.nostra-nav a.active:after{width:100%;}
-      .nostra-nav a.active{color:#008b96;}
-
-      .nostra-cta{
+      .nostra-info-link i{margin-right:11px;font-size:20px;vertical-align:middle;}
+      .nostra-info-sep{width:1px;height:22px;background:#4f8dff;opacity:.85;display:inline-block;}
+      .nostra-live{
         display:inline-flex;
         align-items:center;
         justify-content:center;
         gap:10px;
-        min-height:52px;
-        padding:13px 24px;
-        border-radius:18px;
-        background:linear-gradient(135deg,#008b96,#061426);
-        color:#fff;
-        text-decoration:none;
-        font-size:13.5px;
-        font-weight:950;
-        box-shadow:0 14px 34px rgba(0,137,150,.30),0 0 28px rgba(0,194,209,.13);
-        white-space:nowrap;
-        position:relative;
-        z-index:2;
-        transition:transform .22s ease,box-shadow .22s ease;
+        min-height:40px;
+        padding:10px 22px;
+        border-radius:15px;
+        background:linear-gradient(135deg,#ff1737,#ff5a17);
+        color:#fff !important;
+        font-size:18px;
+        font-weight:900;
+        box-shadow:0 0 28px rgba(255,66,25,.72),0 0 52px rgba(255,66,25,.42);
       }
+      .nostra-live:before{
+        content:'';
+        width:18px;
+        height:18px;
+        border-radius:50%;
+        background:linear-gradient(135deg,#ff4d73,#ad67ff);
+        box-shadow:0 0 10px rgba(255,255,255,.35) inset;
+      }
+      .nostra-social{display:flex;align-items:center;gap:17px;}
+      .nostra-social a{color:#fff;font-size:18px;line-height:1;}
 
-      .nostra-cta:hover{color:#fff;transform:translateY(-3px);box-shadow:0 18px 40px rgba(0,137,150,.38),0 0 30px rgba(0,194,209,.22);}
-      .nostra-cta span{font-size:21px;line-height:1;}
-
-      .nostra-mobile-toggle{
-        display:none;
-        width:46px;
-        height:46px;
-        border:none;
-        border-radius:14px;
-        background:linear-gradient(135deg,#008b96,#061426);
-        color:#fff;
-        font-size:24px;
+      .nostra-main-row{
+        background:#fff;
+        position:relative;
+        overflow:hidden;
+      }
+      .nostra-main-inner{
+        max-width:1520px;
+        min-height:182px;
+        margin:0 auto;
+        padding:24px 48px;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:38px;
+        position:relative;
+      }
+      .nostra-main-inner:after{
+        content:'IQ 100';
+        position:absolute;
+        right:50px;
+        bottom:32px;
+        color:#1da9ce;
+        font-size:42px;
         font-weight:950;
+        line-height:1;
+        pointer-events:none;
+        opacity:.95;
+      }
+      .nostra-main-inner:before{
+        content:'GRUPO DE ESTUDIO';
+        position:absolute;
+        right:60px;
+        bottom:14px;
+        padding:2px 8px;
+        border-radius:2px;
+        background:#1da9ce;
+        color:#fff;
+        font-size:9px;
+        font-weight:900;
+        letter-spacing:.3px;
+        pointer-events:none;
+      }
+      .nostra-logo{display:inline-flex;align-items:center;position:relative;z-index:2;flex:0 0 auto;}
+      .nostra-logo img{width:202px;max-width:202px;height:auto;display:block;}
+      .nostra-nav{
+        display:flex;
         align-items:center;
         justify-content:center;
+        gap:42px;
+        flex:1 1 auto;
         position:relative;
-        z-index:3;
+        z-index:4;
       }
-
+      .nostra-nav-item{position:relative;}
+      .nostra-nav-link{
+        display:inline-flex;
+        align-items:center;
+        gap:7px;
+        color:#071326;
+        font-size:21px;
+        font-weight:900;
+        letter-spacing:.2px;
+        text-transform:uppercase;
+        padding:22px 0;
+        white-space:nowrap;
+      }
+      .nostra-nav-link.active,
+      .nostra-nav-link:hover{color:#008b96;}
+      .nostra-submenu{
+        position:absolute;
+        top:100%;
+        left:-18px;
+        min-width:240px;
+        padding:12px;
+        margin:0;
+        list-style:none;
+        background:#fff;
+        border-radius:14px;
+        box-shadow:0 18px 45px rgba(0,0,0,.14);
+        opacity:0;
+        visibility:hidden;
+        transform:translateY(10px);
+        transition:.22s ease;
+      }
+      .nostra-nav-item:hover .nostra-submenu{opacity:1;visibility:visible;transform:translateY(0);}
+      .nostra-submenu a{
+        display:block;
+        color:#071326;
+        font-size:14px;
+        font-weight:800;
+        padding:10px 12px;
+        border-radius:10px;
+      }
+      .nostra-submenu a:hover{background:#eefbfd;color:#008b96;}
+      .nostra-cta{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:12px;
+        min-height:68px;
+        padding:16px 34px;
+        border-radius:19px;
+        background:linear-gradient(135deg,#098e96 0%,#051427 100%);
+        color:#fff !important;
+        font-size:19px;
+        font-weight:950;
+        letter-spacing:.35px;
+        text-transform:uppercase;
+        box-shadow:0 14px 34px rgba(0,137,150,.25),0 0 0 4px rgba(255,255,255,.88) inset;
+        white-space:nowrap;
+        position:relative;
+        z-index:5;
+      }
+      .nostra-cta i:last-child{font-size:19px;}
+      .nostra-mobile-toggle{
+        display:none;
+        width:48px;
+        height:48px;
+        border:0;
+        border-radius:13px;
+        background:linear-gradient(135deg,#098e96,#051427);
+        color:#fff;
+        font-size:24px;
+        position:relative;
+        z-index:6;
+      }
       .nostra-mobile-panel{display:none;background:linear-gradient(180deg,#061426,#02070d);padding:14px;}
-
       .nostra-mobile-panel a{
         display:block;
         color:#fff;
-        text-decoration:none;
         font-size:14px;
         font-weight:900;
+        text-transform:uppercase;
         padding:13px 14px;
         border-radius:12px;
         margin-bottom:8px;
-        background:rgba(255,255,255,.065);
+        background:rgba(255,255,255,.075);
         border:1px solid rgba(255,255,255,.08);
       }
-
       .nostra-mobile-panel a.active{background:linear-gradient(135deg,#00c2d1,#008b96);}
-      .nostra-mobile-cta{background:linear-gradient(135deg,#25d366,#13a54d) !important;text-align:center;margin-top:10px;}
+      .nostra-mobile-panel.open{display:block;}
 
-      @media(max-width:1280px){
-        .nostra-main-inner{padding:18px 28px;gap:18px;}
-        .nostra-nav{gap:22px;}
-        .nostra-cta{padding:12px 18px;font-size:12.8px;}
-        .nostra-logo img{width:170px;max-width:170px;}
-        .nostra-info-inner{padding-left:28px;padding-right:28px;}
+      @media(max-width:1399px){
+        .nostra-info-link,.nostra-social-title{font-size:16px;}
+        .nostra-nav{gap:24px;}
+        .nostra-nav-link{font-size:17px;}
+        .nostra-logo img{width:180px;max-width:180px;}
+        .nostra-cta{font-size:15px;padding:14px 22px;min-height:58px;}
       }
-
+      @media(max-width:1199px){
+        .nostra-info-inner{padding:0 24px;}
+        .nostra-main-inner{padding:20px 24px;gap:20px;min-height:130px;}
+        .nostra-nav{gap:18px;}
+        .nostra-nav-link{font-size:15px;}
+        .nostra-info-left{gap:14px;}
+      }
       @media(max-width:991px){
-        .nostra-info-bar{display:none;}
-        .nostra-main-inner{min-height:86px;padding:14px 18px;}
+        .nostra-info-row{display:none;}
+        .nostra-top-alert{font-size:12px;line-height:1.35;padding:9px 12px;}
+        .nostra-main-inner{min-height:90px;padding:14px 18px;}
         .nostra-logo img{width:150px;max-width:150px;}
         .nostra-nav,.nostra-cta{display:none;}
-        .nostra-mobile-toggle{display:inline-flex;}
-        .nostra-mobile-panel.open{display:block;}
-        .nostra-promo-bar{font-size:12px;line-height:1.4;padding:9px 14px;}
-        .nostra-main-inner:after{font-size:42px;right:18px;bottom:10px;}
+        .nostra-mobile-toggle{display:inline-flex;align-items:center;justify-content:center;}
+        .nostra-main-inner:after{font-size:30px;right:18px;bottom:22px;opacity:.28;}
+        .nostra-main-inner:before{display:none;}
       }
     `;
     document.head.appendChild(style);
   }
 
+  function menuCiclos() {
+    return ciclos.map(function (item) {
+      return '<li><a href="' + item[1] + '">' + item[0] + '</a></li>';
+    }).join('');
+  }
+
+  function navDesktop() {
+    return `
+      <nav class="nostra-nav" aria-label="Menú principal">
+        <div class="nostra-nav-item"><a class="nostra-nav-link${active('index.html')}" href="index.html">INICIO</a></div>
+        <div class="nostra-nav-item">
+          <a class="nostra-nav-link${active('ciclos.html', 'ciclos')}" href="ciclos.html">CICLOS <i class="far fa-chevron-down"></i></a>
+          <ul class="nostra-submenu">${menuCiclos()}</ul>
+        </div>
+        <div class="nostra-nav-item"><a class="nostra-nav-link${active('docentes.html')}" href="docentes.html">DOCENTES</a></div>
+        <div class="nostra-nav-item"><a class="nostra-nav-link${active('cachimbos.html')}" href="cachimbos.html">CACHIMBOS</a></div>
+        <div class="nostra-nav-item">
+          <a class="nostra-nav-link${active('sedes.html', 'sedes')}" href="sedes.html">SEDE <i class="far fa-chevron-down"></i></a>
+          <ul class="nostra-submenu"><li><a href="sedes.html">UNI</a></li></ul>
+        </div>
+        <div class="nostra-nav-item"><a class="nostra-nav-link${active('blog.html', 'blog')}" href="blog.html">NOTICIAS</a></div>
+        <div class="nostra-nav-item"><a class="nostra-nav-link" href="index.html#contacto">CONTACTO</a></div>
+      </nav>
+    `;
+  }
+
+  function navMobile() {
+    var links = [
+      ['INICIO', 'index.html', active('index.html')],
+      ['CICLOS', 'ciclos.html', active('ciclos.html', 'ciclos')],
+      ['DOCENTES', 'docentes.html', active('docentes.html')],
+      ['CACHIMBOS', 'cachimbos.html', active('cachimbos.html')],
+      ['SEDE', 'sedes.html', active('sedes.html', 'sedes')],
+      ['NOTICIAS', 'blog.html', active('blog.html', 'blog')],
+      ['CONTACTO', 'index.html#contacto', ''],
+      ['📲 SOLICITAR INFORMES', 'https://wa.me/51993750351?text=Hola%20quiero%20informes%20sobre%20la%20matr%C3%ADcula%20en%20el%20Grupo%20Nostradamus', '']
+    ];
+    return links.map(function (item) {
+      var external = item[1].indexOf('http') === 0 ? ' target="_blank" rel="noopener"' : '';
+      return '<a class="' + item[2].trim() + '" href="' + item[1] + '"' + external + '>' + item[0] + '</a>';
+    }).join('');
+  }
+
   function createHeader() {
-    document.body.classList.add('nostra-subpage-with-premium-header');
+    document.body.classList.add('nostra-subpage-index-header');
 
     var wrapper = document.getElementById('site-header');
     if (!wrapper) {
@@ -290,52 +359,46 @@
     }
 
     wrapper.innerHTML = `
-      <header class="nostra-premium-header">
-        <div class="nostra-promo-bar">
+      <header class="nostra-index-header-clone">
+        <div class="nostra-top-alert">
           <a href="https://wa.me/51993750351?text=Hola%20Nostradamus%2C%20quiero%20informes%20sobre%20los%20nuevos%20ciclos%20UNI" target="_blank" rel="noopener">
             🚀 NUEVOS CICLOS UNI DISPONIBLES · CUPOS LIMITADOS · <span>SOLICITAR INFORMES POR WHATSAPP</span>
           </a>
         </div>
 
-        <div class="nostra-info-bar">
+        <div class="nostra-info-row">
           <div class="nostra-info-inner">
             <div class="nostra-info-left">
-              <a href="tel:+51993750351">☎ 993 750 351</a>
-              <span>⌖ Av. Gerardo Unger 193, SMP.</span>
-              <a href="mailto:informes@gruponostradamus.edu.pe">✉ informes@gruponostradamus.edu.pe</a>
+              <a class="nostra-info-link" href="https://wa.me/51993750351?text=Hola%20Nostradamus,%20quiero%20informes%20sobre%20los%20ciclos%20de%20preparaci%C3%B3n." target="_blank" rel="noopener"><i class="far fa-phone"></i>993 750 351</a>
+              <span class="nostra-info-sep"></span>
+              <a class="nostra-info-link" href="https://maps.app.goo.gl/XUF3vLuP6svEMZzj7" target="_blank" rel="noopener"><i class="far fa-location-dot"></i>Av.Gerardo Unger 193, SMP.</a>
+              <span class="nostra-info-sep"></span>
+              <a class="nostra-info-link" href="index.html#contacto"><i class="far fa-envelope"></i>informes@gruponostradamus.edu.pe</a>
             </div>
             <div class="nostra-info-right">
-              <a class="nostra-live-btn" href="https://gruponostradamus.edu.pe/" target="_blank" rel="noopener">CLASES EN VIVO</a>
-              <span>Síguenos en:</span>
-              <a href="#" aria-label="Facebook">f</a>
-              <a href="#" aria-label="Instagram">◎</a>
-              <a href="#" aria-label="TikTok">♪</a>
-              <a href="#" aria-label="YouTube">▶</a>
+              <a class="nostra-live" href="https://teams.microsoft.com" target="_blank" rel="noopener">CLASES EN VIVO</a>
+              <span class="nostra-info-sep"></span>
+              <div class="nostra-social">
+                <span class="nostra-social-title">Síguenos en:</span>
+                <a href="https://www.facebook.com/gruponostradamus" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/gruponostradamus/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.tiktok.com/@grupo_nostradamus" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                <a href="https://www.youtube.com/@GrupoNostradamus" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="nostra-main-header">
+        <div class="nostra-main-row">
           <div class="nostra-main-inner">
-            <a class="nostra-logo" href="index.html">
-              <img src="assets/img/logo.png" alt="Grupo Nostradamus">
-            </a>
-            <nav class="nostra-nav">
-              ${navItems.map(function (item) {
-                return '<a class="' + isActive(item) + '" href="' + item.url + '">' + item.label + '</a>';
-              }).join('')}
-            </nav>
-            <a class="nostra-cta" href="https://wa.me/51993750351?text=Hola%20Nostradamus%2C%20quiero%20solicitar%20informes" target="_blank" rel="noopener">📲 SOLICITAR INFORMES <span>→</span></a>
-            <button class="nostra-mobile-toggle" type="button" aria-label="Abrir menú">☰</button>
+            <a class="nostra-logo" href="index.html"><img src="assets/img/logo.png" alt="Grupo Nostradamus"></a>
+            ${navDesktop()}
+            <a class="nostra-cta" href="https://wa.me/51993750351?text=Hola%20quiero%20informes%20sobre%20la%20matr%C3%ADcula%20en%20el%20Grupo%20Nostradamus" target="_blank" rel="noopener"><i class="fas fa-mobile-alt"></i> SOLICITAR INFORMES <i class="fas fa-arrow-right"></i></a>
+            <button class="nostra-mobile-toggle" type="button" aria-label="Abrir menú"><i class="far fa-bars"></i></button>
           </div>
         </div>
 
-        <div class="nostra-mobile-panel">
-          ${navItems.map(function (item) {
-            return '<a class="' + isActive(item) + '" href="' + item.url + '">' + item.label + '</a>';
-          }).join('')}
-          <a class="nostra-mobile-cta" href="https://wa.me/51993750351?text=Hola%20Nostradamus%2C%20quiero%20solicitar%20informes" target="_blank" rel="noopener">📲 Solicitar informes</a>
-        </div>
+        <div class="nostra-mobile-panel">${navMobile()}</div>
       </header>
     `;
 
@@ -344,7 +407,7 @@
     if (toggle && panel) {
       toggle.addEventListener('click', function () {
         panel.classList.toggle('open');
-        toggle.textContent = panel.classList.contains('open') ? '×' : '☰';
+        toggle.innerHTML = panel.classList.contains('open') ? '<i class="fal fa-times"></i>' : '<i class="far fa-bars"></i>';
       });
     }
   }
