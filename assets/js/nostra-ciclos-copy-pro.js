@@ -8,24 +8,24 @@
 
   var textos = {
     'ciclo anual uni': {
-      descripcion: 'Preparación completa para estudiantes que desean construir una base sólida desde cero y avanzar progresivamente hasta nivel admisión UNI. Integra teoría clara, práctica intensiva, evaluación constante y acompañamiento académico para formar hábitos, seguridad y rendimiento competitivo.',
-      nivel: 'Básico – Intermedio – Avanzado',
-      ideal: 'Ideal para postulantes que buscan una formación integral, ordenada y sostenida durante todo el año.'
+      descripcion: 'Ciclo diseñado para alumnos que no tienen base académica o sienten que deben empezar desde cero. Durante un año completo se construyen los fundamentos paso a paso, desde nivel básico hasta nivel admisión UNI, con teoría ordenada, práctica progresiva, evaluaciones y acompañamiento constante.',
+      nivel: 'Desde cero – Básico – Intermedio – Avanzado',
+      ideal: 'Ideal para estudiantes que necesitan una preparación completa, paciente y sostenida durante todo el año antes de postular.'
     },
     'ciclo semianual uni': {
-      descripcion: 'Programa intensivo para postulantes con conocimientos previos que necesitan reforzar, ordenar y elevar su nivel académico en menos tiempo. Combina clases enfocadas, práctica dirigida, seguimiento permanente y entrenamiento tipo admisión UNI.',
-      nivel: 'Intermedio – Avanzado',
-      ideal: 'Ideal para estudiantes que ya tienen base y quieren acelerar su preparación con exigencia.'
+      descripcion: 'Programa intensivo para alumnos que ya tienen una base académica, pero aún no han postulado a la UNI o no han tenido éxito con preparaciones anteriores. Reordena conocimientos, corrige vacíos y eleva el nivel con práctica exigente y seguimiento académico.',
+      nivel: 'Base previa – Intermedio – Avanzado',
+      ideal: 'Ideal para postulantes que ya estudiaron antes, pero necesitan una preparación más seria, guiada y efectiva.'
     },
     'ciclo semestral uni': {
-      descripcion: 'Preparación estratégica para avanzar con ritmo académico, disciplina y enfoque en resultados. Está diseñado para consolidar teoría, resolver ejercicios de nivel progresivo y fortalecer el desempeño en evaluaciones tipo UNI.',
-      nivel: 'Básico – Intermedio',
-      ideal: 'Ideal para postulantes que desean prepararse con una ruta clara durante el semestre.'
+      descripcion: 'Ciclo dirigido a alumnos con base académica que ya han postulado y todavía no lograron el ingreso. Se enfoca en reforzar puntos débiles, mejorar la velocidad de resolución, afinar estrategia de examen y consolidar los temas clave para competir mejor.',
+      nivel: 'Intermedio – Avanzado',
+      ideal: 'Ideal para postulantes con experiencia previa en admisión que necesitan ajustar su preparación y convertir el intento anterior en una ventaja.'
     },
     'ciclo repaso uni': {
-      descripcion: 'Entrenamiento de alto rendimiento para postulantes que ya estudiaron los temas y necesitan repasar, corregir errores y ganar velocidad de resolución. Se enfoca en práctica intensiva, simulacros, análisis de preguntas y estrategia de examen.',
-      nivel: 'Intermedio – Avanzado',
-      ideal: 'Ideal para quienes están cerca de postular y quieren llegar con mayor precisión y confianza.'
+      descripcion: 'Ciclo corto e intensivo para repasar los temas más frecuentes y relevantes del examen de admisión UNI. Está orientado a reforzar fórmulas, métodos, preguntas tipo, rapidez de resolución y seguridad antes de la evaluación.',
+      nivel: 'Repaso estratégico – Intermedio – Avanzado',
+      ideal: 'Ideal para quienes están próximos a postular y necesitan un repaso final enfocado en lo que más aparece en el examen.'
     },
     'ciclo élite uni': {
       descripcion: 'Ciclo de exigencia superior para postulantes con buena base académica que buscan competir por los primeros puestos. Profundiza en problemas de alto nivel, técnicas de resolución y entrenamiento intensivo orientado al estándar UNI.',
@@ -82,7 +82,7 @@
   }
 
   function mejorarDescripcion(card) {
-    if (!card || card.dataset.nostraCopyPro === '1') return;
+    if (!card) return;
 
     var titleNode = card.querySelector('.course-title');
     var descBox = card.querySelector('.course-description');
@@ -97,11 +97,12 @@
       '<br><br><strong>NIVEL: ' + data.nivel + '</strong>' +
       '<br><span class="nostra-copy-ideal">' + data.ideal + '</span>';
 
-    card.dataset.nostraCopyPro = '1';
+    card.dataset.nostraCopyPro = '2';
   }
 
   function injectStyles() {
-    if (document.getElementById('nostra-ciclos-copy-pro-style')) return;
+    var oldStyle = document.getElementById('nostra-ciclos-copy-pro-style');
+    if (oldStyle) oldStyle.remove();
 
     var style = document.createElement('style');
     style.id = 'nostra-ciclos-copy-pro-style';
