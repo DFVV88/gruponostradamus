@@ -7,7 +7,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-22';
+  var VERSION = '2026-23';
 
   function assetAlreadyLoaded(urlPart) {
     return !!document.querySelector('script[src*="' + urlPart + '"]');
@@ -27,6 +27,7 @@
 
     /* 🧭 HEADER PREMIUM PARA SUBPÁGINAS */
     loadJS('assets/js/shared-header.js?v=' + VERSION);
+    loadJS('assets/js/nostra-contact-whatsapp-fix.js?v=' + VERSION);
 
     /* 🎨 RESTO DEL SISTEMA VISUAL */
     loadJS('assets/js/nostra-uni-campus-only.js?v=' + VERSION);
