@@ -121,61 +121,61 @@
       titulo:'Anual UNI',
       url:'ciclo-anual-uni.html',
       img:'assets/img/ciclos/ciclo-anual.jpg',
-      desc:'Para alumnos sin base o que necesitan empezar desde cero. Preparación completa durante un año, paso a paso, hasta nivel admisión UNI.'
+      desc:'Para alumnos que no tienen base o sienten que deben empezar desde cero. Durante un año completo construyen fundamentos, hábitos de estudio y nivel académico progresivo hasta enfrentar el examen UNI con mayor seguridad.'
     },
     {
       titulo:'Semianual UNI',
       url:'ciclo-semianual-uni.html',
       img:'assets/img/ciclos/ciclo-semianual.jpg',
-      desc:'Para alumnos con base que nunca han postulado o no tuvieron éxito con preparaciones anteriores. Reordena tu preparación y eleva tu nivel.'
+      desc:'Para alumnos con base previa que aún no han postulado o que no obtuvieron resultados con preparaciones anteriores. Reordena conocimientos, corrige vacíos y eleva el rendimiento con práctica constante.'
     },
     {
       titulo:'Semestral UNI',
       url:'ciclo-semestral-uni.html',
       img:'assets/img/ciclos/ciclo-semestral.jpg',
-      desc:'Para alumnos con base que ya postularon y aún no lograron ingresar. Refuerza puntos débiles, velocidad y estrategia de examen.'
+      desc:'Para postulantes con base que ya rindieron examen y todavía no lograron el ingreso. Refuerza puntos débiles, mejora velocidad de resolución y trabaja estrategia para competir mejor en admisión UNI.'
     },
     {
       titulo:'Repaso UNI',
       url:'ciclo-repaso-uni.html',
       img:'assets/img/ciclos/ciclo-repaso.jpg',
       fallback:'assets/img/ciclos/ciclo-anual.jpg',
-      desc:'Ciclo corto para repasar los temas más frecuentes del examen UNI. Ideal para llegar con mayor precisión, rapidez y seguridad.'
+      desc:'Ciclo corto e intensivo para repasar los temas más frecuentes del examen de admisión UNI. Ideal para reforzar fórmulas, métodos, preguntas tipo y llegar con mayor precisión al examen.'
     },
     {
       titulo:'Élite UNI',
       url:'ciclo-elite-uni.html',
       img:'assets/img/ciclos/ciclo-elite.jpg',
       fallback:'assets/img/ciclos/ciclo-semianual.jpg',
-      desc:'Para postulantes con buena base que buscan alto rendimiento. Entrenamiento avanzado con problemas de mayor nivel y exigencia UNI.'
+      desc:'Para postulantes con buena base y alto rendimiento que buscan competir al máximo nivel. Entrenamiento avanzado con problemas exigentes, técnicas de resolución y ritmo académico superior.'
     },
     {
       titulo:'IEN',
       url:'ciclo-ien.html',
       img:'assets/img/ciclos/ciclo-ien.jpg',
       fallback:'assets/img/ciclos/ciclo-semestral.jpg',
-      desc:'Para estudiantes que necesitan reforzar fundamentos, ordenar su preparación y ganar confianza con práctica guiada y seguimiento.'
+      desc:'Para estudiantes que necesitan reforzar fundamentos, ordenar su preparación y recuperar confianza académica. Trabaja teoría clara, práctica guiada y seguimiento para avanzar con mayor seguridad.'
     },
     {
       titulo:'Proyecto Escolar',
       url:'ciclo-proyecto-escolar.html',
       img:'assets/img/ciclos/ciclo-proyecto-escolar.jpg',
       fallback:'assets/img/ciclos/ciclo-anual.jpg',
-      desc:'Para escolares que desean adelantarse. Fortalece bases en Matemáticas, Ciencias y Aptitud Académica con visión preuniversitaria.'
+      desc:'Para escolares que desean adelantarse desde el colegio y formar una base sólida. Fortalece Matemáticas, Ciencias y Aptitud Académica con visión preuniversitaria y disciplina de estudio.'
     },
     {
       titulo:'Paralelo CEPRE UNI',
       url:'ciclo-paralelo-cepre-uni.html',
       img:'assets/img/ciclos/ciclo-paralelo-cepre-uni.jpg',
       fallback:'assets/img/ciclos/ciclo-semianual.jpg',
-      desc:'Para alumnos de CEPRE UNI que necesitan reforzar lo aprendido, resolver dudas y practicar más para sostener un ritmo competitivo.'
+      desc:'Para alumnos de CEPRE UNI que necesitan reforzar lo aprendido, resolver dudas y practicar con mayor intensidad. Complementa su avance y ayuda a sostener un ritmo competitivo.'
     },
     {
       titulo:'Ciclo Verano UNI',
       url:'ciclo-verano-uni.html',
       img:'assets/img/ciclos/ciclo-verano-uni.jpg',
       fallback:'assets/img/ciclos/ciclo-semestral.jpg',
-      desc:'Intensivo de verano para iniciar o reforzar la preparación UNI. Aprovecha las vacaciones para avanzar y ganar ventaja académica.'
+      desc:'Intensivo de verano para iniciar o reforzar la preparación UNI durante las vacaciones. Permite avanzar en cursos clave, crear ritmo académico y llegar mejor preparado al siguiente ciclo.'
     }
   ];
 
@@ -252,11 +252,11 @@
       }
 
       body #course-sec .nostra-home-cycle-desc{
-        margin:0 0 20px !important;
+        margin:0 0 22px !important;
         color:#5e6a78 !important;
         text-align:center !important;
-        font-size:15px !important;
-        line-height:1.55 !important;
+        font-size:14.5px !important;
+        line-height:1.62 !important;
         font-weight:650 !important;
       }
 
@@ -308,7 +308,7 @@
   function upgradeHomeCycles() {
     injectHomeCycleStyles();
     var sec = document.querySelector('body #course-sec');
-    if (!sec || sec.dataset.nostraHomeCyclesPro === '1') return;
+    if (!sec || sec.dataset.nostraHomeCyclesPro === '2') return;
 
     var grid = sec.querySelector('.filter-active');
     if (!grid) return;
@@ -318,7 +318,7 @@
     grid.style.height = 'auto';
     grid.style.position = 'relative';
 
-    sec.dataset.nostraHomeCyclesPro = '1';
+    sec.dataset.nostraHomeCyclesPro = '2';
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', upgradeHomeCycles);
