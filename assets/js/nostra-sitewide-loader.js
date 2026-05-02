@@ -7,7 +7,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-16';
+  var VERSION = '2026-17';
 
   function assetAlreadyLoaded(urlPart) {
     return !!document.querySelector('script[src*="' + urlPart + '"]');
@@ -26,6 +26,7 @@
     loadJS('assets/js/nostra-analytics.js?v=' + VERSION);
 
     /* 🎨 RESTO DEL SISTEMA VISUAL */
+    loadJS('assets/js/nostra-uni-campus-only.js?v=' + VERSION);
     loadJS('assets/js/nostra-grid-fix.js?v=' + VERSION);
     loadJS('assets/js/nostra-footer-pro.js?v=' + VERSION);
     loadJS('assets/js/nostra-button-fix.js?v=' + VERSION);
