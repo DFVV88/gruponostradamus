@@ -49,8 +49,10 @@
         padding: 11px 19px !important;
         border-radius: 999px !important;
         border: 1px solid rgba(0, 137, 150, .22) !important;
-        background: rgba(255,255,255,.82) !important;
+        background: rgba(255,255,255,.88) !important;
         color: #061426 !important;
+        -webkit-text-fill-color: #061426 !important;
+        text-shadow: none !important;
         font-weight: 900 !important;
         letter-spacing: .35px;
         text-transform: uppercase;
@@ -83,7 +85,7 @@
         inset: 0;
         z-index: -1;
         border-radius: inherit;
-        background: linear-gradient(135deg, #062033, #008b96 56%, #00d4df);
+        background: linear-gradient(135deg, #ffffff 0%, #e7fbfd 45%, #ccf8fb 100%);
         opacity: 0;
         transition: opacity .28s ease;
       }
@@ -95,33 +97,48 @@
         height: 120%;
         top: -10%;
         left: -70px;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,.85), transparent);
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,.90), transparent);
         transform: rotate(18deg);
         opacity: 0;
         transition: left .55s ease, opacity .2s ease;
+        pointer-events: none;
       }
 
-      body .tab-menu2.filter-menu-active .filter-btn:hover,
-      body .tab-menu2.filter-menu-active .filter-btn.active{
-        color: #ffffff !important;
-        border-color: rgba(0, 212, 223, .65) !important;
+      body .tab-menu2.filter-menu-active .filter-btn:hover{
+        color: #061426 !important;
+        -webkit-text-fill-color: #061426 !important;
+        background: #ffffff !important;
+        border-color: rgba(0, 212, 223, .75) !important;
         transform: translateY(-5px) scale(1.045);
-        box-shadow: 0 16px 28px rgba(0,137,150,.22), 0 0 22px rgba(0,194,209,.20);
+        box-shadow: 0 16px 28px rgba(0,137,150,.20), 0 0 24px rgba(0,194,209,.22);
       }
 
-      body .tab-menu2.filter-menu-active .filter-btn:hover::before,
-      body .tab-menu2.filter-menu-active .filter-btn.active::before{
+      body .tab-menu2.filter-menu-active .filter-btn:hover::before{
         opacity: 1;
       }
 
-      body .tab-menu2.filter-menu-active .filter-btn:hover::after,
-      body .tab-menu2.filter-menu-active .filter-btn.active::after{
+      body .tab-menu2.filter-menu-active .filter-btn:hover::after{
         left: calc(100% + 45px);
-        opacity: .9;
+        opacity: .65;
       }
 
       body .tab-menu2.filter-menu-active .filter-btn.active{
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+        background: linear-gradient(135deg, #061426, #008b96 58%, #00d4df) !important;
+        border-color: rgba(0, 212, 223, .75) !important;
+        transform: translateY(-5px) scale(1.045);
+        box-shadow: 0 16px 28px rgba(0,137,150,.26), 0 0 28px rgba(0,194,209,.26);
         animation: nostraActivePulse 2.6s ease-in-out infinite;
+      }
+
+      body .tab-menu2.filter-menu-active .filter-btn.active::before{
+        opacity: 0;
+      }
+
+      body .tab-menu2.filter-menu-active .filter-btn.active::after{
+        left: calc(100% + 45px);
+        opacity: .70;
       }
 
       body .tab-menu2.filter-menu-active .filter-btn:first-child{
@@ -129,12 +146,19 @@
         padding-right: 24px !important;
         background: linear-gradient(135deg, #061426, #008b96) !important;
         color: #fff !important;
+        -webkit-text-fill-color: #fff !important;
         border-color: rgba(0,212,223,.56) !important;
         box-shadow: 0 16px 34px rgba(0,137,150,.22), 0 0 22px rgba(0,194,209,.22);
       }
 
+      body .tab-menu2.filter-menu-active .filter-btn:first-child:hover{
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+        background: linear-gradient(135deg, #061426, #008b96, #00d4df) !important;
+      }
+
       body .tab-menu2.filter-menu-active .filter-btn:first-child::before{
-        opacity: .35;
+        opacity: 0;
       }
 
       body .filter-active .filter-item{
@@ -164,8 +188,8 @@
       }
 
       @keyframes nostraActivePulse{
-        0%, 100%{ box-shadow: 0 16px 28px rgba(0,137,150,.22), 0 0 22px rgba(0,194,209,.20); }
-        50%{ box-shadow: 0 19px 36px rgba(0,137,150,.30), 0 0 34px rgba(0,194,209,.35); }
+        0%, 100%{ box-shadow: 0 16px 28px rgba(0,137,150,.26), 0 0 28px rgba(0,194,209,.26); }
+        50%{ box-shadow: 0 19px 36px rgba(0,137,150,.34), 0 0 38px rgba(0,194,209,.40); }
       }
 
       @media (max-width: 991px){
