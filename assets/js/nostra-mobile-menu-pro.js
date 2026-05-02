@@ -1,9 +1,6 @@
 /* ==================================================
-   Grupo Nostradamus - Menú móvil institucional PRO
-   Rediseño compacto y limpio para celulares.
-   - Sin emojis decorativos.
-   - Botones más delgados y legibles.
-   - Submenús integrados sin círculos que tapen texto.
+   Grupo Nostradamus - Menú móvil institucional ELITE
+   Panel móvil más moderno, limpio y compacto.
    No afecta iq100.html.
 ================================================== */
 (function () {
@@ -18,70 +15,89 @@
     style.textContent = `
       @media(max-width: 991.98px){
         .th-menu-wrapper{
-          background:rgba(2,7,13,.70) !important;
-          backdrop-filter:blur(9px) !important;
+          background:rgba(0,5,10,.74) !important;
+          backdrop-filter:blur(12px) saturate(1.15) !important;
         }
 
         .th-menu-wrapper .th-menu-area{
-          width:min(84vw,310px) !important;
-          max-width:310px !important;
+          width:min(82vw,292px) !important;
+          max-width:292px !important;
           min-height:100vh !important;
           background:
-            radial-gradient(circle at 15% 7%, rgba(0,194,209,.16), transparent 32%),
-            linear-gradient(180deg,#071421 0%,#02070d 70%,#06111d 100%) !important;
-          border-right:1px solid rgba(0,194,209,.45) !important;
-          box-shadow:18px 0 48px rgba(0,0,0,.55) !important;
-          padding:18px 16px 22px !important;
+            radial-gradient(circle at 8% 0%, rgba(0,212,223,.22), transparent 31%),
+            radial-gradient(circle at 100% 24%, rgba(0,141,255,.13), transparent 28%),
+            linear-gradient(180deg,#061426 0%,#02070d 62%,#06111d 100%) !important;
+          border-right:1px solid rgba(0,212,223,.42) !important;
+          box-shadow:18px 0 46px rgba(0,0,0,.58), inset -1px 0 0 rgba(255,255,255,.04) !important;
+          padding:14px 13px 18px !important;
           overflow-y:auto !important;
           overflow-x:hidden !important;
         }
 
         .th-menu-wrapper .th-menu-area:before{
           content:'GRUPO NOSTRADAMUS';
-          display:block;
-          color:rgba(255,255,255,.72);
-          font-size:10px;
+          display:flex;
+          align-items:center;
+          gap:8px;
+          color:rgba(255,255,255,.76);
+          font-size:9.5px;
           line-height:1;
-          font-weight:900;
-          letter-spacing:2px;
+          font-weight:950;
+          letter-spacing:1.8px;
           text-align:left;
-          margin:2px 0 10px;
+          margin:1px 0 9px 1px;
           text-transform:uppercase;
         }
 
+        .th-menu-wrapper .th-menu-area:after{
+          content:'La ruta que transforma alumnos en cachimbos';
+          display:block;
+          color:rgba(255,255,255,.48);
+          font-size:10.5px;
+          line-height:1.25;
+          font-weight:650;
+          margin:-4px 0 11px 1px;
+        }
+
         .th-menu-wrapper .mobile-logo{
-          background:#ffffff !important;
-          border:1px solid rgba(0,194,209,.20) !important;
-          border-radius:18px !important;
-          padding:12px 14px !important;
-          margin:0 0 14px !important;
-          box-shadow:0 12px 28px rgba(0,0,0,.20) !important;
+          display:flex !important;
+          align-items:center !important;
+          justify-content:center !important;
+          min-height:96px !important;
+          background:linear-gradient(135deg,#ffffff,#eefcff) !important;
+          border:1px solid rgba(0,194,209,.24) !important;
+          border-radius:20px !important;
+          padding:10px 14px !important;
+          margin:0 0 12px !important;
+          box-shadow:0 14px 28px rgba(0,0,0,.22),0 0 22px rgba(0,194,209,.08) !important;
           text-align:center !important;
         }
 
         .th-menu-wrapper .mobile-logo img{
-          max-width:165px !important;
+          max-width:168px !important;
+          max-height:72px !important;
           width:auto !important;
           height:auto !important;
-          display:inline-block !important;
+          object-fit:contain !important;
+          display:block !important;
         }
 
         .th-menu-wrapper .th-menu-toggle{
-          top:24px !important;
-          right:-19px !important;
-          width:42px !important;
-          height:42px !important;
-          line-height:42px !important;
+          top:18px !important;
+          right:-18px !important;
+          width:40px !important;
+          height:40px !important;
+          line-height:40px !important;
           border-radius:50% !important;
-          background:linear-gradient(135deg,#078c95,#00c2d1) !important;
+          background:linear-gradient(135deg,#00c2d1,#007f8a) !important;
           color:#ffffff !important;
           border:1px solid rgba(255,255,255,.24) !important;
-          box-shadow:0 0 22px rgba(0,194,209,.38) !important;
-          font-size:17px !important;
+          box-shadow:0 0 24px rgba(0,194,209,.42),0 8px 18px rgba(0,0,0,.24) !important;
+          font-size:16px !important;
         }
 
         .only-mobile-live{
-          margin:0 0 12px !important;
+          margin:0 0 10px !important;
           padding:0 !important;
           list-style:none !important;
           text-align:center !important;
@@ -91,53 +107,48 @@
           display:flex !important;
           align-items:center !important;
           justify-content:center !important;
-          gap:10px !important;
+          gap:9px !important;
           width:100% !important;
-          min-height:46px !important;
-          padding:11px 13px !important;
+          min-height:44px !important;
+          padding:10px 12px !important;
           border-radius:15px !important;
-          background:linear-gradient(135deg,#00c2d1 0%,#008dff 100%) !important;
+          background:linear-gradient(135deg,#ff3434 0%,#d71313 50%,#ff6a00 100%) !important;
           color:#ffffff !important;
-          font-size:13px !important;
-          font-weight:900 !important;
-          line-height:1.1 !important;
+          font-size:12.5px !important;
+          font-weight:950 !important;
+          line-height:1.05 !important;
           letter-spacing:.8px !important;
           text-transform:uppercase !important;
-          box-shadow:0 12px 26px rgba(0,141,255,.22), inset 0 1px 0 rgba(255,255,255,.18) !important;
-          border:1px solid rgba(255,255,255,.18) !important;
+          box-shadow:0 12px 24px rgba(255,65,35,.24), inset 0 1px 0 rgba(255,255,255,.22) !important;
+          border:1px solid rgba(255,255,255,.16) !important;
         }
 
         .btn-live-mobile:before{
           content:'';
-          width:9px;
-          height:9px;
-          flex:0 0 9px;
+          width:8px;
+          height:8px;
+          flex:0 0 8px;
           border-radius:50%;
-          background:#ff3131;
-          box-shadow:0 0 12px rgba(255,49,49,.85);
+          background:#ffffff;
+          box-shadow:0 0 12px rgba(255,255,255,.95),0 0 20px rgba(255,0,0,.9);
+          animation:nostraLiveDot 1.2s ease-in-out infinite;
         }
 
         .live-help-text{
-          color:rgba(255,255,255,.68) !important;
-          font-size:11.5px !important;
-          line-height:1.35 !important;
+          color:rgba(255,255,255,.58) !important;
+          font-size:10.5px !important;
+          line-height:1.28 !important;
           font-weight:650 !important;
-          margin:7px auto 0 !important;
-          max-width:235px !important;
+          margin:6px auto 0 !important;
+          max-width:225px !important;
         }
 
-        .th-mobile-menu{
-          margin-top:3px !important;
-        }
+        .th-mobile-menu{margin-top:2px !important;}
+        .th-mobile-menu ul{padding:0 !important;margin:0 !important;}
 
-        .th-mobile-menu ul{
-          padding:0 !important;
-          margin:0 !important;
-        }
-
-        .th-mobile-menu li{
+        .th-mobile-menu > ul > li{
           border:0 !important;
-          margin:0 0 7px !important;
+          margin:0 0 6px !important;
           list-style:none !important;
           position:relative !important;
         }
@@ -145,56 +156,57 @@
         .th-mobile-menu li > a{
           display:flex !important;
           align-items:center !important;
-          min-height:42px !important;
-          padding:10px 13px 10px 16px !important;
-          border-radius:14px !important;
-          background:rgba(255,255,255,.045) !important;
+          min-height:40px !important;
+          padding:9px 12px 9px 13px !important;
+          border-radius:13px !important;
+          background:rgba(255,255,255,.052) !important;
           border:1px solid rgba(255,255,255,.075) !important;
-          color:rgba(255,255,255,.92) !important;
-          font-size:14px !important;
-          font-weight:830 !important;
-          letter-spacing:.2px !important;
+          color:rgba(255,255,255,.93) !important;
+          font-size:13.6px !important;
+          font-weight:860 !important;
+          letter-spacing:.15px !important;
           text-transform:none !important;
           box-shadow:inset 0 1px 0 rgba(255,255,255,.035) !important;
-          transition:transform .22s ease, background .22s ease, border-color .22s ease !important;
+          transition:transform .22s ease, background .22s ease, border-color .22s ease, box-shadow .22s ease !important;
         }
 
         .th-mobile-menu li > a:before{
           content:'';
-          width:5px;
-          height:18px;
-          flex:0 0 5px;
-          border-radius:999px;
-          background:#00c2d1;
-          margin-right:11px;
-          box-shadow:0 0 10px rgba(0,194,209,.52);
+          width:7px;
+          height:7px;
+          flex:0 0 7px;
+          border-radius:50%;
+          background:#00d4df;
+          margin-right:10px;
+          box-shadow:0 0 11px rgba(0,212,223,.70);
         }
 
         .th-mobile-menu li > a:hover,
         .th-mobile-menu li.th-active > a,
         .th-mobile-menu li > a:focus{
-          background:linear-gradient(90deg,rgba(0,194,209,.18),rgba(255,255,255,.052)) !important;
-          border-color:rgba(0,194,209,.32) !important;
+          background:linear-gradient(90deg,rgba(0,194,209,.22),rgba(255,255,255,.062)) !important;
+          border-color:rgba(0,194,209,.34) !important;
           color:#ffffff !important;
           transform:translateX(2px) !important;
+          box-shadow:0 8px 16px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.05) !important;
         }
 
         .th-mobile-menu .th-item-has-children > a,
         .th-mobile-menu .menu-item-has-children > a{
-          padding-right:48px !important;
+          padding-right:45px !important;
         }
 
         .th-mobile-menu .th-mean-expand{
           position:absolute !important;
-          right:9px !important;
-          top:7px !important;
-          width:28px !important;
-          height:28px !important;
-          line-height:28px !important;
-          border-radius:10px !important;
-          background:rgba(255,255,255,.10) !important;
+          right:7px !important;
+          top:6px !important;
+          width:29px !important;
+          height:29px !important;
+          line-height:29px !important;
+          border-radius:12px !important;
+          background:linear-gradient(135deg,rgba(255,255,255,.13),rgba(255,255,255,.05)) !important;
           color:#ffffff !important;
-          border:1px solid rgba(0,194,209,.22) !important;
+          border:1px solid rgba(0,194,209,.24) !important;
           font-size:0 !important;
           box-shadow:none !important;
           z-index:5 !important;
@@ -218,44 +230,43 @@
           transition:transform .22s ease !important;
         }
 
-        .th-mobile-menu li.th-active > .th-mean-expand:after{
-          transform:translate(-50%,-50%) rotate(0deg) !important;
-        }
+        .th-mobile-menu li.th-active > .th-mean-expand:after{transform:translate(-50%,-50%) rotate(0deg) !important;}
 
         .th-mobile-menu .sub-menu{
-          margin:7px 0 9px 8px !important;
-          padding:7px !important;
+          margin:6px 0 8px 0 !important;
+          padding:7px 7px 4px !important;
           border-radius:14px !important;
-          background:rgba(0,0,0,.24) !important;
-          border:1px solid rgba(0,194,209,.10) !important;
+          background:rgba(0,0,0,.22) !important;
+          border:1px solid rgba(0,194,209,.09) !important;
+          box-shadow:inset 0 1px 0 rgba(255,255,255,.035) !important;
         }
 
-        .th-mobile-menu .sub-menu li{
-          margin-bottom:5px !important;
-        }
+        .th-mobile-menu .sub-menu li{margin-bottom:5px !important;}
 
         .th-mobile-menu .sub-menu a{
-          min-height:35px !important;
-          font-size:12.5px !important;
-          font-weight:720 !important;
+          min-height:34px !important;
+          font-size:12.2px !important;
+          font-weight:760 !important;
           padding:8px 10px !important;
-          background:rgba(255,255,255,.032) !important;
+          background:rgba(255,255,255,.035) !important;
           border-radius:10px !important;
+          color:rgba(255,255,255,.86) !important;
         }
 
         .th-mobile-menu .sub-menu a:before{
           width:4px !important;
           height:4px !important;
           border-radius:50% !important;
-          margin-right:9px !important;
+          margin-right:8px !important;
+          background:rgba(0,212,223,.82) !important;
         }
 
-        .th-menu-wrapper .th-menu-area::-webkit-scrollbar{
-          width:5px;
-        }
-        .th-menu-wrapper .th-menu-area::-webkit-scrollbar-thumb{
-          background:#00c2d1;
-          border-radius:20px;
+        .th-menu-wrapper .th-menu-area::-webkit-scrollbar{width:4px;}
+        .th-menu-wrapper .th-menu-area::-webkit-scrollbar-thumb{background:#00c2d1;border-radius:20px;}
+
+        @keyframes nostraLiveDot{
+          0%,100%{transform:scale(1);opacity:1;}
+          50%{transform:scale(.72);opacity:.65;}
         }
       }
     `;
@@ -277,7 +288,7 @@
       if (text === 'ciclos') a.textContent = 'Ciclos';
       if (text === 'docentes') a.textContent = 'Docentes';
       if (text === 'cachimbos') a.textContent = 'Cachimbos';
-      if (text === 'sede' || text === 'sedes') a.textContent = 'Sede';
+      if (text === 'sede' || text === 'sedes') a.textContent = 'Sede UNI';
       if (text === 'noticias') a.textContent = 'Noticias';
       if (text === 'contacto') a.textContent = 'Contacto';
     });
