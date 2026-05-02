@@ -1,5 +1,5 @@
 /* ==================================================
-   Grupo Nostradamus - Loader global de estilo institucional
+   Grupo Nostradamus - Loader global restaurado + analytics
 ================================================== */
 (function () {
   var path = window.location.pathname.toLowerCase();
@@ -7,10 +7,10 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-14';
+  var VERSION = '2026-15';
 
   function assetAlreadyLoaded(urlPart) {
-    return !!document.querySelector('link[href*="' + urlPart + '"], script[src*="' + urlPart + '"]');
+    return !!document.querySelector('script[src*="' + urlPart + '"]');
   }
 
   function loadJS(src) {
@@ -22,8 +22,24 @@
   }
 
   function init() {
+    /* 🔥 ANALYTICS */
     loadJS('assets/js/nostra-analytics.js?v=' + VERSION);
+
+    /* 🎨 RESTO DEL SISTEMA VISUAL */
+    loadJS('assets/js/nostra-grid-fix.js?v=' + VERSION);
+    loadJS('assets/js/nostra-footer-pro.js?v=' + VERSION);
+    loadJS('assets/js/nostra-button-fix.js?v=' + VERSION);
+    loadJS('assets/js/nostra-whatsapp-inscripcion.js?v=' + VERSION);
+    loadJS('assets/js/nostra-content-polish.js?v=' + VERSION);
+    loadJS('assets/js/nostra-page-polish.js?v=' + VERSION);
     loadJS('assets/js/nostra-mobile-menu-pro.js?v=' + VERSION);
+    loadJS('assets/js/nostra-performance-pro.js?v=' + VERSION);
+    loadJS('assets/js/nostra-social-seo.js?v=' + VERSION);
+    loadJS('assets/js/nostra-offer-section-fix.js?v=' + VERSION);
+    loadJS('assets/js/nostra-offer-uniform-override.js?v=' + VERSION);
+    loadJS('assets/js/nostra-header-footer-premium.js?v=' + VERSION);
+    loadJS('assets/js/nostra-live-classes-fix.js?v=' + VERSION);
+    loadJS('assets/js/nostra-offer-hard-uniform.js?v=' + VERSION);
   }
 
   if (document.readyState === 'loading') {
