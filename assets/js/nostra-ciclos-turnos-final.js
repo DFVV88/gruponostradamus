@@ -16,10 +16,29 @@
       .trim();
   }
 
+  function formatTime(value) {
+    return normalizeText(value)
+      .replace(/a\.m\./gi, 'a. m.')
+      .replace(/p\.m\./gi, 'p. m.')
+      .replace(/\s+a\s+(?=\d)/i, ' – ');
+  }
+
   function formatLine(text) {
-    return normalizeText(text)
-      .replace(/\(([^)]+)\)/g, '<strong>($1)</strong>')
-      .replace(/Más dos tardes/g, '<strong>Más dos tardes</strong>');
+    var clean = normalizeText(text);
+    var match = clean.match(/^(.+?)\s*\(([^)]+)\)\s*(.*)$/);
+
+    if (match) {
+      var days = normalizeText(match[1]);
+      var time = formatTime(match[2]);
+      var extra = normalizeText(match[3]);
+      return '<span class="nostra-turno-final-label">HORARIO</span>' +
+        '<span class="nostra-turno-final-days">' + days + '</span>' +
+        '<span class="nostra-turno-final-time">' + time + '</span>' +
+        (extra ? '<span class="nostra-turno-final-extra">' + extra + '</span>' : '');
+    }
+
+    return '<span class="nostra-turno-final-label">HORARIO</span>' +
+      '<span class="nostra-turno-final-days">' + clean + '</span>';
   }
 
   function injectStyles() {
@@ -100,16 +119,22 @@
       body #course-sec .nostra-turno-final-line{
         position:relative !important;
         width:100% !important;
-        min-height:44px !important;
-        display:block !important;
-        padding:11px 12px 11px 43px !important;
-        border-radius:14px !important;
+        min-height:62px !important;
+        display:grid !important;
+        grid-template-columns:26px 1fr !important;
+        grid-template-areas:
+          "icon label"
+          "icon days"
+          "icon time"
+          "icon extra" !important;
+        column-gap:10px !important;
+        row-gap:3px !important;
+        align-items:start !important;
+        padding:12px 13px !important;
+        border-radius:15px !important;
         background:#ffffff !important;
         border:1px solid rgba(0,137,150,.13) !important;
         color:#061426 !important;
-        font-size:13px !important;
-        font-weight:900 !important;
-        line-height:1.35 !important;
         text-align:left !important;
         box-shadow:0 7px 16px rgba(6,20,38,.045) !important;
         white-space:normal !important;
@@ -119,11 +144,10 @@
 
       body #course-sec .nostra-turno-final-line:before{
         content:'🕘' !important;
-        position:absolute !important;
-        left:12px !important;
-        top:12px !important;
-        width:22px !important;
-        height:22px !important;
+        grid-area:icon !important;
+        width:24px !important;
+        height:24px !important;
+        margin-top:1px !important;
         border-radius:999px !important;
         display:flex !important;
         align-items:center !important;
@@ -134,15 +158,54 @@
       }
 
       body #course-sec .nostra-turno-final-line:after{
-        content:'Horario' !important;
+        content:none !important;
+        display:none !important;
+      }
+
+      body #course-sec .nostra-turno-final-label{
+        grid-area:label !important;
         display:block !important;
-        margin-bottom:4px !important;
         color:#008b96 !important;
-        font-size:9.5px !important;
+        font-size:10px !important;
         font-weight:950 !important;
         line-height:1 !important;
-        letter-spacing:.45px !important;
+        letter-spacing:.55px !important;
         text-transform:uppercase !important;
+      }
+
+      body #course-sec .nostra-turno-final-days{
+        grid-area:days !important;
+        display:block !important;
+        color:#061426 !important;
+        font-size:13.5px !important;
+        font-weight:950 !important;
+        line-height:1.18 !important;
+      }
+
+      body #course-sec .nostra-turno-final-time{
+        grid-area:time !important;
+        display:inline-flex !important;
+        align-items:center !important;
+        width:max-content !important;
+        max-width:100% !important;
+        margin-top:2px !important;
+        padding:5px 9px !important;
+        border-radius:999px !important;
+        background:rgba(0,194,209,.10) !important;
+        color:#008b96 !important;
+        font-size:13px !important;
+        font-weight:950 !important;
+        line-height:1.15 !important;
+      }
+
+      body #course-sec .nostra-turno-final-extra{
+        grid-area:extra !important;
+        display:block !important;
+        margin-top:3px !important;
+        color:#23364b !important;
+        font-size:12.5px !important;
+        font-weight:850 !important;
+        line-height:1.25 !important;
       }
 
       body #course-sec .nostra-turno-final-line strong{
@@ -153,7 +216,10 @@
       @media(max-width:575px){
         body #course-sec .nostra-turno-final-card{padding:12px !important;border-radius:16px !important;}
         body #course-sec .nostra-turno-final-title{font-size:12.8px !important;min-height:40px !important;}
-        body #course-sec .nostra-turno-final-line{font-size:12.8px !important;padding-left:41px !important;}
+        body #course-sec .nostra-turno-final-line{min-height:58px !important;padding:11px 12px !important;column-gap:9px !important;}
+        body #course-sec .nostra-turno-final-days{font-size:13px !important;}
+        body #course-sec .nostra-turno-final-time{font-size:12.5px !important;}
+        body #course-sec .nostra-turno-final-extra{font-size:12.2px !important;}
       }
     `;
     document.head.appendChild(style);
@@ -215,7 +281,9 @@
       if (!turnos.length) return;
 
       var existing = pane.querySelector('.nostra-turnos-final');
-      if (existing) return;
+      if (existing) {
+        existing.remove();
+      }
 
       var wrap = document.createElement('div');
       wrap.className = 'nostra-turnos-final';
