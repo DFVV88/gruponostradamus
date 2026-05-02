@@ -1,4 +1,4 @@
-name: Inject Google Analytics
+name: Inject Google Analytics and Tag Manager
 
 on:
   workflow_dispatch:
@@ -16,13 +16,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Correct GA4 ID and inject conversion tracking
+      - name: Inject GA4, GTM and conversion tracking
         shell: python
         run: |
           from pathlib import Path
+          import re
 
           OLD_GA_ID = "G-SHGP6KM962"
           GA_ID = "G-SHGP6KW962"
+          GTM_ID = "GTM-WZ5RPX4C"
 
           ga = f'''<!-- Google Analytics - Grupo Nostradamus -->
           <script async src="https://www.googletagmanager.com/gtag/js?id={GA_ID}"></script>
@@ -33,6 +35,17 @@ jobs:
             gtag("config", "{GA_ID}", {{ anonymize_ip: true }});
           </script>
           <!-- /Google Analytics - Grupo Nostradamus -->'''
+
+          gtm_head = f'''<!-- Google Tag Manager - Grupo Nostradamus -->
+          <script>
+          (function(w,d,s,l,i){{w[l]=w[l]||[];w[l].push({{'gtm.start':new Date().getTime(),event:'gtm.js'}});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);}})(window,document,'script','dataLayer','{GTM_ID}');
+          </script>
+          <!-- /Google Tag Manager - Grupo Nostradamus -->'''
+
+          gtm_body = f'''<!-- Google Tag Manager (noscript) - Grupo Nostradamus -->
+          <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={GTM_ID}"
+          height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+          <!-- /Google Tag Manager (noscript) - Grupo Nostradamus -->'''
 
           tracking = '''<!-- Conversion tracking - Grupo Nostradamus -->
           <script>
@@ -69,6 +82,12 @@ jobs:
               if GA_ID not in text and '</head>' in text:
                   text = text.replace('</head>', ga + '\n</head>', 1)
 
+              if GTM_ID not in text and '</head>' in text:
+                  text = text.replace('</head>', gtm_head + '\n</head>', 1)
+
+              if 'Google Tag Manager (noscript) - Grupo Nostradamus' not in text and '<body' in text:
+                  text = re.sub(r'(<body[^>]*>)', r'\1\n' + gtm_body, text, count=1, flags=re.IGNORECASE)
+
               if 'Conversion tracking - Grupo Nostradamus' not in text and '</body>' in text:
                   text = text.replace('</body>', tracking + '\n</body>', 1)
 
@@ -87,6 +106,6 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
             git add *.html
-            git commit -m "Correct Google Analytics measurement ID"
+            git commit -m "Install Google Tag Manager"
             git push
           fi
