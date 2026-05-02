@@ -1,28 +1,15 @@
 /* ==================================================
-   Grupo Nostradamus - Google Analytics + Conversiones
-   ID GA4: G-SHGP6KM962
-   Mide visitas y clics comerciales importantes.
+   Grupo Nostradamus - Conversiones GA4
+   ID GA4 correcto: G-SHGP6KW962
+   Nota: GA4 y GTM se cargan directo en los HTML.
+   Este archivo solo registra eventos comerciales.
 ================================================== */
 (function () {
-  var GA_ID = 'G-SHGP6KM962';
+  var GA_ID = 'G-SHGP6KW962';
 
-  function loadGoogleAnalytics() {
-    if (window.__nostraAnalyticsLoaded) return;
-    window.__nostraAnalyticsLoaded = true;
-
+  function ensureGtagFallback() {
     window.dataLayer = window.dataLayer || [];
     window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
-
-    var script = document.createElement('script');
-    script.async = true;
-    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
-    document.head.appendChild(script);
-
-    window.gtag('js', new Date());
-    window.gtag('config', GA_ID, {
-      send_page_view: true,
-      anonymize_ip: true
-    });
   }
 
   function cleanText(value) {
@@ -45,6 +32,7 @@
   function sendEvent(eventName, params) {
     if (typeof window.gtag !== 'function') return;
     window.gtag('event', eventName, Object.assign({
+      send_to: GA_ID,
       page_name: getPageName(),
       page_path: window.location.pathname,
       page_url: window.location.href
@@ -77,6 +65,9 @@
   }
 
   function installClickTracking() {
+    if (window.__nostraClickTrackingInstalled) return;
+    window.__nostraClickTrackingInstalled = true;
+
     document.addEventListener('click', function (event) {
       var link = event.target && event.target.closest ? event.target.closest('a') : null;
       if (!link || !link.href) return;
@@ -107,11 +98,11 @@
   }
 
   function init() {
-    loadGoogleAnalytics();
+    ensureGtagFallback();
     installClickTracking();
     sendEvent('nostra_analytics_ready', {
       event_category: 'system',
-      event_label: 'analytics_instalado'
+      event_label: 'conversiones_activas'
     });
   }
 
