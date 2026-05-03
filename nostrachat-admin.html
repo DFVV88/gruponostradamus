@@ -12,8 +12,26 @@
   <style>
     *{box-sizing:border-box}body{margin:0;font-family:'Jost',Arial,sans-serif;background:linear-gradient(135deg,#02070d,#061426 55%,#07333b);color:#172033;min-height:100vh}.admin-wrap{width:min(1180px,92%);margin:auto;padding:34px 0 60px}.admin-top{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:24px;color:#fff}.admin-brand{display:flex;align-items:center;gap:13px;font-weight:950}.admin-brand img{width:62px}.admin-top a{color:#fff;font-weight:900}.admin-card{background:#fff;border:1px solid rgba(255,255,255,.18);border-radius:30px;box-shadow:0 26px 80px rgba(0,0,0,.24);overflow:hidden}.admin-hero{padding:28px;background:radial-gradient(circle at 20% 10%,rgba(255,148,30,.22),transparent 34%),linear-gradient(135deg,#061426,#078c95);color:#fff}.admin-hero h1{font-family:'Baloo 2';font-size:clamp(34px,5vw,58px);line-height:1;margin:0 0 8px;color:#fff}.admin-hero p{margin:0;color:rgba(255,255,255,.86);font-size:18px}.admin-login{max-width:460px;margin:28px auto;padding:26px}.admin-login label{display:block;font-weight:900;margin:14px 0 6px;color:#061426}.admin-login input{width:100%;border:1px solid rgba(7,140,149,.25);border-radius:14px;padding:13px;font:inherit;outline:none}.admin-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:13px 18px;background:linear-gradient(135deg,#ff941e,#078c95,#061426);color:#fff;font-weight:950;cursor:pointer;text-transform:uppercase}.admin-btn.full{width:100%;margin-top:18px}.admin-btn.light{background:#fff;color:#061426}.admin-btn.danger{background:linear-gradient(135deg,#e71939,#061426)}.admin-btn.small{padding:8px 12px;font-size:12px}.admin-warning{display:none;background:#fff2f2;border:1px solid #ffd3d3;color:#941b1b;padding:12px;border-radius:14px;margin-top:12px;font-weight:800}.admin-warning.show{display:block}.admin-panel{display:none;padding:24px}.admin-panel.show{display:block}.admin-controls{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:18px}.admin-tabs{display:flex;gap:10px;flex-wrap:wrap}.admin-tab{border:1px solid rgba(7,140,149,.18);background:#f7fdff;border-radius:999px;padding:10px 14px;font-weight:950;cursor:pointer;color:#061426}.admin-tab.active{background:linear-gradient(135deg,#078c95,#061426);color:#fff;border-color:transparent}.admin-grid{display:grid;grid-template-columns:1fr;gap:14px}.admin-item{border:1px solid rgba(7,140,149,.16);border-radius:20px;padding:16px;background:#fff;box-shadow:0 12px 32px rgba(6,20,38,.06)}.admin-meta{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;color:#5f6b7a;font-size:13px;font-weight:800;margin-bottom:8px}.admin-text{font-size:16px;line-height:1.55;color:#172033;margin:10px 0}.admin-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.admin-empty{text-align:center;color:#657588;font-weight:850;padding:38px}.admin-badge{display:inline-flex;border-radius:999px;padding:5px 9px;background:#fff7e6;color:#9b5a00;font-size:12px;font-weight:950}.admin-badge.report{background:#fff2f2;color:#941b1b}@media(max-width:800px){.admin-top{flex-direction:column;align-items:flex-start}.admin-controls{align-items:stretch}.admin-tabs,.admin-btn.light{width:100%}.admin-tab{flex:1;text-align:center}.admin-actions .admin-btn{width:100%}}
   </style>
+<!-- Google Analytics - Grupo Nostradamus -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SHGP6KW962"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-SHGP6KW962", { anonymize_ip: true });
+</script>
+<!-- /Google Analytics - Grupo Nostradamus -->
+<!-- Google Tag Manager - Grupo Nostradamus -->
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-WZ5RPX4C');
+</script>
+<!-- /Google Tag Manager - Grupo Nostradamus -->
 </head>
 <body>
+<!-- Google Tag Manager (noscript) - Grupo Nostradamus -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WZ5RPX4C"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- /Google Tag Manager (noscript) - Grupo Nostradamus -->
   <div class="admin-wrap">
     <div class="admin-top">
       <div class="admin-brand"><img src="assets/img/logo.png" alt="Grupo Nostradamus"><span>NostraCHAT Admin</span></div>
@@ -52,5 +70,27 @@
 
   <script src="assets/js/nostrachat-firebase-config.js?v=2026-42"></script>
   <script src="assets/js/nostrachat-admin.js?v=2026-42"></script>
+<!-- Conversion tracking - Grupo Nostradamus -->
+<script>
+(function(){
+  function cleanText(value){return (value || "").replace(/\s+/g," ").trim().slice(0,120);}
+  function pageName(){var p=location.pathname||"/";return (p==="/"||p.endsWith("/"))?"home":(p.split("/").pop().replace(".html","")||"home");}
+  function sendEvent(name, params){
+    if(typeof window.gtag!=="function") return;
+    window.gtag("event", name, Object.assign({page_name: pageName(), page_path: location.pathname, page_url: location.href}, params || {}));
+  }
+  document.addEventListener("click", function(event){
+    var link = event.target && event.target.closest ? event.target.closest("a") : null;
+    if(!link || !link.href) return;
+    var href = link.href.toLowerCase();
+    var text = (link.textContent || "").toLowerCase();
+    var label = cleanText(link.getAttribute("aria-label") || link.textContent || link.href || "sin_texto");
+    if(href.indexOf("wa.me") !== -1 || href.indexOf("whatsapp") !== -1){sendEvent("click_whatsapp", {event_category:"lead", event_label:label, link_url:link.href, conversion_type:"whatsapp"}); return;}
+    if(href.indexOf("clases-en-vivo.html") !== -1 || href.indexOf("teams.microsoft.com") !== -1 || text.indexOf("clases en vivo") !== -1){sendEvent("click_clases_en_vivo", {event_category:"engagement", event_label:label, link_url:link.href}); return;}
+    if(text.indexOf("matric") !== -1 || text.indexOf("informes") !== -1 || text.indexOf("vacante") !== -1 || text.indexOf("quiero ingresar") !== -1 || href.indexOf("ingresa-uni.html") !== -1){sendEvent("click_comercial", {event_category:"conversion", event_label:label, link_url:link.href});}
+  }, true);
+})();
+</script>
+<!-- /Conversion tracking - Grupo Nostradamus -->
 </body>
 </html>
