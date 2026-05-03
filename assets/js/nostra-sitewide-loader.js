@@ -7,7 +7,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-29';
+  var VERSION = '2026-30';
 
   function assetAlreadyLoaded(urlPart) {
     return !!document.querySelector('script[src*="' + urlPart + '"]');
@@ -44,6 +44,7 @@
     loadJS('assets/js/nostra-ciclos-links.js?v=' + VERSION);
     loadJS('assets/js/nostra-grid-fix.js?v=' + VERSION);
     loadJS('assets/js/nostra-footer-pro.js?v=' + VERSION);
+    loadJS('assets/js/nostra-footer-logo-white-bg.js?v=' + VERSION);
     loadJS('assets/js/nostra-button-fix.js?v=' + VERSION);
     loadJS('assets/js/nostra-whatsapp-inscripcion.js?v=' + VERSION);
     loadJS('assets/js/nostra-content-polish.js?v=' + VERSION);
