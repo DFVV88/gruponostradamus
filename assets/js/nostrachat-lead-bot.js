@@ -1,31 +1,54 @@
 /* ==================================================
-   NostraCHAT Lead Bot v1
-   Bot comercial suave para salas externas.
-   Objetivo: orientar y generar posibles matrículas por WhatsApp.
+   NostraCHAT Lead Bot v2
+   Bot comercial de respuesta automática para salas externas.
+   Usa una base de conocimiento tomada de la web del Grupo Nostradamus.
 ================================================== */
 (function () {
   var WA_NUMBER = '51993750351';
   var botInjected = false;
   var lastRoomTitle = '';
+  var lastBotInput = '';
+  var lastBotAt = 0;
 
-  function cleanText(value) {
-    return String(value || '').replace(/\s+/g, ' ').trim();
+  var KB = {
+    marca: 'Grupo de Estudio Nostradamus',
+    enfoque: 'preparación para postulantes a la UNI con acompañamiento académico, teoría, práctica y evaluación',
+    telefono: '993 750 351',
+    whatsapp: '51993750351',
+    correo: 'informes@gruponostradamus.edu.pe',
+    sede: 'Av. Gerardo Unger 193, San Martín de Porres',
+    horarioBase: 'Las clases académicas se trabajan de 8:00 a. m. a 1:00 p. m., con teoría, práctica y evaluación.',
+    plataforma: 'Las clases presenciales se graban y pueden revisarse posteriormente en la plataforma Q10.',
+    aulas: 'Cada aula tiene cupos controlados, con un máximo aproximado de 35 alumnos.',
+    evaluacion: 'Se toman simulacros mensuales tipo examen de admisión UNI.',
+    humanidades: 'Humanidades se trabaja principalmente como seminarios dominicales.',
+    cursos: 'Matemática, Ciencias, Aptitud Académica y Humanidades, según el ciclo elegido.',
+    ciclos: {
+      anual: 'Ciclo Anual: ruta amplia para construir base, avanzar por etapas y sostener una preparación completa hacia la UNI.',
+      semianual: 'Ciclo Semianual: preparación intensiva y ordenada para alumnos que necesitan avanzar con mayor ritmo hacia la UNI.',
+      semestral: 'Ciclo Semestral: alternativa concentrada para reforzar teoría, práctica y evaluación en menos tiempo.',
+      ien: 'Ciclo IEN: ruta especializada para estudiantes que buscan preparación enfocada según su objetivo académico.',
+      cepre: 'Paralelo CEPRE UNI: acompañamiento pensado para alumnos que llevan o desean complementar su preparación tipo CEPRE UNI.',
+      modulos: 'NostraMÓDULOS: programa enfocado en desarrollo de preguntas de Matemáticas, Ciencias y Aptitud Académica. No incluye Humanidades.'
+    },
+    modulos: {
+      fenix: 'Módulo Fénix: refuerzo de base, ideal para ordenar fundamentos y recuperar seguridad académica.',
+      drakon: 'Módulo Drakon: trabajo avanzado para alumnos que necesitan mayor exigencia y velocidad de resolución.'
+    }
+  };
+
+  function cleanText(value) { return String(value || '').replace(/\s+/g, ' ').trim(); }
+  function escapeHTML(text) {
+    return String(text || '').replace(/[&<>'\"]/g, function (c) {
+      return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','\"':'&quot;'}[c] || c;
+    });
   }
-
-  function encodeWA(text) {
-    return encodeURIComponent(text);
-  }
-
+  function encodeWA(text) { return encodeURIComponent(text); }
   function currentRoomText() {
     var title = document.getElementById('nchat-room-title-main');
     return cleanText(title ? title.textContent : '');
   }
-
-  function isExternalRoom() {
-    var text = currentRoomText().toLowerCase();
-    return text.indexOf('externos') !== -1;
-  }
-
+  function isExternalRoom() { return currentRoomText().toLowerCase().indexOf('externos') !== -1; }
   function roomLabel() {
     var text = currentRoomText();
     if (text.indexOf('·') !== -1) {
@@ -34,12 +57,10 @@
     }
     return 'General';
   }
-
   function userName() {
     var input = document.getElementById('nchat-name');
     return cleanText(input ? input.value : '') || 'Postulante';
   }
-
   function userExtra() {
     var input = document.getElementById('nchat-extra');
     return cleanText(input ? input.value : '');
@@ -63,15 +84,7 @@
     var style = document.createElement('style');
     style.id = 'nostrachat-lead-bot-style';
     style.textContent = `
-      .nchat-leadbot{
-        display:none;
-        margin:14px 15px 0;
-        padding:15px;
-        border-radius:20px;
-        background:linear-gradient(135deg,#fff7e6,#f3fdff);
-        border:1px solid rgba(255,148,30,.28);
-        box-shadow:0 12px 30px rgba(6,20,38,.08);
-      }
+      .nchat-leadbot{display:none;margin:14px 15px 0;padding:15px;border-radius:20px;background:linear-gradient(135deg,#fff7e6,#f3fdff);border:1px solid rgba(255,148,30,.28);box-shadow:0 12px 30px rgba(6,20,38,.08);}
       .nchat-leadbot.show{display:block;}
       .nchat-leadbot-head{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;}
       .nchat-leadbot-avatar{width:38px;height:38px;border-radius:14px;background:linear-gradient(135deg,#ff941e,#078c95);display:grid;place-items:center;color:#fff;font-size:20px;flex:0 0 auto;}
@@ -81,9 +94,11 @@
       .nchat-leadbot-btn{border:0;border-radius:999px;padding:9px 12px;font-size:12px;font-weight:950;cursor:pointer;text-decoration:none!important;display:inline-flex;align-items:center;gap:6px;}
       .nchat-leadbot-btn.primary{background:linear-gradient(135deg,#25d366,#078c95);color:#fff!important;}
       .nchat-leadbot-btn.secondary{background:#fff;color:#061426!important;border:1px solid rgba(7,140,149,.18);}
-      .nchat-botmsg{max-width:86%;margin:0 0 12px;padding:12px 14px;border-radius:18px;background:#fff7e6;border:1px solid #ffe0ad;color:#513500;box-shadow:0 8px 22px rgba(6,20,38,.06);border-bottom-left-radius:6px;}
+      .nchat-botmsg{max-width:88%;margin:0 0 12px;padding:12px 14px;border-radius:18px;background:#fff7e6;border:1px solid #ffe0ad;color:#513500;box-shadow:0 8px 22px rgba(6,20,38,.06);border-bottom-left-radius:6px;}
       .nchat-botmsg .nchat-meta{opacity:.85;}
-      @media(max-width:700px){.nchat-leadbot-actions{flex-direction:column}.nchat-leadbot-btn{justify-content:center;width:100%;}.nchat-botmsg{max-width:96%;}}
+      .nchat-botmsg .nchat-bot-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+      .nchat-botmsg .nchat-bot-link{display:inline-flex;border-radius:999px;padding:7px 10px;background:linear-gradient(135deg,#25d366,#078c95);color:#fff!important;font-size:12px;font-weight:950;text-decoration:none!important;}
+      @media(max-width:700px){.nchat-leadbot-actions,.nchat-botmsg .nchat-bot-actions{flex-direction:column}.nchat-leadbot-btn,.nchat-botmsg .nchat-bot-link{justify-content:center;width:100%;}.nchat-botmsg{max-width:96%;}}
     `;
     document.head.appendChild(style);
   }
@@ -95,7 +110,7 @@
           <div class="nchat-leadbot-avatar">🤖</div>
           <div>
             <div class="nchat-leadbot-title">Asistente de matrícula Nostra</div>
-            <div class="nchat-leadbot-text" id="nchat-leadbot-text">Estoy aquí para ayudarte a elegir una ruta de preparación UNI y derivarte con un asesor.</div>
+            <div class="nchat-leadbot-text" id="nchat-leadbot-text">Escribe tu consulta. Responderé usando la información de la web de Nostradamus y, si corresponde, te derivaré a WhatsApp.</div>
           </div>
         </div>
         <div class="nchat-leadbot-actions">
@@ -103,8 +118,7 @@
           <a class="nchat-leadbot-btn secondary" id="nchat-leadbot-wa-ciclos" target="_blank" rel="noopener">📚 Ver ciclos</a>
           <a class="nchat-leadbot-btn secondary" id="nchat-leadbot-wa-orientacion" target="_blank" rel="noopener">🎯 Necesito orientación</a>
         </div>
-      </div>
-    `;
+      </div>`;
   }
 
   function ensureBotBox() {
@@ -119,62 +133,111 @@
     ensureBotBox();
     var box = document.getElementById('nchat-leadbot');
     if (!box) return;
-
-    if (!isExternalRoom()) {
-      box.classList.remove('show');
-      return;
-    }
+    if (!isExternalRoom()) { box.classList.remove('show'); return; }
 
     var sala = roomLabel();
     var text = document.getElementById('nchat-leadbot-text');
     if (text) {
-      if (sala.toLowerCase().indexOf('informes') !== -1) {
-        text.textContent = 'Puedo ayudarte a pedir informes de ciclos, horarios, vacantes y matrícula. Déjanos tu consulta o escribe directo a WhatsApp.';
-      } else if (sala.toLowerCase().indexOf('orientación') !== -1 || sala.toLowerCase().indexOf('orientacion') !== -1) {
-        text.textContent = 'Cuéntanos tu situación: base académica, universidad objetivo y tiempo disponible. Te derivamos a una ruta de preparación UNI.';
-      } else {
-        text.textContent = 'Bienvenido a la zona externa. Si estás interesado en estudiar con Nostradamus, puedes pedir orientación o iniciar una posible matrícula.';
-      }
+      if (/informes/i.test(sala)) text.textContent = 'Estoy atento a tus dudas sobre ciclos, horarios, vacantes, costos y matrícula usando la información de la web.';
+      else if (/orientaci/i.test(sala)) text.textContent = 'Cuéntame tu nivel, carrera objetivo y tiempo disponible. Te daré una primera orientación con base en las rutas Nostradamus.';
+      else text.textContent = 'Escribe tu consulta. Puedo orientarte sobre ciclos, módulos, horarios, plataforma, simulacros, sede y matrícula.';
     }
-
     var a1 = document.getElementById('nchat-leadbot-wa-matricula');
     var a2 = document.getElementById('nchat-leadbot-wa-ciclos');
     var a3 = document.getElementById('nchat-leadbot-wa-orientacion');
     if (a1) a1.href = leadMessage('Deseo matricularme');
     if (a2) a2.href = leadMessage('Quiero información de ciclos, horarios y costos');
     if (a3) a3.href = leadMessage('Necesito orientación para elegir mi preparación UNI');
-
     box.classList.add('show');
   }
 
-  function addBotMessage(text) {
+  function addBotMessage(text, intent) {
     var messages = document.getElementById('nchat-messages');
     if (!messages || !isExternalRoom()) return;
     var now = new Date().toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' });
     var div = document.createElement('div');
     div.className = 'nchat-botmsg';
-    div.innerHTML = '<div class="nchat-meta"><span>Asistente Nostra</span><span>' + now + '</span></div><div class="nchat-text">' + text + '</div>';
+    var link = leadMessage(intent || 'Consulta desde bot de NostraCHAT');
+    div.innerHTML = '<div class="nchat-meta"><span>Asistente Nostra</span><span>' + now + '</span></div>' +
+      '<div class="nchat-text">' + escapeHTML(text) + '</div>' +
+      '<div class="nchat-bot-actions"><a class="nchat-bot-link" href="' + link + '" target="_blank" rel="noopener">📲 Continuar por WhatsApp</a></div>';
     messages.appendChild(div);
     messages.scrollTop = messages.scrollHeight;
   }
 
+  function cycleText(t) {
+    if (/anual/.test(t)) return KB.ciclos.anual;
+    if (/semianual/.test(t)) return KB.ciclos.semianual;
+    if (/semestral/.test(t)) return KB.ciclos.semestral;
+    if (/cepre|paralelo/.test(t)) return KB.ciclos.cepre;
+    if (/ien/.test(t)) return KB.ciclos.ien;
+    if (/módulo|modulo|nostramod|nostra mód/.test(t)) return KB.ciclos.modulos;
+    return 'En la web se presentan varias rutas de preparación: Ciclo Anual, Semianual, Semestral, Ciclo IEN, Paralelo CEPRE UNI y NostraMÓDULOS. La mejor opción depende de tu nivel, tiempo disponible y objetivo.';
+  }
+
+  function buildReply(userText) {
+    var t = cleanText(userText).toLowerCase();
+    var sala = roomLabel().toLowerCase();
+
+    if (/hola|buenas|info|informes|informacion|información/.test(t) || /informes/.test(sala)) {
+      return { intent: 'Solicito informes generales', text: '¡Hola! Soy el asistente Nostra. Según la web, ' + KB.marca + ' se enfoca en ' + KB.enfoque + '. Puedo orientarte sobre ciclos, horarios, sede, plataforma, simulacros y matrícula.' };
+    }
+
+    if (/ciclo|anual|semianual|semestral|cepre|ien|módulo|modulo|nostram/.test(t)) {
+      return { intent: 'Quiero información de ciclos', text: cycleText(t) + ' Para elegir bien, dime tu nivel actual, carrera objetivo y cuándo planeas postular.' };
+    }
+
+    if (/fenix|fénix|drakon|dragón|dragon|avanzado|básico|basico/.test(t)) {
+      return { intent: 'Quiero información de módulos Fénix o Drakon', text: KB.modulos.fenix + ' ' + KB.modulos.drakon + ' Estos módulos complementan la preparación según el nivel del alumno.' };
+    }
+
+    if (/horario|turno|mañana|tarde|noche|dias|días|domingo|lunes|sabado|sábado|clases/.test(t)) {
+      return { intent: 'Quiero información de horarios', text: KB.horarioBase + ' Además, ' + KB.humanidades + ' Para confirmar horarios disponibles y vacantes, conviene continuar por WhatsApp.' };
+    }
+
+    if (/curso|matem|fisic|físic|quim|quím|aptitud|humanidades|letras|ciencias/.test(t)) {
+      return { intent: 'Quiero información de cursos', text: 'Según la web, se trabajan cursos de ' + KB.cursos + ' En NostraMÓDULOS el enfoque es Matemáticas, Ciencias y Aptitud Académica, sin Humanidades.' };
+    }
+
+    if (/q10|grabaci|grabado|plataforma|virtual|clases en vivo|video/.test(t)) {
+      return { intent: 'Quiero información de plataforma y grabaciones', text: KB.plataforma + ' Esto ayuda a repasar clases o recuperar sesiones cuando el alumno necesita reforzar.' };
+    }
+
+    if (/simulacro|examen|evaluaci|prueba/.test(t)) {
+      return { intent: 'Quiero información de simulacros', text: KB.evaluacion + ' La preparación busca acostumbrar al alumno al formato y exigencia del examen de admisión.' };
+    }
+
+    if (/sede|direccion|dirección|local|ubicacion|ubicación|smp|san martin|san martín/.test(t)) {
+      return { intent: 'Quiero información de sede', text: 'La sede indicada en la web es: ' + KB.sede + '. Para recibir indicaciones o consultar disponibilidad, puedes continuar por WhatsApp.' };
+    }
+
+    if (/aula|cupos|cupo|vacante|vacantes|cantidad/.test(t)) {
+      return { intent: 'Quiero consultar vacantes', text: KB.aulas + ' Como los cupos son limitados, lo mejor es confirmar vacante disponible por WhatsApp.' };
+    }
+
+    if (/matric|inscrib|separar|reservar|pagar|pago|precio|costo|cuanto|cuánto|mensualidad|promocion|promoción|descuento/.test(t)) {
+      return { intent: 'Deseo información de matrícula y costos', text: 'Puedo ayudarte con una posible matrícula. Los costos y vacantes pueden variar según ciclo y disponibilidad. Continúa por WhatsApp para que un asesor confirme monto, requisitos, cupo y horario.' };
+    }
+
+    if (/orient|no sé|no se|recomienda|recomiendan|empezar|desde cero|base|nivel|academia|uni|ingenier|postular|admision|admisión/.test(t) || /orient/.test(sala)) {
+      return { intent: 'Necesito orientación académica', text: 'Para orientarte con base en las rutas de la web, dime: 1) carrera objetivo, 2) nivel actual en Matemática/Física/Química, 3) si estás en colegio o egresado, 4) cuándo planeas postular. Con eso se puede sugerir ciclo, módulo o ruta de preparación.' };
+    }
+
+    return { intent: 'Consulta general desde NostraCHAT', text: 'Gracias por escribir. Con base en la web de Nostradamus, puedo orientarte sobre ciclos, NostraMÓDULOS, Fénix, Drakon, horarios, cursos, plataforma Q10, simulacros, sede y matrícula. ¿Sobre cuál de esos puntos deseas información?' };
+  }
+
   function maybeBotReply(userText) {
     if (!isExternalRoom()) return;
-    var t = cleanText(userText).toLowerCase();
-    if (!t) return;
-
-    var reply = '';
-    if (/matric|inscrib|vacante|precio|costo|pago|mensualidad/.test(t)) {
-      reply = 'Puedo derivarte con un asesor de matrícula. Usa el botón verde “Quiero matricularme” y se abrirá WhatsApp con tus datos listos.';
-    } else if (/horario|ciclo|semianual|anual|semestral|cepre|ien|módulo|modulo/.test(t)) {
-      reply = 'Para ayudarte mejor, indica tu nivel actual, carrera objetivo y horario disponible. También puedes tocar “Ver ciclos” para pedir informes por WhatsApp.';
-    } else if (/orient|no sé|no se|recomienda|recomiendan|empezar|desde cero|base/.test(t)) {
-      reply = 'Te recomiendo pedir orientación. Un asesor puede ayudarte a elegir entre ciclo, módulos o preparación desde cero según tu nivel.';
-    }
-
-    if (reply) {
-      setTimeout(function () { addBotMessage(reply); }, 850);
-    }
+    var text = cleanText(userText);
+    if (!text) return;
+    var now = Date.now();
+    var normalized = text.toLowerCase();
+    if (normalized === lastBotInput && now - lastBotAt < 8000) return;
+    if (now - lastBotAt < 1800) return;
+    lastBotInput = normalized;
+    lastBotAt = now;
+    var reply = buildReply(text);
+    setTimeout(function () { addBotMessage(reply.text, reply.intent); }, 900);
   }
 
   function hookSend() {
@@ -182,10 +245,8 @@
       var send = e.target && e.target.closest ? e.target.closest('#nchat-send') : null;
       if (!send) return;
       var input = document.getElementById('nchat-message');
-      var text = input ? input.value : '';
-      maybeBotReply(text);
+      maybeBotReply(input ? input.value : '');
     }, true);
-
     document.addEventListener('keydown', function (e) {
       if (e.key !== 'Enter' || e.shiftKey) return;
       var input = e.target && e.target.id === 'nchat-message' ? e.target : null;
@@ -197,18 +258,10 @@
   function run() {
     injectStyles();
     updateBotBox();
-    if (currentRoomText() !== lastRoomTitle) {
-      lastRoomTitle = currentRoomText();
-      updateBotBox();
-    }
+    if (currentRoomText() !== lastRoomTitle) { lastRoomTitle = currentRoomText(); updateBotBox(); }
   }
 
-  function init() {
-    hookSend();
-    run();
-    setInterval(run, 900);
-  }
-
+  function init() { hookSend(); run(); setInterval(run, 900); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();
