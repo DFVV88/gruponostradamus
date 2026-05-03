@@ -1,15 +1,31 @@
 /* ==================================================
-   NostraCHAT Admin v1.3
-   Compatible con salas oficiales.
-   Lee mensajes/reportes desde todas las subcolecciones oficiales.
+   NostraCHAT Admin v1.4
+   Compatible con salas oficiales sin collectionGroup.
+   Lee sala por sala para evitar índices obligatorios.
 ================================================== */
 (function () {
   var firebaseConfig = window.NOSTRACHAT_FIREBASE_CONFIG;
-  var state = { view: 'alumnos', app: null, db: null, auth: null, unsubscribe: null, user: null, fs: null };
+  var state = { view: 'alumnos', app: null, db: null, auth: null, unsubscribe: null, unsubscribers: [], user: null, fs: null, docsByPath: {} };
+
+  var officialRoomIds = {
+    alumnos: [
+      'alumnos-general',
+      'alumnos-matematica',
+      'alumnos-fisica',
+      'alumnos-quimica',
+      'alumnos-aptitud-academica',
+      'alumnos-humanidades'
+    ],
+    externos: [
+      'externos-general',
+      'externos-informes',
+      'externos-orientacion-uni'
+    ]
+  };
 
   function escapeHTML(text) {
-    return String(text || '').replace(/[&<>'"]/g, function (c) {
-      return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c];
+    return String(text || '').replace(/[&<>'\"]/g, function (c) {
+      return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','\"':'&quot;'}[c] || c;
     });
   }
 
@@ -60,35 +76,47 @@
     return (state.view === 'alumnos' || state.view === 'reports-alumnos') ? 'alumnos' : 'externos';
   }
 
-  function sortDocsByDateDesc(docs) {
-    return docs.sort(function (a, b) {
-      var ad = a.data().createdAt && a.data().createdAt.toMillis ? a.data().createdAt.toMillis() : 0;
-      var bd = b.data().createdAt && b.data().createdAt.toMillis ? b.data().createdAt.toMillis() : 0;
-      return bd - ad;
+  function stopAllListeners() {
+    if (state.unsubscribe) state.unsubscribe();
+    state.unsubscribers.forEach(function (unsub) {
+      try { unsub(); } catch (e) {}
     });
+    state.unsubscribers = [];
+    state.unsubscribe = null;
+    state.docsByPath = {};
   }
 
-  function renderMessages(snapshot) {
+  function docsArraySorted() {
+    return Object.keys(state.docsByPath).map(function (path) {
+      return state.docsByPath[path];
+    }).sort(function (a, b) {
+      var ad = a.data.createdAt && a.data.createdAt.toMillis ? a.data.createdAt.toMillis() : 0;
+      var bd = b.data.createdAt && b.data.createdAt.toMillis ? b.data.createdAt.toMillis() : 0;
+      return bd - ad;
+    }).slice(0, 100);
+  }
+
+  function renderCurrentDocs() {
     var list = document.getElementById('admin-list');
     if (!list) return;
+    var docs = docsArraySorted();
 
-    var docs = sortDocsByDateDesc(snapshot.docs || []);
     if (!docs.length) {
       list.innerHTML = '<div class="admin-empty">No hay registros en esta vista.</div>';
       return;
     }
 
     var html = '';
-    docs.forEach(function (docSnap) {
-      var d = docSnap.data();
+    docs.forEach(function (entry) {
+      var d = entry.data;
       var isReport = isReportView();
       var status = d.status || d.moderationStatus || 'visible';
-      var itemPath = docSnap.ref.path;
+      var itemPath = entry.path;
       var roomLabel = d.roomLabel || d.roomId || 'Sala';
 
       html += '<article class="admin-item" data-item-path="' + escapeHTML(itemPath) + '">' +
         '<div class="admin-meta">' +
-          '<span><b>ID:</b> ' + escapeHTML(docSnap.id) + '</span>' +
+          '<span><b>ID:</b> ' + escapeHTML(entry.id) + '</span>' +
           '<span>' + escapeHTML(formatDate(d.createdAt)) + '</span>' +
         '</div>' +
         '<div>' +
@@ -109,24 +137,41 @@
   }
 
   function loadView(fs) {
-    if (state.unsubscribe) state.unsubscribe();
+    stopAllListeners();
     setActiveTab();
     var list = document.getElementById('admin-list');
     if (list) list.innerHTML = '<div class="admin-empty">Cargando registros de salas oficiales...</div>';
 
     var zone = currentZone();
     var collectionName = isReportView() ? 'reports' : 'messages';
-    var field = isReportView() ? 'room' : 'zone';
+    var rooms = officialRoomIds[zone] || [];
 
-    var q = fs.query(
-      fs.collectionGroup(state.db, collectionName),
-      fs.where(field, '==', zone),
-      fs.limit(100)
-    );
+    rooms.forEach(function (roomId) {
+      var q = fs.query(
+        fs.collection(state.db, 'rooms/' + roomId + '/' + collectionName),
+        fs.orderBy('createdAt', 'desc'),
+        fs.limit(40)
+      );
 
-    state.unsubscribe = fs.onSnapshot(q, renderMessages, function (err) {
-      if (list) list.innerHTML = '<div class="admin-empty">No se pudo cargar. Revisa reglas de Firebase o índices de Firestore.</div>';
-      console.error(err);
+      var unsub = fs.onSnapshot(q, function (snapshot) {
+        snapshot.docChanges().forEach(function (change) {
+          var key = change.doc.ref.path;
+          if (change.type === 'removed') {
+            delete state.docsByPath[key];
+          } else {
+            state.docsByPath[key] = {
+              id: change.doc.id,
+              path: change.doc.ref.path,
+              data: change.doc.data()
+            };
+          }
+        });
+        renderCurrentDocs();
+      }, function (err) {
+        if (list) list.innerHTML = '<div class="admin-empty">No se pudo cargar una o más salas. Revisa reglas de Firebase.</div>';
+        console.error(err);
+      });
+      state.unsubscribers.push(unsub);
     });
   }
 
@@ -224,7 +269,7 @@
           if (info) info.textContent = 'Sesión iniciada como: ' + (user.email || user.displayName || 'Administrador');
           loadView(fs);
         } else {
-          if (state.unsubscribe) state.unsubscribe();
+          stopAllListeners();
           loginForm.style.display = 'block';
           panel.classList.remove('show');
         }
