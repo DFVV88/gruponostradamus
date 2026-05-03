@@ -1,7 +1,8 @@
 /* ==================================================
-   DAMUS v3.2
+   DAMUS v3.3
    Bot comercial persistente para NostraCHAT Externos.
-   Corrige detección de IEN dentro de palabras como “tienen”.
+   Respuestas más contundentes con base de index, ciclos, docentes,
+   cachimbos, sede, noticias y contacto.
 ================================================== */
 (function () {
   var WA_NUMBER = '51993750351';
@@ -22,46 +23,48 @@
 
   var KB = {
     marca: 'Grupo de Estudio Nostradamus',
-    enfoque: 'preparación académica para postulantes a la UNI con acompañamiento, teoría, práctica y evaluación',
-    sede: 'Av. Gerardo Unger 193, San Martín de Porres',
-    horarios: 'Tenemos tres modalidades de horario: Full, Mañana y Tarde. La disponibilidad puede variar según ciclo y vacantes.',
-    horarioFull: 'Horario Full: modalidad más completa, pensada para estudiantes que desean mayor carga académica y acompañamiento.',
-    horarioManana: 'Horario Mañana: alternativa para estudiantes que desean estudiar principalmente en la primera parte del día.',
-    horarioTarde: 'Horario Tarde: alternativa para estudiantes que tienen disponibilidad después del mediodía o desean complementar otras actividades.',
-    plataforma: 'La plataforma institucional de trabajo es Microsoft 365. Desde allí se organiza el acceso a recursos, clases y herramientas académicas según corresponda.',
-    aulas: 'Cada aula tiene cupos controlados para mantener orden y acompañamiento académico.',
-    evaluacion: 'Se realizan evaluaciones y simulacros tipo examen de admisión UNI para medir el avance del estudiante.',
+    trayectoria: '16 años preparando futuros ingenieros del Perú, con miles de alumnos entrenados, simulacros tipo admisión y acompañamiento académico real.',
+    respaldo: 'La web destaca 2.5k+ egresados satisfechos, 109.5k+ clases completadas, 90%+ de satisfacción y 3.1k+ estudiantes satisfechos.',
+    enfoque: 'preparación UNI con método, disciplina, teoría, práctica intensiva, evaluación constante y seguimiento académico.',
+    sede: 'Av. Gerardo Unger 193, San Martín de Porres, cerca al entorno UNI.',
+    contacto: 'WhatsApp 993 750 351 y correo informes@gruponostradamus.edu.pe.',
+    costos: 'Los costos se confirman por WhatsApp porque dependen del ciclo, turno, vacante disponible y promociones vigentes. Lo más rápido es escribir al 993 750 351 para recibir monto, requisitos y forma de matrícula.',
+    horarios: 'Tenemos modalidades Full, Mañana y Tarde. La disponibilidad depende del ciclo y de las vacantes activas.',
+    horarioFull: 'Horario Full: modalidad de mayor carga académica. Está pensada para postulantes que quieren máxima exigencia, más horas de entrenamiento y acompañamiento más completo.',
+    horarioManana: 'Horario Mañana: ideal para estudiantes que quieren concentrar su preparación en la primera parte del día. En la web se muestran referencias de 8:00 a. m. a 1:00 p. m. según ciclo.',
+    horarioTarde: 'Horario Tarde: alternativa para quienes estudian o realizan otras actividades en la mañana y necesitan preparar UNI después del mediodía. Debe confirmarse según ciclo activo.',
+    plataforma: 'La plataforma institucional es Microsoft 365. Se usa para organizar recursos, clases en vivo y herramientas académicas según la programación del ciclo.',
+    docentes: 'La web resalta una plana docente especialista en UNI, con experiencia, dominio de materia, práctica constante, evaluaciones y acompañamiento.',
+    cachimbos: 'La sección Cachimbos muestra los resultados e ingresantes como respaldo del trabajo académico y la exigencia del Grupo Nostradamus.',
+    noticias: 'La sección Noticias sirve para publicar novedades, actividades, ciclos, comunicados y contenido académico relevante para postulantes.',
+    aulas: 'Los cupos son controlados para mantener orden, interacción y acompañamiento. Por eso conviene separar vacante con anticipación.',
+    evaluacion: 'La metodología incluye evaluaciones, simulacros tipo examen UNI, revisión de avance y práctica orientada a resultados.',
+    beneficios: 'Beneficios clave: docentes especialistas en UNI, práctica intensiva, evaluaciones, simulacros, asesorías, material académico, acompañamiento y comunicación institucional.',
     humanidades: 'Humanidades se trabaja como seminarios o sesiones programadas según el ciclo.',
     cursos: 'Matemática, Ciencias, Aptitud Académica y Humanidades, según el ciclo elegido.',
     ciclos: {
-      anual: 'Ciclo Anual UNI: ruta amplia para construir base, avanzar por etapas y sostener una preparación completa hacia la UNI.',
-      semianual: 'Ciclo Semianual UNI: preparación intensiva y ordenada para alumnos que necesitan avanzar con mayor ritmo hacia la UNI.',
-      semestral: 'Ciclo Semestral UNI: alternativa concentrada para reforzar teoría, práctica y evaluación en menos tiempo.',
-      verano: 'Ciclo Verano UNI: preparación de temporada enfocada en avanzar, reforzar base y mantener ritmo académico durante el verano.',
-      repaso: 'Repaso UNI: ciclo orientado a reforzar, practicar y consolidar contenidos clave antes de una etapa evaluativa o examen.',
-      sabatino: 'Ciclos Sabatinos UNI: opción para estudiantes que necesitan prepararse principalmente los sábados, ideal para complementar estudios o actividades de lunes a viernes.',
-      ien: 'Ciclo IEN: ruta especializada para estudiantes que buscan preparación enfocada según su objetivo académico.',
-      cepre: 'Paralelo CEPRE UNI: acompañamiento pensado para alumnos que llevan o desean complementar su preparación tipo CEPRE UNI.',
-      modulos: 'Módulos: programa enfocado en desarrollo de preguntas, refuerzo y práctica por áreas. Se trabaja especialmente Matemáticas, Ciencias y Aptitud Académica según la programación.'
+      anual: 'Ciclo Anual UNI: formación completa desde cero hasta nivel admisión UNI. Es ideal si necesitas construir base sólida, avanzar por etapas y competir con mayor seguridad durante una preparación larga.',
+      semianual: 'Ciclo Semianual UNI: entrenamiento intensivo para postulantes con base previa que desean elevar su rendimiento hacia la UNI en menos tiempo, con ritmo fuerte y práctica constante.',
+      semestral: 'Ciclo Semestral UNI: preparación estratégica para avanzar con ritmo académico, reforzar teoría, practicar de forma constante y mantener enfoque en admisión UNI.',
+      verano: 'Ciclo Verano UNI: preparación de temporada para aprovechar el verano, reforzar base, ganar ritmo y llegar mejor preparado al siguiente tramo académico.',
+      repaso: 'Repaso UNI: ciclo para consolidar contenidos, practicar preguntas tipo examen y llegar con mayor seguridad a una etapa evaluativa o admisión.',
+      sabatino: 'Ciclo Sabatino UNI: opción para estudiantes que necesitan prepararse principalmente los sábados porque estudian o trabajan de lunes a viernes.',
+      ien: 'Ciclo IEN: ruta especializada para estudiantes que buscan preparación enfocada y necesitan una orientación más precisa según su objetivo académico.',
+      cepre: 'Paralelo CEPRE UNI: acompañamiento para alumnos que llevan o desean complementar una preparación tipo CEPRE UNI, reforzando lo que necesitan para rendir mejor.',
+      elite: 'Élite UNI: ruta de alta exigencia para alumnos que buscan un entrenamiento más competitivo y retador.',
+      escolar: 'Proyecto Escolar: ruta para estudiantes de colegio que quieren construir base académica con anticipación y llegar mejor preparados a la etapa preuniversitaria.',
+      modulos: 'Módulos: programa enfocado en desarrollo de preguntas, refuerzo y práctica por áreas. Se trabaja especialmente Matemáticas, Ciencias y Aptitud Académica según la programación vigente.'
     }
   };
 
   function cleanText(value) { return String(value || '').replace(/\s+/g, ' ').trim(); }
   function encodeWA(text) { return encodeURIComponent(text); }
-  function hasWord(text, word) {
-    return new RegExp('(^|[^a-záéíóúñ0-9])' + word + '([^a-záéíóúñ0-9]|$)', 'i').test(text);
-  }
-  function currentRoomText() {
-    var title = document.getElementById('nchat-room-title-main');
-    return cleanText(title ? title.textContent : '');
-  }
+  function hasWord(text, word) { return new RegExp('(^|[^a-záéíóúñ0-9])' + word + '([^a-záéíóúñ0-9]|$)', 'i').test(text); }
+  function currentRoomText() { var title = document.getElementById('nchat-room-title-main'); return cleanText(title ? title.textContent : ''); }
   function isExternalRoom() { return currentRoomText().toLowerCase().indexOf('externos') !== -1; }
   function roomLabel() {
     var text = currentRoomText();
-    if (text.indexOf('·') !== -1) {
-      var parts = text.split('·').map(cleanText);
-      return parts[2] || 'General';
-    }
+    if (text.indexOf('·') !== -1) { var parts = text.split('·').map(cleanText); return parts[2] || 'General'; }
     return 'General';
   }
   function currentRoomId() {
@@ -70,14 +73,8 @@
     var key = roomLabel().toLowerCase();
     return roomIdMap[key] || 'externos-general';
   }
-  function userName() {
-    var input = document.getElementById('nchat-name');
-    return cleanText(input ? input.value : '') || 'Postulante';
-  }
-  function userExtra() {
-    var input = document.getElementById('nchat-extra');
-    return cleanText(input ? input.value : '');
-  }
+  function userName() { var input = document.getElementById('nchat-name'); return cleanText(input ? input.value : '') || 'Postulante'; }
+  function userExtra() { var input = document.getElementById('nchat-extra'); return cleanText(input ? input.value : ''); }
 
   function leadMessage(intent) {
     var sala = roomLabel();
@@ -159,13 +156,12 @@
     var box = document.getElementById('nchat-leadbot');
     if (!box) return;
     if (!isExternalRoom()) { box.classList.remove('show'); return; }
-
     var sala = roomLabel();
     var text = document.getElementById('nchat-leadbot-text');
     if (text) {
-      if (/informes/i.test(sala)) text.textContent = 'DAMUS está atento a tus dudas sobre ciclos, horarios Full/Mañana/Tarde, vacantes, costos, Microsoft 365 y matrícula.';
-      else if (/orientaci/i.test(sala)) text.textContent = 'Cuéntale a DAMUS tu nivel, carrera objetivo y tiempo disponible. Te dará una primera orientación.';
-      else text.textContent = 'DAMUS puede orientarte sobre ciclos, módulos, horarios Full/Mañana/Tarde, cursos, Microsoft 365, simulacros, sede y matrícula.';
+      if (/informes/i.test(sala)) text.textContent = 'DAMUS responde sobre ciclos, horarios Full/Mañana/Tarde, vacantes, costos, Microsoft 365, sede y matrícula.';
+      else if (/orientaci/i.test(sala)) text.textContent = 'Cuéntale a DAMUS tu nivel, carrera objetivo y tiempo disponible para sugerirte una ruta de preparación.';
+      else text.textContent = 'DAMUS puede orientarte sobre ciclos, módulos, horarios, docentes, cachimbos, sede, noticias, contacto y matrícula.';
     }
     var a1 = document.getElementById('nchat-leadbot-wa-matricula');
     var a2 = document.getElementById('nchat-leadbot-wa-ciclos');
@@ -180,35 +176,45 @@
     if (/verano/.test(t)) return KB.ciclos.verano;
     if (/repaso/.test(t)) return KB.ciclos.repaso;
     if (/sabatino|sabado|sábado/.test(t)) return KB.ciclos.sabatino;
-    if (/anual/.test(t)) return KB.ciclos.anual;
     if (/semianual/.test(t)) return KB.ciclos.semianual;
     if (/semestral/.test(t)) return KB.ciclos.semestral;
+    if (/anual/.test(t)) return KB.ciclos.anual;
+    if (/elite|élite/.test(t)) return KB.ciclos.elite;
+    if (/proyecto|escolar|colegio/.test(t)) return KB.ciclos.escolar;
     if (/cepre|paralelo/.test(t)) return KB.ciclos.cepre;
     if (hasWord(t, 'ien')) return KB.ciclos.ien;
     if (/módulo|modulo|modulos|módulos|nostramod|nostra mód/.test(t)) return KB.ciclos.modulos;
-    return 'En Nostradamus se manejan varias rutas de preparación: Anual UNI, Semianual UNI, Semestral UNI, Verano UNI, Repaso UNI, Sabatinos UNI, Ciclo IEN, Paralelo CEPRE UNI y Módulos. La mejor opción depende de tu nivel, tiempo disponible y objetivo.';
+    return 'Ciclos disponibles: Anual UNI, Semianual UNI, Semestral UNI, Verano UNI, Repaso UNI, Sabatinos UNI, Élite UNI, Proyecto Escolar, Ciclo IEN, Paralelo CEPRE UNI y Módulos. Si me dices tu nivel y cuándo postulas, te recomiendo la ruta más conveniente.';
   }
 
   function buildReply(userText) {
     var t = cleanText(userText).toLowerCase();
     var sala = roomLabel().toLowerCase();
 
-    if (/full/.test(t)) return { intent: 'Quiero información de horario Full', text: KB.horarioFull + ' Para confirmar el horario exacto, ciclo disponible y vacantes, continúa por WhatsApp con un asesor.' };
-    if (/mañana|manana/.test(t)) return { intent: 'Quiero información de horario Mañana', text: KB.horarioManana + ' Para confirmar el horario exacto, ciclo disponible y vacantes, continúa por WhatsApp con un asesor.' };
-    if (/tarde/.test(t)) return { intent: 'Quiero información de horario Tarde', text: KB.horarioTarde + ' Para confirmar el horario exacto, ciclo disponible y vacantes, continúa por WhatsApp con un asesor.' };
-    if (/horario|horarios|turno|turnos|noche|dias|días|domingo|lunes|clases/.test(t)) return { intent: 'Quiero información de horarios', text: KB.horarios + ' Puedes elegir entre Full, Mañana o Tarde según tu disponibilidad. Para confirmar horarios exactos, ciclo activo y vacantes, lo recomendable es continuar por WhatsApp.' };
+    if (/full/.test(t)) return { intent: 'Horario Full', text: KB.horarioFull + ' Recomendado para quien quiere entrenar fuerte para la UNI. La vacante y el horario exacto se confirman por WhatsApp.' };
+    if (/mañana|manana/.test(t)) return { intent: 'Horario Mañana', text: KB.horarioManana + ' Es una buena opción si buscas estudiar temprano y mantener la tarde para repaso, tareas o asesorías. Confirma ciclo activo y vacante por WhatsApp.' };
+    if (/tarde/.test(t)) return { intent: 'Horario Tarde', text: KB.horarioTarde + ' Es útil si estudias o trabajas en la mañana. La disponibilidad depende del ciclo activo.' };
+    if (/horario|horarios|turno|turnos|noche|dias|días|domingo|lunes|clases/.test(t)) return { intent: 'Horarios', text: KB.horarios + ' En general se maneja Full para mayor exigencia, Mañana para preparación concentrada temprano y Tarde para quienes necesitan estudiar después del mediodía. Para darte el horario exacto debo derivarte a WhatsApp, porque cambia según ciclo y cupo.' };
 
-    if (/hola|buenas|info|informes|informacion|información/.test(t) || /informes/.test(sala)) return { intent: 'Solicito informes generales', text: '¡Hola! Soy DAMUS, asistente de matrícula de Nostradamus. ' + KB.marca + ' se enfoca en ' + KB.enfoque + '. Puedo orientarte sobre ciclos, módulos, horarios Full/Mañana/Tarde, sede, Microsoft 365, simulacros y matrícula.' };
-    if (/ciclo|anual|semianual|semestral|verano|repaso|sabatino|sábado|sabado|cepre|módulo|modulo|módulos|modulos|nostram/.test(t) || hasWord(t, 'ien')) return { intent: 'Quiero información de ciclos y módulos', text: cycleText(t) + ' Para elegir bien, dime tu nivel actual, carrera objetivo y cuándo planeas postular.' };
-    if (/fenix|fénix|drakon|dragón|dragon/.test(t)) return { intent: 'Quiero información de módulos', text: 'Actualmente ya no usamos esos nombres. Ahora los llamamos simplemente Módulos. ' + KB.ciclos.modulos };
-    if (/curso|matem|fisic|físic|quim|quím|aptitud|humanidades|letras|ciencias/.test(t)) return { intent: 'Quiero información de cursos', text: 'Se trabajan cursos de ' + KB.cursos + ' En los Módulos se refuerza la práctica y resolución por áreas según la programación vigente.' };
-    if (/microsoft|365|teams|plataforma|virtual|clases en vivo|recurso|grabaci|grabado|video/.test(t)) return { intent: 'Quiero información de plataforma Microsoft 365', text: KB.plataforma + ' Para detalles de acceso, clases o recursos disponibles, un asesor puede orientarte por WhatsApp.' };
-    if (/simulacro|examen|evaluaci|prueba/.test(t)) return { intent: 'Quiero información de simulacros', text: KB.evaluacion + ' Esto ayuda a que el alumno mida su avance y se acostumbre al estilo de evaluación UNI.' };
-    if (/sede|direccion|dirección|local|ubicacion|ubicación|smp|san martin|san martín/.test(t)) return { intent: 'Quiero información de sede', text: 'La sede indicada es: ' + KB.sede + '. Para recibir indicaciones o consultar atención, puedes continuar por WhatsApp.' };
-    if (/aula|cupos|cupo|vacante|vacantes|cantidad/.test(t)) return { intent: 'Quiero consultar vacantes', text: KB.aulas + ' Como los cupos son limitados, lo mejor es confirmar vacante disponible por WhatsApp.' };
-    if (/matric|inscrib|separar|reservar|pagar|pago|precio|costo|cuanto|cuánto|mensualidad|promocion|promoción|descuento/.test(t)) return { intent: 'Deseo información de matrícula y costos', text: 'Puedo ayudarte con una posible matrícula. Los costos y vacantes pueden variar según ciclo, horario y disponibilidad. Continúa por WhatsApp para que un asesor confirme monto, requisitos, cupo y horario.' };
-    if (/orient|no sé|no se|recomienda|recomiendan|empezar|desde cero|base|nivel|academia|uni|ingenier|postular|admision|admisión/.test(t) || /orient/.test(sala)) return { intent: 'Necesito orientación académica', text: 'Para orientarte, dime: 1) carrera objetivo, 2) nivel actual en Matemática/Física/Química, 3) si estás en colegio o egresado, 4) cuándo planeas postular. Con eso se puede sugerir un ciclo, módulo o ruta de preparación.' };
-    return { intent: 'Consulta general desde NostraCHAT', text: 'Gracias por escribir. DAMUS puede orientarte sobre Anual, Semianual, Semestral, Verano UNI, Repaso UNI, Sabatinos, Paralelo CEPRE UNI, IEN, Módulos, horarios Full/Mañana/Tarde, cursos, Microsoft 365, simulacros, sede y matrícula. ¿Sobre cuál de esos puntos deseas información?' };
+    if (/precio|costo|costos|cuanto|cuánto|mensualidad|pension|pensión|pago|promocion|promoción|descuento/.test(t)) return { intent: 'Costos y promociones', text: KB.costos + ' Te recomiendo tocar “Continuar por WhatsApp” para que te envíen la información vigente y puedas asegurar vacante si el ciclo está disponible.' };
+    if (/matric|inscrib|separar|reservar|vacante|vacantes|cupo|cupos/.test(t)) return { intent: 'Matrícula y vacantes', text: 'Sí puedes consultar una posible matrícula. ' + KB.aulas + ' ' + KB.costos + ' DAMUS puede derivarte por WhatsApp para confirmar turno, ciclo, requisitos y vacante.' };
+
+    if (/hola|buenas|info|informes|informacion|información/.test(t) || /informes/.test(sala)) return { intent: 'Informes generales', text: '¡Hola! Soy DAMUS. ' + KB.marca + ' tiene ' + KB.trayectoria + ' Trabajamos con ' + KB.enfoque + ' Puedo orientarte sobre ciclos, costos, horarios, docentes, sede y matrícula.' };
+    if (/ciclo|anual|semianual|semestral|verano|repaso|sabatino|sábado|sabado|cepre|elite|élite|proyecto|escolar|módulo|modulo|módulos|modulos|nostram/.test(t) || hasWord(t, 'ien')) return { intent: 'Ciclos y módulos', text: cycleText(t) + ' Además, la preparación se apoya en docentes especialistas, práctica intensiva, evaluaciones y simulacros tipo UNI.' };
+    if (/fenix|fénix|drakon|dragón|dragon/.test(t)) return { intent: 'Módulos', text: 'Actualmente ya no usamos esos nombres. Ahora los llamamos simplemente Módulos. ' + KB.ciclos.modulos };
+
+    if (/docente|docentes|profesor|profesores|plana/.test(t)) return { intent: 'Docentes', text: KB.docentes + ' El objetivo es que el alumno no solo reciba teoría, sino entrenamiento, práctica, resolución y seguimiento.' };
+    if (/cachimbo|cachimbos|ingresante|ingresantes|resultado|resultados|egresado|egresados/.test(t)) return { intent: 'Cachimbos y resultados', text: KB.cachimbos + ' Además, ' + KB.respaldo + ' Estos datos refuerzan la trayectoria y confianza de la institución.' };
+    if (/noticia|noticias|blog|novedad|novedades|comunicado/.test(t)) return { intent: 'Noticias', text: KB.noticias + ' Para novedades específicas, puedes revisar la sección Noticias de la web o consultar por WhatsApp.' };
+    if (/contacto|telefono|teléfono|whatsapp|correo|email|informes/.test(t)) return { intent: 'Contacto', text: 'Puedes comunicarte con Nostradamus por ' + KB.contacto + ' También puedes usar el botón de WhatsApp para que llegue tu consulta con tus datos desde NostraCHAT.' };
+    if (/sede|direccion|dirección|local|ubicacion|ubicación|smp|san martin|san martín|uni/.test(t)) return { intent: 'Sede', text: 'Nuestra sede principal indicada en la web está en ' + KB.sede + ' Si necesitas ubicación exacta o indicaciones para llegar, te derivo por WhatsApp.' };
+    if (/curso|matem|fisic|físic|quim|quím|aptitud|humanidades|letras|ciencias/.test(t)) return { intent: 'Cursos', text: 'Se trabajan cursos de ' + KB.cursos + ' La preparación combina teoría, práctica intensiva, evaluaciones y simulacros tipo UNI.' };
+    if (/microsoft|365|teams|plataforma|virtual|clases en vivo|recurso|grabaci|grabado|video/.test(t)) return { intent: 'Microsoft 365', text: KB.plataforma + ' En la web también aparece el acceso a Clases en Vivo mediante Teams/Microsoft 365.' };
+    if (/simulacro|examen|evaluaci|evaluación|prueba/.test(t)) return { intent: 'Simulacros y evaluación', text: KB.evaluacion + ' La idea es medir avance, acostumbrar al postulante al estilo UNI y corregir a tiempo.' };
+    if (/beneficio|beneficios|incluye|incluyen|metodo|método|acompañamiento|asesoria|asesoría|material/.test(t)) return { intent: 'Beneficios', text: KB.beneficios + ' Es una preparación con exigencia, seguimiento y orientación hacia resultados.' };
+    if (/orient|no sé|no se|recomienda|recomiendan|empezar|desde cero|base|nivel|academia|postular|admision|admisión/.test(t) || /orient/.test(sala)) return { intent: 'Orientación académica', text: 'Para orientarte mejor: si estás desde cero, normalmente conviene una ruta amplia como Anual UNI o Proyecto Escolar si aún estás en colegio. Si ya tienes base, podrías evaluar Semianual, Semestral, Repaso, Sabatino o Módulos. Dime tu carrera objetivo, nivel actual y fecha tentativa de postulación.' };
+
+    return { intent: 'Consulta general desde NostraCHAT', text: 'DAMUS puede orientarte sobre ciclos, descripción de cada ciclo, costos vigentes, horarios Full/Mañana/Tarde, docentes, cachimbos, sede, noticias, contacto, Microsoft 365, simulacros y matrícula. ¿Qué punto quieres revisar primero?' };
   }
 
   function saveBotReply(reply) {
@@ -228,9 +234,7 @@
         moderationStatus: 'visible',
         createdAt: api.fs.serverTimestamp()
       });
-    }).catch(function (err) {
-      console.error('DAMUS no pudo guardar respuesta:', err);
-    });
+    }).catch(function (err) { console.error('DAMUS no pudo guardar respuesta:', err); });
   }
 
   function maybeBotReply(userText) {
