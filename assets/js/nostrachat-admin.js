@@ -1,7 +1,7 @@
 /* ==================================================
-   NostraCHAT Admin v1
-   Login con Firebase Auth + lectura de mensajes/reportes.
-   Las acciones de borrado requieren reglas/adminClaims más adelante.
+   NostraCHAT Admin v1.1
+   Login con Google + lectura de mensajes/reportes.
+   Seguridad real: Firebase Auth + reglas por email/dominio.
 ================================================== */
 (function () {
   var firebaseConfig = window.NOSTRACHAT_FIREBASE_CONFIG;
@@ -83,7 +83,7 @@
     if (list) list.innerHTML = '<div class="admin-empty">Cargando...</div>';
     var q = fs.query(fs.collection(state.db, collectionPath()), fs.orderBy('createdAt', 'desc'), fs.limit(100));
     state.unsubscribe = fs.onSnapshot(q, renderMessages, function (err) {
-      if (list) list.innerHTML = '<div class="admin-empty">No se pudo cargar. Revisa reglas de Firebase/Auth.</div>';
+      if (list) list.innerHTML = '<div class="admin-empty">No se pudo cargar. Revisa que tu correo tenga permiso en las reglas de Firebase.</div>';
       console.error(err);
     });
   }
@@ -109,14 +109,15 @@
       var loginForm = document.getElementById('admin-login');
       var panel = document.getElementById('admin-panel');
       var logoutBtn = document.getElementById('admin-logout');
+      var googleBtn = document.getElementById('admin-google-login');
 
-      loginForm.addEventListener('submit', function (e) {
-        e.preventDefault();
+      googleBtn.addEventListener('click', function () {
         hideWarning();
-        var email = document.getElementById('admin-email').value.trim();
-        var password = document.getElementById('admin-password').value;
-        authMod.signInWithEmailAndPassword(state.auth, email, password).catch(function () {
-          showWarning('Correo o contraseña incorrectos, o Authentication todavía no está activado.');
+        var provider = new authMod.GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
+        authMod.signInWithPopup(state.auth, provider).catch(function (err) {
+          showWarning('No se pudo ingresar con Google. Revisa que Google esté habilitado en Authentication.');
+          console.error(err);
         });
       });
 
@@ -136,6 +137,8 @@
         if (user) {
           loginForm.style.display = 'none';
           panel.classList.add('show');
+          var info = document.getElementById('admin-user-info');
+          if (info) info.textContent = 'Sesión iniciada como: ' + (user.email || user.displayName || 'Administrador');
           loadView(fs);
         } else {
           if (state.unsubscribe) state.unsubscribe();
