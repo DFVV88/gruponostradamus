@@ -7,7 +7,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-32';
+  var VERSION = '2026-33';
 
   function assetAlreadyLoaded(urlPart) {
     return !!document.querySelector('script[src*="' + urlPart + '"]');
@@ -36,6 +36,7 @@
     /* 🎨 RESTO DEL SISTEMA VISUAL */
     loadJS('assets/js/nostra-uni-campus-only.js?v=' + VERSION);
     loadJS('assets/js/nostra-ingresantes-counter-pro.js?v=' + VERSION);
+    loadJS('assets/js/nostra-faq-index-pro.js?v=' + VERSION);
     loadJS('assets/js/nostra-ciclos-design-pro.js?v=' + VERSION);
     loadJS('assets/js/nostra-ciclos-copy-pro.js?v=' + VERSION);
     loadJS('assets/js/nostra-ciclos-horarios-fix.js?v=' + VERSION);
