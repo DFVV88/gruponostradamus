@@ -1,8 +1,12 @@
 /* ==================================================
    Grupo Nostradamus - Link global NostraCHAT
-   Inserta NostraCHAT en menús existentes sin alterar HTML base.
+   Inserta NostraCHAT sin desordenar el menú del index.
 ================================================== */
 (function () {
+  var path = location.pathname.toLowerCase();
+  var fileName = path.split('/').pop() || 'index.html';
+  var isIndex = path === '/' || fileName === 'index.html' || fileName === '';
+
   function alreadyHasChat(root) {
     return !!root.querySelector('a[href="nostrachat.html"]');
   }
@@ -13,7 +17,7 @@
     var a = document.createElement('a');
     a.href = 'nostrachat.html';
     a.textContent = 'NostraCHAT';
-    if (location.pathname.toLowerCase().includes('nostrachat.html')) {
+    if (path.includes('nostrachat.html')) {
       a.classList.add('active');
       li.classList.add('active');
     }
@@ -36,7 +40,24 @@
     return true;
   }
 
+  function removeFromIndexDesktop() {
+    if (!isIndex) return;
+    document.querySelectorAll('.main-menu > ul > li > a[href="nostrachat.html"]').forEach(function (a) {
+      if (a.parentElement) a.parentElement.remove();
+    });
+  }
+
   function addToClassicMenus() {
+    if (isIndex) {
+      // En el index, el menú de escritorio ya está al límite.
+      // NostraCHAT queda en móvil y en subpáginas para no desplazar el botón ni el logo IQ100.
+      document.querySelectorAll('.th-mobile-menu > ul').forEach(function (menu) {
+        insertAfterText(menu, 'cachimbos');
+      });
+      removeFromIndexDesktop();
+      return;
+    }
+
     document.querySelectorAll('.main-menu > ul, .th-mobile-menu > ul').forEach(function (menu) {
       insertAfterText(menu, 'cachimbos');
     });
@@ -48,7 +69,7 @@
       var item = document.createElement('div');
       item.className = 'nostra-nav-item';
       var a = document.createElement('a');
-      a.className = 'nostra-nav-link' + (location.pathname.toLowerCase().includes('nostrachat.html') ? ' active' : '');
+      a.className = 'nostra-nav-link' + (path.includes('nostrachat.html') ? ' active' : '');
       a.href = 'nostrachat.html';
       a.textContent = 'NOSTRACHAT';
       item.appendChild(a);
@@ -68,7 +89,7 @@
       var aMobile = document.createElement('a');
       aMobile.href = 'nostrachat.html';
       aMobile.textContent = 'NOSTRACHAT';
-      if (location.pathname.toLowerCase().includes('nostrachat.html')) aMobile.className = 'active';
+      if (path.includes('nostrachat.html')) aMobile.className = 'active';
 
       var noticiasMobile = Array.prototype.slice.call(mobile.querySelectorAll('a')).find(function (link) {
         return (link.textContent || '').toLowerCase().includes('noticias');
@@ -79,7 +100,7 @@
   }
 
   function addToNostrachatOwnMenu() {
-    if (!location.pathname.toLowerCase().includes('nostrachat.html')) return;
+    if (!path.includes('nostrachat.html')) return;
     document.querySelectorAll('header .menu').forEach(function (menu) {
       if (alreadyHasChat(menu)) return;
       var a = document.createElement('a');
@@ -94,6 +115,7 @@
     addToClassicMenus();
     addToSharedHeader();
     addToNostrachatOwnMenu();
+    removeFromIndexDesktop();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
@@ -101,4 +123,5 @@
 
   setTimeout(run, 700);
   setTimeout(run, 1600);
+  setTimeout(run, 2600);
 })();
