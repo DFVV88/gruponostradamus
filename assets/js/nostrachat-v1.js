@@ -1,11 +1,13 @@
 /* ==================================================
-   NostraCHAT v1 - Chat de texto con Firebase Firestore
+   NostraCHAT v1.1 - Sistema mixto
+   Bot básico + reportes + revisión humana.
    Zonas: alumnos y externos. Sin fotos todavía.
 ================================================== */
 (function () {
   var firebaseConfig = window.NOSTRACHAT_FIREBASE_CONFIG;
   var maxMessageLength = 420;
   var badWords = ['mierda','carajo','puta','puto','imbecil','imbécil','idiota','estupido','estúpido','huevon','huevón','ctm','conchatumare'];
+  var blockedPatterns = [/https?:\/\//i, /www\./i, /t\.me\//i, /bit\.ly/i, /tinyurl/i, /wa\.me\//i, /\.com\b/i, /\.pe\b/i, /\.net\b/i];
 
   function escapeHTML(text) {
     return String(text || '').replace(/[&<>'"]/g, function (c) {
@@ -20,6 +22,23 @@
   function containsBadWords(text) {
     var lower = cleanText(text).toLowerCase();
     return badWords.some(function (w) { return lower.indexOf(w) !== -1; });
+  }
+
+  function containsBlockedPattern(text) {
+    return blockedPatterns.some(function (rx) { return rx.test(text || ''); });
+  }
+
+  function looksLikeSpam(text) {
+    var t = cleanText(text).toLowerCase();
+    if (!t) return false;
+    if (/(.)\1{8,}/.test(t)) return true;
+    if (t.length > 25 && t === t.toUpperCase()) return true;
+    var words = t.split(' ');
+    if (words.length >= 6) {
+      var unique = Array.from(new Set(words));
+      if (unique.length <= 2) return true;
+    }
+    return false;
   }
 
   function injectStyles() {
@@ -57,12 +76,17 @@
       .nchat-pill{display:inline-flex;padding:8px 11px;border-radius:999px;background:rgba(255,255,255,.12);font-weight:900;font-size:13px;white-space:nowrap;}
       .nchat-messages{flex:1;padding:20px;background:linear-gradient(180deg,#f7fdff,#fff);overflow-y:auto;max-height:520px;}
       .nchat-empty{text-align:center;color:#69788a;padding:44px 12px;font-weight:800;}
-      .nchat-msg{max-width:82%;margin:0 0 12px;padding:12px 14px;border-radius:18px;box-shadow:0 8px 22px rgba(6,20,38,.06);}
+      .nchat-msg{max-width:82%;margin:0 0 12px;padding:12px 14px;border-radius:18px;box-shadow:0 8px 22px rgba(6,20,38,.06);position:relative;}
       .nchat-msg.mine{margin-left:auto;background:linear-gradient(135deg,#078c95,#00c2d1);color:#fff;border-bottom-right-radius:6px;}
       .nchat-msg.other{background:#fff;color:#26384a;border:1px solid rgba(7,140,149,.12);border-bottom-left-radius:6px;}
       .nchat-msg.system{max-width:100%;background:#fff7e6;border:1px solid #ffe0ad;color:#7a4a00;text-align:center;border-radius:16px;font-weight:850;}
+      .nchat-msg.reported{opacity:.72;}
       .nchat-meta{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:5px;font-size:12px;opacity:.78;font-weight:900;}
       .nchat-text{font-size:15px;line-height:1.5;word-break:break-word;}
+      .nchat-actions{display:flex;justify-content:flex-end;margin-top:8px;gap:8px;}
+      .nchat-report{border:0;background:rgba(6,20,38,.08);color:inherit;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:900;cursor:pointer;}
+      .nchat-msg.mine .nchat-report{background:rgba(255,255,255,.18);color:#fff;}
+      .nchat-report:disabled{opacity:.65;cursor:not-allowed;}
       .nchat-composer{display:flex;gap:10px;padding:15px;background:#fff;border-top:1px solid rgba(7,140,149,.14);}
       .nchat-composer textarea{flex:1;min-height:48px;max-height:110px;resize:vertical;border:1px solid rgba(7,140,149,.22);border-radius:16px;padding:12px 13px;font:inherit;outline:none;}
       .nchat-send{width:auto;min-width:112px;border:0;border-radius:16px;padding:0 18px;background:linear-gradient(135deg,#078c95,#061426);color:#fff;font-weight:950;cursor:pointer;}
@@ -82,9 +106,9 @@
     section.innerHTML = `
       <div class="nchat-wrap">
         <div class="nchat-title">
-          <span>Versión funcional inicial</span>
+          <span>Sistema mixto activo</span>
           <h2>Entrar al chat académico</h2>
-          <p>Primera versión de NostraCHAT: chat de texto, dos zonas separadas, nombre obligatorio y reglas aceptadas antes de participar. Las fotos se habilitarán más adelante.</p>
+          <p>NostraCHAT usa filtro automático, límite de mensajes y botón de reporte. Las fotos se habilitarán más adelante con controles adicionales.</p>
         </div>
         <div class="nchat-shell">
           <aside class="nchat-card nchat-side">
@@ -97,7 +121,7 @@
               <input id="nchat-name" maxlength="60" placeholder="Ej. Daniel Villavicencio" autocomplete="name">
               <label id="nchat-extra-label">Ciclo o código de alumno</label>
               <input id="nchat-extra" maxlength="80" placeholder="Ej. Semianual UNI / WTC-001">
-              <div class="nchat-check"><input id="nchat-rules" type="checkbox"><span>Acepto las reglas: solo consultas académicas, respeto obligatorio, sin datos personales, sin spam y con moderación institucional.</span></div>
+              <div class="nchat-check"><input id="nchat-rules" type="checkbox"><span>Acepto las reglas: solo consultas académicas, respeto obligatorio, sin datos personales, sin spam, sin enlaces externos y con moderación institucional.</span></div>
               <button class="nchat-btn" type="submit">Ingresar al chat</button>
               <div class="nchat-warning" id="nchat-warning"></div>
             </form>
@@ -112,7 +136,7 @@
               <textarea id="nchat-message" maxlength="420" placeholder="Escribe tu consulta académica..." disabled></textarea>
               <button class="nchat-send" id="nchat-send" disabled>Enviar</button>
             </div>
-            <div class="nchat-note">Límite: 420 caracteres. Por ahora no se permite subir fotos. Los mensajes ofensivos o no académicos podrán ser eliminados.</div>
+            <div class="nchat-note">Sistema mixto: filtro automático + reportes + revisión humana. Límite: 420 caracteres. Por ahora no se permite subir fotos ni enlaces externos.</div>
           </main>
         </div>
       </div>
@@ -155,6 +179,8 @@
         user: null,
         unsubscribe: null,
         lastSendAt: 0,
+        lastMessageText: '',
+        reportedIds: JSON.parse(localStorage.getItem('nostrachat_reported_ids') || '{}'),
         sessionId: localStorage.getItem('nostrachat_session_id') || ('nc_' + Date.now() + '_' + Math.random().toString(36).slice(2))
       };
       localStorage.setItem('nostrachat_session_id', state.sessionId);
@@ -174,6 +200,9 @@
 
       function roomPath() {
         return 'rooms/' + state.zone + '/messages';
+      }
+      function reportsPath() {
+        return 'rooms/' + state.zone + '/reports';
       }
 
       function setZone(zone) {
@@ -202,7 +231,12 @@
           var cls = m.type === 'system' ? 'system' : (mine ? 'mine' : 'other');
           var date = m.createdAt && m.createdAt.toDate ? m.createdAt.toDate() : null;
           var time = date ? date.toLocaleTimeString('es-PE', {hour:'2-digit', minute:'2-digit'}) : '';
-          return '<div class="nchat-msg ' + cls + '"><div class="nchat-meta"><span>' + escapeHTML(m.name || 'NostraCHAT') + '</span><span>' + escapeHTML(time) + '</span></div><div class="nchat-text">' + escapeHTML(m.text || '') + '</div></div>';
+          var id = escapeHTML(m.id || '');
+          var reported = state.reportedIds[m.id] ? ' reported' : '';
+          var reportText = state.reportedIds[m.id] ? 'Reportado' : 'Reportar';
+          var reportDisabled = state.reportedIds[m.id] ? ' disabled' : '';
+          var actions = m.type === 'system' ? '' : '<div class="nchat-actions"><button class="nchat-report" data-report-id="' + id + '"' + reportDisabled + '>' + reportText + '</button></div>';
+          return '<div class="nchat-msg ' + cls + reported + '"><div class="nchat-meta"><span>' + escapeHTML(m.name || 'NostraCHAT') + '</span><span>' + escapeHTML(time) + '</span></div><div class="nchat-text">' + escapeHTML(m.text || '') + '</div>' + actions + '</div>';
         }).join('');
         messages.scrollTop = messages.scrollHeight;
       }
@@ -213,7 +247,11 @@
         var q = fs.query(fs.collection(db, roomPath()), fs.orderBy('createdAt', 'asc'), fs.limit(80));
         state.unsubscribe = fs.onSnapshot(q, function (snapshot) {
           var items = [];
-          snapshot.forEach(function (doc) { items.push(doc.data()); });
+          snapshot.forEach(function (doc) {
+            var data = doc.data();
+            data.id = doc.id;
+            items.push(data);
+          });
           renderMessages(items);
         }, function (error) {
           messages.innerHTML = '<div class="nchat-empty">No se pudieron cargar mensajes. Revisa que Firestore esté activado y sus reglas permitan lectura/escritura controlada.</div>';
@@ -248,7 +286,11 @@
         if (!text) return;
         if (text.length > maxMessageLength) return showWarning('El mensaje es demasiado largo.');
         if (containsBadWords(text)) return showWarning('Tu mensaje contiene palabras no permitidas.');
+        if (containsBlockedPattern(text)) return showWarning('Por seguridad, NostraCHAT no permite enlaces externos por ahora.');
+        if (looksLikeSpam(text)) return showWarning('El sistema detectó posible spam. Escribe tu consulta con más claridad.');
+        if (state.lastMessageText && state.lastMessageText === text.toLowerCase()) return showWarning('No envíes el mismo mensaje repetido.');
         state.lastSendAt = now;
+        state.lastMessageText = text.toLowerCase();
         sendBtn.disabled = true;
         fs.addDoc(fs.collection(db, roomPath()), {
           text: text,
@@ -257,6 +299,7 @@
           zone: state.zone,
           sessionId: state.sessionId,
           type: 'message',
+          moderationStatus: 'visible',
           createdAt: fs.serverTimestamp()
         }).then(function () {
           messageInput.value = '';
@@ -269,6 +312,38 @@
           messageInput.focus();
         });
       }
+
+      function reportMessage(messageId) {
+        if (!state.user) return showWarning('Primero debes ingresar al chat.');
+        if (!messageId || state.reportedIds[messageId]) return;
+        var reason = window.prompt('¿Por qué reportas este mensaje? Ej: insulto, spam, contenido no académico');
+        reason = cleanText(reason || 'Reporte del usuario');
+        if (reason.length < 3) reason = 'Reporte del usuario';
+        fs.addDoc(fs.collection(db, reportsPath()), {
+          messageId: messageId,
+          room: state.zone,
+          reportedBy: state.user.name,
+          reporterExtra: state.user.extra,
+          reporterSessionId: state.sessionId,
+          reason: reason.slice(0, 180),
+          status: 'pendiente',
+          createdAt: fs.serverTimestamp()
+        }).then(function () {
+          state.reportedIds[messageId] = true;
+          localStorage.setItem('nostrachat_reported_ids', JSON.stringify(state.reportedIds));
+          startListening();
+          showWarning('Reporte enviado. Coordinación podrá revisarlo.');
+        }).catch(function (err) {
+          showWarning('No se pudo enviar el reporte. Revisa las reglas de Firestore.');
+          console.error(err);
+        });
+      }
+
+      messages.addEventListener('click', function (e) {
+        var btn = e.target && e.target.closest ? e.target.closest('[data-report-id]') : null;
+        if (!btn) return;
+        reportMessage(btn.getAttribute('data-report-id'));
+      });
 
       sendBtn.addEventListener('click', sendMessage);
       messageInput.addEventListener('keydown', function (e) {
