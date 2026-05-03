@@ -396,3 +396,70 @@ body{
   background:radial-gradient(circle at center, rgba(0,0,0,.34), rgba(0,0,0,.12) 52%, transparent 74%);
   pointer-events:none;
 }
+
+/* ==================================================
+   MATRÍCULA INDEX - TÍTULOS LEGIBLES SOBRE FONDO OSCURO
+   Mejora la sección “Reserva tu matrícula ahora / Garantiza tu futuro”.
+================================================== */
+section:has(input[placeholder*="Nombre"]) .title-area,
+div:has(input[placeholder*="Nombre"]) .title-area{
+  margin-bottom:34px !important;
+}
+
+section:has(input[placeholder*="Nombre"]) .sub-title,
+div:has(input[placeholder*="Nombre"]) .sub-title,
+section:has(input[placeholder*="Nombre"]) .title-area .sub-title,
+div:has(input[placeholder*="Nombre"]) .title-area .sub-title{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:7px 14px !important;
+  border-radius:999px !important;
+  background:rgba(0,194,209,.13) !important;
+  border:1px solid rgba(120,249,255,.34) !important;
+  color:#78f9ff !important;
+  -webkit-text-fill-color:#78f9ff !important;
+  text-shadow:0 0 12px rgba(0,194,209,.65),0 2px 6px rgba(0,0,0,.72) !important;
+  filter:none !important;
+  font-size:clamp(13px,1.2vw,18px) !important;
+  font-weight:950 !important;
+  letter-spacing:1.15px !important;
+}
+
+section:has(input[placeholder*="Nombre"]) .sec-title,
+div:has(input[placeholder*="Nombre"]) .sec-title,
+section:has(input[placeholder*="Nombre"]) .title-area .sec-title,
+div:has(input[placeholder*="Nombre"]) .title-area .sec-title{
+  background:linear-gradient(180deg,#ffffff 0%,#effbff 24%,#82f4ff 46%,#ffffff 61%,#00c2d1 100%) !important;
+  -webkit-background-clip:text !important;
+  background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+  color:#ffffff !important;
+  filter:
+    drop-shadow(0 2px 0 rgba(0,0,0,.88))
+    drop-shadow(0 6px 12px rgba(0,0,0,.72))
+    drop-shadow(0 0 18px rgba(0,194,209,.50)) !important;
+  text-shadow:none !important;
+  letter-spacing:-.6px !important;
+  font-size:clamp(36px,4vw,64px) !important;
+  line-height:1.05 !important;
+}
+
+section:has(input[placeholder*="Nombre"]) .title-area::after,
+div:has(input[placeholder*="Nombre"]) .title-area::after{
+  width:160px !important;
+  height:5px !important;
+  margin:18px 0 0 !important;
+  background:linear-gradient(90deg,transparent,#78f9ff,#00c2d1,transparent) !important;
+  box-shadow:0 0 24px rgba(0,194,209,.75) !important;
+}
+
+section:has(input[placeholder*="Nombre"]) .title-area p,
+div:has(input[placeholder*="Nombre"]) .title-area p,
+section:has(input[placeholder*="Nombre"]) .sec-text,
+div:has(input[placeholder*="Nombre"]) .sec-text{
+  color:#e9f7ff !important;
+  text-shadow:0 2px 8px rgba(0,0,0,.72) !important;
+  font-weight:650 !important;
+  opacity:1 !important;
+}
