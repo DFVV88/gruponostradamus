@@ -7,7 +7,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-31';
+  var VERSION = '2026-32';
 
   function assetAlreadyLoaded(urlPart) {
     return !!document.querySelector('script[src*="' + urlPart + '"]');
@@ -31,6 +31,7 @@
 
     /* 📰 NOTICIAS UNI */
     loadJS('assets/js/nostra-noticias-uni-pro.js?v=' + VERSION);
+    loadJS('assets/js/nostra-index-noticias-pro.js?v=' + VERSION);
 
     /* 🎨 RESTO DEL SISTEMA VISUAL */
     loadJS('assets/js/nostra-uni-campus-only.js?v=' + VERSION);
