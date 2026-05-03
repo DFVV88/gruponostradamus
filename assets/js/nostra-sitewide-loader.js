@@ -7,7 +7,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-37';
+  var VERSION = '2026-39';
 
   function assetAlreadyLoaded(urlPart) {
     return !!document.querySelector('script[src*="' + urlPart + '"]');
@@ -35,6 +35,7 @@
 
     /* 🧭 HEADER PREMIUM PARA SUBPÁGINAS */
     loadJS('assets/js/shared-header.js?v=' + VERSION);
+    loadJS('assets/js/nostrachat-menu-link.js?v=' + VERSION);
     loadJS('assets/js/nostra-contact-whatsapp-fix.js?v=' + VERSION);
 
     /* 📰 NOTICIAS UNI */
