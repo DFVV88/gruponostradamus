@@ -19,6 +19,11 @@
     ['Conoces las Modalidades para ingresar a la UNI', 'Conoce las modalidades para ingresar a la UNI'],
     ['Guía para la Elección de Carreras', 'Guía para la elección de carreras'],
     ['Orientación Vocacional para Estudiantes', 'Orientación vocacional para estudiantes'],
+    ['Noticias Academicas', 'Noticias Académicas'],
+    ['Nuestro Mundo Academico', 'nuestro mundo académico'],
+    ['Ciclos Academicos', 'Ciclos académicos'],
+    ['Ciclos Académicos', 'Ciclos académicos'],
+    ['Explora nuestros Ciclos', 'Explora nuestros ciclos'],
     ['Academicas', 'Académicas'],
     ['Academicos', 'Académicos'],
     ['Academico', 'Académico'],
@@ -66,6 +71,20 @@
     ['teoria', 'teoría'],
     ['Basico', 'Básico'],
     ['basico', 'básico'],
+    ['Modulos', 'Módulos'],
+    ['modulos', 'módulos'],
+    ['Modulo', 'Módulo'],
+    ['modulo', 'módulo'],
+    ['Analisis', 'Análisis'],
+    ['analisis', 'análisis'],
+    ['Diagnostico', 'Diagnóstico'],
+    ['diagnostico', 'diagnóstico'],
+    ['Estrategico', 'Estratégico'],
+    ['estrategico', 'estratégico'],
+    ['Estrategica', 'Estratégica'],
+    ['estrategica', 'estratégica'],
+    ['Intensivo', 'Intensivo'],
+    ['Intensiva', 'Intensiva'],
     ['Avanzado', 'Avanzado'],
     ['Av.Gerardo', 'Av. Gerardo'],
     ['Av.Gerardo Unger', 'Av. Gerardo Unger'],
@@ -77,6 +96,29 @@
     ['Clases Completadas', 'Clases completadas'],
     ['Satisfacción Porcentual', 'Satisfacción estudiantil'],
     ['Estudiantes Satisfechos', 'Estudiantes satisfechos'],
+    ['formación escolar', 'formación escolar'],
+    ['Formacion', 'Formación'],
+    ['formacion', 'formación'],
+    ['Educacion', 'Educación'],
+    ['educacion', 'educación'],
+    ['Cronograma', 'Cronograma'],
+    ['cronograma', 'cronograma'],
+    ['Horario', 'Horario'],
+    ['horario', 'horario'],
+    ['Turno Mañana', 'Turno mañana'],
+    ['Turno Tarde', 'Turno tarde'],
+    ['Turno Noche', 'Turno noche'],
+    ['Modalidad Presencial', 'Modalidad presencial'],
+    ['Modalidad Virtual', 'Modalidad virtual'],
+    ['Modalidad Semipresencial', 'Modalidad semipresencial'],
+    ['Material Academico', 'Material académico'],
+    ['Material academico', 'Material académico'],
+    ['Simulacro Tipo UNI', 'Simulacro tipo UNI'],
+    ['Simulacros Tipo UNI', 'Simulacros tipo UNI'],
+    ['Ciclo Verano', 'Ciclo verano'],
+    ['Ciclo Repaso', 'Ciclo repaso'],
+    ['Ciclo Paralelo', 'Ciclo paralelo'],
+    ['Proyecto Escolar', 'Proyecto escolar'],
     ['QUIERO INGRESAR', 'QUIERO INGRESAR'],
     ['VER TODOS', 'VER TODO'],
     ['Leer Más', 'Leer más'],
@@ -147,11 +189,27 @@
     });
   }
 
+  function mejorarCiclos() {
+    var path = location.pathname.toLowerCase();
+    if (!path.includes('ciclo') && !path.includes('ciclos.html')) return;
+
+    document.querySelectorAll('h1, h2, h3, h4, h5, p, a, span, li, button').forEach(function (el) {
+      if (!el || !el.textContent) return;
+      var t = el.textContent.trim();
+      if (t === 'Ver Más' || t === 'VER MÁS') el.textContent = 'Ver más';
+      if (t === 'Mas información' || t === 'Más Informacion') el.textContent = 'Más información';
+      if (t === 'Solicita informacion') el.textContent = 'Solicita información';
+      if (t === 'Inscribete') el.textContent = 'Inscríbete';
+      if (t === 'Matriculate') el.textContent = 'Matricúlate';
+    });
+  }
+
   function corregirTodo() {
     recorrer(document.body);
     corregirAtributos();
     corregirSedesBlogs();
     mejorarIndex();
+    mejorarCiclos();
   }
 
   if (document.readyState === 'loading') {
