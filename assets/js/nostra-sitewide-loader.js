@@ -7,7 +7,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-39';
+  var VERSION = '2026-40';
 
   function assetAlreadyLoaded(urlPart) {
     return !!document.querySelector('script[src*="' + urlPart + '"]');
@@ -37,6 +37,9 @@
     loadJS('assets/js/shared-header.js?v=' + VERSION);
     loadJS('assets/js/nostrachat-menu-link.js?v=' + VERSION);
     loadJS('assets/js/nostra-contact-whatsapp-fix.js?v=' + VERSION);
+
+    /* 💬 NOSTRACHAT EN INDEX */
+    loadJS('assets/js/nostrachat-index-section.js?v=' + VERSION);
 
     /* 📰 NOTICIAS UNI */
     loadJS('assets/js/nostra-noticias-uni-pro.js?v=' + VERSION);
