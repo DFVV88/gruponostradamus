@@ -1,7 +1,7 @@
 /* ==================================================
-   NostraCHAT Admin v1.2
-   Login con Google + lectura + marcar revisado + eliminar.
-   Seguridad real: Firebase Auth + reglas por email/dominio.
+   NostraCHAT Admin v1.3
+   Compatible con salas oficiales.
+   Lee mensajes/reportes desde todas las subcolecciones oficiales.
 ================================================== */
 (function () {
   var firebaseConfig = window.NOSTRACHAT_FIREBASE_CONFIG;
@@ -56,31 +56,36 @@
     return state.view.indexOf('reports') === 0;
   }
 
-  function currentRoom() {
-    if (state.view === 'alumnos' || state.view === 'reports-alumnos') return 'alumnos';
-    return 'externos';
+  function currentZone() {
+    return (state.view === 'alumnos' || state.view === 'reports-alumnos') ? 'alumnos' : 'externos';
   }
 
-  function collectionPath() {
-    if (state.view === 'alumnos') return 'rooms/alumnos/messages';
-    if (state.view === 'externos') return 'rooms/externos/messages';
-    if (state.view === 'reports-alumnos') return 'rooms/alumnos/reports';
-    return 'rooms/externos/reports';
+  function sortDocsByDateDesc(docs) {
+    return docs.sort(function (a, b) {
+      var ad = a.data().createdAt && a.data().createdAt.toMillis ? a.data().createdAt.toMillis() : 0;
+      var bd = b.data().createdAt && b.data().createdAt.toMillis ? b.data().createdAt.toMillis() : 0;
+      return bd - ad;
+    });
   }
 
   function renderMessages(snapshot) {
     var list = document.getElementById('admin-list');
     if (!list) return;
-    if (snapshot.empty) {
+
+    var docs = sortDocsByDateDesc(snapshot.docs || []);
+    if (!docs.length) {
       list.innerHTML = '<div class="admin-empty">No hay registros en esta vista.</div>';
       return;
     }
+
     var html = '';
-    snapshot.forEach(function (docSnap) {
+    docs.forEach(function (docSnap) {
       var d = docSnap.data();
       var isReport = isReportView();
       var status = d.status || d.moderationStatus || 'visible';
-      var itemPath = collectionPath() + '/' + docSnap.id;
+      var itemPath = docSnap.ref.path;
+      var roomLabel = d.roomLabel || d.roomId || 'Sala';
+
       html += '<article class="admin-item" data-item-path="' + escapeHTML(itemPath) + '">' +
         '<div class="admin-meta">' +
           '<span><b>ID:</b> ' + escapeHTML(docSnap.id) + '</span>' +
@@ -88,11 +93,12 @@
         '</div>' +
         '<div>' +
           '<span class="admin-badge' + (isReport ? ' report' : '') + '">' + (isReport ? 'REPORTE' : escapeHTML(d.zone || 'mensaje')) + '</span> ' +
+          '<span class="admin-badge">' + escapeHTML(roomLabel) + '</span> ' +
           '<span class="admin-badge">' + escapeHTML(status) + '</span>' +
         '</div>' +
         (isReport
-          ? '<div class="admin-text"><b>Mensaje reportado:</b> ' + escapeHTML(d.messageId || '') + '<br><b>Motivo:</b> ' + escapeHTML(d.reason || '') + '<br><b>Reportado por:</b> ' + escapeHTML(d.reportedBy || '') + '<br><b>Dato:</b> ' + escapeHTML(d.reporterExtra || '') + '</div>'
-          : '<div class="admin-text"><b>' + escapeHTML(d.name || '') + '</b><br><small>' + escapeHTML(d.extra || '') + '</small><br><br>' + escapeHTML(d.text || '') + '</div>') +
+          ? '<div class="admin-text"><b>Mensaje reportado:</b> ' + escapeHTML(d.messageId || '') + '<br><b>Sala:</b> ' + escapeHTML(roomLabel) + '<br><b>Motivo:</b> ' + escapeHTML(d.reason || '') + '<br><b>Reportado por:</b> ' + escapeHTML(d.reportedBy || '') + '<br><b>Dato:</b> ' + escapeHTML(d.reporterExtra || '') + '</div>'
+          : '<div class="admin-text"><b>' + escapeHTML(d.name || '') + '</b><br><small>' + escapeHTML(d.extra || '') + '</small><br><small>Sala: ' + escapeHTML(roomLabel) + '</small><br><br>' + escapeHTML(d.text || '') + '</div>') +
         '<div class="admin-actions">' +
           '<button class="admin-btn small" type="button" data-admin-action="review" data-item-path="' + escapeHTML(itemPath) + '">' + (isReport ? 'Marcar reporte revisado' : 'Marcar revisado') + '</button>' +
           '<button class="admin-btn small danger" type="button" data-admin-action="delete" data-item-path="' + escapeHTML(itemPath) + '">' + (isReport ? 'Eliminar reporte' : 'Eliminar mensaje') + '</button>' +
@@ -106,10 +112,20 @@
     if (state.unsubscribe) state.unsubscribe();
     setActiveTab();
     var list = document.getElementById('admin-list');
-    if (list) list.innerHTML = '<div class="admin-empty">Cargando...</div>';
-    var q = fs.query(fs.collection(state.db, collectionPath()), fs.orderBy('createdAt', 'desc'), fs.limit(100));
+    if (list) list.innerHTML = '<div class="admin-empty">Cargando registros de salas oficiales...</div>';
+
+    var zone = currentZone();
+    var collectionName = isReportView() ? 'reports' : 'messages';
+    var field = isReportView() ? 'room' : 'zone';
+
+    var q = fs.query(
+      fs.collectionGroup(state.db, collectionName),
+      fs.where(field, '==', zone),
+      fs.limit(100)
+    );
+
     state.unsubscribe = fs.onSnapshot(q, renderMessages, function (err) {
-      if (list) list.innerHTML = '<div class="admin-empty">No se pudo cargar. Revisa que tu correo tenga permiso en las reglas de Firebase.</div>';
+      if (list) list.innerHTML = '<div class="admin-empty">No se pudo cargar. Revisa reglas de Firebase o índices de Firestore.</div>';
       console.error(err);
     });
   }
