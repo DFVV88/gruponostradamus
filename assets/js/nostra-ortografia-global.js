@@ -15,9 +15,10 @@
     ['MATRICULATE', 'MATRICÚLATE'],
     ['Matriculate', 'Matricúlate'],
     ['Clases en Vivo', 'Clases en vivo'],
-    ['CLASES EN VIVO', 'CLASES EN VIVO'],
     ['Examen de Admisión', 'Examen de admisión'],
     ['Conoces las Modalidades para ingresar a la UNI', 'Conoce las modalidades para ingresar a la UNI'],
+    ['Guía para la Elección de Carreras', 'Guía para la elección de carreras'],
+    ['Orientación Vocacional para Estudiantes', 'Orientación vocacional para estudiantes'],
     ['Academicas', 'Académicas'],
     ['Academicos', 'Académicos'],
     ['Academico', 'Académico'],
@@ -55,6 +56,33 @@
     ['Inscripcion', 'Inscripción'],
     ['Acompanamiento', 'Acompañamiento'],
     ['acompanamiento', 'acompañamiento'],
+    ['Exito', 'Éxito'],
+    ['exito', 'éxito'],
+    ['Practica', 'Práctica'],
+    ['practica', 'práctica'],
+    ['Practicas', 'Prácticas'],
+    ['practicas', 'prácticas'],
+    ['Teoria', 'Teoría'],
+    ['teoria', 'teoría'],
+    ['Basico', 'Básico'],
+    ['basico', 'básico'],
+    ['Avanzado', 'Avanzado'],
+    ['Av.Gerardo', 'Av. Gerardo'],
+    ['Av.Gerardo Unger', 'Av. Gerardo Unger'],
+    ['Gerardo Unger\n                                    193', 'Gerardo Unger 193'],
+    ['Preparando a los futuros ingenieros del Perú', 'Preparando a los futuros ingenieros del Perú.'],
+    ['Resultados que respaldan', 'Resultados que nos respaldan'],
+    ['Seguimiento academico', 'Seguimiento académico'],
+    ['Egresados Satisfechos', 'Egresados satisfechos'],
+    ['Clases Completadas', 'Clases completadas'],
+    ['Satisfacción Porcentual', 'Satisfacción estudiantil'],
+    ['Estudiantes Satisfechos', 'Estudiantes satisfechos'],
+    ['QUIERO INGRESAR', 'QUIERO INGRESAR'],
+    ['VER TODOS', 'VER TODO'],
+    ['Leer Más', 'Leer más'],
+    ['LEER MÁS', 'LEER MÁS'],
+    ['Ver Mapa', 'Ver mapa'],
+    ['Ver mapa', 'Ver mapa'],
     ['anos', 'años'],
     ['Anos', 'Años']
   ]);
@@ -94,9 +122,36 @@
     });
   }
 
+  function corregirSedesBlogs() {
+    if (!location.pathname.toLowerCase().includes('sedes.html')) return;
+    var nuevos = {
+      'blog1.html': 'Cómo saber si ya estás listo para postular a la UNI',
+      'blog2.html': 'Qué ciclo UNI elegir según tu nivel actual',
+      'blog3.html': 'Cómo dejar de estancarte en Matemática, Física y Química'
+    };
+    Object.keys(nuevos).forEach(function (url) {
+      document.querySelectorAll('#blog-sec .box-title a[href="' + url + '"]').forEach(function (a) {
+        a.textContent = nuevos[url];
+      });
+    });
+  }
+
+  function mejorarIndex() {
+    if (!/index\.html$|\/$/.test(location.pathname)) return;
+    document.querySelectorAll('.counter-card_text').forEach(function (el) {
+      el.innerHTML = el.innerHTML
+        .replace('<strong>Egresados</strong> Satisfechos', '<strong>Egresados</strong> satisfechos')
+        .replace('<strong>Clases</strong> Completadas', '<strong>Clases</strong> completadas')
+        .replace('<strong>Satisfacción</strong> Porcentual', '<strong>Satisfacción</strong> estudiantil')
+        .replace('<strong>Estudiantes</strong> Satisfechos', '<strong>Estudiantes</strong> satisfechos');
+    });
+  }
+
   function corregirTodo() {
     recorrer(document.body);
     corregirAtributos();
+    corregirSedesBlogs();
+    mejorarIndex();
   }
 
   if (document.readyState === 'loading') {
