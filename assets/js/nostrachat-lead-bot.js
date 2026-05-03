@@ -1,7 +1,7 @@
 /* ==================================================
-   NostraCHAT Lead Bot v2
+   NostraCHAT Lead Bot v2.1
    Bot comercial de respuesta automática para salas externas.
-   Usa una base de conocimiento tomada de la web del Grupo Nostradamus.
+   Base actualizada: Microsoft 365, Módulos, Verano UNI, Repaso UNI y Sabatinos.
 ================================================== */
 (function () {
   var WA_NUMBER = '51993750351';
@@ -12,28 +12,27 @@
 
   var KB = {
     marca: 'Grupo de Estudio Nostradamus',
-    enfoque: 'preparación para postulantes a la UNI con acompañamiento académico, teoría, práctica y evaluación',
+    enfoque: 'preparación académica para postulantes a la UNI con acompañamiento, teoría, práctica y evaluación',
     telefono: '993 750 351',
     whatsapp: '51993750351',
     correo: 'informes@gruponostradamus.edu.pe',
     sede: 'Av. Gerardo Unger 193, San Martín de Porres',
     horarioBase: 'Las clases académicas se trabajan de 8:00 a. m. a 1:00 p. m., con teoría, práctica y evaluación.',
-    plataforma: 'Las clases presenciales se graban y pueden revisarse posteriormente en la plataforma Q10.',
-    aulas: 'Cada aula tiene cupos controlados, con un máximo aproximado de 35 alumnos.',
-    evaluacion: 'Se toman simulacros mensuales tipo examen de admisión UNI.',
-    humanidades: 'Humanidades se trabaja principalmente como seminarios dominicales.',
+    plataforma: 'La plataforma institucional de trabajo es Microsoft 365. Desde allí se organiza el acceso a recursos, clases y herramientas académicas según corresponda.',
+    aulas: 'Cada aula tiene cupos controlados para mantener orden y acompañamiento académico.',
+    evaluacion: 'Se realizan evaluaciones y simulacros tipo examen de admisión UNI para medir el avance del estudiante.',
+    humanidades: 'Humanidades se trabaja principalmente como seminarios o sesiones programadas según el ciclo.',
     cursos: 'Matemática, Ciencias, Aptitud Académica y Humanidades, según el ciclo elegido.',
     ciclos: {
-      anual: 'Ciclo Anual: ruta amplia para construir base, avanzar por etapas y sostener una preparación completa hacia la UNI.',
-      semianual: 'Ciclo Semianual: preparación intensiva y ordenada para alumnos que necesitan avanzar con mayor ritmo hacia la UNI.',
-      semestral: 'Ciclo Semestral: alternativa concentrada para reforzar teoría, práctica y evaluación en menos tiempo.',
+      anual: 'Ciclo Anual UNI: ruta amplia para construir base, avanzar por etapas y sostener una preparación completa hacia la UNI.',
+      semianual: 'Ciclo Semianual UNI: preparación intensiva y ordenada para alumnos que necesitan avanzar con mayor ritmo hacia la UNI.',
+      semestral: 'Ciclo Semestral UNI: alternativa concentrada para reforzar teoría, práctica y evaluación en menos tiempo.',
+      verano: 'Ciclo Verano UNI: preparación de temporada enfocada en avanzar, reforzar base y mantener ritmo académico durante el verano.',
+      repaso: 'Repaso UNI: ciclo orientado a reforzar, practicar y consolidar contenidos clave antes de una etapa evaluativa o examen.',
+      sabatino: 'Ciclos Sabatinos UNI: opción para estudiantes que necesitan prepararse principalmente los sábados, ideal para complementar estudios o actividades de lunes a viernes.',
       ien: 'Ciclo IEN: ruta especializada para estudiantes que buscan preparación enfocada según su objetivo académico.',
       cepre: 'Paralelo CEPRE UNI: acompañamiento pensado para alumnos que llevan o desean complementar su preparación tipo CEPRE UNI.',
-      modulos: 'NostraMÓDULOS: programa enfocado en desarrollo de preguntas de Matemáticas, Ciencias y Aptitud Académica. No incluye Humanidades.'
-    },
-    modulos: {
-      fenix: 'Módulo Fénix: refuerzo de base, ideal para ordenar fundamentos y recuperar seguridad académica.',
-      drakon: 'Módulo Drakon: trabajo avanzado para alumnos que necesitan mayor exigencia y velocidad de resolución.'
+      modulos: 'Módulos: programa enfocado en desarrollo de preguntas, refuerzo y práctica por áreas. Se trabaja especialmente Matemáticas, Ciencias y Aptitud Académica según la programación.'
     }
   };
 
@@ -110,7 +109,7 @@
           <div class="nchat-leadbot-avatar">🤖</div>
           <div>
             <div class="nchat-leadbot-title">Asistente de matrícula Nostra</div>
-            <div class="nchat-leadbot-text" id="nchat-leadbot-text">Escribe tu consulta. Responderé usando la información de la web de Nostradamus y, si corresponde, te derivaré a WhatsApp.</div>
+            <div class="nchat-leadbot-text" id="nchat-leadbot-text">Escribe tu consulta. Responderé usando la información institucional de Nostradamus y, si corresponde, te derivaré a WhatsApp.</div>
           </div>
         </div>
         <div class="nchat-leadbot-actions">
@@ -138,9 +137,9 @@
     var sala = roomLabel();
     var text = document.getElementById('nchat-leadbot-text');
     if (text) {
-      if (/informes/i.test(sala)) text.textContent = 'Estoy atento a tus dudas sobre ciclos, horarios, vacantes, costos y matrícula usando la información de la web.';
+      if (/informes/i.test(sala)) text.textContent = 'Estoy atento a tus dudas sobre ciclos, horarios, vacantes, costos, Microsoft 365 y matrícula.';
       else if (/orientaci/i.test(sala)) text.textContent = 'Cuéntame tu nivel, carrera objetivo y tiempo disponible. Te daré una primera orientación con base en las rutas Nostradamus.';
-      else text.textContent = 'Escribe tu consulta. Puedo orientarte sobre ciclos, módulos, horarios, plataforma, simulacros, sede y matrícula.';
+      else text.textContent = 'Escribe tu consulta. Puedo orientarte sobre ciclos, módulos, horarios, cursos, plataforma Microsoft 365, simulacros, sede y matrícula.';
     }
     var a1 = document.getElementById('nchat-leadbot-wa-matricula');
     var a2 = document.getElementById('nchat-leadbot-wa-ciclos');
@@ -166,13 +165,16 @@
   }
 
   function cycleText(t) {
+    if (/verano/.test(t)) return KB.ciclos.verano;
+    if (/repaso/.test(t)) return KB.ciclos.repaso;
+    if (/sabatino|sabado|sábado/.test(t)) return KB.ciclos.sabatino;
     if (/anual/.test(t)) return KB.ciclos.anual;
     if (/semianual/.test(t)) return KB.ciclos.semianual;
     if (/semestral/.test(t)) return KB.ciclos.semestral;
     if (/cepre|paralelo/.test(t)) return KB.ciclos.cepre;
     if (/ien/.test(t)) return KB.ciclos.ien;
-    if (/módulo|modulo|nostramod|nostra mód/.test(t)) return KB.ciclos.modulos;
-    return 'En la web se presentan varias rutas de preparación: Ciclo Anual, Semianual, Semestral, Ciclo IEN, Paralelo CEPRE UNI y NostraMÓDULOS. La mejor opción depende de tu nivel, tiempo disponible y objetivo.';
+    if (/módulo|modulo|modulos|módulos|nostramod|nostra mód/.test(t)) return KB.ciclos.modulos;
+    return 'En Nostradamus se manejan varias rutas de preparación: Anual UNI, Semianual UNI, Semestral UNI, Verano UNI, Repaso UNI, Sabatinos UNI, Ciclo IEN, Paralelo CEPRE UNI y Módulos. La mejor opción depende de tu nivel, tiempo disponible y objetivo.';
   }
 
   function buildReply(userText) {
@@ -180,35 +182,35 @@
     var sala = roomLabel().toLowerCase();
 
     if (/hola|buenas|info|informes|informacion|información/.test(t) || /informes/.test(sala)) {
-      return { intent: 'Solicito informes generales', text: '¡Hola! Soy el asistente Nostra. Según la web, ' + KB.marca + ' se enfoca en ' + KB.enfoque + '. Puedo orientarte sobre ciclos, horarios, sede, plataforma, simulacros y matrícula.' };
+      return { intent: 'Solicito informes generales', text: '¡Hola! Soy el asistente Nostra. ' + KB.marca + ' se enfoca en ' + KB.enfoque + '. Puedo orientarte sobre ciclos, módulos, horarios, sede, Microsoft 365, simulacros y matrícula.' };
     }
 
-    if (/ciclo|anual|semianual|semestral|cepre|ien|módulo|modulo|nostram/.test(t)) {
-      return { intent: 'Quiero información de ciclos', text: cycleText(t) + ' Para elegir bien, dime tu nivel actual, carrera objetivo y cuándo planeas postular.' };
+    if (/ciclo|anual|semianual|semestral|verano|repaso|sabatino|sábado|sabado|cepre|ien|módulo|modulo|módulos|modulos|nostram/.test(t)) {
+      return { intent: 'Quiero información de ciclos y módulos', text: cycleText(t) + ' Para elegir bien, dime tu nivel actual, carrera objetivo y cuándo planeas postular.' };
     }
 
-    if (/fenix|fénix|drakon|dragón|dragon|avanzado|básico|basico/.test(t)) {
-      return { intent: 'Quiero información de módulos Fénix o Drakon', text: KB.modulos.fenix + ' ' + KB.modulos.drakon + ' Estos módulos complementan la preparación según el nivel del alumno.' };
+    if (/fenix|fénix|drakon|dragón|dragon/.test(t)) {
+      return { intent: 'Quiero información de módulos', text: 'Actualmente ya no usamos esos nombres. Ahora los llamamos simplemente Módulos. ' + KB.ciclos.modulos };
     }
 
-    if (/horario|turno|mañana|tarde|noche|dias|días|domingo|lunes|sabado|sábado|clases/.test(t)) {
-      return { intent: 'Quiero información de horarios', text: KB.horarioBase + ' Además, ' + KB.humanidades + ' Para confirmar horarios disponibles y vacantes, conviene continuar por WhatsApp.' };
+    if (/horario|turno|mañana|tarde|noche|dias|días|domingo|lunes|clases/.test(t)) {
+      return { intent: 'Quiero información de horarios', text: KB.horarioBase + ' Además, ' + KB.humanidades + ' Para confirmar horarios disponibles por ciclo, lo recomendable es continuar por WhatsApp.' };
     }
 
     if (/curso|matem|fisic|físic|quim|quím|aptitud|humanidades|letras|ciencias/.test(t)) {
-      return { intent: 'Quiero información de cursos', text: 'Según la web, se trabajan cursos de ' + KB.cursos + ' En NostraMÓDULOS el enfoque es Matemáticas, Ciencias y Aptitud Académica, sin Humanidades.' };
+      return { intent: 'Quiero información de cursos', text: 'Se trabajan cursos de ' + KB.cursos + ' En los Módulos se refuerza la práctica y resolución por áreas según la programación vigente.' };
     }
 
-    if (/q10|grabaci|grabado|plataforma|virtual|clases en vivo|video/.test(t)) {
-      return { intent: 'Quiero información de plataforma y grabaciones', text: KB.plataforma + ' Esto ayuda a repasar clases o recuperar sesiones cuando el alumno necesita reforzar.' };
+    if (/microsoft|365|teams|plataforma|virtual|clases en vivo|recurso|grabaci|grabado|video/.test(t)) {
+      return { intent: 'Quiero información de plataforma Microsoft 365', text: KB.plataforma + ' Para detalles de acceso, clases o recursos disponibles, un asesor puede orientarte por WhatsApp.' };
     }
 
     if (/simulacro|examen|evaluaci|prueba/.test(t)) {
-      return { intent: 'Quiero información de simulacros', text: KB.evaluacion + ' La preparación busca acostumbrar al alumno al formato y exigencia del examen de admisión.' };
+      return { intent: 'Quiero información de simulacros', text: KB.evaluacion + ' Esto ayuda a que el alumno mida su avance y se acostumbre al estilo de evaluación UNI.' };
     }
 
     if (/sede|direccion|dirección|local|ubicacion|ubicación|smp|san martin|san martín/.test(t)) {
-      return { intent: 'Quiero información de sede', text: 'La sede indicada en la web es: ' + KB.sede + '. Para recibir indicaciones o consultar disponibilidad, puedes continuar por WhatsApp.' };
+      return { intent: 'Quiero información de sede', text: 'La sede indicada es: ' + KB.sede + '. Para recibir indicaciones o consultar atención, puedes continuar por WhatsApp.' };
     }
 
     if (/aula|cupos|cupo|vacante|vacantes|cantidad/.test(t)) {
@@ -216,14 +218,14 @@
     }
 
     if (/matric|inscrib|separar|reservar|pagar|pago|precio|costo|cuanto|cuánto|mensualidad|promocion|promoción|descuento/.test(t)) {
-      return { intent: 'Deseo información de matrícula y costos', text: 'Puedo ayudarte con una posible matrícula. Los costos y vacantes pueden variar según ciclo y disponibilidad. Continúa por WhatsApp para que un asesor confirme monto, requisitos, cupo y horario.' };
+      return { intent: 'Deseo información de matrícula y costos', text: 'Puedo ayudarte con una posible matrícula. Los costos y vacantes pueden variar según ciclo, horario y disponibilidad. Continúa por WhatsApp para que un asesor confirme monto, requisitos, cupo y horario.' };
     }
 
     if (/orient|no sé|no se|recomienda|recomiendan|empezar|desde cero|base|nivel|academia|uni|ingenier|postular|admision|admisión/.test(t) || /orient/.test(sala)) {
-      return { intent: 'Necesito orientación académica', text: 'Para orientarte con base en las rutas de la web, dime: 1) carrera objetivo, 2) nivel actual en Matemática/Física/Química, 3) si estás en colegio o egresado, 4) cuándo planeas postular. Con eso se puede sugerir ciclo, módulo o ruta de preparación.' };
+      return { intent: 'Necesito orientación académica', text: 'Para orientarte, dime: 1) carrera objetivo, 2) nivel actual en Matemática/Física/Química, 3) si estás en colegio o egresado, 4) cuándo planeas postular. Con eso se puede sugerir un ciclo, módulo o ruta de preparación.' };
     }
 
-    return { intent: 'Consulta general desde NostraCHAT', text: 'Gracias por escribir. Con base en la web de Nostradamus, puedo orientarte sobre ciclos, NostraMÓDULOS, Fénix, Drakon, horarios, cursos, plataforma Q10, simulacros, sede y matrícula. ¿Sobre cuál de esos puntos deseas información?' };
+    return { intent: 'Consulta general desde NostraCHAT', text: 'Gracias por escribir. Puedo orientarte sobre Anual, Semianual, Semestral, Verano UNI, Repaso UNI, Sabatinos, Paralelo CEPRE UNI, IEN, Módulos, horarios, cursos, Microsoft 365, simulacros, sede y matrícula. ¿Sobre cuál de esos puntos deseas información?' };
   }
 
   function maybeBotReply(userText) {
