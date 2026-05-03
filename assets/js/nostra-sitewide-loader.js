@@ -7,7 +7,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-34';
+  var VERSION = '2026-35';
 
   function assetAlreadyLoaded(urlPart) {
     return !!document.querySelector('script[src*="' + urlPart + '"]');
@@ -27,6 +27,7 @@
 
     /* 📝 CORRECCIÓN ORTOGRÁFICA GLOBAL */
     loadJS('assets/js/nostra-ortografia-global.js?v=' + VERSION);
+    loadJS('assets/js/nostra-ortografia-extra.js?v=' + VERSION);
 
     /* 🧭 HEADER PREMIUM PARA SUBPÁGINAS */
     loadJS('assets/js/shared-header.js?v=' + VERSION);
