@@ -1,7 +1,5 @@
 /* ==================================================
-   Grupo Nostradamus - Corrección global de botones
-   Evita que el hover blanco oculte el texto en botones animados.
-   Incluye mejora de miniaturas de ciclos del index.
+   Grupo Nostradamus - Botones, ciclos del index y actualización Microsoft 365
 ================================================== */
 (function () {
   function injectButtonFix() {
@@ -10,7 +8,6 @@
     var style = document.createElement('style');
     style.id = 'nostra-button-fix-style';
     style.textContent = `
-      /* Botones principales: texto siempre visible */
       .th-btn,
       .th-btn:visited,
       .th-btn.style3,
@@ -65,7 +62,6 @@
         fill:#ffffff !important;
       }
 
-      /* Efecto animado: baja opacidad para que no tape el texto */
       .th-btn.style3::before,
       .th-btn.style3::after{
         z-index:-1 !important;
@@ -82,7 +78,6 @@
         background:linear-gradient(120deg,transparent 0%,rgba(255,255,255,.16) 45%,transparent 58%) !important;
       }
 
-      /* Botones claros: texto oscuro siempre visible */
       .th-btn.style6,
       .th-btn.style6:visited{
         color:#061426 !important;
@@ -109,7 +104,6 @@
 
 /* ==================================================
    Grupo Nostradamus - Miniaturas PRO de ciclos en index
-   Actualiza las descripciones cortas y agrega ciclos faltantes.
 ================================================== */
 (function () {
   var file = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
@@ -192,7 +186,6 @@
         gap:32px !important;
         width:100% !important;
       }
-
       body #course-sec .nostra-home-cycle-card{
         height:100% !important;
         display:flex !important;
@@ -205,13 +198,11 @@
         transition:transform .24s ease, box-shadow .24s ease, border-color .24s ease !important;
         overflow:hidden !important;
       }
-
       body #course-sec .nostra-home-cycle-card:hover{
         transform:translateY(-7px) !important;
         border-color:rgba(0,194,209,.48) !important;
         box-shadow:0 28px 60px rgba(6,20,38,.13),0 0 32px rgba(0,194,209,.13) !important;
       }
-
       body #course-sec .nostra-home-cycle-card .course-img{
         margin:0 0 20px !important;
         border-radius:18px !important;
@@ -219,14 +210,12 @@
         aspect-ratio:16/8.5 !important;
         box-shadow:0 14px 34px rgba(6,20,38,.12) !important;
       }
-
       body #course-sec .nostra-home-cycle-card .course-img img{
         width:100% !important;
         height:100% !important;
         object-fit:cover !important;
         display:block !important;
       }
-
       body #course-sec .nostra-home-cycle-body{
         display:flex !important;
         flex-direction:column !important;
@@ -235,7 +224,6 @@
         padding-top:18px !important;
         border-top:4px solid #008b96 !important;
       }
-
       body #course-sec .nostra-home-cycle-title{
         margin:0 0 13px !important;
         text-align:center !important;
@@ -245,12 +233,7 @@
         text-transform:uppercase !important;
         letter-spacing:-.4px !important;
       }
-
-      body #course-sec .nostra-home-cycle-title a{
-        color:#061426 !important;
-        text-decoration:none !important;
-      }
-
+      body #course-sec .nostra-home-cycle-title a{color:#061426 !important;text-decoration:none !important;}
       body #course-sec .nostra-home-cycle-desc{
         margin:0 0 22px !important;
         color:#5e6a78 !important;
@@ -259,7 +242,6 @@
         line-height:1.62 !important;
         font-weight:650 !important;
       }
-
       body #course-sec .nostra-home-cycle-cta{
         margin-top:auto !important;
         display:inline-flex !important;
@@ -276,13 +258,7 @@
         text-decoration:none !important;
         box-shadow:0 12px 26px rgba(0,139,150,.22) !important;
       }
-
-      body #course-sec .nostra-home-cycle-cta:hover{
-        color:#fff !important;
-        transform:translateY(-2px) !important;
-        box-shadow:0 18px 34px rgba(0,194,209,.28) !important;
-      }
-
+      body #course-sec .nostra-home-cycle-cta:hover{color:#fff !important;transform:translateY(-2px) !important;box-shadow:0 18px 34px rgba(0,194,209,.28) !important;}
       @media(max-width:1199px){body #course-sec .nostra-home-cycles-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}}
       @media(max-width:767px){body #course-sec .nostra-home-cycles-grid{grid-template-columns:1fr !important;} body #course-sec .nostra-home-cycle-card{padding:18px !important;}}
     `;
@@ -308,7 +284,7 @@
   function upgradeHomeCycles() {
     injectHomeCycleStyles();
     var sec = document.querySelector('body #course-sec');
-    if (!sec || sec.dataset.nostraHomeCyclesPro === '2') return;
+    if (!sec || sec.dataset.nostraHomeCyclesPro === '3') return;
 
     var grid = sec.querySelector('.filter-active');
     if (!grid) return;
@@ -318,7 +294,7 @@
     grid.style.height = 'auto';
     grid.style.position = 'relative';
 
-    sec.dataset.nostraHomeCyclesPro = '2';
+    sec.dataset.nostraHomeCyclesPro = '3';
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', upgradeHomeCycles);
@@ -328,4 +304,61 @@
     setTimeout(upgradeHomeCycles, 500);
     setTimeout(upgradeHomeCycles, 1500);
   });
+})();
+
+/* ==================================================
+   Grupo Nostradamus - Actualización de plataforma: Microsoft 365
+   Reemplaza referencias visibles a Q10 relacionadas con clases/plataforma.
+================================================== */
+(function () {
+  function replaceTextNode(node) {
+    var original = node.nodeValue;
+    if (!original || original.toLowerCase().indexOf('q10') === -1) return;
+
+    var updated = original
+      .replace(/Q10\s*[-–—]?\s*clases\s*grabadas/gi, 'Microsoft 365 · clases, recursos y grabaciones')
+      .replace(/clases\s*grabadas\s*(en|por)?\s*Q10/gi, 'clases, recursos y grabaciones en Microsoft 365')
+      .replace(/plataforma\s*Q10/gi, 'plataforma Microsoft 365')
+      .replace(/aula\s*virtual\s*Q10/gi, 'aula virtual Microsoft 365')
+      .replace(/Q10/gi, 'Microsoft 365');
+
+    if (updated !== original) node.nodeValue = updated;
+  }
+
+  function updateVisibleText() {
+    var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (node) {
+        var parent = node.parentElement;
+        if (!parent) return NodeFilter.FILTER_REJECT;
+        var tag = parent.tagName ? parent.tagName.toLowerCase() : '';
+        if (tag === 'script' || tag === 'style' || tag === 'noscript') return NodeFilter.FILTER_REJECT;
+        return node.nodeValue && node.nodeValue.toLowerCase().indexOf('q10') !== -1 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      }
+    });
+
+    var nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(replaceTextNode);
+  }
+
+  function updateTooltipsAndAlt() {
+    document.querySelectorAll('[title], [alt], [aria-label]').forEach(function (el) {
+      ['title', 'alt', 'aria-label'].forEach(function (attr) {
+        var value = el.getAttribute(attr);
+        if (!value || value.toLowerCase().indexOf('q10') === -1) return;
+        el.setAttribute(attr, value.replace(/Q10/gi, 'Microsoft 365'));
+      });
+    });
+  }
+
+  function init() {
+    updateVisibleText();
+    updateTooltipsAndAlt();
+    setTimeout(updateVisibleText, 500);
+    setTimeout(updateVisibleText, 1500);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+  window.addEventListener('load', init);
 })();
