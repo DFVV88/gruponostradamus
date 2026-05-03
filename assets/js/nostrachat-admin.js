@@ -1,11 +1,11 @@
 /* ==================================================
-   NostraCHAT Admin v1.1
-   Login con Google + lectura de mensajes/reportes.
+   NostraCHAT Admin v1.2
+   Login con Google + lectura + marcar revisado + eliminar.
    Seguridad real: Firebase Auth + reglas por email/dominio.
 ================================================== */
 (function () {
   var firebaseConfig = window.NOSTRACHAT_FIREBASE_CONFIG;
-  var state = { view: 'alumnos', app: null, db: null, auth: null, unsubscribe: null, user: null };
+  var state = { view: 'alumnos', app: null, db: null, auth: null, unsubscribe: null, user: null, fs: null };
 
   function escapeHTML(text) {
     return String(text || '').replace(/[&<>'"]/g, function (c) {
@@ -25,6 +25,20 @@
     if (el) el.classList.remove('show');
   }
 
+  function showPanelNotice(msg) {
+    var list = document.getElementById('admin-list');
+    if (!list) return;
+    var notice = document.createElement('div');
+    notice.className = 'admin-empty';
+    notice.style.background = '#fff7e6';
+    notice.style.border = '1px solid #ffe0ad';
+    notice.style.borderRadius = '16px';
+    notice.style.marginBottom = '12px';
+    notice.textContent = msg;
+    list.prepend(notice);
+    setTimeout(function () { notice.remove(); }, 2800);
+  }
+
   function formatDate(value) {
     try {
       var d = value && value.toDate ? value.toDate() : null;
@@ -36,6 +50,15 @@
     document.querySelectorAll('.admin-tab').forEach(function (btn) {
       btn.classList.toggle('active', btn.dataset.view === state.view);
     });
+  }
+
+  function isReportView() {
+    return state.view.indexOf('reports') === 0;
+  }
+
+  function currentRoom() {
+    if (state.view === 'alumnos' || state.view === 'reports-alumnos') return 'alumnos';
+    return 'externos';
   }
 
   function collectionPath() {
@@ -53,23 +76,26 @@
       return;
     }
     var html = '';
-    snapshot.forEach(function (doc) {
-      var d = doc.data();
-      var isReport = state.view.indexOf('reports') === 0;
-      html += '<article class="admin-item">' +
+    snapshot.forEach(function (docSnap) {
+      var d = docSnap.data();
+      var isReport = isReportView();
+      var status = d.status || d.moderationStatus || 'visible';
+      var itemPath = collectionPath() + '/' + docSnap.id;
+      html += '<article class="admin-item" data-item-path="' + escapeHTML(itemPath) + '">' +
         '<div class="admin-meta">' +
-          '<span><b>ID:</b> ' + escapeHTML(doc.id) + '</span>' +
+          '<span><b>ID:</b> ' + escapeHTML(docSnap.id) + '</span>' +
           '<span>' + escapeHTML(formatDate(d.createdAt)) + '</span>' +
         '</div>' +
         '<div>' +
-          '<span class="admin-badge' + (isReport ? ' report' : '') + '">' + (isReport ? 'REPORTE' : escapeHTML(d.zone || 'mensaje')) + '</span>' +
+          '<span class="admin-badge' + (isReport ? ' report' : '') + '">' + (isReport ? 'REPORTE' : escapeHTML(d.zone || 'mensaje')) + '</span> ' +
+          '<span class="admin-badge">' + escapeHTML(status) + '</span>' +
         '</div>' +
         (isReport
           ? '<div class="admin-text"><b>Mensaje reportado:</b> ' + escapeHTML(d.messageId || '') + '<br><b>Motivo:</b> ' + escapeHTML(d.reason || '') + '<br><b>Reportado por:</b> ' + escapeHTML(d.reportedBy || '') + '<br><b>Dato:</b> ' + escapeHTML(d.reporterExtra || '') + '</div>'
           : '<div class="admin-text"><b>' + escapeHTML(d.name || '') + '</b><br><small>' + escapeHTML(d.extra || '') + '</small><br><br>' + escapeHTML(d.text || '') + '</div>') +
         '<div class="admin-actions">' +
-          '<button class="admin-btn small" type="button" disabled>Revisado próximamente</button>' +
-          '<button class="admin-btn small danger" type="button" disabled>Eliminar próximamente</button>' +
+          '<button class="admin-btn small" type="button" data-admin-action="review" data-item-path="' + escapeHTML(itemPath) + '">' + (isReport ? 'Marcar reporte revisado' : 'Marcar revisado') + '</button>' +
+          '<button class="admin-btn small danger" type="button" data-admin-action="delete" data-item-path="' + escapeHTML(itemPath) + '">' + (isReport ? 'Eliminar reporte' : 'Eliminar mensaje') + '</button>' +
         '</div>' +
       '</article>';
     });
@@ -88,6 +114,34 @@
     });
   }
 
+  function reviewItem(itemPath) {
+    if (!state.fs || !state.db || !itemPath) return;
+    var fs = state.fs;
+    var data = isReportView()
+      ? { status: 'revisado', reviewedAt: fs.serverTimestamp(), reviewedBy: state.user.email || 'admin' }
+      : { moderationStatus: 'revisado', reviewedAt: fs.serverTimestamp(), reviewedBy: state.user.email || 'admin' };
+
+    fs.updateDoc(fs.doc(state.db, itemPath), data).then(function () {
+      showPanelNotice('Marcado como revisado.');
+    }).catch(function (err) {
+      showPanelNotice('No se pudo marcar como revisado. Revisa reglas de Firebase.');
+      console.error(err);
+    });
+  }
+
+  function deleteItem(itemPath) {
+    if (!state.fs || !state.db || !itemPath) return;
+    var label = isReportView() ? 'este reporte' : 'este mensaje';
+    if (!window.confirm('¿Seguro que deseas eliminar ' + label + '? Esta acción no se puede deshacer.')) return;
+
+    state.fs.deleteDoc(state.fs.doc(state.db, itemPath)).then(function () {
+      showPanelNotice('Elemento eliminado correctamente.');
+    }).catch(function (err) {
+      showPanelNotice('No se pudo eliminar. Revisa reglas de Firebase.');
+      console.error(err);
+    });
+  }
+
   function init() {
     if (!firebaseConfig) {
       showWarning('Falta configuración Firebase.');
@@ -102,6 +156,7 @@
       var appMod = mods[0];
       var fs = mods[1];
       var authMod = mods[2];
+      state.fs = fs;
       state.app = appMod.initializeApp(firebaseConfig);
       state.db = fs.getFirestore(state.app);
       state.auth = authMod.getAuth(state.app);
@@ -110,6 +165,7 @@
       var panel = document.getElementById('admin-panel');
       var logoutBtn = document.getElementById('admin-logout');
       var googleBtn = document.getElementById('admin-google-login');
+      var list = document.getElementById('admin-list');
 
       googleBtn.addEventListener('click', function () {
         hideWarning();
@@ -131,6 +187,17 @@
           loadView(fs);
         });
       });
+
+      if (list) {
+        list.addEventListener('click', function (e) {
+          var btn = e.target && e.target.closest ? e.target.closest('[data-admin-action]') : null;
+          if (!btn) return;
+          var action = btn.getAttribute('data-admin-action');
+          var itemPath = btn.getAttribute('data-item-path');
+          if (action === 'review') reviewItem(itemPath);
+          if (action === 'delete') deleteItem(itemPath);
+        });
+      }
 
       authMod.onAuthStateChanged(state.auth, function (user) {
         state.user = user;
