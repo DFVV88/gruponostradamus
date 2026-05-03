@@ -32,9 +32,9 @@
         inset:0 !important;
         z-index:0 !important;
         background:
-          radial-gradient(circle at 23% 35%, rgba(0,194,209,.28), transparent 24%),
-          radial-gradient(circle at 78% 72%, rgba(255,255,255,.20), transparent 26%),
-          linear-gradient(90deg, rgba(255,255,255,.88) 0%, rgba(232,244,247,.74) 40%, rgba(6,20,38,.32) 100%) !important;
+          radial-gradient(circle at 23% 35%, rgba(0,194,209,.22), transparent 24%),
+          radial-gradient(circle at 78% 72%, rgba(255,255,255,.18), transparent 26%),
+          linear-gradient(90deg, rgba(255,255,255,.88) 0%, rgba(232,244,247,.74) 45%, rgba(6,20,38,.26) 100%) !important;
         pointer-events:none !important;
       }
 
@@ -61,12 +61,12 @@
 
       body .nostra-ingresantes-card{
         position:relative !important;
-        max-width:790px !important;
-        padding:34px 36px !important;
-        border-radius:30px !important;
-        background:linear-gradient(135deg, rgba(255,255,255,.70), rgba(255,255,255,.38)) !important;
+        max-width:760px !important;
+        padding:28px 32px !important;
+        border-radius:28px !important;
+        background:linear-gradient(135deg, rgba(255,255,255,.74), rgba(255,255,255,.44)) !important;
         border:1px solid rgba(255,255,255,.55) !important;
-        box-shadow:0 26px 70px rgba(6,20,38,.16), 0 0 36px rgba(0,194,209,.14) !important;
+        box-shadow:0 24px 62px rgba(6,20,38,.14), 0 0 30px rgba(0,194,209,.12) !important;
         backdrop-filter:blur(10px) !important;
         overflow:hidden !important;
       }
@@ -85,44 +85,44 @@
       body .nostra-ingresantes-badge{
         display:inline-flex !important;
         align-items:center !important;
-        gap:9px !important;
-        margin-bottom:14px !important;
-        padding:9px 14px !important;
+        gap:8px !important;
+        margin-bottom:12px !important;
+        padding:8px 13px !important;
         border-radius:999px !important;
         background:rgba(0,139,150,.10) !important;
         border:1px solid rgba(0,139,150,.24) !important;
         color:#008b96 !important;
-        font-size:15px !important;
+        font-size:13.5px !important;
         font-weight:950 !important;
         text-transform:uppercase !important;
-        letter-spacing:.75px !important;
+        letter-spacing:.65px !important;
       }
 
       body .nostra-ingresantes-title{
         margin:0 !important;
         color:#061426 !important;
-        font-size:clamp(42px,5.7vw,92px) !important;
-        line-height:.98 !important;
+        font-size:clamp(34px,4.05vw,64px) !important;
+        line-height:1.02 !important;
         font-weight:950 !important;
         font-style:italic !important;
         text-transform:uppercase !important;
-        letter-spacing:-1.6px !important;
-        text-shadow:0 3px 0 rgba(255,255,255,.62), 0 14px 28px rgba(6,20,38,.17) !important;
+        letter-spacing:-1.15px !important;
+        text-shadow:0 2px 0 rgba(255,255,255,.68), 0 10px 22px rgba(6,20,38,.14) !important;
       }
 
       body .nostra-ingresantes-number-wrap{
         display:inline-flex !important;
         align-items:baseline !important;
-        gap:4px !important;
-        margin:0 8px !important;
-        padding:0 10px !important;
-        border-radius:18px !important;
+        gap:3px !important;
+        margin:0 5px !important;
+        padding:0 6px !important;
+        border-radius:14px !important;
         color:#00c2d1 !important;
         background:linear-gradient(180deg,#0af1ff 0%,#00a9b8 42%,#03535c 100%) !important;
         -webkit-background-clip:text !important;
         background-clip:text !important;
         -webkit-text-fill-color:transparent !important;
-        filter:drop-shadow(0 0 14px rgba(0,194,209,.48)) drop-shadow(0 4px 6px rgba(0,0,0,.28)) !important;
+        filter:drop-shadow(0 0 10px rgba(0,194,209,.42)) drop-shadow(0 3px 5px rgba(0,0,0,.20)) !important;
       }
 
       body .nostra-ingresantes-counter,
@@ -132,10 +132,10 @@
       }
 
       body .nostra-ingresantes-copy{
-        max-width:650px !important;
-        margin:18px 0 0 !important;
+        max-width:640px !important;
+        margin:16px 0 0 !important;
         color:#334456 !important;
-        font-size:clamp(16px,1.4vw,20px) !important;
+        font-size:clamp(15.5px,1.18vw,18px) !important;
         line-height:1.55 !important;
         font-weight:750 !important;
       }
@@ -144,13 +144,13 @@
         display:grid !important;
         grid-template-columns:repeat(3,minmax(0,1fr)) !important;
         gap:12px !important;
-        margin-top:24px !important;
+        margin-top:22px !important;
       }
 
       body .nostra-ingresantes-stat{
-        padding:14px 13px !important;
-        border-radius:18px !important;
-        background:rgba(255,255,255,.74) !important;
+        padding:13px 13px !important;
+        border-radius:17px !important;
+        background:rgba(255,255,255,.78) !important;
         border:1px solid rgba(0,139,150,.16) !important;
         box-shadow:0 10px 24px rgba(6,20,38,.07) !important;
       }
@@ -158,7 +158,7 @@
       body .nostra-ingresantes-stat strong{
         display:block !important;
         color:#008b96 !important;
-        font-size:20px !important;
+        font-size:19px !important;
         font-weight:950 !important;
         line-height:1 !important;
       }
@@ -167,7 +167,7 @@
         display:block !important;
         margin-top:6px !important;
         color:#061426 !important;
-        font-size:12.5px !important;
+        font-size:12px !important;
         font-weight:850 !important;
         line-height:1.22 !important;
         text-transform:uppercase !important;
@@ -177,19 +177,19 @@
         display:flex !important;
         flex-wrap:wrap !important;
         gap:12px !important;
-        margin-top:26px !important;
+        margin-top:24px !important;
       }
 
       body .nostra-ingresantes-btn{
         display:inline-flex !important;
         align-items:center !important;
         justify-content:center !important;
-        min-height:52px !important;
-        padding:14px 24px !important;
+        min-height:50px !important;
+        padding:13px 22px !important;
         border-radius:999px !important;
         background:linear-gradient(135deg,#008b96,#05313d 55%,#061426) !important;
         color:#fff !important;
-        font-size:14px !important;
+        font-size:13.5px !important;
         font-weight:950 !important;
         text-transform:uppercase !important;
         text-decoration:none !important;
@@ -229,15 +229,17 @@
       }
 
       @media(max-width:991px){
-        body .nostra-ingresantes-pro{min-height:520px !important;}
-        body .nostra-ingresantes-card{padding:28px 24px !important;}
+        body .nostra-ingresantes-pro{min-height:500px !important;}
+        body .nostra-ingresantes-card{padding:26px 22px !important;}
+        body .nostra-ingresantes-title{font-size:clamp(32px,7vw,52px) !important;}
         body .nostra-ingresantes-stats{grid-template-columns:1fr !important;}
       }
 
       @media(max-width:575px){
-        body .nostra-ingresantes-pro{min-height:auto !important;padding:58px 0 !important;}
-        body .nostra-ingresantes-card{padding:24px 18px !important;border-radius:24px !important;}
-        body .nostra-ingresantes-title{font-size:clamp(38px,13vw,58px) !important;}
+        body .nostra-ingresantes-pro{min-height:auto !important;padding:54px 0 !important;}
+        body .nostra-ingresantes-card{padding:23px 18px !important;border-radius:24px !important;}
+        body .nostra-ingresantes-title{font-size:clamp(30px,10.5vw,44px) !important;line-height:1.05 !important;letter-spacing:-.65px !important;}
+        body .nostra-ingresantes-copy{font-size:15px !important;}
         body .nostra-ingresantes-actions{display:grid !important;grid-template-columns:1fr !important;}
         body .nostra-ingresantes-btn{width:100% !important;}
       }
