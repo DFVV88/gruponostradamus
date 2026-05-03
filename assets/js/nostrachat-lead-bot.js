@@ -1,7 +1,7 @@
 /* ==================================================
-   DAMUS v3.1
+   DAMUS v3.2
    Bot comercial persistente para NostraCHAT Externos.
-   Guarda sus respuestas en Firebase para que no desaparezcan.
+   Corrige detección de IEN dentro de palabras como “tienen”.
 ================================================== */
 (function () {
   var WA_NUMBER = '51993750351';
@@ -48,6 +48,9 @@
 
   function cleanText(value) { return String(value || '').replace(/\s+/g, ' ').trim(); }
   function encodeWA(text) { return encodeURIComponent(text); }
+  function hasWord(text, word) {
+    return new RegExp('(^|[^a-záéíóúñ0-9])' + word + '([^a-záéíóúñ0-9]|$)', 'i').test(text);
+  }
   function currentRoomText() {
     var title = document.getElementById('nchat-room-title-main');
     return cleanText(title ? title.textContent : '');
@@ -181,7 +184,7 @@
     if (/semianual/.test(t)) return KB.ciclos.semianual;
     if (/semestral/.test(t)) return KB.ciclos.semestral;
     if (/cepre|paralelo/.test(t)) return KB.ciclos.cepre;
-    if (/ien/.test(t)) return KB.ciclos.ien;
+    if (hasWord(t, 'ien')) return KB.ciclos.ien;
     if (/módulo|modulo|modulos|módulos|nostramod|nostra mód/.test(t)) return KB.ciclos.modulos;
     return 'En Nostradamus se manejan varias rutas de preparación: Anual UNI, Semianual UNI, Semestral UNI, Verano UNI, Repaso UNI, Sabatinos UNI, Ciclo IEN, Paralelo CEPRE UNI y Módulos. La mejor opción depende de tu nivel, tiempo disponible y objetivo.';
   }
@@ -189,13 +192,15 @@
   function buildReply(userText) {
     var t = cleanText(userText).toLowerCase();
     var sala = roomLabel().toLowerCase();
-    if (/hola|buenas|info|informes|informacion|información/.test(t) || /informes/.test(sala)) return { intent: 'Solicito informes generales', text: '¡Hola! Soy DAMUS, asistente de matrícula de Nostradamus. ' + KB.marca + ' se enfoca en ' + KB.enfoque + '. Puedo orientarte sobre ciclos, módulos, horarios Full/Mañana/Tarde, sede, Microsoft 365, simulacros y matrícula.' };
-    if (/ciclo|anual|semianual|semestral|verano|repaso|sabatino|sábado|sabado|cepre|ien|módulo|modulo|módulos|modulos|nostram/.test(t)) return { intent: 'Quiero información de ciclos y módulos', text: cycleText(t) + ' Para elegir bien, dime tu nivel actual, carrera objetivo y cuándo planeas postular.' };
-    if (/fenix|fénix|drakon|dragón|dragon/.test(t)) return { intent: 'Quiero información de módulos', text: 'Actualmente ya no usamos esos nombres. Ahora los llamamos simplemente Módulos. ' + KB.ciclos.modulos };
+
     if (/full/.test(t)) return { intent: 'Quiero información de horario Full', text: KB.horarioFull + ' Para confirmar el horario exacto, ciclo disponible y vacantes, continúa por WhatsApp con un asesor.' };
     if (/mañana|manana/.test(t)) return { intent: 'Quiero información de horario Mañana', text: KB.horarioManana + ' Para confirmar el horario exacto, ciclo disponible y vacantes, continúa por WhatsApp con un asesor.' };
     if (/tarde/.test(t)) return { intent: 'Quiero información de horario Tarde', text: KB.horarioTarde + ' Para confirmar el horario exacto, ciclo disponible y vacantes, continúa por WhatsApp con un asesor.' };
-    if (/horario|turno|noche|dias|días|domingo|lunes|clases/.test(t)) return { intent: 'Quiero información de horarios', text: KB.horarios + ' Puedes elegir entre Full, Mañana o Tarde según tu disponibilidad. Para confirmar horarios exactos, ciclo activo y vacantes, lo recomendable es continuar por WhatsApp.' };
+    if (/horario|horarios|turno|turnos|noche|dias|días|domingo|lunes|clases/.test(t)) return { intent: 'Quiero información de horarios', text: KB.horarios + ' Puedes elegir entre Full, Mañana o Tarde según tu disponibilidad. Para confirmar horarios exactos, ciclo activo y vacantes, lo recomendable es continuar por WhatsApp.' };
+
+    if (/hola|buenas|info|informes|informacion|información/.test(t) || /informes/.test(sala)) return { intent: 'Solicito informes generales', text: '¡Hola! Soy DAMUS, asistente de matrícula de Nostradamus. ' + KB.marca + ' se enfoca en ' + KB.enfoque + '. Puedo orientarte sobre ciclos, módulos, horarios Full/Mañana/Tarde, sede, Microsoft 365, simulacros y matrícula.' };
+    if (/ciclo|anual|semianual|semestral|verano|repaso|sabatino|sábado|sabado|cepre|módulo|modulo|módulos|modulos|nostram/.test(t) || hasWord(t, 'ien')) return { intent: 'Quiero información de ciclos y módulos', text: cycleText(t) + ' Para elegir bien, dime tu nivel actual, carrera objetivo y cuándo planeas postular.' };
+    if (/fenix|fénix|drakon|dragón|dragon/.test(t)) return { intent: 'Quiero información de módulos', text: 'Actualmente ya no usamos esos nombres. Ahora los llamamos simplemente Módulos. ' + KB.ciclos.modulos };
     if (/curso|matem|fisic|físic|quim|quím|aptitud|humanidades|letras|ciencias/.test(t)) return { intent: 'Quiero información de cursos', text: 'Se trabajan cursos de ' + KB.cursos + ' En los Módulos se refuerza la práctica y resolución por áreas según la programación vigente.' };
     if (/microsoft|365|teams|plataforma|virtual|clases en vivo|recurso|grabaci|grabado|video/.test(t)) return { intent: 'Quiero información de plataforma Microsoft 365', text: KB.plataforma + ' Para detalles de acceso, clases o recursos disponibles, un asesor puede orientarte por WhatsApp.' };
     if (/simulacro|examen|evaluaci|prueba/.test(t)) return { intent: 'Quiero información de simulacros', text: KB.evaluacion + ' Esto ayuda a que el alumno mida su avance y se acostumbre al estilo de evaluación UNI.' };
