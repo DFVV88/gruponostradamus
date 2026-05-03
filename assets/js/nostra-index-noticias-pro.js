@@ -1,7 +1,7 @@
 /* ==================================================
    Grupo Nostradamus - Noticias PRO en index
-   Actualiza la sección “Explora nuestro mundo académico”
-   con los 3 bloques oficiales de Noticias UNI.
+   Reemplaza las noticias antiguas del index por los 3 bloques oficiales:
+   Modalidades de ingreso, Orientación vocacional y Noticias UNI.
 ================================================== */
 (function () {
   var file = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
@@ -57,18 +57,6 @@
         overflow:hidden !important;
       }
 
-      body .nostra-index-news-section::before{
-        content:'' !important;
-        position:absolute !important;
-        top:26px !important;
-        right:-90px !important;
-        width:360px !important;
-        height:360px !important;
-        border-radius:50% !important;
-        background:radial-gradient(circle, rgba(0,194,209,.14), transparent 68%) !important;
-        pointer-events:none !important;
-      }
-
       body .nostra-index-news-head{
         display:grid !important;
         grid-template-columns:1fr auto !important;
@@ -106,9 +94,7 @@
         filter:drop-shadow(0 2px 0 rgba(255,255,255,.72)) !important;
       }
 
-      body .nostra-index-news-title span{
-        color:#008b96 !important;
-      }
+      body .nostra-index-news-title span{color:#008b96 !important;}
 
       body .nostra-index-news-cta{
         min-height:56px !important;
@@ -128,11 +114,7 @@
         white-space:nowrap !important;
       }
 
-      body .nostra-index-news-cta:hover{
-        color:#fff !important;
-        transform:translateY(-3px) !important;
-        box-shadow:0 24px 48px rgba(0,194,209,.30) !important;
-      }
+      body .nostra-index-news-cta:hover{color:#fff !important;transform:translateY(-3px) !important;box-shadow:0 24px 48px rgba(0,194,209,.30) !important;}
 
       body .nostra-index-news-grid{
         display:grid !important;
@@ -162,11 +144,7 @@
         background:linear-gradient(90deg,#00c2d1,#008b96,#061426) !important;
       }
 
-      body .nostra-index-news-card:hover{
-        transform:translateY(-8px) !important;
-        border-color:rgba(0,194,209,.48) !important;
-        box-shadow:0 30px 68px rgba(6,20,38,.13),0 0 38px rgba(0,194,209,.14) !important;
-      }
+      body .nostra-index-news-card:hover{transform:translateY(-8px) !important;border-color:rgba(0,194,209,.48) !important;box-shadow:0 30px 68px rgba(6,20,38,.13),0 0 38px rgba(0,194,209,.14) !important;}
 
       body .nostra-index-news-icon{
         width:70px !important;
@@ -237,22 +215,10 @@
         text-decoration:none !important;
       }
 
-      body .nostra-index-news-btn{
-        background:linear-gradient(135deg,#008b96 0%,#05313d 55%,#061426 100%) !important;
-        box-shadow:0 13px 26px rgba(0,139,150,.20) !important;
-      }
-
-      body .nostra-index-news-wa{
-        background:linear-gradient(135deg,#25d366 0%,#13a54d 48%,#061426 100%) !important;
-        box-shadow:0 13px 26px rgba(37,211,102,.20) !important;
-      }
-
+      body .nostra-index-news-btn{background:linear-gradient(135deg,#008b96 0%,#05313d 55%,#061426 100%) !important;box-shadow:0 13px 26px rgba(0,139,150,.20) !important;}
+      body .nostra-index-news-wa{background:linear-gradient(135deg,#25d366 0%,#13a54d 48%,#061426 100%) !important;box-shadow:0 13px 26px rgba(37,211,102,.20) !important;}
       body .nostra-index-news-btn:hover,
-      body .nostra-index-news-wa:hover{
-        color:#fff !important;
-        transform:translateY(-2px) !important;
-        box-shadow:0 18px 34px rgba(0,194,209,.28) !important;
-      }
+      body .nostra-index-news-wa:hover{color:#fff !important;transform:translateY(-2px) !important;box-shadow:0 18px 34px rgba(0,194,209,.28) !important;}
 
       body .nostra-index-news-note{
         margin:36px auto 0 !important;
@@ -268,37 +234,52 @@
         line-height:1.55 !important;
       }
 
-      body .nostra-index-news-note strong{
-        color:#a8f7ff !important;
-      }
+      body .nostra-index-news-note strong{color:#a8f7ff !important;}
 
-      @media(max-width:1199px){
-        body .nostra-index-news-grid{grid-template-columns:1fr !important;}
-        body .nostra-index-news-card{min-height:auto !important;}
-      }
-
-      @media(max-width:767px){
-        body .nostra-index-news-head{grid-template-columns:1fr !important;align-items:start !important;}
-        body .nostra-index-news-cta{width:100% !important;}
-      }
-
-      @media(max-width:575px){
-        body .nostra-index-news-section{padding:58px 0 !important;}
-        body .nostra-index-news-card{padding:22px !important;border-radius:22px !important;}
-      }
+      @media(max-width:1199px){body .nostra-index-news-grid{grid-template-columns:1fr !important;} body .nostra-index-news-card{min-height:auto !important;}}
+      @media(max-width:767px){body .nostra-index-news-head{grid-template-columns:1fr !important;align-items:start !important;} body .nostra-index-news-cta{width:100% !important;}}
+      @media(max-width:575px){body .nostra-index-news-section{padding:58px 0 !important;} body .nostra-index-news-card{padding:22px !important;border-radius:22px !important;}}
     `;
     document.head.appendChild(style);
   }
 
+  function normalize(text) {
+    return (text || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim();
+  }
+
   function findSection() {
-    var elements = Array.from(document.querySelectorAll('section'));
-    return elements.find(function (el) {
-      var txt = (el.textContent || '').replace(/\s+/g, ' ').toLowerCase();
-      return txt.indexOf('explora nuestro mundo académico') !== -1 ||
-             txt.indexOf('conoces las modalidades') !== -1 ||
-             txt.indexOf('examen de admisión uni') !== -1 ||
-             txt.indexOf('orientación vocacional') !== -1;
+    var selectors = [
+      'section',
+      '.blog-area',
+      '.blog-sec',
+      '.th-blog-wrapper',
+      '.blog-section',
+      '.space',
+      '.space-top',
+      '.space-bottom',
+      '.overflow-hidden'
+    ];
+
+    var nodes = Array.from(document.querySelectorAll(selectors.join(',')));
+    var matches = nodes.filter(function (el) {
+      if (el.closest('.nostra-index-news-section')) return false;
+      var txt = normalize(el.textContent);
+      var hasOldNews = txt.indexOf('conoces las modalidades') !== -1 ||
+        txt.indexOf('examen de admision uni') !== -1 ||
+        txt.indexOf('orientacion vocacional') !== -1 ||
+        txt.indexOf('explora nuestro mundo academico') !== -1;
+      var hasCards = !!el.querySelector('.blog-card, .blog-box, .blog-grid, .th-blog, [class*="blog"]');
+      return hasOldNews && (hasCards || el.tagName.toLowerCase() === 'section');
     });
+
+    if (!matches.length) return null;
+
+    matches.sort(function (a, b) {
+      return a.querySelectorAll('.blog-card, .blog-box, .blog-grid, .th-blog, [class*="blog"]').length -
+        b.querySelectorAll('.blog-card, .blog-box, .blog-grid, .th-blog, [class*="blog"]').length;
+    });
+
+    return matches[0].tagName.toLowerCase() === 'section' ? matches[0] : (matches[0].closest('section') || matches[0]);
   }
 
   function cardHTML(item) {
@@ -333,17 +314,19 @@
   function init() {
     injectStyles();
     var section = findSection();
-    if (!section || section.dataset.nostraIndexNoticiasPro === '1') return;
+    if (!section) return;
+
     section.classList.add('nostra-index-news-section');
     section.innerHTML = buildSection();
-    section.dataset.nostraIndexNoticiasPro = '1';
+    section.dataset.nostraIndexNoticiasPro = '2';
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
   window.addEventListener('load', function () {
     init();
-    setTimeout(init, 800);
-    setTimeout(init, 1600);
+    setTimeout(init, 500);
+    setTimeout(init, 1200);
+    setTimeout(init, 2500);
   });
 })();
