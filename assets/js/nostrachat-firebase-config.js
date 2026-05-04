@@ -12,6 +12,12 @@ window.NOSTRACHAT_FIREBASE_CONFIG = {
 };
 
 /*
+  Endpoint seguro de DAMUS Vision.
+  La API key de Gemini NO está en la web; está guardada en Google Apps Script.
+*/
+window.NOSTRA_DAMUS_VISION_ENDPOINT = "https://script.google.com/macros/s/AKfycbxlmtgspmeFMOqyWnHpbcHIOvpU6Ihr9c_NxtV9e4E89aa9SdwV4H6G9rBVuItVRQPhpw/exec";
+
+/*
   Carga progresiva de módulos NostraCHAT.
   Importante: la subida de imágenes usa Firestore, no Firebase Storage,
   para evitar activar servicios de pago en la primera versión.
@@ -26,7 +32,7 @@ window.NOSTRACHAT_FIREBASE_CONFIG = {
   }
 
   var path = (window.location.pathname || '').toLowerCase();
-  var version = 'v=2026-47-damus-vision';
+  var version = 'v=2026-48-damus-endpoint';
 
   if (path.indexOf('nostrachat.html') !== -1 || path.endsWith('/nostrachat')) {
     loadScript('assets/js/nostrachat-images-firestore.js?' + version);
