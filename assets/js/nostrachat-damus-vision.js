@@ -163,8 +163,15 @@
 
   function normalizeMathDelimiters(text) {
     return String(text || '')
+      .replace(/\\sen/g, '\\sin')
+      .replace(/\bsen\s*([αa-zA-Z])/g, '\\(\\sin $1\\)')
+      .replace(/\bcos\s*([αa-zA-Z])/g, '\\(\\cos $1\\)')
+      .replace(/\btan\s*([αa-zA-Z0-9])/g, '\\(\\tan $1\\)')
+      .replace(/\bα\b/g, '\\(\\alpha\\)')
       .replace(/\$\$([\s\S]*?)\$\$/g, '\\[$1\\]')
-      .replace(/(^|[^\\])\$([^$\n]+?)\$/g, '$1\\($2\\)');
+      .replace(/(^|[^\\])\$([^$\n]+?)\$/g, '$1\\($2\\)')
+      .replace(/\\\[\s*$/gm, '')
+      .replace(/^\s*\\\]\s*$/gm, '');
   }
 
   function formatDamusMessages() {
@@ -239,7 +246,7 @@
   }
 
   function buildPrompt(originalText) {
-    return 'Eres DAMUS Académico, tutor del Grupo Nostradamus para postulantes UNI. Analiza la imagen del ejercicio. Da una POSIBLE solución educativa, no una respuesta absoluta. Si el enunciado no se lee bien, dilo claramente. Responde en español peruano académico con esta estructura:\n\n📌 Tema probable:\n🧠 Datos o condición clave:\n✏️ Desarrollo paso a paso:\n✅ Posible respuesta final:\n🔑 Posible clave:\n⚠️ Verificación:\n\nUsa LaTeX para toda fórmula matemática. Usa preferentemente fórmulas inline entre \\( y \\). Evita bloques \\[ \\] para no romper el render del chat. Ejemplos: \\(m=\\frac{y_2-y_1}{x_2-x_1}\\), \\(y-7=\\frac{4}{3}(x-3)\\). No uses símbolos con formato plano si puedes escribirlos en LaTeX.\n\nTexto escrito por el alumno: ' + (originalText || 'Sin texto adicional');
+    return 'Eres DAMUS Académico, tutor del Grupo Nostradamus para postulantes UNI. Analiza la imagen del ejercicio. Da una POSIBLE solución educativa, no una respuesta absoluta. Si el enunciado no se lee bien, dilo claramente. Responde en español peruano académico con esta estructura:\n\n📌 Tema probable:\n🧠 Datos o condición clave:\n✏️ Desarrollo paso a paso:\n✅ Posible respuesta final:\n🔑 Posible clave:\n⚠️ Verificación:\n\nUsa LaTeX para toda fórmula matemática. Usa preferentemente fórmulas inline entre \\( y \\). Evita bloques \\[ \\] para no romper el render del chat. Para trigonometría usa \\sin, \\cos y \\tan, NO uses \\sen. Ejemplos: \\(\\sin \\alpha=-\\frac{2}{3}\\), \\(\\cos^2 \\alpha=1-\\sin^2 \\alpha\\), \\(\\cos \\alpha=-\\frac{\\sqrt{5}}{3}\\). No uses símbolos con formato plano si puedes escribirlos en LaTeX.\n\nTexto escrito por el alumno: ' + (originalText || 'Sin texto adicional');
   }
 
   function callEndpoint(data) {
