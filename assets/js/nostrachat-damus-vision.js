@@ -105,9 +105,40 @@
       .nchat-damus-btn{border:0;border-radius:999px;padding:7px 10px;background:linear-gradient(135deg,#ff941e,#078c95,#061426);color:#fff;font-size:11px;font-weight:950;cursor:pointer;box-shadow:0 8px 18px rgba(6,20,38,.12);}\
       .nchat-damus-btn:disabled{opacity:.58;cursor:not-allowed;}\
       .nchat-damus-mini{font-size:11px;font-weight:850;opacity:.72;}\
+      .nchat-msg.other .nchat-text{white-space:pre-wrap;}\
+      .nchat-msg.other .nchat-text strong{font-weight:950;color:#061426;}\
       .nchat-damus-answer{white-space:pre-wrap;}\
     ';
     document.head.appendChild(style);
+  }
+
+  function formatDamusMessages() {
+    document.querySelectorAll('.nchat-msg.other .nchat-text').forEach(function (el) {
+      var text = el.textContent || '';
+      if (text.indexOf('DAMUS Académico') === -1 && text.indexOf('📌 Tema probable') === -1) return;
+      if (el.getAttribute('data-damus-formatted') === '1') return;
+
+      var cleaned = text
+        .replace(/\*\*/g, '')
+        .replace(/`/g, '')
+        .replace(/\s*(📌 Tema probable:)/g, '\n\n$1')
+        .replace(/\s*(🧠 Datos o condición clave:)/g, '\n\n$1')
+        .replace(/\s*(✏️ Desarrollo paso a paso:)/g, '\n\n$1')
+        .replace(/\s*(✅ Posible respuesta final:)/g, '\n\n$1')
+        .replace(/\s*(🔑 Posible clave:)/g, '\n\n$1')
+        .replace(/\s*(⚠️ Verificación:)/g, '\n\n$1')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+
+      el.innerHTML = escapeHTML(cleaned)
+        .replace(/(📌 Tema probable:)/g, '<strong>$1</strong>')
+        .replace(/(🧠 Datos o condición clave:)/g, '<strong>$1</strong>')
+        .replace(/(✏️ Desarrollo paso a paso:)/g, '<strong>$1</strong>')
+        .replace(/(✅ Posible respuesta final:)/g, '<strong>$1</strong>')
+        .replace(/(🔑 Posible clave:)/g, '<strong>$1</strong>')
+        .replace(/(⚠️ Verificación:)/g, '<strong>$1</strong>');
+      el.setAttribute('data-damus-formatted', '1');
+    });
   }
 
   function listenImages() {
@@ -129,6 +160,7 @@
         }
       });
       enhanceButtons();
+      formatDamusMessages();
     }, function (err) {
       console.warn('DAMUS Vision listener:', err);
     });
@@ -151,7 +183,7 @@
   }
 
   function buildPrompt(originalText) {
-    return 'Eres DAMUS Académico, tutor del Grupo Nostradamus para postulantes UNI. Analiza la imagen del ejercicio. Da una POSIBLE solución educativa, no una respuesta absoluta. Si el enunciado no se lee bien, dilo claramente. Responde en español peruano académico con esta estructura:\n\n📌 Tema probable:\n🧠 Idea clave:\n✏️ Desarrollo paso a paso:\n✅ Posible respuesta:\n⚠️ Verificación:\n\nTexto escrito por el alumno: ' + (originalText || 'Sin texto adicional');
+    return 'Eres DAMUS Académico, tutor del Grupo Nostradamus para postulantes UNI. Analiza la imagen del ejercicio. Da una POSIBLE solución educativa, no una respuesta absoluta. Si el enunciado no se lee bien, dilo claramente. Responde en español peruano académico con esta estructura:\n\n📌 Tema probable:\n🧠 Datos o condición clave:\n✏️ Desarrollo paso a paso:\n✅ Posible respuesta final:\n🔑 Posible clave:\n⚠️ Verificación:\n\nTexto escrito por el alumno: ' + (originalText || 'Sin texto adicional');
   }
 
   function callEndpoint(data) {
@@ -265,6 +297,7 @@
       setInterval(function () {
         listenImages();
         enhanceButtons();
+        formatDamusMessages();
       }, 1200);
     }).catch(function (err) {
       console.warn('DAMUS Vision init:', err);
