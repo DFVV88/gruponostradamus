@@ -26,11 +26,12 @@ window.NOSTRACHAT_FIREBASE_CONFIG = {
   }
 
   var path = (window.location.pathname || '').toLowerCase();
-  var version = 'v=2026-46-img-help';
+  var version = 'v=2026-47-damus-vision';
 
   if (path.indexOf('nostrachat.html') !== -1 || path.endsWith('/nostrachat')) {
     loadScript('assets/js/nostrachat-images-firestore.js?' + version);
     loadScript('assets/js/nostrachat-images-help.js?' + version);
+    loadScript('assets/js/nostrachat-damus-vision.js?' + version);
   }
 
   if (path.indexOf('nostrachat-admin.html') !== -1 || path.endsWith('/nostrachat-admin')) {
