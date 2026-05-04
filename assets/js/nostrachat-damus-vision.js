@@ -108,7 +108,7 @@
       .nchat-damus-btn{border:0;border-radius:999px;padding:7px 10px;background:linear-gradient(135deg,#ff941e,#078c95,#061426);color:#fff;font-size:11px;font-weight:950;cursor:pointer;box-shadow:0 8px 18px rgba(6,20,38,.12);}\
       .nchat-damus-btn:disabled{opacity:.58;cursor:not-allowed;}\
       .nchat-damus-mini{font-size:11px;font-weight:850;opacity:.72;}\
-      .nchat-msg.other .nchat-text{white-space:pre-wrap;}\
+      .nchat-msg.other .nchat-text{white-space:pre-wrap;line-height:1.58;}\
       .nchat-msg.other .nchat-text strong{font-weight:950;color:#061426;}\
       .nchat-msg.other .nchat-text mjx-container{margin:3px 0;max-width:100%;overflow-x:auto;overflow-y:hidden;}\
       .nchat-msg.other .nchat-text mjx-container[jax="CHTML"][display="true"]{display:block;text-align:left;}\
@@ -131,8 +131,10 @@
       tex: {
         inlineMath: [['\\(', '\\)']],
         displayMath: [['\\[', '\\]']],
-        processEscapes: true
+        processEscapes: true,
+        packages: {'[+]': ['ams', 'noerrors', 'noundefined']}
       },
+      loader: {load: ['[tex]/ams', '[tex]/noerrors', '[tex]/noundefined']},
       options: {
         skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
       }
@@ -161,17 +163,71 @@
     });
   }
 
-  function normalizeMathDelimiters(text) {
+  function fixLatexAliases(text) {
     return String(text || '')
       .replace(/\\sen/g, '\\sin')
-      .replace(/\bsen\s*([αa-zA-Z])/g, '\\(\\sin $1\\)')
-      .replace(/\bcos\s*([αa-zA-Z])/g, '\\(\\cos $1\\)')
+      .replace(/\\tg/g, '\\tan')
+      .replace(/\\cotg/g, '\\cot')
+      .replace(/\\arcsen/g, '\\arcsin')
+      .replace(/\bsen\s*([αa-zA-Z0-9])/g, '\\(\\sin $1\\)')
+      .replace(/\bcos\s*([αa-zA-Z0-9])/g, '\\(\\cos $1\\)')
       .replace(/\btan\s*([αa-zA-Z0-9])/g, '\\(\\tan $1\\)')
+      .replace(/\blog\s*([0-9a-zA-Z])/g, '\\(\\log $1\\)')
+      .replace(/\bln\s*([0-9a-zA-Z])/g, '\\(\\ln $1\\)')
+      .replace(/\blim\s/g, '\\(\\lim \\) ')
       .replace(/\bα\b/g, '\\(\\alpha\\)')
-      .replace(/\$\$([\s\S]*?)\$\$/g, '\\[$1\\]')
-      .replace(/(^|[^\\])\$([^$\n]+?)\$/g, '$1\\($2\\)')
-      .replace(/\\\[\s*$/gm, '')
-      .replace(/^\s*\\\]\s*$/gm, '');
+      .replace(/\bβ\b/g, '\\(\\beta\\)')
+      .replace(/\bγ\b/g, '\\(\\gamma\\)')
+      .replace(/\bθ\b/g, '\\(\\theta\\)')
+      .replace(/\bπ\b/g, '\\(\\pi\\)')
+      .replace(/∞/g, '\\(\\infty\\)')
+      .replace(/≤/g, '\\(\\leq\\)')
+      .replace(/≥/g, '\\(\\geq\\)')
+      .replace(/≠/g, '\\(\\neq\\)')
+      .replace(/≈/g, '\\(\\approx\\)')
+      .replace(/→/g, '\\(\\to\\)')
+      .replace(/±/g, '\\(\\pm\\)')
+      .replace(/∑/g, '\\(\\sum\\)')
+      .replace(/∫/g, '\\(\\int\\)')
+      .replace(/√\s*([0-9a-zA-Z]+)/g, '\\(\\sqrt{$1}\\)');
+  }
+
+  function wrapLooseLatexLines(text) {
+    return String(text || '').split('\n').map(function (line) {
+      var trimmed = line.trim();
+      if (!trimmed) return line;
+      if (/^\s*(📌|🧠|✏️|✅|🔑|⚠️)/.test(line)) return line;
+      if (trimmed.indexOf('\\(') !== -1 || trimmed.indexOf('\\[') !== -1) return line;
+      if (/\\(frac|sqrt|sin|cos|tan|cot|sec|csc|log|ln|lim|sum|int|alpha|beta|gamma|theta|pi|Delta|vec|overline|angle|parallel|perp|leq|geq|neq|approx|to|pm|cdot|times)/.test(line)) {
+        return '\\(' + trimmed + '\\)';
+      }
+      return line;
+    }).join('\n');
+  }
+
+  function balanceInlineDelimiters(text) {
+    var s = String(text || '');
+    var openInline = (s.match(/\\\(/g) || []).length;
+    var closeInline = (s.match(/\\\)/g) || []).length;
+    if (openInline > closeInline) s += '\\)';
+    var openDisplay = (s.match(/\\\[/g) || []).length;
+    var closeDisplay = (s.match(/\\\]/g) || []).length;
+    if (openDisplay > closeDisplay) s += '\\]';
+    return s;
+  }
+
+  function normalizeMathDelimiters(text) {
+    return balanceInlineDelimiters(
+      wrapLooseLatexLines(
+        fixLatexAliases(
+          String(text || '')
+            .replace(/\$\$([\s\S]*?)\$\$/g, '\\[$1\\]')
+            .replace(/(^|[^\\])\$([^$\n]+?)\$/g, '$1\\($2\\)')
+            .replace(/\\\[\s*$/gm, '')
+            .replace(/^\s*\\\]\s*$/gm, '')
+        )
+      )
+    );
   }
 
   function formatDamusMessages() {
@@ -246,7 +302,7 @@
   }
 
   function buildPrompt(originalText) {
-    return 'Eres DAMUS Académico, tutor del Grupo Nostradamus para postulantes UNI. Analiza la imagen del ejercicio. Da una POSIBLE solución educativa, no una respuesta absoluta. Si el enunciado no se lee bien, dilo claramente. Responde en español peruano académico con esta estructura:\n\n📌 Tema probable:\n🧠 Datos o condición clave:\n✏️ Desarrollo paso a paso:\n✅ Posible respuesta final:\n🔑 Posible clave:\n⚠️ Verificación:\n\nUsa LaTeX para toda fórmula matemática. Usa preferentemente fórmulas inline entre \\( y \\). Evita bloques \\[ \\] para no romper el render del chat. Para trigonometría usa \\sin, \\cos y \\tan, NO uses \\sen. Ejemplos: \\(\\sin \\alpha=-\\frac{2}{3}\\), \\(\\cos^2 \\alpha=1-\\sin^2 \\alpha\\), \\(\\cos \\alpha=-\\frac{\\sqrt{5}}{3}\\). No uses símbolos con formato plano si puedes escribirlos en LaTeX.\n\nTexto escrito por el alumno: ' + (originalText || 'Sin texto adicional');
+    return 'Eres DAMUS Académico, tutor del Grupo Nostradamus para postulantes UNI. Analiza la imagen del ejercicio. Da una POSIBLE solución educativa, no una respuesta absoluta. Si el enunciado no se lee bien, dilo claramente. Responde en español peruano académico con esta estructura:\n\n📌 Tema probable:\n🧠 Datos o condición clave:\n✏️ Desarrollo paso a paso:\n✅ Posible respuesta final:\n🔑 Posible clave:\n⚠️ Verificación:\n\nUsa LaTeX estándar para toda fórmula matemática de cualquier área: álgebra, geometría, trigonometría, cálculo, física, química, estadística, matrices, vectores y logaritmos. Usa fórmulas inline entre \\( y \\). Solo usa bloques \\[ \\] si son cortos y completos. No uses signos de dólar. Para trigonometría usa \\sin, \\cos y \\tan, NO uses \\sen. Para raíces usa \\sqrt{}, fracciones \\frac{}{}, límites \\lim, integrales \\int, sumatorias \\sum, vectores \\vec{}, ángulos \\angle, grados ^\\circ. Nunca dejes una fórmula sin cerrar.\n\nTexto escrito por el alumno: ' + (originalText || 'Sin texto adicional');
   }
 
   function callEndpoint(data) {
