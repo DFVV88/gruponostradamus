@@ -79,7 +79,7 @@
     if (!host) return alert(message);
     host.textContent = message;
     host.className = 'nchat-image-notice show ' + (type || 'info');
-    setTimeout(function () { host.className = 'nchat-image-notice'; }, 4200);
+    setTimeout(function () { host.className = 'nchat-image-notice'; }, 6500);
   }
 
   function ensureFirebase() {
@@ -164,13 +164,24 @@
 
     return fetch(ENDPOINT, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(data),
+      redirect: 'follow'
     }).then(function (res) {
-      if (!res.ok) throw new Error('Endpoint DAMUS no respondió correctamente.');
-      return res.json();
-    }).then(function (json) {
+      if (!res.ok) throw new Error('Endpoint DAMUS respondió con estado ' + res.status + '.');
+      return res.text();
+    }).then(function (text) {
+      var json = {};
+      try { json = JSON.parse(text || '{}'); }
+      catch (e) { throw new Error('Endpoint DAMUS no devolvió JSON válido.'); }
+      if (json.ok === false) throw new Error(json.answer || json.error || 'DAMUS Endpoint devolvió error.');
       return { answer: json.answer || json.text || 'DAMUS no pudo generar una respuesta clara.' };
+    }).catch(function (err) {
+      var msg = err && err.message ? err.message : String(err || 'Error desconocido');
+      if (/Failed to fetch|NetworkError|Load failed/i.test(msg)) {
+        msg = 'No se pudo conectar con Google Apps Script desde el navegador. Probable bloqueo CORS o endpoint no accesible.';
+      }
+      throw new Error(msg);
     });
   }
 
@@ -229,7 +240,7 @@
       if (btn) btn.textContent = '✅ Solicitud enviada a DAMUS';
     }).catch(function (err) {
       console.error(err);
-      showNotice('No se pudo generar la respuesta de DAMUS. Revisa la conexión del endpoint IA.', 'error');
+      showNotice('No se pudo generar la respuesta de DAMUS: ' + (err && err.message ? err.message : 'error desconocido'), 'error');
       if (btn) {
         btn.disabled = false;
         btn.textContent = '🤖 Pedir posible solución a DAMUS';
