@@ -8,6 +8,8 @@
   var ENDPOINT = window.NOSTRA_DAMUS_VISION_ENDPOINT || '';
   var DAMUS_DAILY_LIMIT = 5;
   var DAMUS_MAX_CHARS = 6000;
+  var DAMUS_COOLDOWN_SECONDS = 60;
+  var COOLDOWN_KEY = 'nostrachat_damus_vision_cooldown_until';
   var app = null;
   var db = null;
   var fs = null;
@@ -16,6 +18,7 @@
   var unsubscribe = null;
   var working = {};
   var mathJaxLoading = false;
+  var cooldownTimer = null;
 
   function escapeHTML(text) {
     return String(text || '').replace(/[&<>'\"]/g, function (c) {
@@ -77,6 +80,57 @@
     localStorage.setItem('nostrachat_damus_vision_daily_count', JSON.stringify({ date: todayKey(), count: dailyCount() + 1 }));
   }
 
+  function getCooldownRemaining() {
+    var until = Number(localStorage.getItem(COOLDOWN_KEY) || 0);
+    var remaining = Math.ceil((until - Date.now()) / 1000);
+    return remaining > 0 ? remaining : 0;
+  }
+
+  function startCooldown(seconds) {
+    var duration = Number(seconds || DAMUS_COOLDOWN_SECONDS);
+    if (!duration || duration < 1) duration = DAMUS_COOLDOWN_SECONDS;
+    duration = Math.max(duration, DAMUS_COOLDOWN_SECONDS);
+    localStorage.setItem(COOLDOWN_KEY, String(Date.now() + duration * 1000));
+    updateCooldownButtons();
+    if (cooldownTimer) clearInterval(cooldownTimer);
+    cooldownTimer = setInterval(function () {
+      updateCooldownButtons();
+      if (getCooldownRemaining() <= 0) {
+        clearInterval(cooldownTimer);
+        cooldownTimer = null;
+        localStorage.removeItem(COOLDOWN_KEY);
+        updateCooldownButtons();
+      }
+    }, 1000);
+  }
+
+  function updateCooldownButtons() {
+    var remaining = getCooldownRemaining();
+    document.querySelectorAll('[data-damus-vision-id]').forEach(function (btn) {
+      if (working[btn.getAttribute('data-damus-vision-id')]) return;
+      if (remaining > 0) {
+        btn.disabled = true;
+        btn.textContent = '⏳ DAMUS disponible en ' + remaining + ' s';
+      } else if (btn.textContent.indexOf('Solicitud enviada') === -1) {
+        btn.disabled = false;
+        btn.textContent = '🤖 Pedir posible solución a DAMUS';
+      }
+    });
+  }
+
+  function parseRetrySeconds(message) {
+    var text = String(message || '');
+    var m = text.match(/retryDelay"?\s*:\s*"?(\d+(?:\.\d+)?)s/i) || text.match(/retryDelay[^0-9]*(\d+(?:\.\d+)?)/i);
+    if (m && m[1]) return Math.ceil(Number(m[1]));
+    m = text.match(/Please retry in\s*(\d+(?:\.\d+)?)s/i);
+    if (m && m[1]) return Math.ceil(Number(m[1]));
+    return DAMUS_COOLDOWN_SECONDS;
+  }
+
+  function isQuotaError(message) {
+    return /429|RESOURCE_EXHAUSTED|quota|retryDelay|GenerateRequestsPerDay|FreeTier/i.test(String(message || ''));
+  }
+
   function showNotice(message, type) {
     var host = document.getElementById('nchat-image-notice');
     if (!host) return alert(message);
@@ -106,7 +160,7 @@
     style.textContent = '\
       .nchat-damus-vision{margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}\
       .nchat-damus-btn{border:0;border-radius:999px;padding:7px 10px;background:linear-gradient(135deg,#ff941e,#078c95,#061426);color:#fff;font-size:11px;font-weight:950;cursor:pointer;box-shadow:0 8px 18px rgba(6,20,38,.12);}\
-      .nchat-damus-btn:disabled{opacity:.58;cursor:not-allowed;}\
+      .nchat-damus-btn:disabled{opacity:.76;cursor:not-allowed;background:linear-gradient(135deg,#7e8792,#36515d,#061426);}\
       .nchat-damus-mini{font-size:11px;font-weight:850;opacity:.72;}\
       .nchat-msg.other .nchat-text{white-space:pre-wrap;line-height:1.58;}\
       .nchat-msg.other .nchat-text strong{font-weight:950;color:#061426;}\
@@ -280,6 +334,7 @@
       });
       enhanceButtons();
       formatDamusMessages();
+      updateCooldownButtons();
     }, function (err) {
       console.warn('DAMUS Vision listener:', err);
     });
@@ -299,6 +354,7 @@
       var imageWrap = msg.querySelector('.nchat-image-wrap') || msg.querySelector('.nchat-actions');
       if (imageWrap) imageWrap.insertAdjacentElement('afterend', row);
     });
+    updateCooldownButtons();
   }
 
   function buildPrompt(originalText) {
@@ -358,6 +414,11 @@
 
   function requestDamus(messageId, btn) {
     if (working[messageId]) return;
+    var remaining = getCooldownRemaining();
+    if (remaining > 0) {
+      updateCooldownButtons();
+      return showNotice('⏳ DAMUS está ocupado. Espera ' + remaining + ' segundos y vuelve a intentarlo. No necesitas subir la imagen otra vez.', 'info');
+    }
     if (!isAllowedContext()) return showNotice('DAMUS con imagen solo está disponible para alumnos en salas académicas.', 'error');
     if (dailyCount() >= DAMUS_DAILY_LIMIT) return showNotice('Llegaste al límite de ' + DAMUS_DAILY_LIMIT + ' solicitudes a DAMUS por día en este dispositivo.', 'error');
     var data = imageCache[messageId];
@@ -391,13 +452,21 @@
       if (btn) btn.textContent = '✅ Solicitud enviada a DAMUS';
     }).catch(function (err) {
       console.error(err);
-      showNotice('No se pudo generar la respuesta de DAMUS: ' + (err && err.message ? err.message : 'error desconocido'), 'error');
-      if (btn) {
+      var message = err && err.message ? err.message : 'error desconocido';
+      if (isQuotaError(message)) {
+        var wait = parseRetrySeconds(message);
+        startCooldown(wait);
+        showNotice('⏳ DAMUS está ocupado por muchas solicitudes. Espera ' + Math.max(wait, DAMUS_COOLDOWN_SECONDS) + ' segundos y vuelve a intentarlo. Tu imagen ya está en el chat.', 'info');
+      } else {
+        showNotice('No se pudo generar la respuesta de DAMUS. Intenta nuevamente en unos segundos.', 'error');
+      }
+      if (btn && !getCooldownRemaining()) {
         btn.disabled = false;
         btn.textContent = '🤖 Pedir posible solución a DAMUS';
       }
     }).finally(function () {
       working[messageId] = false;
+      updateCooldownButtons();
     });
   }
 
@@ -412,11 +481,13 @@
   function run() {
     injectStyles();
     bindClicks();
+    if (getCooldownRemaining() > 0) startCooldown(getCooldownRemaining());
     ensureFirebase().then(function () {
       setInterval(function () {
         listenImages();
         enhanceButtons();
         formatDamusMessages();
+        updateCooldownButtons();
       }, 1200);
     }).catch(function (err) {
       console.warn('DAMUS Vision init:', err);
