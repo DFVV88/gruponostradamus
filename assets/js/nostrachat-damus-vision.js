@@ -1,7 +1,7 @@
 /* ==================================================
-   NostraCHAT DAMUS Vision
-   Botón para pedir posible solución de ejercicios con imagen.
-   No expone API keys. Usa endpoint seguro si existe.
+   NostraCHAT DAMUS Vision + Texto
+   Botón para pedir respuesta de DAMUS en mensajes con imagen o texto.
+   No expone API keys. Usa endpoint seguro de Apps Script.
 ================================================== */
 (function () {
   var firebaseConfig = window.NOSTRACHAT_FIREBASE_CONFIG;
@@ -10,10 +10,11 @@
   var DAMUS_MAX_CHARS = 6000;
   var DAMUS_COOLDOWN_SECONDS = 60;
   var COOLDOWN_KEY = 'nostrachat_damus_vision_cooldown_until';
+
   var app = null;
   var db = null;
   var fs = null;
-  var imageCache = {};
+  var messageCache = {};
   var currentRoomId = '';
   var unsubscribe = null;
   var working = {};
@@ -86,10 +87,21 @@
     return remaining > 0 ? remaining : 0;
   }
 
+  function parseRetrySeconds(message) {
+    var text = String(message || '');
+    var m = text.match(/retryDelay"?\s*:\s*"?(\d+(?:\.\d+)?)s/i) || text.match(/retryDelay[^0-9]*(\d+(?:\.\d+)?)/i);
+    if (m && m[1]) return Math.ceil(Number(m[1]));
+    m = text.match(/Please retry in\s*(\d+(?:\.\d+)?)s/i);
+    if (m && m[1]) return Math.ceil(Number(m[1]));
+    return DAMUS_COOLDOWN_SECONDS;
+  }
+
+  function isQuotaError(message) {
+    return /429|RESOURCE_EXHAUSTED|quota|retryDelay|GenerateRequestsPerDay|FreeTier/i.test(String(message || ''));
+  }
+
   function startCooldown(seconds) {
-    var duration = Number(seconds || DAMUS_COOLDOWN_SECONDS);
-    if (!duration || duration < 1) duration = DAMUS_COOLDOWN_SECONDS;
-    duration = Math.max(duration, DAMUS_COOLDOWN_SECONDS);
+    var duration = Math.max(Number(seconds || DAMUS_COOLDOWN_SECONDS), DAMUS_COOLDOWN_SECONDS);
     localStorage.setItem(COOLDOWN_KEY, String(Date.now() + duration * 1000));
     updateCooldownButtons();
     if (cooldownTimer) clearInterval(cooldownTimer);
@@ -104,31 +116,24 @@
     }, 1000);
   }
 
+  function defaultButtonText(mode) {
+    return mode === 'text' ? '🤖 Pedir respuesta a DAMUS' : '🤖 Pedir posible solución a DAMUS';
+  }
+
   function updateCooldownButtons() {
     var remaining = getCooldownRemaining();
-    document.querySelectorAll('[data-damus-vision-id]').forEach(function (btn) {
-      if (working[btn.getAttribute('data-damus-vision-id')]) return;
+    document.querySelectorAll('[data-damus-id]').forEach(function (btn) {
+      var id = btn.getAttribute('data-damus-id');
+      var mode = btn.getAttribute('data-damus-mode') || 'image';
+      if (working[id]) return;
       if (remaining > 0) {
         btn.disabled = true;
         btn.textContent = '⏳ DAMUS disponible en ' + remaining + ' s';
       } else if (btn.textContent.indexOf('Solicitud enviada') === -1) {
         btn.disabled = false;
-        btn.textContent = '🤖 Pedir posible solución a DAMUS';
+        btn.textContent = defaultButtonText(mode);
       }
     });
-  }
-
-  function parseRetrySeconds(message) {
-    var text = String(message || '');
-    var m = text.match(/retryDelay"?\s*:\s*"?(\d+(?:\.\d+)?)s/i) || text.match(/retryDelay[^0-9]*(\d+(?:\.\d+)?)/i);
-    if (m && m[1]) return Math.ceil(Number(m[1]));
-    m = text.match(/Please retry in\s*(\d+(?:\.\d+)?)s/i);
-    if (m && m[1]) return Math.ceil(Number(m[1]));
-    return DAMUS_COOLDOWN_SECONDS;
-  }
-
-  function isQuotaError(message) {
-    return /429|RESOURCE_EXHAUSTED|quota|retryDelay|GenerateRequestsPerDay|FreeTier/i.test(String(message || ''));
   }
 
   function showNotice(message, type) {
@@ -166,20 +171,13 @@
       .nchat-msg.other .nchat-text strong{font-weight:950;color:#061426;}\
       .nchat-msg.other .nchat-text mjx-container{margin:3px 0;max-width:100%;overflow-x:auto;overflow-y:hidden;}\
       .nchat-msg.other .nchat-text mjx-container[jax="CHTML"][display="true"]{display:block;text-align:left;}\
-      .nchat-damus-answer{white-space:pre-wrap;}\
     ';
     document.head.appendChild(style);
   }
 
   function ensureMathJax(callback) {
-    if (window.MathJax && window.MathJax.typesetPromise) {
-      callback();
-      return;
-    }
-    if (mathJaxLoading) {
-      setTimeout(function () { ensureMathJax(callback); }, 500);
-      return;
-    }
+    if (window.MathJax && window.MathJax.typesetPromise) return callback();
+    if (mathJaxLoading) return setTimeout(function () { ensureMathJax(callback); }, 500);
     mathJaxLoading = true;
     window.MathJax = {
       tex: {
@@ -189,72 +187,43 @@
         packages: {'[+]': ['ams', 'noerrors', 'noundefined']}
       },
       loader: {load: ['[tex]/ams', '[tex]/noerrors', '[tex]/noundefined']},
-      options: {
-        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-      }
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
     };
     var script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js';
     script.async = true;
-    script.onload = function () {
-      mathJaxLoading = false;
-      callback();
-    };
-    script.onerror = function () {
-      mathJaxLoading = false;
-      console.warn('No se pudo cargar MathJax.');
-    };
+    script.onload = function () { mathJaxLoading = false; callback(); };
+    script.onerror = function () { mathJaxLoading = false; console.warn('No se pudo cargar MathJax.'); };
     document.head.appendChild(script);
   }
 
   function renderMath(el) {
     ensureMathJax(function () {
       if (window.MathJax && window.MathJax.typesetPromise) {
-        window.MathJax.typesetPromise([el]).catch(function (err) {
-          console.warn('MathJax render:', err);
-        });
+        window.MathJax.typesetPromise([el]).catch(function (err) { console.warn('MathJax render:', err); });
       }
     });
   }
 
   function fixLatexAliases(text) {
     return String(text || '')
-      .replace(/\\sen/g, '\\sin')
-      .replace(/\\tg/g, '\\tan')
-      .replace(/\\cotg/g, '\\cot')
-      .replace(/\\arcsen/g, '\\arcsin')
+      .replace(/\\sen/g, '\\sin').replace(/\\tg/g, '\\tan').replace(/\\cotg/g, '\\cot').replace(/\\arcsen/g, '\\arcsin')
       .replace(/\bsen\s*([αa-zA-Z0-9])/g, '\\(\\sin $1\\)')
       .replace(/\bcos\s*([αa-zA-Z0-9])/g, '\\(\\cos $1\\)')
       .replace(/\btan\s*([αa-zA-Z0-9])/g, '\\(\\tan $1\\)')
       .replace(/\blog\s*([0-9a-zA-Z])/g, '\\(\\log $1\\)')
       .replace(/\bln\s*([0-9a-zA-Z])/g, '\\(\\ln $1\\)')
-      .replace(/\blim\s/g, '\\(\\lim \\) ')
-      .replace(/\bα\b/g, '\\(\\alpha\\)')
-      .replace(/\bβ\b/g, '\\(\\beta\\)')
-      .replace(/\bγ\b/g, '\\(\\gamma\\)')
-      .replace(/\bθ\b/g, '\\(\\theta\\)')
-      .replace(/\bπ\b/g, '\\(\\pi\\)')
-      .replace(/∞/g, '\\(\\infty\\)')
-      .replace(/≤/g, '\\(\\leq\\)')
-      .replace(/≥/g, '\\(\\geq\\)')
-      .replace(/≠/g, '\\(\\neq\\)')
-      .replace(/≈/g, '\\(\\approx\\)')
-      .replace(/→/g, '\\(\\to\\)')
-      .replace(/±/g, '\\(\\pm\\)')
-      .replace(/∑/g, '\\(\\sum\\)')
-      .replace(/∫/g, '\\(\\int\\)')
+      .replace(/\bα\b/g, '\\(\\alpha\\)').replace(/\bβ\b/g, '\\(\\beta\\)').replace(/\bγ\b/g, '\\(\\gamma\\)').replace(/\bθ\b/g, '\\(\\theta\\)').replace(/\bπ\b/g, '\\(\\pi\\)')
+      .replace(/∞/g, '\\(\\infty\\)').replace(/≤/g, '\\(\\leq\\)').replace(/≥/g, '\\(\\geq\\)').replace(/≠/g, '\\(\\neq\\)').replace(/≈/g, '\\(\\approx\\)').replace(/→/g, '\\(\\to\\)').replace(/±/g, '\\(\\pm\\)').replace(/∑/g, '\\(\\sum\\)').replace(/∫/g, '\\(\\int\\)')
       .replace(/√\s*([0-9a-zA-Z]+)/g, '\\(\\sqrt{$1}\\)');
   }
 
   function wrapLooseLatexLines(text) {
     return String(text || '').split('\n').map(function (line) {
       var trimmed = line.trim();
-      if (!trimmed) return line;
-      if (/^\s*(📌|🧠|✏️|✅|🔑|⚠️)/.test(line)) return line;
+      if (!trimmed || /^\s*(📌|🧠|✏️|✅|🔑|⚠️)/.test(line)) return line;
       if (trimmed.indexOf('\\(') !== -1 || trimmed.indexOf('\\[') !== -1) return line;
-      if (/\\(frac|sqrt|sin|cos|tan|cot|sec|csc|log|ln|lim|sum|int|alpha|beta|gamma|theta|pi|Delta|vec|overline|angle|parallel|perp|leq|geq|neq|approx|to|pm|cdot|times)/.test(line)) {
-        return '\\(' + trimmed + '\\)';
-      }
+      if (/\\(frac|sqrt|sin|cos|tan|cot|sec|csc|log|ln|lim|sum|int|alpha|beta|gamma|theta|pi|Delta|vec|overline|angle|parallel|perp|leq|geq|neq|approx|to|pm|cdot|times)/.test(line)) return '\\(' + trimmed + '\\)';
       return line;
     }).join('\n');
   }
@@ -271,17 +240,11 @@
   }
 
   function normalizeMathDelimiters(text) {
-    return balanceInlineDelimiters(
-      wrapLooseLatexLines(
-        fixLatexAliases(
-          String(text || '')
-            .replace(/\$\$([\s\S]*?)\$\$/g, '\\[$1\\]')
-            .replace(/(^|[^\\])\$([^$\n]+?)\$/g, '$1\\($2\\)')
-            .replace(/\\\[\s*$/gm, '')
-            .replace(/^\s*\\\]\s*$/gm, '')
-        )
-      )
-    );
+    return balanceInlineDelimiters(wrapLooseLatexLines(fixLatexAliases(String(text || '')
+      .replace(/\$\$([\s\S]*?)\$\$/g, '\\[$1\\]')
+      .replace(/(^|[^\\])\$([^$\n]+?)\$/g, '$1\\($2\\)')
+      .replace(/\\\[\s*$/gm, '')
+      .replace(/^\s*\\\]\s*$/gm, ''))));
   }
 
   function formatDamusMessages() {
@@ -289,19 +252,15 @@
       var text = el.textContent || '';
       if (text.indexOf('DAMUS Académico') === -1 && text.indexOf('📌 Tema probable') === -1) return;
       if (el.getAttribute('data-damus-formatted') === '1') return;
-
       var cleaned = normalizeMathDelimiters(text)
-        .replace(/\*\*/g, '')
-        .replace(/`/g, '')
+        .replace(/\*\*/g, '').replace(/`/g, '')
         .replace(/\s*(📌 Tema probable:)/g, '\n\n$1')
         .replace(/\s*(🧠 Datos o condición clave:)/g, '\n\n$1')
         .replace(/\s*(✏️ Desarrollo paso a paso:)/g, '\n\n$1')
         .replace(/\s*(✅ Posible respuesta final:)/g, '\n\n$1')
         .replace(/\s*(🔑 Posible clave:)/g, '\n\n$1')
         .replace(/\s*(⚠️ Verificación:)/g, '\n\n$1')
-        .replace(/\n{3,}/g, '\n\n')
-        .trim();
-
+        .replace(/\n{3,}/g, '\n\n').trim();
       el.innerHTML = escapeHTML(cleaned)
         .replace(/(📌 Tema probable:)/g, '<strong>$1</strong>')
         .replace(/(🧠 Datos o condición clave:)/g, '<strong>$1</strong>')
@@ -314,61 +273,66 @@
     });
   }
 
-  function listenImages() {
+  function listenMessages() {
     var roomId = getActiveRoomId();
     if (!roomId || roomId === currentRoomId || !db || !fs) return;
     currentRoomId = roomId;
-    imageCache = {};
-    if (unsubscribe) {
-      try { unsubscribe(); } catch (e) {}
-      unsubscribe = null;
-    }
-    var q = fs.query(fs.collection(db, 'rooms/' + roomId + '/messages'), fs.orderBy('createdAt', 'asc'), fs.limit(80));
+    messageCache = {};
+    if (unsubscribe) { try { unsubscribe(); } catch (e) {} unsubscribe = null; }
+    var q = fs.query(fs.collection(db, 'rooms/' + roomId + '/messages'), fs.orderBy('createdAt', 'asc'), fs.limit(100));
     unsubscribe = fs.onSnapshot(q, function (snapshot) {
       snapshot.forEach(function (doc) {
         var d = doc.data();
-        if (d && d.hasImage && d.imageData) {
-          d.id = doc.id;
-          imageCache[doc.id] = d;
-        }
+        if (d) { d.id = doc.id; messageCache[doc.id] = d; }
       });
       enhanceButtons();
       formatDamusMessages();
       updateCooldownButtons();
-    }, function (err) {
-      console.warn('DAMUS Vision listener:', err);
-    });
+    }, function (err) { console.warn('DAMUS listener:', err); });
+  }
+
+  function canAskDamusForText(data) {
+    if (!data || data.damusVision || data.hasImage) return false;
+    if (data.type && data.type !== 'message') return false;
+    var text = cleanText(data.text || '');
+    if (text.length < 6 || text.length > 420) return false;
+    if (/^🤖|DAMUS Académico/i.test(data.name || '')) return false;
+    return true;
+  }
+
+  function addDamusButton(msg, id, mode) {
+    if (!msg || msg.querySelector('.nchat-damus-vision')) return;
+    var row = document.createElement('div');
+    row.className = 'nchat-damus-vision';
+    row.innerHTML = '<button class="nchat-damus-btn" type="button" data-damus-id="' + escapeHTML(id) + '" data-damus-mode="' + mode + '">' + escapeHTML(defaultButtonText(mode)) + '</button><span class="nchat-damus-mini">Orientación IA, verificar con docente.</span>';
+    var target = msg.querySelector('.nchat-image-wrap') || msg.querySelector('.nchat-actions') || msg.querySelector('.nchat-text');
+    if (target) target.insertAdjacentElement('afterend', row);
   }
 
   function enhanceButtons() {
     if (!isAllowedContext()) return;
     document.querySelectorAll('.nchat-report[data-report-id]').forEach(function (reportBtn) {
       var id = reportBtn.getAttribute('data-report-id');
-      var data = imageCache[id];
-      if (!data || !data.imageData) return;
+      var data = messageCache[id];
+      if (!data) return;
       var msg = reportBtn.closest('.nchat-msg');
-      if (!msg || msg.querySelector('.nchat-damus-vision')) return;
-      var row = document.createElement('div');
-      row.className = 'nchat-damus-vision';
-      row.innerHTML = '<button class="nchat-damus-btn" type="button" data-damus-vision-id="' + escapeHTML(id) + '">🤖 Pedir posible solución a DAMUS</button><span class="nchat-damus-mini">Orientación IA, verificar con docente.</span>';
-      var imageWrap = msg.querySelector('.nchat-image-wrap') || msg.querySelector('.nchat-actions');
-      if (imageWrap) imageWrap.insertAdjacentElement('afterend', row);
+      if (data.hasImage && data.imageData) addDamusButton(msg, id, 'image');
+      else if (canAskDamusForText(data)) addDamusButton(msg, id, 'text');
     });
     updateCooldownButtons();
   }
 
-  function buildPrompt(originalText) {
-    return 'Eres DAMUS Académico, tutor del Grupo Nostradamus para postulantes UNI. Analiza la imagen del ejercicio. Da una POSIBLE solución educativa, no una respuesta absoluta. Si el enunciado no se lee bien, dilo claramente. Responde en español peruano académico con esta estructura:\n\n📌 Tema probable:\n🧠 Datos o condición clave:\n✏️ Desarrollo paso a paso:\n✅ Posible respuesta final:\n🔑 Posible clave:\n⚠️ Verificación:\n\nUsa LaTeX estándar para toda fórmula matemática de cualquier área: álgebra, geometría, trigonometría, cálculo, física, química, estadística, matrices, vectores y logaritmos. Usa fórmulas inline entre \\( y \\). Solo usa bloques \\[ \\] si son cortos y completos. No uses signos de dólar. Para trigonometría usa \\sin, \\cos y \\tan, NO uses \\sen. Para raíces usa \\sqrt{}, fracciones \\frac{}{}, límites \\lim, integrales \\int, sumatorias \\sum, vectores \\vec{}, ángulos \\angle, grados ^\\circ. Nunca dejes una fórmula sin cerrar.\n\nTexto escrito por el alumno: ' + (originalText || 'Sin texto adicional');
+  function buildPrompt(originalText, mode) {
+    var base = mode === 'text'
+      ? 'Eres DAMUS Académico, tutor del Grupo Nostradamus para postulantes UNI. Responde la consulta escrita del alumno. Si es ejercicio, resuélvelo paso a paso. Si es pregunta conceptual, explica claro y breve.'
+      : 'Eres DAMUS Académico, tutor del Grupo Nostradamus para postulantes UNI. Analiza la imagen del ejercicio y resuelve paso a paso.';
+    return base + '\n\nEstructura obligatoria:\n📌 Tema probable:\n🧠 Datos o condición clave:\n✏️ Desarrollo paso a paso:\n✅ Posible respuesta final:\n🔑 Posible clave:\n⚠️ Verificación:\n\nUsa LaTeX estándar para toda fórmula matemática. Fórmulas inline entre \\( y \\). No uses signos de dólar. Para trigonometría usa \\sin, \\cos y \\tan. Nunca dejes una fórmula sin cerrar.\n\nConsulta del alumno: ' + (originalText || 'Sin texto adicional');
   }
 
   function callEndpoint(data) {
     if (!ENDPOINT) {
-      return Promise.resolve({
-        pending: true,
-        answer: '🤖 DAMUS Académico\n\nLa imagen fue recibida, pero el motor de IA todavía no está conectado.\n\nPara que DAMUS dé una posible solución automática, falta conectar un endpoint seguro con Gemini u otra IA de visión.\n\nMientras tanto, un docente o moderador puede revisar esta imagen desde el panel admin.\n\n⚠️ Cuando esté conectado, DAMUS responderá como guía educativa, no como respuesta absoluta.'
-      });
+      return Promise.resolve({ answer: '🤖 DAMUS Académico\n\nEl motor de IA todavía no está conectado.\n\n⚠️ Cuando esté conectado, DAMUS responderá como guía educativa, no como respuesta absoluta.' });
     }
-
     return fetch(ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -383,12 +347,6 @@
       catch (e) { throw new Error('Endpoint DAMUS no devolvió JSON válido.'); }
       if (json.ok === false) throw new Error(json.answer || json.error || 'DAMUS Endpoint devolvió error.');
       return { answer: json.answer || json.text || 'DAMUS no pudo generar una respuesta clara.' };
-    }).catch(function (err) {
-      var msg = err && err.message ? err.message : String(err || 'Error desconocido');
-      if (/Failed to fetch|NetworkError|Load failed/i.test(msg)) {
-        msg = 'No se pudo conectar con Google Apps Script desde el navegador. Probable bloqueo CORS o endpoint no accesible.';
-      }
-      throw new Error(msg);
     });
   }
 
@@ -398,11 +356,11 @@
     return fs.addDoc(fs.collection(db, 'rooms/' + roomId + '/messages'), {
       text: String(answer || '').slice(0, DAMUS_MAX_CHARS),
       name: 'DAMUS Académico 🤖',
-      extra: 'Posible solución generada con IA · verificar con docente',
+      extra: 'Respuesta generada con IA · verificar con docente',
       zone: 'alumnos',
       roomId: roomId,
       roomLabel: getRoomLabel(),
-      sessionId: 'damus_vision_' + getSessionId(),
+      sessionId: 'damus_' + getSessionId(),
       type: 'message',
       moderationStatus: 'visible',
       damusVision: true,
@@ -417,64 +375,55 @@
     var remaining = getCooldownRemaining();
     if (remaining > 0) {
       updateCooldownButtons();
-      return showNotice('⏳ DAMUS está ocupado. Espera ' + remaining + ' segundos y vuelve a intentarlo. No necesitas subir la imagen otra vez.', 'info');
+      return showNotice('⏳ DAMUS está ocupado. Espera ' + remaining + ' segundos y vuelve a intentarlo.', 'info');
     }
-    if (!isAllowedContext()) return showNotice('DAMUS con imagen solo está disponible para alumnos en salas académicas.', 'error');
+    if (!isAllowedContext()) return showNotice('DAMUS solo está disponible para alumnos en salas académicas.', 'error');
     if (dailyCount() >= DAMUS_DAILY_LIMIT) return showNotice('Llegaste al límite de ' + DAMUS_DAILY_LIMIT + ' solicitudes a DAMUS por día en este dispositivo.', 'error');
-    var data = imageCache[messageId];
-    if (!data || !data.imageData) return showNotice('No se encontró la imagen del ejercicio.', 'error');
+    var data = messageCache[messageId];
+    if (!data) return showNotice('No se encontró la consulta.', 'error');
+    var mode = data.hasImage && data.imageData ? 'image' : 'text';
+    if (mode === 'image' && !data.imageData) return showNotice('No se encontró la imagen del ejercicio.', 'error');
+    if (mode === 'text' && !canAskDamusForText(data)) return showNotice('Esta consulta no está disponible para DAMUS.', 'error');
 
     working[messageId] = true;
-    if (btn) {
-      btn.disabled = true;
-      btn.textContent = 'DAMUS analizando...';
-    }
+    if (btn) { btn.disabled = true; btn.textContent = 'DAMUS analizando...'; }
 
     var payload = {
       messageId: messageId,
+      mode: mode,
       roomId: getActiveRoomId(),
       roomLabel: getRoomLabel(),
       studentText: data.text || '',
-      prompt: buildPrompt(data.text || ''),
-      imageData: data.imageData,
+      prompt: buildPrompt(data.text || '', mode),
+      imageData: mode === 'image' ? data.imageData : '',
       imageMime: data.imageMime || 'image/jpeg',
       imageSizeBytes: data.imageSizeBytes || 0,
       requestedAt: new Date().toISOString()
     };
 
-    ensureFirebase().then(function () {
-      return callEndpoint(payload);
-    }).then(function (result) {
-      increaseDailyCount();
-      return postDamusAnswer(result.answer, messageId);
-    }).then(function () {
-      showNotice('DAMUS publicó una posible orientación en el chat.', 'info');
-      if (btn) btn.textContent = '✅ Solicitud enviada a DAMUS';
-    }).catch(function (err) {
-      console.error(err);
-      var message = err && err.message ? err.message : 'error desconocido';
-      if (isQuotaError(message)) {
-        var wait = parseRetrySeconds(message);
-        startCooldown(wait);
-        showNotice('⏳ DAMUS está ocupado por muchas solicitudes. Espera ' + Math.max(wait, DAMUS_COOLDOWN_SECONDS) + ' segundos y vuelve a intentarlo. Tu imagen ya está en el chat.', 'info');
-      } else {
-        showNotice('No se pudo generar la respuesta de DAMUS. Intenta nuevamente en unos segundos.', 'error');
-      }
-      if (btn && !getCooldownRemaining()) {
-        btn.disabled = false;
-        btn.textContent = '🤖 Pedir posible solución a DAMUS';
-      }
-    }).finally(function () {
-      working[messageId] = false;
-      updateCooldownButtons();
-    });
+    ensureFirebase().then(function () { return callEndpoint(payload); })
+      .then(function (result) { increaseDailyCount(); return postDamusAnswer(result.answer, messageId); })
+      .then(function () { showNotice('DAMUS publicó una respuesta en el chat.', 'info'); if (btn) btn.textContent = '✅ Solicitud enviada a DAMUS'; })
+      .catch(function (err) {
+        console.error(err);
+        var message = err && err.message ? err.message : 'error desconocido';
+        if (isQuotaError(message)) {
+          var wait = parseRetrySeconds(message);
+          startCooldown(wait);
+          showNotice('⏳ DAMUS está ocupado por muchas solicitudes. Espera ' + Math.max(wait, DAMUS_COOLDOWN_SECONDS) + ' segundos y vuelve a intentarlo.', 'info');
+        } else {
+          showNotice('No se pudo generar la respuesta de DAMUS. Intenta nuevamente en unos segundos.', 'error');
+        }
+        if (btn && !getCooldownRemaining()) { btn.disabled = false; btn.textContent = defaultButtonText(mode); }
+      })
+      .finally(function () { working[messageId] = false; updateCooldownButtons(); });
   }
 
   function bindClicks() {
     document.addEventListener('click', function (e) {
-      var btn = e.target && e.target.closest ? e.target.closest('[data-damus-vision-id]') : null;
+      var btn = e.target && e.target.closest ? e.target.closest('[data-damus-id]') : null;
       if (!btn) return;
-      requestDamus(btn.getAttribute('data-damus-vision-id'), btn);
+      requestDamus(btn.getAttribute('data-damus-id'), btn);
     }, true);
   }
 
@@ -484,14 +433,12 @@
     if (getCooldownRemaining() > 0) startCooldown(getCooldownRemaining());
     ensureFirebase().then(function () {
       setInterval(function () {
-        listenImages();
+        listenMessages();
         enhanceButtons();
         formatDamusMessages();
         updateCooldownButtons();
       }, 1200);
-    }).catch(function (err) {
-      console.warn('DAMUS Vision init:', err);
-    });
+    }).catch(function (err) { console.warn('DAMUS init:', err); });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
