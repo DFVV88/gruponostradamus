@@ -6,6 +6,7 @@
 (function () {
   var firebaseConfig = window.NOSTRACHAT_FIREBASE_CONFIG;
   var ENDPOINT = window.NOSTRA_DAMUS_VISION_ENDPOINT || '';
+  var DAMUS_DAILY_LIMIT = 5;
   var app = null;
   var db = null;
   var fs = null;
@@ -240,7 +241,7 @@
   function requestDamus(messageId, btn) {
     if (working[messageId]) return;
     if (!isAllowedContext()) return showNotice('DAMUS con imagen solo está disponible para alumnos en salas académicas.', 'error');
-    if (dailyCount() >= 3) return showNotice('Llegaste al límite de 3 solicitudes a DAMUS por día en este dispositivo.', 'error');
+    if (dailyCount() >= DAMUS_DAILY_LIMIT) return showNotice('Llegaste al límite de ' + DAMUS_DAILY_LIMIT + ' solicitudes a DAMUS por día en este dispositivo.', 'error');
     var data = imageCache[messageId];
     if (!data || !data.imageData) return showNotice('No se encontró la imagen del ejercicio.', 'error');
 
