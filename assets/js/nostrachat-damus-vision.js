@@ -97,7 +97,14 @@
   }
 
   function isQuotaError(message) {
-    return /429|RESOURCE_EXHAUSTED|quota|retryDelay|GenerateRequestsPerDay|FreeTier/i.test(String(message || ''));
+    return /429|RESOURCE_EXHAUSTED|QUOTA|quota|retryDelay|GenerateRequestsPerDay|FreeTier|DAMUS está ocupado/i.test(String(message || ''));
+  }
+
+  function makeEndpointError(json) {
+    var err = new Error(json.answer || json.error || 'DAMUS Endpoint devolvió error.');
+    err.errorType = json.errorType || '';
+    err.retrySeconds = Number(json.retrySeconds || 0);
+    return err;
   }
 
   function startCooldown(seconds) {
@@ -345,7 +352,7 @@
       var json = {};
       try { json = JSON.parse(text || '{}'); }
       catch (e) { throw new Error('Endpoint DAMUS no devolvió JSON válido.'); }
-      if (json.ok === false) throw new Error(json.answer || json.error || 'DAMUS Endpoint devolvió error.');
+      if (json.ok === false) throw makeEndpointError(json);
       return { answer: json.answer || json.text || 'DAMUS no pudo generar una respuesta clara.' };
     });
   }
@@ -407,8 +414,8 @@
       .catch(function (err) {
         console.error(err);
         var message = err && err.message ? err.message : 'error desconocido';
-        if (isQuotaError(message)) {
-          var wait = parseRetrySeconds(message);
+        if ((err && err.errorType === 'QUOTA') || isQuotaError(message)) {
+          var wait = err && err.retrySeconds ? Number(err.retrySeconds) : parseRetrySeconds(message);
           startCooldown(wait);
           showNotice('⏳ DAMUS está ocupado por muchas solicitudes. Espera ' + Math.max(wait, DAMUS_COOLDOWN_SECONDS) + ' segundos y vuelve a intentarlo.', 'info');
         } else {
