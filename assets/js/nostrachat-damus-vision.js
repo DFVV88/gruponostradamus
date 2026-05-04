@@ -14,6 +14,7 @@
   var currentRoomId = '';
   var unsubscribe = null;
   var working = {};
+  var mathJaxLoading = false;
 
   function escapeHTML(text) {
     return String(text || '').replace(/[&<>'\"]/g, function (c) {
@@ -108,9 +109,61 @@
       .nchat-damus-mini{font-size:11px;font-weight:850;opacity:.72;}\
       .nchat-msg.other .nchat-text{white-space:pre-wrap;}\
       .nchat-msg.other .nchat-text strong{font-weight:950;color:#061426;}\
+      .nchat-msg.other .nchat-text mjx-container{margin:3px 0;max-width:100%;overflow-x:auto;overflow-y:hidden;}\
+      .nchat-msg.other .nchat-text mjx-container[jax="CHTML"][display="true"]{display:block;text-align:left;}\
       .nchat-damus-answer{white-space:pre-wrap;}\
     ';
     document.head.appendChild(style);
+  }
+
+  function ensureMathJax(callback) {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      callback();
+      return;
+    }
+    if (mathJaxLoading) {
+      setTimeout(function () { ensureMathJax(callback); }, 500);
+      return;
+    }
+    mathJaxLoading = true;
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+    var script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js';
+    script.async = true;
+    script.onload = function () {
+      mathJaxLoading = false;
+      callback();
+    };
+    script.onerror = function () {
+      mathJaxLoading = false;
+      console.warn('No se pudo cargar MathJax.');
+    };
+    document.head.appendChild(script);
+  }
+
+  function renderMath(el) {
+    ensureMathJax(function () {
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise([el]).catch(function (err) {
+          console.warn('MathJax render:', err);
+        });
+      }
+    });
+  }
+
+  function normalizeMathDelimiters(text) {
+    return String(text || '')
+      .replace(/\$\$([\s\S]*?)\$\$/g, '\\[$1\\]')
+      .replace(/(^|[^\\])\$([^$\n]+?)\$/g, '$1\\($2\\)');
   }
 
   function formatDamusMessages() {
@@ -119,7 +172,7 @@
       if (text.indexOf('DAMUS Académico') === -1 && text.indexOf('📌 Tema probable') === -1) return;
       if (el.getAttribute('data-damus-formatted') === '1') return;
 
-      var cleaned = text
+      var cleaned = normalizeMathDelimiters(text)
         .replace(/\*\*/g, '')
         .replace(/`/g, '')
         .replace(/\s*(📌 Tema probable:)/g, '\n\n$1')
@@ -139,6 +192,7 @@
         .replace(/(🔑 Posible clave:)/g, '<strong>$1</strong>')
         .replace(/(⚠️ Verificación:)/g, '<strong>$1</strong>');
       el.setAttribute('data-damus-formatted', '1');
+      renderMath(el);
     });
   }
 
@@ -184,7 +238,7 @@
   }
 
   function buildPrompt(originalText) {
-    return 'Eres DAMUS Académico, tutor del Grupo Nostradamus para postulantes UNI. Analiza la imagen del ejercicio. Da una POSIBLE solución educativa, no una respuesta absoluta. Si el enunciado no se lee bien, dilo claramente. Responde en español peruano académico con esta estructura:\n\n📌 Tema probable:\n🧠 Datos o condición clave:\n✏️ Desarrollo paso a paso:\n✅ Posible respuesta final:\n🔑 Posible clave:\n⚠️ Verificación:\n\nTexto escrito por el alumno: ' + (originalText || 'Sin texto adicional');
+    return 'Eres DAMUS Académico, tutor del Grupo Nostradamus para postulantes UNI. Analiza la imagen del ejercicio. Da una POSIBLE solución educativa, no una respuesta absoluta. Si el enunciado no se lee bien, dilo claramente. Responde en español peruano académico con esta estructura:\n\n📌 Tema probable:\n🧠 Datos o condición clave:\n✏️ Desarrollo paso a paso:\n✅ Posible respuesta final:\n🔑 Posible clave:\n⚠️ Verificación:\n\nUsa LaTeX para toda fórmula matemática. Fórmulas cortas entre \\( y \\). Fórmulas importantes en bloque entre \\[ y \\]. Ejemplos: \\(m=\\frac{y_2-y_1}{x_2-x_1}\\), \\[y-7=\\frac{4}{3}(x-3)\\]. No uses símbolos con formato plano si puedes escribirlos en LaTeX.\n\nTexto escrito por el alumno: ' + (originalText || 'Sin texto adicional');
   }
 
   function callEndpoint(data) {
