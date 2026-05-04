@@ -26,10 +26,11 @@ window.NOSTRACHAT_FIREBASE_CONFIG = {
   }
 
   var path = (window.location.pathname || '').toLowerCase();
-  var version = 'v=2026-45-img';
+  var version = 'v=2026-46-img-help';
 
   if (path.indexOf('nostrachat.html') !== -1 || path.endsWith('/nostrachat')) {
     loadScript('assets/js/nostrachat-images-firestore.js?' + version);
+    loadScript('assets/js/nostrachat-images-help.js?' + version);
   }
 
   if (path.indexOf('nostrachat-admin.html') !== -1 || path.endsWith('/nostrachat-admin')) {
