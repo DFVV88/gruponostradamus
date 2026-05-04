@@ -7,6 +7,7 @@
   var firebaseConfig = window.NOSTRACHAT_FIREBASE_CONFIG;
   var ENDPOINT = window.NOSTRA_DAMUS_VISION_ENDPOINT || '';
   var DAMUS_DAILY_LIMIT = 5;
+  var DAMUS_MAX_CHARS = 6000;
   var app = null;
   var db = null;
   var fs = null;
@@ -238,7 +239,7 @@
   }
 
   function buildPrompt(originalText) {
-    return 'Eres DAMUS Académico, tutor del Grupo Nostradamus para postulantes UNI. Analiza la imagen del ejercicio. Da una POSIBLE solución educativa, no una respuesta absoluta. Si el enunciado no se lee bien, dilo claramente. Responde en español peruano académico con esta estructura:\n\n📌 Tema probable:\n🧠 Datos o condición clave:\n✏️ Desarrollo paso a paso:\n✅ Posible respuesta final:\n🔑 Posible clave:\n⚠️ Verificación:\n\nUsa LaTeX para toda fórmula matemática. Fórmulas cortas entre \\( y \\). Fórmulas importantes en bloque entre \\[ y \\]. Ejemplos: \\(m=\\frac{y_2-y_1}{x_2-x_1}\\), \\[y-7=\\frac{4}{3}(x-3)\\]. No uses símbolos con formato plano si puedes escribirlos en LaTeX.\n\nTexto escrito por el alumno: ' + (originalText || 'Sin texto adicional');
+    return 'Eres DAMUS Académico, tutor del Grupo Nostradamus para postulantes UNI. Analiza la imagen del ejercicio. Da una POSIBLE solución educativa, no una respuesta absoluta. Si el enunciado no se lee bien, dilo claramente. Responde en español peruano académico con esta estructura:\n\n📌 Tema probable:\n🧠 Datos o condición clave:\n✏️ Desarrollo paso a paso:\n✅ Posible respuesta final:\n🔑 Posible clave:\n⚠️ Verificación:\n\nUsa LaTeX para toda fórmula matemática. Usa preferentemente fórmulas inline entre \\( y \\). Evita bloques \\[ \\] para no romper el render del chat. Ejemplos: \\(m=\\frac{y_2-y_1}{x_2-x_1}\\), \\(y-7=\\frac{4}{3}(x-3)\\). No uses símbolos con formato plano si puedes escribirlos en LaTeX.\n\nTexto escrito por el alumno: ' + (originalText || 'Sin texto adicional');
   }
 
   function callEndpoint(data) {
@@ -276,7 +277,7 @@
     var user = getSavedUser();
     var roomId = getActiveRoomId();
     return fs.addDoc(fs.collection(db, 'rooms/' + roomId + '/messages'), {
-      text: String(answer || '').slice(0, 2400),
+      text: String(answer || '').slice(0, DAMUS_MAX_CHARS),
       name: 'DAMUS Académico 🤖',
       extra: 'Posible solución generada con IA · verificar con docente',
       zone: 'alumnos',
