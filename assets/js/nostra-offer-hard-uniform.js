@@ -1,8 +1,8 @@
 /* ==================================================
    Grupo Nostradamus - Ajustes de index
    1) Uniforma la sección de ofertas.
-   2) Corrige el slide que contiene el video sin romper
-      los demás slides del hero.
+   2) Cambia el iframe del hero por una miniatura estable
+      para que no se corte dentro del carrusel.
 ================================================== */
 (function () {
   var path = window.location.pathname.toLowerCase();
@@ -17,6 +17,12 @@
       .trim();
   }
 
+  function getYouTubeId(src) {
+    var value = String(src || '');
+    var match = value.match(/\/embed\/([A-Za-z0-9_-]+)/) || value.match(/[?&]v=([A-Za-z0-9_-]+)/);
+    return match ? match[1] : 'Gi-ZXzQSIDI';
+  }
+
   function injectStyle() {
     if (document.getElementById('nostra-offer-hard-uniform-style')) return;
 
@@ -24,7 +30,7 @@
     style.id = 'nostra-offer-hard-uniform-style';
     style.textContent = `
       /* =========================
-         FIX SOLO PARA EL SLIDE VIDEO
+         SLIDE VIDEO COMO MINIATURA ESTABLE
       ========================== */
 
       #hero .nostra-video-slide-fix .th-hero-bg,
@@ -34,38 +40,19 @@
         background-repeat: no-repeat !important;
       }
 
-      #hero .nostra-video-slide-fix.slick-active,
-      #hero .nostra-video-slide-fix.slick-active .th-hero-bg,
-      #hero .nostra-video-slide-fix.slick-active .img-min-slider,
-      #hero .nostra-video-slide-fix.slick-active .container,
-      #hero .nostra-video-slide-fix.active,
-      #hero .nostra-video-slide-fix.active .th-hero-bg,
-      #hero .nostra-video-slide-fix.active .img-min-slider,
-      #hero .nostra-video-slide-fix.active .container,
-      #hero .nostra-video-slide-fix.swiper-slide-active,
-      #hero .nostra-video-slide-fix.swiper-slide-active .th-hero-bg,
-      #hero .nostra-video-slide-fix.swiper-slide-active .img-min-slider,
-      #hero .nostra-video-slide-fix.swiper-slide-active .container {
-        min-height: 560px !important;
-        height: 560px !important;
-        max-height: 560px !important;
-        overflow: hidden !important;
-      }
-
-      #hero .nostra-video-slide-fix.slick-active .container,
-      #hero .nostra-video-slide-fix.active .container,
-      #hero .nostra-video-slide-fix.swiper-slide-active .container {
+      #hero .nostra-video-slide-fix .container {
         display: flex !important;
         align-items: flex-start !important;
         justify-content: center !important;
-        padding-top: 0 !important;
+        padding-top: 44px !important;
         padding-bottom: 120px !important;
+        overflow: visible !important;
       }
 
       #hero .nostra-video-slide-fix .contenido-min-slider-tovideo,
       #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo {
-        width: min(720px, 70vw) !important;
-        max-width: 720px !important;
+        width: min(760px, 76vw) !important;
+        max-width: 760px !important;
         margin: 0 auto !important;
         padding: 0 !important;
         min-height: auto !important;
@@ -74,110 +61,101 @@
         align-items: center !important;
         justify-content: center !important;
         position: relative !important;
-        z-index: 5 !important;
+        z-index: 30 !important;
+        transform: none !important;
       }
 
-      #hero .nostra-video-slide-fix.slick-active .contenido-min-slider-tovideo,
-      #hero .nostra-video-slide-fix.slick-active .contenido-max-slider.contenido-min-slider-tovideo,
-      #hero .nostra-video-slide-fix.active .contenido-min-slider-tovideo,
-      #hero .nostra-video-slide-fix.active .contenido-max-slider.contenido-min-slider-tovideo,
-      #hero .nostra-video-slide-fix.swiper-slide-active .contenido-min-slider-tovideo,
-      #hero .nostra-video-slide-fix.swiper-slide-active .contenido-max-slider.contenido-min-slider-tovideo {
-        transform: translateY(-28px) !important;
-      }
-
-      #hero .nostra-video-slide-fix .frame-video {
+      #hero .nostra-youtube-thumb {
+        position: relative !important;
         display: block !important;
         width: 100% !important;
-        height: 300px !important;
-        aspect-ratio: auto !important;
-        min-height: 0 !important;
-        max-height: 300px !important;
-        border-radius: 22px !important;
-        border: 1px solid rgba(255,255,255,.28) !important;
-        box-shadow: 0 20px 54px rgba(0,0,0,.44), 0 0 28px rgba(0,194,209,.20) !important;
-        background: #02070d !important;
+        aspect-ratio: 16 / 9 !important;
+        border-radius: 24px !important;
         overflow: hidden !important;
+        background: #02070d !important;
+        border: 1px solid rgba(255,255,255,.30) !important;
+        box-shadow: 0 24px 70px rgba(0,0,0,.46), 0 0 32px rgba(0,194,209,.22) !important;
+      }
+
+      #hero .nostra-youtube-thumb img {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        object-position: center center !important;
+      }
+
+      #hero .nostra-youtube-thumb::before {
+        content: '' !important;
+        position: absolute !important;
+        inset: 0 !important;
+        background: linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.10)) !important;
+        z-index: 1 !important;
+      }
+
+      #hero .nostra-youtube-play {
+        position: absolute !important;
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 86px !important;
+        height: 60px !important;
+        border-radius: 18px !important;
+        display: grid !important;
+        place-items: center !important;
+        background: #ff0000 !important;
+        color: #fff !important;
+        font-size: 34px !important;
+        line-height: 1 !important;
+        z-index: 2 !important;
+        box-shadow: 0 14px 32px rgba(0,0,0,.30) !important;
+      }
+
+      #hero .nostra-youtube-label {
+        position: absolute !important;
+        left: 18px !important;
+        top: 16px !important;
+        right: 18px !important;
+        z-index: 2 !important;
+        color: #fff !important;
+        font-weight: 950 !important;
+        font-size: 18px !important;
+        text-shadow: 0 3px 12px rgba(0,0,0,.55) !important;
       }
 
       @media (max-width: 1199px) {
-        #hero .nostra-video-slide-fix.slick-active,
-        #hero .nostra-video-slide-fix.slick-active .th-hero-bg,
-        #hero .nostra-video-slide-fix.slick-active .img-min-slider,
-        #hero .nostra-video-slide-fix.slick-active .container,
-        #hero .nostra-video-slide-fix.active,
-        #hero .nostra-video-slide-fix.active .th-hero-bg,
-        #hero .nostra-video-slide-fix.active .img-min-slider,
-        #hero .nostra-video-slide-fix.active .container,
-        #hero .nostra-video-slide-fix.swiper-slide-active,
-        #hero .nostra-video-slide-fix.swiper-slide-active .th-hero-bg,
-        #hero .nostra-video-slide-fix.swiper-slide-active .img-min-slider,
-        #hero .nostra-video-slide-fix.swiper-slide-active .container {
-          min-height: 530px !important;
-          height: 530px !important;
-          max-height: 530px !important;
-        }
-
-        #hero .nostra-video-slide-fix.slick-active .container,
-        #hero .nostra-video-slide-fix.active .container,
-        #hero .nostra-video-slide-fix.swiper-slide-active .container {
+        #hero .nostra-video-slide-fix .container {
+          padding-top: 44px !important;
           padding-bottom: 100px !important;
         }
-
         #hero .nostra-video-slide-fix .contenido-min-slider-tovideo,
         #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo {
-          width: min(680px, 70vw) !important;
-        }
-
-        #hero .nostra-video-slide-fix .frame-video {
-          height: 280px !important;
-          max-height: 280px !important;
+          width: min(700px, 76vw) !important;
         }
       }
 
       @media (max-width: 767px) {
-        #hero .nostra-video-slide-fix.slick-active,
-        #hero .nostra-video-slide-fix.slick-active .th-hero-bg,
-        #hero .nostra-video-slide-fix.slick-active .img-min-slider,
-        #hero .nostra-video-slide-fix.slick-active .container,
-        #hero .nostra-video-slide-fix.active,
-        #hero .nostra-video-slide-fix.active .th-hero-bg,
-        #hero .nostra-video-slide-fix.active .img-min-slider,
-        #hero .nostra-video-slide-fix.active .container,
-        #hero .nostra-video-slide-fix.swiper-slide-active,
-        #hero .nostra-video-slide-fix.swiper-slide-active .th-hero-bg,
-        #hero .nostra-video-slide-fix.swiper-slide-active .img-min-slider,
-        #hero .nostra-video-slide-fix.swiper-slide-active .container {
-          min-height: 400px !important;
-          height: 400px !important;
-          max-height: 400px !important;
-        }
-
-        #hero .nostra-video-slide-fix.slick-active .container,
-        #hero .nostra-video-slide-fix.active .container,
-        #hero .nostra-video-slide-fix.swiper-slide-active .container {
-          padding-top: 6px !important;
+        #hero .nostra-video-slide-fix .container {
+          padding-top: 22px !important;
           padding-bottom: 70px !important;
         }
-
         #hero .nostra-video-slide-fix .contenido-min-slider-tovideo,
         #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo {
-          width: calc(100vw - 48px) !important;
+          width: calc(100vw - 34px) !important;
         }
-
-        #hero .nostra-video-slide-fix.slick-active .contenido-min-slider-tovideo,
-        #hero .nostra-video-slide-fix.slick-active .contenido-max-slider.contenido-min-slider-tovideo,
-        #hero .nostra-video-slide-fix.active .contenido-min-slider-tovideo,
-        #hero .nostra-video-slide-fix.active .contenido-max-slider.contenido-min-slider-tovideo,
-        #hero .nostra-video-slide-fix.swiper-slide-active .contenido-min-slider-tovideo,
-        #hero .nostra-video-slide-fix.swiper-slide-active .contenido-max-slider.contenido-min-slider-tovideo {
-          transform: translateY(-12px) !important;
-        }
-
-        #hero .nostra-video-slide-fix .frame-video {
-          height: 220px !important;
-          max-height: 220px !important;
+        #hero .nostra-youtube-thumb {
           border-radius: 16px !important;
+        }
+        #hero .nostra-youtube-play {
+          width: 66px !important;
+          height: 48px !important;
+          border-radius: 14px !important;
+          font-size: 26px !important;
+        }
+        #hero .nostra-youtube-label {
+          font-size: 14px !important;
+          left: 12px !important;
+          top: 10px !important;
         }
       }
 
@@ -301,11 +279,8 @@
           if (
             parentText.indexOf('ofertas exclusivas') !== -1 &&
             parentText.indexOf('descuentos academicos') !== -1
-          ) {
-            el = el.parentElement;
-          } else {
-            break;
-          }
+          ) el = el.parentElement;
+          else break;
         }
         return el;
       }
@@ -313,15 +288,46 @@
     return null;
   }
 
-  function applyVideoFix() {
-    document.querySelectorAll('#hero .frame-video').forEach(function (video) {
-      var slide =
-        video.closest('.th-hero-slide') ||
-        video.closest('.slick-slide') ||
-        video.closest('.swiper-slide') ||
-        video.parentElement;
+  function replaceHeroYouTubeIframe() {
+    document.querySelectorAll('#hero iframe.frame-video, #hero .frame-video').forEach(function (video) {
+      if (video.dataset.nostraThumbReady === '1') return;
 
+      var src = video.getAttribute('src') || '';
+      if (src.indexOf('youtube.com') === -1 && src.indexOf('youtu.be') === -1) return;
+
+      var id = getYouTubeId(src);
+      var slide = video.closest('.th-hero-slide') || video.closest('.slick-slide') || video.closest('.swiper-slide') || video.parentElement;
       if (slide) slide.classList.add('nostra-video-slide-fix');
+
+      var link = document.createElement('a');
+      link.className = 'nostra-youtube-thumb frame-video';
+      link.href = 'https://www.youtube.com/watch?v=' + id;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.setAttribute('aria-label', 'Ver video institucional en YouTube');
+      link.dataset.nostraThumbReady = '1';
+
+      var img = document.createElement('img');
+      img.src = 'https://img.youtube.com/vi/' + id + '/maxresdefault.jpg';
+      img.alt = 'Video institucional Grupo Nostradamus';
+      img.loading = 'lazy';
+      img.onerror = function () {
+        img.onerror = null;
+        img.src = 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg';
+      };
+
+      var label = document.createElement('span');
+      label.className = 'nostra-youtube-label';
+      label.textContent = 'Bienvenidos al Grupo de Estudio Nostradamus';
+
+      var play = document.createElement('span');
+      play.className = 'nostra-youtube-play';
+      play.textContent = '▶';
+
+      link.appendChild(img);
+      link.appendChild(label);
+      link.appendChild(play);
+      video.replaceWith(link);
     });
   }
 
@@ -334,7 +340,7 @@
 
   function applyFix() {
     injectStyle();
-    applyVideoFix();
+    replaceHeroYouTubeIframe();
     applyOfferFix();
   }
 
@@ -345,11 +351,7 @@
     setTimeout(applyFix, 1800);
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
-
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
   window.addEventListener('load', init);
 })();
