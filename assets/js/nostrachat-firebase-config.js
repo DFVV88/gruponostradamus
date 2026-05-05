@@ -44,6 +44,7 @@ window.NOSTRA_DAMUS_VISION_ENDPOINT = "https://script.google.com/macros/s/AKfycb
   }
 
   if (path.indexOf('nostrachat-admin.html') !== -1 || path.endsWith('/nostrachat-admin')) {
+    loadScript('assets/js/nostrachat-admin-users.js?' + version);
     loadScript('assets/js/nostrachat-admin-images.js?' + version);
   }
 })();
