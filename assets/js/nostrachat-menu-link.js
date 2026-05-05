@@ -40,20 +40,31 @@
     return true;
   }
 
+  function replaceInicioWithChatOnIndex() {
+    if (!isIndex) return;
+
+    document.querySelectorAll('.main-menu > ul > li > a, .th-mobile-menu > ul > li > a').forEach(function (a) {
+      var text = (a.textContent || '').trim().toLowerCase();
+      var href = (a.getAttribute('href') || '').toLowerCase();
+      if (text === 'inicio' && (href === 'index.html' || href === '/' || href === './' || href === '')) {
+        a.href = 'nostrachat.html';
+        a.textContent = 'NostraCHAT';
+        a.classList.remove('active');
+        if (a.parentElement) a.parentElement.classList.remove('active');
+      }
+    });
+  }
+
   function removeFromIndexDesktop() {
     if (!isIndex) return;
-    document.querySelectorAll('.main-menu > ul > li > a[href="nostrachat.html"]').forEach(function (a) {
-      if (a.parentElement) a.parentElement.remove();
+    document.querySelectorAll('.main-menu > ul > li > a[href="nostrachat.html"]').forEach(function (a, index) {
+      if (index > 0 && a.parentElement) a.parentElement.remove();
     });
   }
 
   function addToClassicMenus() {
     if (isIndex) {
-      // En el index, el menú de escritorio ya está al límite.
-      // NostraCHAT queda en móvil y en subpáginas para no desplazar el botón ni el logo IQ100.
-      document.querySelectorAll('.th-mobile-menu > ul').forEach(function (menu) {
-        insertAfterText(menu, 'cachimbos');
-      });
+      replaceInicioWithChatOnIndex();
       removeFromIndexDesktop();
       return;
     }
@@ -115,6 +126,7 @@
     addToClassicMenus();
     addToSharedHeader();
     addToNostrachatOwnMenu();
+    replaceInicioWithChatOnIndex();
     removeFromIndexDesktop();
   }
 
