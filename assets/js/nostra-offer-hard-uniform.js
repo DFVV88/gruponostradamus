@@ -23,21 +23,29 @@
     style.id = 'nostra-offer-hard-uniform-style';
     style.textContent = `
       .nostra-video-slide-fix .container{
-        min-height:clamp(500px,70vh,700px) !important;
+        min-height:clamp(460px,62vh,620px) !important;
         display:flex !important;
         align-items:center !important;
         justify-content:center !important;
-        padding-top:28px !important;
-        padding-bottom:28px !important;
+        padding-top:18px !important;
+        padding-bottom:18px !important;
       }
       .nostra-video-slide-fix .th-hero-bg,
       .nostra-video-slide-fix .img-min-slider{
-        min-height:clamp(500px,70vh,700px) !important;
+        min-height:clamp(460px,62vh,620px) !important;
+        background-size:cover !important;
+        background-position:center center !important;
+        background-repeat:no-repeat !important;
+      }
+      .nostra-video-slide-fix .th-hero-slide,
+      .nostra-video-slide-fix{
+        min-height:clamp(460px,62vh,620px) !important;
+        overflow:hidden !important;
       }
       .nostra-video-slide-fix .contenido-min-slider-tovideo,
       .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo{
-        width:min(980px,92vw) !important;
-        max-width:980px !important;
+        width:min(940px,90vw) !important;
+        max-width:940px !important;
         margin:0 auto !important;
         padding:0 !important;
         min-height:auto !important;
@@ -47,6 +55,7 @@
         justify-content:center !important;
         position:relative !important;
         z-index:3 !important;
+        transform:translateY(-10px) !important;
       }
       .nostra-video-slide-fix .frame-video{
         display:block !important;
@@ -54,26 +63,41 @@
         aspect-ratio:16 / 9 !important;
         height:auto !important;
         min-height:0 !important;
-        max-height:min(62vh,560px) !important;
+        max-height:min(58vh,520px) !important;
         border-radius:24px !important;
         border:1px solid rgba(255,255,255,.28) !important;
         box-shadow:0 24px 70px rgba(0,0,0,.46),0 0 32px rgba(0,194,209,.22) !important;
         background:#02070d !important;
         overflow:hidden !important;
       }
+      @media(max-width:991px){
+        .nostra-video-slide-fix .container,
+        .nostra-video-slide-fix .th-hero-bg,
+        .nostra-video-slide-fix .img-min-slider,
+        .nostra-video-slide-fix{
+          min-height:430px !important;
+        }
+        .nostra-video-slide-fix .contenido-min-slider-tovideo,
+        .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo{
+          width:min(92vw,760px) !important;
+          transform:translateY(-6px) !important;
+        }
+      }
       @media(max-width:767px){
         .nostra-video-slide-fix .container,
         .nostra-video-slide-fix .th-hero-bg,
-        .nostra-video-slide-fix .img-min-slider{
-          min-height:430px !important;
+        .nostra-video-slide-fix .img-min-slider,
+        .nostra-video-slide-fix{
+          min-height:380px !important;
         }
         .nostra-video-slide-fix .container{
-          padding-top:20px !important;
-          padding-bottom:34px !important;
+          padding-top:14px !important;
+          padding-bottom:18px !important;
         }
         .nostra-video-slide-fix .contenido-min-slider-tovideo,
         .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo{
           width:calc(100vw - 24px) !important;
+          transform:translateY(-4px) !important;
         }
         .nostra-video-slide-fix .frame-video{
           border-radius:16px !important;
@@ -85,24 +109,17 @@
         position:relative !important;
         isolation:isolate !important;
         overflow:hidden !important;
-        background:
-          radial-gradient(circle at 22% 28%, rgba(0,194,209,.24), transparent 31%),
-          radial-gradient(circle at 78% 48%, rgba(0,194,209,.20), transparent 35%),
-          linear-gradient(135deg,#061426 0%,#02070d 48%,#061426 100%) !important;
+        background:radial-gradient(circle at 22% 28%, rgba(0,194,209,.24), transparent 31%),radial-gradient(circle at 78% 48%, rgba(0,194,209,.20), transparent 35%),linear-gradient(135deg,#061426 0%,#02070d 48%,#061426 100%) !important;
         background-color:#061426 !important;
       }
-
       .nostra-offer-hard-uniform::before{
         content:'' !important;
         position:absolute !important;
         inset:0 !important;
         z-index:0 !important;
-        background:
-          linear-gradient(90deg,rgba(2,7,13,.78),rgba(2,7,13,.68),rgba(2,7,13,.72)),
-          repeating-linear-gradient(90deg,rgba(255,255,255,.022) 0 1px,transparent 1px 92px) !important;
+        background:linear-gradient(90deg,rgba(2,7,13,.78),rgba(2,7,13,.68),rgba(2,7,13,.72)),repeating-linear-gradient(90deg,rgba(255,255,255,.022) 0 1px,transparent 1px 92px) !important;
         pointer-events:none !important;
       }
-
       .nostra-offer-hard-uniform > *,
       .nostra-offer-hard-uniform .container,
       .nostra-offer-hard-uniform .row,
@@ -117,36 +134,24 @@
         background-color:transparent !important;
         background-image:none !important;
       }
-
       .nostra-offer-hard-uniform .container,
       .nostra-offer-hard-uniform .row,
       .nostra-offer-hard-uniform .row > [class*='col']{
         position:relative !important;
         z-index:2 !important;
       }
-
-      .nostra-offer-hard-uniform .row{
-        align-items:center !important;
-      }
-
-      .nostra-offer-hard-uniform .row > [class*='col']:last-child{
-        background:transparent !important;
-        position:relative !important;
-      }
-
+      .nostra-offer-hard-uniform .row{align-items:center !important;}
+      .nostra-offer-hard-uniform .row > [class*='col']:last-child{background:transparent !important;position:relative !important;}
       .nostra-offer-hard-uniform .row > [class*='col']:last-child::after{
         content:'' !important;
         position:absolute !important;
         inset:8% 4% 0 4% !important;
         z-index:-1 !important;
         border-radius:34px !important;
-        background:
-          radial-gradient(circle at 50% 50%, rgba(0,194,209,.18), transparent 54%),
-          linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.015)) !important;
+        background:radial-gradient(circle at 50% 50%, rgba(0,194,209,.18), transparent 54%),linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.015)) !important;
         border:1px solid rgba(0,194,209,.14) !important;
         box-shadow:0 0 34px rgba(0,194,209,.13) !important;
       }
-
       .nostra-offer-hard-uniform h1,
       .nostra-offer-hard-uniform h2,
       .nostra-offer-hard-uniform h3,
@@ -157,7 +162,6 @@
         background:none !important;
         text-shadow:0 4px 0 rgba(0,0,0,.62),0 12px 22px rgba(0,0,0,.58),0 0 20px rgba(0,194,209,.22) !important;
       }
-
       .nostra-offer-hard-uniform p,
       .nostra-offer-hard-uniform .text,
       .nostra-offer-hard-uniform .desc{
@@ -165,12 +169,10 @@
         -webkit-text-fill-color:rgba(255,255,255,.92) !important;
         text-shadow:0 3px 10px rgba(0,0,0,.65) !important;
       }
-
       .nostra-offer-hard-uniform img{
         background:transparent !important;
         filter:drop-shadow(0 24px 34px rgba(0,0,0,.52)) drop-shadow(0 0 18px rgba(0,194,209,.18)) !important;
       }
-
       @media(max-width:991.98px){
         .nostra-offer-hard-uniform{text-align:center !important;}
         .nostra-offer-hard-uniform .row > [class*='col']:last-child::after{inset:6% 12% 0 12% !important;}
@@ -187,11 +189,8 @@
         var el = candidates[i];
         while (el.parentElement && el.parentElement !== document.body) {
           var parentText = normalize(el.parentElement.textContent);
-          if (parentText.indexOf('ofertas exclusivas') !== -1 && parentText.indexOf('descuentos academicos') !== -1) {
-            el = el.parentElement;
-          } else {
-            break;
-          }
+          if (parentText.indexOf('ofertas exclusivas') !== -1 && parentText.indexOf('descuentos academicos') !== -1) el = el.parentElement;
+          else break;
         }
         return el;
       }
@@ -226,10 +225,7 @@
     setTimeout(applyFix, 2500);
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
   window.addEventListener('load', init);
 })();
