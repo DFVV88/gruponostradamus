@@ -12,6 +12,12 @@ window.NOSTRACHAT_FIREBASE_CONFIG = {
 };
 
 /*
+  Tenant Microsoft 365 del Grupo Nostradamus.
+  Se usa para verificar cuentas del inquilino institucional.
+*/
+window.NOSTRA_MICROSOFT_TENANT_ID = "23b6326f-b776-4ffd-8b1d-cd9d10e38d84";
+
+/*
   Endpoint seguro de DAMUS Vision.
   La API key de Gemini NO está en la web; está guardada en Google Apps Script.
 */
@@ -32,10 +38,10 @@ window.NOSTRA_DAMUS_VISION_ENDPOINT = "https://script.google.com/macros/s/AKfycb
   }
 
   var path = (window.location.pathname || '').toLowerCase();
-  var version = 'v=2026-60-auth-users';
+  var version = 'v=2026-61-auth-tenant';
 
   if (path.indexOf('nostrachat.html') !== -1 || path.endsWith('/nostrachat')) {
-    loadScript('assets/js/nostrachat-auth-users.js?' + version);
+    loadScript('assets/js/nostrachat-auth-users-v2.js?' + version);
     loadScript('assets/js/nostrachat-images-firestore.js?' + version);
     loadScript('assets/js/nostrachat-images-help.js?' + version);
     loadScript('assets/js/nostrachat-damus-vision.js?' + version);
