@@ -38,7 +38,7 @@ window.NOSTRA_DAMUS_VISION_ENDPOINT = "https://script.google.com/macros/s/AKfycb
   }
 
   var path = (window.location.pathname || '').toLowerCase();
-  var version = 'v=2026-61-auth-tenant';
+  var version = 'v=2026-62-admin-mathjax';
 
   if (path.indexOf('nostrachat.html') !== -1 || path.endsWith('/nostrachat')) {
     loadScript('assets/js/nostrachat-auth-users-v2.js?' + version);
@@ -50,6 +50,7 @@ window.NOSTRA_DAMUS_VISION_ENDPOINT = "https://script.google.com/macros/s/AKfycb
   }
 
   if (path.indexOf('nostrachat-admin.html') !== -1 || path.endsWith('/nostrachat-admin')) {
+    loadScript('assets/js/nostrachat-admin-mathjax.js?' + version);
     loadScript('assets/js/nostrachat-admin-users.js?' + version);
     loadScript('assets/js/nostrachat-admin-images.js?' + version);
   }
