@@ -58,14 +58,14 @@
         display: flex !important;
         align-items: flex-start !important;
         justify-content: center !important;
-        padding-top: 8px !important;
-        padding-bottom: 84px !important;
+        padding-top: 0 !important;
+        padding-bottom: 120px !important;
       }
 
       #hero .nostra-video-slide-fix .contenido-min-slider-tovideo,
       #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo {
-        width: min(860px, 84vw) !important;
-        max-width: 860px !important;
+        width: min(720px, 70vw) !important;
+        max-width: 720px !important;
         margin: 0 auto !important;
         padding: 0 !important;
         min-height: auto !important;
@@ -83,19 +83,19 @@
       #hero .nostra-video-slide-fix.active .contenido-max-slider.contenido-min-slider-tovideo,
       #hero .nostra-video-slide-fix.swiper-slide-active .contenido-min-slider-tovideo,
       #hero .nostra-video-slide-fix.swiper-slide-active .contenido-max-slider.contenido-min-slider-tovideo {
-        transform: translateY(-18px) !important;
+        transform: translateY(-28px) !important;
       }
 
       #hero .nostra-video-slide-fix .frame-video {
         display: block !important;
         width: 100% !important;
-        aspect-ratio: 16 / 9 !important;
-        height: auto !important;
+        height: 300px !important;
+        aspect-ratio: auto !important;
         min-height: 0 !important;
-        max-height: 360px !important;
-        border-radius: 24px !important;
+        max-height: 300px !important;
+        border-radius: 22px !important;
         border: 1px solid rgba(255,255,255,.28) !important;
-        box-shadow: 0 24px 70px rgba(0,0,0,.46), 0 0 32px rgba(0,194,209,.22) !important;
+        box-shadow: 0 20px 54px rgba(0,0,0,.44), 0 0 28px rgba(0,194,209,.20) !important;
         background: #02070d !important;
         overflow: hidden !important;
       }
@@ -121,16 +121,17 @@
         #hero .nostra-video-slide-fix.slick-active .container,
         #hero .nostra-video-slide-fix.active .container,
         #hero .nostra-video-slide-fix.swiper-slide-active .container {
-          padding-bottom: 72px !important;
+          padding-bottom: 100px !important;
         }
 
         #hero .nostra-video-slide-fix .contenido-min-slider-tovideo,
         #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo {
-          width: min(820px, 84vw) !important;
+          width: min(680px, 70vw) !important;
         }
 
         #hero .nostra-video-slide-fix .frame-video {
-          max-height: 330px !important;
+          height: 280px !important;
+          max-height: 280px !important;
         }
       }
 
@@ -155,13 +156,13 @@
         #hero .nostra-video-slide-fix.slick-active .container,
         #hero .nostra-video-slide-fix.active .container,
         #hero .nostra-video-slide-fix.swiper-slide-active .container {
-          padding-top: 10px !important;
-          padding-bottom: 56px !important;
+          padding-top: 6px !important;
+          padding-bottom: 70px !important;
         }
 
         #hero .nostra-video-slide-fix .contenido-min-slider-tovideo,
         #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo {
-          width: calc(100vw - 24px) !important;
+          width: calc(100vw - 48px) !important;
         }
 
         #hero .nostra-video-slide-fix.slick-active .contenido-min-slider-tovideo,
@@ -170,12 +171,13 @@
         #hero .nostra-video-slide-fix.active .contenido-max-slider.contenido-min-slider-tovideo,
         #hero .nostra-video-slide-fix.swiper-slide-active .contenido-min-slider-tovideo,
         #hero .nostra-video-slide-fix.swiper-slide-active .contenido-max-slider.contenido-min-slider-tovideo {
-          transform: translateY(-8px) !important;
+          transform: translateY(-12px) !important;
         }
 
         #hero .nostra-video-slide-fix .frame-video {
+          height: 220px !important;
+          max-height: 220px !important;
           border-radius: 16px !important;
-          max-height: 250px !important;
         }
       }
 
@@ -250,7 +252,6 @@
       }
 
       .nostra-offer-hard-uniform h1,
-      .nostra-offer-uniform h2,
       .nostra-offer-hard-uniform h2,
       .nostra-offer-hard-uniform h3,
       .nostra-offer-hard-uniform .sec-title,
