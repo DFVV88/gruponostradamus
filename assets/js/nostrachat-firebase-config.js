@@ -32,9 +32,10 @@ window.NOSTRA_DAMUS_VISION_ENDPOINT = "https://script.google.com/macros/s/AKfycb
   }
 
   var path = (window.location.pathname || '').toLowerCase();
-  var version = 'v=2026-59-online-users';
+  var version = 'v=2026-60-auth-users';
 
   if (path.indexOf('nostrachat.html') !== -1 || path.endsWith('/nostrachat')) {
+    loadScript('assets/js/nostrachat-auth-users.js?' + version);
     loadScript('assets/js/nostrachat-images-firestore.js?' + version);
     loadScript('assets/js/nostrachat-images-help.js?' + version);
     loadScript('assets/js/nostrachat-damus-vision.js?' + version);
