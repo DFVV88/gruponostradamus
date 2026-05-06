@@ -1,6 +1,6 @@
 /* ==================================================
-   Grupo Nostradamus - Slide 2 thumbnail único
-   Objetivo: mantener una sola miniatura grande de YouTube.
+   Grupo Nostradamus - Slide 2 thumbnail único centrado
+   Objetivo: una sola miniatura grande, centrada y sin franja inferior visible.
 ================================================== */
 (function () {
   var VIDEO_ID = 'Gi-ZXzQSIDI';
@@ -12,13 +12,6 @@
     var style = document.createElement('style');
     style.id = 'nostra-video-slide-2-zoom-fix-style';
     style.textContent = `
-      #hero .nostra-video-slide-fix .th-hero-bg,
-      #hero .nostra-video-slide-fix .img-min-slider {
-        background-size: cover !important;
-        background-position: center 18% !important;
-        background-repeat: no-repeat !important;
-      }
-
       #hero.nostra-video-active,
       #hero.nostra-video-active .hero-6,
       #hero.nostra-video-active #heroSlide6,
@@ -26,24 +19,40 @@
       #hero.nostra-video-active .slick-track,
       #hero.nostra-video-active .slick-slide,
       #hero.nostra-video-active .slick-slide > div,
+      #hero .nostra-video-slide-fix,
       #hero .nostra-video-slide-fix .container {
-        min-height: 680px !important;
-        height: 680px !important;
+        min-height: 780px !important;
+        height: 780px !important;
+        max-height: 780px !important;
         overflow: hidden !important;
+      }
+
+      #hero .nostra-video-slide-fix .th-hero-bg,
+      #hero .nostra-video-slide-fix .img-min-slider {
+        min-height: 780px !important;
+        height: 780px !important;
+        background-size: cover !important;
+        background-position: center 12% !important;
+        background-repeat: no-repeat !important;
       }
 
       #hero .nostra-video-slide-fix .container {
         position: relative !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
       }
 
       #hero .nostra-video-slide-fix .contenido-min-slider-tovideo,
       #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo {
         position: absolute !important;
         left: 50% !important;
-        top: 54% !important;
+        right: auto !important;
+        top: 52% !important;
         transform: translate(-50%, -50%) !important;
-        width: min(860px, 72vw) !important;
-        max-width: 860px !important;
+        width: min(940px, 78vw) !important;
+        max-width: 940px !important;
         z-index: 100 !important;
         display: block !important;
         margin: 0 !important;
@@ -65,10 +74,10 @@
         display: block !important;
         width: 100% !important;
         aspect-ratio: 16/9 !important;
-        border-radius: 24px !important;
+        border-radius: 26px !important;
         overflow: hidden !important;
         border: 1px solid rgba(255,255,255,.35) !important;
-        box-shadow: 0 24px 70px rgba(0,0,0,.45) !important;
+        box-shadow: 0 26px 76px rgba(0,0,0,.48) !important;
         background: #000 !important;
       }
 
@@ -86,26 +95,20 @@
         left: 50% !important;
         top: 50% !important;
         transform: translate(-50%, -50%) !important;
-        width: 92px !important;
-        height: 64px !important;
+        width: 96px !important;
+        height: 68px !important;
         border-radius: 18px !important;
         background: #ff0000 !important;
         color: #fff !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        font-size: 36px !important;
+        font-size: 38px !important;
         font-weight: bold !important;
         z-index: 5 !important;
       }
 
-      @media (max-width: 767px) {
-        #hero .nostra-video-slide-fix .th-hero-bg,
-        #hero .nostra-video-slide-fix .img-min-slider {
-          background-size: 190% auto !important;
-          background-position: center 16% !important;
-        }
-
+      @media (max-width: 1199px) {
         #hero.nostra-video-active,
         #hero.nostra-video-active .hero-6,
         #hero.nostra-video-active #heroSlide6,
@@ -113,9 +116,44 @@
         #hero.nostra-video-active .slick-track,
         #hero.nostra-video-active .slick-slide,
         #hero.nostra-video-active .slick-slide > div,
-        #hero .nostra-video-slide-fix .container {
-          min-height: 360px !important;
-          height: 360px !important;
+        #hero .nostra-video-slide-fix,
+        #hero .nostra-video-slide-fix .container,
+        #hero .nostra-video-slide-fix .th-hero-bg,
+        #hero .nostra-video-slide-fix .img-min-slider {
+          min-height: 640px !important;
+          height: 640px !important;
+          max-height: 640px !important;
+        }
+
+        #hero .nostra-video-slide-fix .contenido-min-slider-tovideo,
+        #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo {
+          width: min(800px, 78vw) !important;
+          max-width: 800px !important;
+          top: 52% !important;
+        }
+      }
+
+      @media (max-width: 767px) {
+        #hero.nostra-video-active,
+        #hero.nostra-video-active .hero-6,
+        #hero.nostra-video-active #heroSlide6,
+        #hero.nostra-video-active .slick-list,
+        #hero.nostra-video-active .slick-track,
+        #hero.nostra-video-active .slick-slide,
+        #hero.nostra-video-active .slick-slide > div,
+        #hero .nostra-video-slide-fix,
+        #hero .nostra-video-slide-fix .container,
+        #hero .nostra-video-slide-fix .th-hero-bg,
+        #hero .nostra-video-slide-fix .img-min-slider {
+          min-height: 420px !important;
+          height: 420px !important;
+          max-height: 420px !important;
+        }
+
+        #hero .nostra-video-slide-fix .th-hero-bg,
+        #hero .nostra-video-slide-fix .img-min-slider {
+          background-size: 190% auto !important;
+          background-position: center 14% !important;
         }
 
         #hero .nostra-video-slide-fix .contenido-min-slider-tovideo,
@@ -123,6 +161,11 @@
           width: calc(100vw - 30px) !important;
           max-width: 430px !important;
           top: 50% !important;
+        }
+
+        .nostra-video-thumb-restore,
+        #hero .nostra-youtube-thumb {
+          border-radius: 16px !important;
         }
       }
     `;
