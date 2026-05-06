@@ -7,7 +7,7 @@
     if (window.innerWidth <= 430) return 292;
     if (window.innerWidth <= 767) return 320;
     if (window.innerWidth <= 1199) return 500;
-    return 560;
+    return 640;
   }
 
   function injectStyle() {
@@ -16,59 +16,61 @@
     var style = document.createElement('style');
     style.id = 'nostra-video-slide-2-zoom-fix-style';
     style.textContent = `
-      /* Cuando el carrusel está en el slide 2, bajamos la altura real del hero */
+      /* Altura real del hero solo cuando está activo el slide 2 */
       #hero.nostra-video-active,
       #hero.nostra-video-active .hero-6,
       #hero.nostra-video-active #heroSlide6,
       #hero.nostra-video-active .slick-list,
       #hero.nostra-video-active .slick-track,
       #hero.nostra-video-active .slick-slide,
-      #hero.nostra-video-active .slick-slide > div {
-        min-height: 560px !important;
-        height: 560px !important;
-        max-height: 560px !important;
-        overflow: hidden !important;
-      }
-
+      #hero.nostra-video-active .slick-slide > div,
       #hero.nostra-video-active .nostra-video-slide-fix,
       #hero.nostra-video-active .slick-current.nostra-video-slide-fix,
-      #hero.nostra-video-active .nostra-video-slide-fix.th-hero-slide {
-        min-height: 560px !important;
-        height: 560px !important;
-        max-height: 560px !important;
+      #hero.nostra-video-active .nostra-video-slide-fix.th-hero-slide,
+      #hero .nostra-video-slide-fix .th-hero-bg,
+      #hero .nostra-video-slide-fix .img-min-slider,
+      #hero .nostra-video-slide-fix .container {
+        min-height: 640px !important;
+        height: 640px !important;
+        max-height: 640px !important;
         overflow: hidden !important;
       }
 
       #hero .nostra-video-slide-fix .th-hero-bg,
       #hero .nostra-video-slide-fix .img-min-slider {
-        min-height: 560px !important;
-        height: 560px !important;
-        background-size: 135% auto !important;
-        background-position: center 46% !important;
+        background-size: cover !important;
+        background-position: center 42% !important;
         background-repeat: no-repeat !important;
       }
 
       #hero .nostra-video-slide-fix::before {
-        background: linear-gradient(180deg, rgba(2,7,13,.38) 0%, rgba(2,7,13,.34) 44%, rgba(2,7,13,.48) 100%) !important;
+        background: linear-gradient(180deg, rgba(2,7,13,.34) 0%, rgba(2,7,13,.30) 44%, rgba(2,7,13,.46) 100%) !important;
       }
 
       #hero .nostra-video-slide-fix .container {
-        min-height: 560px !important;
-        height: 560px !important;
-        display: flex !important;
-        align-items: flex-start !important;
-        justify-content: center !important;
-        padding-top: 32px !important;
-        padding-bottom: 24px !important;
-        overflow: visible !important;
+        position: relative !important;
+        display: block !important;
+        padding: 0 !important;
+        overflow: hidden !important;
       }
 
       #hero .nostra-video-slide-fix .contenido-min-slider-tovideo,
       #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo {
-        width: min(760px, 76vw) !important;
-        max-width: 760px !important;
-        margin: 0 auto !important;
-        transform: translateY(0) !important;
+        position: absolute !important;
+        left: 50% !important;
+        top: 58% !important;
+        width: min(720px, 64vw) !important;
+        max-width: 720px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        min-height: auto !important;
+        height: auto !important;
+        transform: translate(-50%, -50%) !important;
+        z-index: 30 !important;
+      }
+
+      #hero .nostra-youtube-thumb {
+        border-radius: 24px !important;
       }
 
       @media (max-width: 1199px) {
@@ -89,14 +91,11 @@
           height: 500px !important;
           max-height: 500px !important;
         }
-        #hero .nostra-video-slide-fix .th-hero-bg,
-        #hero .nostra-video-slide-fix .img-min-slider {
-          background-size: 150% auto !important;
-          background-position: center 45% !important;
-        }
-        #hero .nostra-video-slide-fix .container {
-          padding-top: 28px !important;
-          padding-bottom: 22px !important;
+        #hero .nostra-video-slide-fix .contenido-min-slider-tovideo,
+        #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo {
+          top: 56% !important;
+          width: min(640px, 72vw) !important;
+          max-width: 640px !important;
         }
       }
 
@@ -123,16 +122,15 @@
           background-size: 190% auto !important;
           background-position: center 35% !important;
         }
-        #hero .nostra-video-slide-fix .container {
-          padding-top: 18px !important;
-          padding-bottom: 18px !important;
-          align-items: center !important;
-        }
         #hero .nostra-video-slide-fix .contenido-min-slider-tovideo,
         #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo {
+          top: 50% !important;
           width: calc(100vw - 30px) !important;
           max-width: 430px !important;
-          transform: translateY(0) !important;
+          transform: translate(-50%, -50%) !important;
+        }
+        #hero .nostra-youtube-thumb {
+          border-radius: 16px !important;
         }
       }
 
@@ -173,17 +171,15 @@
     var isVideo = current && current.classList.contains('nostra-video-slide-fix');
     hero.classList.toggle('nostra-video-active', !!isVideo);
 
+    var list = sliderEl.querySelector('.slick-list');
+    var track = sliderEl.querySelector('.slick-track');
     if (isVideo) {
       var h = getTargetHeight() + 'px';
-      var list = sliderEl.querySelector('.slick-list');
-      var track = sliderEl.querySelector('.slick-track');
       if (list) list.style.height = h;
       if (track) track.style.height = h;
     } else {
-      var listReset = sliderEl.querySelector('.slick-list');
-      var trackReset = sliderEl.querySelector('.slick-track');
-      if (listReset) listReset.style.height = '';
-      if (trackReset) trackReset.style.height = '';
+      if (list) list.style.height = '';
+      if (track) track.style.height = '';
     }
   }
 
