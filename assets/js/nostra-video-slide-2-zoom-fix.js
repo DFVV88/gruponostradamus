@@ -1,5 +1,6 @@
 /* ==================================================
-   Grupo Nostradamus - Slide 2 thumbnail restore
+   Grupo Nostradamus - Slide 2 thumbnail único
+   Objetivo: mantener una sola miniatura grande de YouTube.
 ================================================== */
 (function () {
   var VIDEO_ID = 'Gi-ZXzQSIDI';
@@ -24,14 +25,14 @@
       #hero.nostra-video-active .slick-list,
       #hero.nostra-video-active .slick-track,
       #hero.nostra-video-active .slick-slide,
-      #hero.nostra-video-active .slick-slide > div {
-        min-height: 680px !important;
-        height: 680px !important;
-      }
-
+      #hero.nostra-video-active .slick-slide > div,
       #hero .nostra-video-slide-fix .container {
         min-height: 680px !important;
         height: 680px !important;
+        overflow: hidden !important;
+      }
+
+      #hero .nostra-video-slide-fix .container {
         position: relative !important;
       }
 
@@ -39,48 +40,63 @@
       #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo {
         position: absolute !important;
         left: 50% !important;
-        top: 58% !important;
+        top: 54% !important;
         transform: translate(-50%, -50%) !important;
-        width: min(720px, 64vw) !important;
-        max-width: 720px !important;
+        width: min(860px, 72vw) !important;
+        max-width: 860px !important;
         z-index: 100 !important;
         display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        min-height: auto !important;
+        height: auto !important;
       }
 
-      .nostra-video-thumb-restore {
+      #hero .nostra-video-slide-fix .contenido-min-slider-tovideo > a:not(:first-of-type),
+      #hero .nostra-video-slide-fix .contenido-min-slider-tovideo > iframe,
+      #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo > a:not(:first-of-type),
+      #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo > iframe {
+        display: none !important;
+      }
+
+      .nostra-video-thumb-restore,
+      #hero .nostra-youtube-thumb {
         position: relative !important;
         display: block !important;
         width: 100% !important;
         aspect-ratio: 16/9 !important;
-        border-radius: 22px !important;
+        border-radius: 24px !important;
         overflow: hidden !important;
         border: 1px solid rgba(255,255,255,.35) !important;
         box-shadow: 0 24px 70px rgba(0,0,0,.45) !important;
         background: #000 !important;
       }
 
-      .nostra-video-thumb-restore img {
+      .nostra-video-thumb-restore img,
+      #hero .nostra-youtube-thumb img {
         width: 100% !important;
         height: 100% !important;
         object-fit: cover !important;
         display: block !important;
       }
 
-      .nostra-video-thumb-restore .play {
+      .nostra-video-thumb-restore .play,
+      #hero .nostra-youtube-play {
         position: absolute !important;
         left: 50% !important;
         top: 50% !important;
         transform: translate(-50%, -50%) !important;
-        width: 86px !important;
-        height: 60px !important;
-        border-radius: 16px !important;
+        width: 92px !important;
+        height: 64px !important;
+        border-radius: 18px !important;
         background: #ff0000 !important;
         color: #fff !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        font-size: 34px !important;
+        font-size: 36px !important;
         font-weight: bold !important;
+        z-index: 5 !important;
       }
 
       @media (max-width: 767px) {
@@ -113,30 +129,42 @@
     document.head.appendChild(style);
   }
 
+  function makeThumb() {
+    var a = document.createElement('a');
+    a.className = 'nostra-video-thumb-restore frame-video';
+    a.href = 'https://www.youtube.com/watch?v=' + VIDEO_ID;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+
+    var img = document.createElement('img');
+    img.src = 'https://img.youtube.com/vi/' + VIDEO_ID + '/maxresdefault.jpg';
+    img.alt = 'Video institucional Grupo Nostradamus';
+    img.onerror = function(){ img.src='https://img.youtube.com/vi/' + VIDEO_ID + '/hqdefault.jpg'; };
+
+    var play = document.createElement('div');
+    play.className = 'play';
+    play.innerHTML = '▶';
+
+    a.appendChild(img);
+    a.appendChild(play);
+    return a;
+  }
+
   function restoreThumb() {
-    document.querySelectorAll('.contenido-min-slider-tovideo').forEach(function (box) {
-      if (box.querySelector('.nostra-video-thumb-restore')) return;
+    document.querySelectorAll('#hero .nostra-video-slide-fix .contenido-min-slider-tovideo').forEach(function (box) {
+      var thumbs = box.querySelectorAll('.nostra-video-thumb-restore, .nostra-youtube-thumb');
+      var first = thumbs[0];
 
-      var iframe = box.querySelector('iframe');
-      if (iframe) iframe.remove();
+      box.querySelectorAll('iframe').forEach(function (iframe) { iframe.remove(); });
+      thumbs.forEach(function (thumb, index) {
+        if (index > 0) thumb.remove();
+      });
 
-      var a = document.createElement('a');
-      a.className = 'nostra-video-thumb-restore';
-      a.href = 'https://www.youtube.com/watch?v=' + VIDEO_ID;
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
-
-      var img = document.createElement('img');
-      img.src = 'https://img.youtube.com/vi/' + VIDEO_ID + '/maxresdefault.jpg';
-      img.onerror = function(){ img.src='https://img.youtube.com/vi/' + VIDEO_ID + '/hqdefault.jpg'; };
-
-      var play = document.createElement('div');
-      play.className = 'play';
-      play.innerHTML = '▶';
-
-      a.appendChild(img);
-      a.appendChild(play);
-      box.appendChild(a);
+      if (!first || !box.contains(first)) {
+        box.appendChild(makeThumb());
+      } else {
+        first.classList.add('nostra-video-thumb-restore');
+      }
     });
   }
 
