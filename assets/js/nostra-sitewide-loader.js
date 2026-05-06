@@ -7,7 +7,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-40';
+  var VERSION = '2026-41';
   var ADSENSE_CLIENT = 'ca-pub-9810053992087127';
 
   function assetAlreadyLoaded(urlPart) {
@@ -32,33 +32,18 @@
   }
 
   function init() {
-    /* 💰 GOOGLE ADSENSE */
     loadAdSense();
-
-    /* 🔥 ANALYTICS */
     loadJS('assets/js/nostra-analytics.js?v=' + VERSION);
-
-    /* 🔎 SEO META + SCHEMA */
     loadJS('assets/js/nostra-seo-meta.js?v=' + VERSION);
     loadJS('assets/js/nostra-schema-jsonld.js?v=' + VERSION);
-
-    /* 📝 CORRECCIÓN ORTOGRÁFICA GLOBAL */
     loadJS('assets/js/nostra-ortografia-global.js?v=' + VERSION);
     loadJS('assets/js/nostra-ortografia-extra.js?v=' + VERSION);
-
-    /* 🧭 HEADER PREMIUM PARA SUBPÁGINAS */
     loadJS('assets/js/shared-header.js?v=' + VERSION);
     loadJS('assets/js/nostrachat-menu-link.js?v=' + VERSION);
     loadJS('assets/js/nostra-contact-whatsapp-fix.js?v=' + VERSION);
-
-    /* 💬 NOSTRACHAT EN INDEX */
     loadJS('assets/js/nostrachat-index-section.js?v=' + VERSION);
-
-    /* 📰 NOTICIAS UNI */
     loadJS('assets/js/nostra-noticias-uni-pro.js?v=' + VERSION);
     loadJS('assets/js/nostra-index-noticias-pro.js?v=' + VERSION);
-
-    /* 🎨 RESTO DEL SISTEMA VISUAL */
     loadJS('assets/js/nostra-uni-campus-only.js?v=' + VERSION);
     loadJS('assets/js/nostra-ingresantes-counter-pro.js?v=' + VERSION);
     loadJS('assets/js/nostra-faq-index-pro.js?v=' + VERSION);
@@ -86,6 +71,7 @@
     loadJS('assets/js/nostra-header-footer-premium.js?v=' + VERSION);
     loadJS('assets/js/nostra-live-classes-fix.js?v=' + VERSION);
     loadJS('assets/js/nostra-offer-hard-uniform.js?v=' + VERSION);
+    loadJS('assets/js/nostra-video-slide-2-zoom-fix.js?v=' + VERSION);
   }
 
   if (document.readyState === 'loading') {
