@@ -8,6 +8,7 @@
   if (isIq100) return;
 
   var VERSION = '2026-40';
+  var ADSENSE_CLIENT = 'ca-pub-9810053992087127';
 
   function assetAlreadyLoaded(urlPart) {
     return !!document.querySelector('script[src*="' + urlPart + '"]');
@@ -21,7 +22,19 @@
     document.body.appendChild(script);
   }
 
+  function loadAdSense() {
+    if (document.querySelector('script[src*="pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]')) return;
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + ADSENSE_CLIENT;
+    script.crossOrigin = 'anonymous';
+    document.head.appendChild(script);
+  }
+
   function init() {
+    /* 💰 GOOGLE ADSENSE */
+    loadAdSense();
+
     /* 🔥 ANALYTICS */
     loadJS('assets/js/nostra-analytics.js?v=' + VERSION);
 
