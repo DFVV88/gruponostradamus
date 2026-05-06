@@ -1,57 +1,38 @@
 /* ==================================================
-   Grupo Nostradamus - Slide 2 video background + height fix
-   Objetivo: eliminar el espacio vacío del slide 2 sin tocar slide 1.
+   Grupo Nostradamus - Slide 2 thumbnail restore
 ================================================== */
 (function () {
-  function getTargetHeight() {
-    if (window.innerWidth <= 430) return 292;
-    if (window.innerWidth <= 767) return 320;
-    if (window.innerWidth <= 1199) return 500;
-    return 640;
-  }
+  var VIDEO_ID = 'Gi-ZXzQSIDI';
 
   function injectStyle() {
-    if (document.getElementById('nostra-video-slide-2-zoom-fix-style')) return;
+    var old = document.getElementById('nostra-video-slide-2-zoom-fix-style');
+    if (old) old.remove();
 
     var style = document.createElement('style');
     style.id = 'nostra-video-slide-2-zoom-fix-style';
     style.textContent = `
-      /* Altura real del hero solo cuando está activo el slide 2 */
+      #hero .nostra-video-slide-fix .th-hero-bg,
+      #hero .nostra-video-slide-fix .img-min-slider {
+        background-size: cover !important;
+        background-position: center 18% !important;
+        background-repeat: no-repeat !important;
+      }
+
       #hero.nostra-video-active,
       #hero.nostra-video-active .hero-6,
       #hero.nostra-video-active #heroSlide6,
       #hero.nostra-video-active .slick-list,
       #hero.nostra-video-active .slick-track,
       #hero.nostra-video-active .slick-slide,
-      #hero.nostra-video-active .slick-slide > div,
-      #hero.nostra-video-active .nostra-video-slide-fix,
-      #hero.nostra-video-active .slick-current.nostra-video-slide-fix,
-      #hero.nostra-video-active .nostra-video-slide-fix.th-hero-slide,
-      #hero .nostra-video-slide-fix .th-hero-bg,
-      #hero .nostra-video-slide-fix .img-min-slider,
-      #hero .nostra-video-slide-fix .container {
-        min-height: 640px !important;
-        height: 640px !important;
-        max-height: 640px !important;
-        overflow: hidden !important;
-      }
-
-      #hero .nostra-video-slide-fix .th-hero-bg,
-      #hero .nostra-video-slide-fix .img-min-slider {
-        background-size: cover !important;
-        background-position: center 42% !important;
-        background-repeat: no-repeat !important;
-      }
-
-      #hero .nostra-video-slide-fix::before {
-        background: linear-gradient(180deg, rgba(2,7,13,.34) 0%, rgba(2,7,13,.30) 44%, rgba(2,7,13,.46) 100%) !important;
+      #hero.nostra-video-active .slick-slide > div {
+        min-height: 680px !important;
+        height: 680px !important;
       }
 
       #hero .nostra-video-slide-fix .container {
+        min-height: 680px !important;
+        height: 680px !important;
         position: relative !important;
-        display: block !important;
-        padding: 0 !important;
-        overflow: hidden !important;
       }
 
       #hero .nostra-video-slide-fix .contenido-min-slider-tovideo,
@@ -59,82 +40,56 @@
         position: absolute !important;
         left: 50% !important;
         top: 58% !important;
+        transform: translate(-50%, -50%) !important;
         width: min(720px, 64vw) !important;
         max-width: 720px !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        min-height: auto !important;
-        height: auto !important;
+        z-index: 100 !important;
+        display: block !important;
+      }
+
+      .nostra-video-thumb-restore {
+        position: relative !important;
+        display: block !important;
+        width: 100% !important;
+        aspect-ratio: 16/9 !important;
+        border-radius: 22px !important;
+        overflow: hidden !important;
+        border: 1px solid rgba(255,255,255,.35) !important;
+        box-shadow: 0 24px 70px rgba(0,0,0,.45) !important;
+        background: #000 !important;
+      }
+
+      .nostra-video-thumb-restore img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        display: block !important;
+      }
+
+      .nostra-video-thumb-restore .play {
+        position: absolute !important;
+        left: 50% !important;
+        top: 50% !important;
         transform: translate(-50%, -50%) !important;
-        z-index: 30 !important;
-      }
-
-      #hero .nostra-youtube-thumb {
-        border-radius: 24px !important;
-      }
-
-      @media (max-width: 1199px) {
-        #hero.nostra-video-active,
-        #hero.nostra-video-active .hero-6,
-        #hero.nostra-video-active #heroSlide6,
-        #hero.nostra-video-active .slick-list,
-        #hero.nostra-video-active .slick-track,
-        #hero.nostra-video-active .slick-slide,
-        #hero.nostra-video-active .slick-slide > div,
-        #hero.nostra-video-active .nostra-video-slide-fix,
-        #hero.nostra-video-active .slick-current.nostra-video-slide-fix,
-        #hero.nostra-video-active .nostra-video-slide-fix.th-hero-slide,
-        #hero .nostra-video-slide-fix .th-hero-bg,
-        #hero .nostra-video-slide-fix .img-min-slider,
-        #hero .nostra-video-slide-fix .container {
-          min-height: 500px !important;
-          height: 500px !important;
-          max-height: 500px !important;
-        }
-        #hero .nostra-video-slide-fix .contenido-min-slider-tovideo,
-        #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo {
-          top: 56% !important;
-          width: min(640px, 72vw) !important;
-          max-width: 640px !important;
-        }
+        width: 86px !important;
+        height: 60px !important;
+        border-radius: 16px !important;
+        background: #ff0000 !important;
+        color: #fff !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 34px !important;
+        font-weight: bold !important;
       }
 
       @media (max-width: 767px) {
-        #hero.nostra-video-active,
-        #hero.nostra-video-active .hero-6,
-        #hero.nostra-video-active #heroSlide6,
-        #hero.nostra-video-active .slick-list,
-        #hero.nostra-video-active .slick-track,
-        #hero.nostra-video-active .slick-slide,
-        #hero.nostra-video-active .slick-slide > div,
-        #hero.nostra-video-active .nostra-video-slide-fix,
-        #hero.nostra-video-active .slick-current.nostra-video-slide-fix,
-        #hero.nostra-video-active .nostra-video-slide-fix.th-hero-slide,
-        #hero .nostra-video-slide-fix .th-hero-bg,
-        #hero .nostra-video-slide-fix .img-min-slider,
-        #hero .nostra-video-slide-fix .container {
-          min-height: 320px !important;
-          height: 320px !important;
-          max-height: 320px !important;
-        }
         #hero .nostra-video-slide-fix .th-hero-bg,
         #hero .nostra-video-slide-fix .img-min-slider {
           background-size: 190% auto !important;
-          background-position: center 35% !important;
+          background-position: center 16% !important;
         }
-        #hero .nostra-video-slide-fix .contenido-min-slider-tovideo,
-        #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo {
-          top: 50% !important;
-          width: calc(100vw - 30px) !important;
-          max-width: 430px !important;
-          transform: translate(-50%, -50%) !important;
-        }
-        #hero .nostra-youtube-thumb {
-          border-radius: 16px !important;
-        }
-      }
 
-      @media (max-width: 430px) {
         #hero.nostra-video-active,
         #hero.nostra-video-active .hero-6,
         #hero.nostra-video-active #heroSlide6,
@@ -142,76 +97,67 @@
         #hero.nostra-video-active .slick-track,
         #hero.nostra-video-active .slick-slide,
         #hero.nostra-video-active .slick-slide > div,
-        #hero.nostra-video-active .nostra-video-slide-fix,
-        #hero.nostra-video-active .slick-current.nostra-video-slide-fix,
-        #hero.nostra-video-active .nostra-video-slide-fix.th-hero-slide,
-        #hero .nostra-video-slide-fix .th-hero-bg,
-        #hero .nostra-video-slide-fix .img-min-slider,
         #hero .nostra-video-slide-fix .container {
-          min-height: 292px !important;
-          height: 292px !important;
-          max-height: 292px !important;
+          min-height: 360px !important;
+          height: 360px !important;
         }
-        #hero .nostra-video-slide-fix .th-hero-bg,
-        #hero .nostra-video-slide-fix .img-min-slider {
-          background-size: 220% auto !important;
-          background-position: center 35% !important;
+
+        #hero .nostra-video-slide-fix .contenido-min-slider-tovideo,
+        #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo {
+          width: calc(100vw - 30px) !important;
+          max-width: 430px !important;
+          top: 50% !important;
         }
       }
     `;
     document.head.appendChild(style);
   }
 
-  function setVideoState() {
-    var hero = document.getElementById('hero');
-    var sliderEl = document.getElementById('heroSlide6');
-    if (!hero || !sliderEl) return;
+  function restoreThumb() {
+    document.querySelectorAll('.contenido-min-slider-tovideo').forEach(function (box) {
+      if (box.querySelector('.nostra-video-thumb-restore')) return;
 
-    var current = sliderEl.querySelector('.slick-current');
-    var isVideo = current && current.classList.contains('nostra-video-slide-fix');
-    hero.classList.toggle('nostra-video-active', !!isVideo);
+      var iframe = box.querySelector('iframe');
+      if (iframe) iframe.remove();
 
-    var list = sliderEl.querySelector('.slick-list');
-    var track = sliderEl.querySelector('.slick-track');
-    if (isVideo) {
-      var h = getTargetHeight() + 'px';
-      if (list) list.style.height = h;
-      if (track) track.style.height = h;
-    } else {
-      if (list) list.style.height = '';
-      if (track) track.style.height = '';
-    }
+      var a = document.createElement('a');
+      a.className = 'nostra-video-thumb-restore';
+      a.href = 'https://www.youtube.com/watch?v=' + VIDEO_ID;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+
+      var img = document.createElement('img');
+      img.src = 'https://img.youtube.com/vi/' + VIDEO_ID + '/maxresdefault.jpg';
+      img.onerror = function(){ img.src='https://img.youtube.com/vi/' + VIDEO_ID + '/hqdefault.jpg'; };
+
+      var play = document.createElement('div');
+      play.className = 'play';
+      play.innerHTML = '▶';
+
+      a.appendChild(img);
+      a.appendChild(play);
+      box.appendChild(a);
+    });
   }
 
   function refreshSlider() {
-    setVideoState();
+    restoreThumb();
     if (!window.jQuery) return;
     var slider = window.jQuery('#heroSlide6');
     if (!slider.length || !slider.hasClass('slick-initialized')) return;
-    try { slider.slick('setPosition'); } catch (error) {}
-  }
-
-  function bindSlider() {
-    if (!window.jQuery) return;
-    var slider = window.jQuery('#heroSlide6');
-    if (!slider.length || slider.data('nostraVideoHeightFixBound')) return;
-    slider.data('nostraVideoHeightFixBound', true);
-    slider.on('init afterChange setPosition', function () {
-      setTimeout(refreshSlider, 40);
-    });
+    try { slider.slick('setPosition'); } catch (e) {}
   }
 
   function init() {
     injectStyle();
-    bindSlider();
     refreshSlider();
-    setTimeout(refreshSlider, 300);
-    setTimeout(refreshSlider, 900);
-    setTimeout(refreshSlider, 1800);
+    setTimeout(refreshSlider, 400);
+    setTimeout(refreshSlider, 1200);
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
-  window.addEventListener('load', init);
-  window.addEventListener('resize', refreshSlider);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();
