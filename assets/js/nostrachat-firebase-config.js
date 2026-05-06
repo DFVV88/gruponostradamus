@@ -29,6 +29,8 @@ window.NOSTRA_DAMUS_VISION_ENDPOINT = "https://script.google.com/macros/s/AKfycb
   para evitar activar servicios de pago en la primera versión.
 */
 (function () {
+  var ADSENSE_CLIENT = 'ca-pub-9810053992087127';
+
   function loadScript(src) {
     if (document.querySelector('script[src="' + src + '"]')) return;
     var script = document.createElement('script');
@@ -37,10 +39,20 @@ window.NOSTRA_DAMUS_VISION_ENDPOINT = "https://script.google.com/macros/s/AKfycb
     document.head.appendChild(script);
   }
 
+  function loadAdSense() {
+    if (document.querySelector('script[src*="pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]')) return;
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + ADSENSE_CLIENT;
+    script.crossOrigin = 'anonymous';
+    document.head.appendChild(script);
+  }
+
   var path = (window.location.pathname || '').toLowerCase();
   var version = 'v=2026-63-mobile-polish';
 
   if (path.indexOf('nostrachat.html') !== -1 || path.endsWith('/nostrachat')) {
+    loadAdSense();
     loadScript('assets/js/nostrachat-mobile-polish.js?' + version);
     loadScript('assets/js/nostrachat-auth-users-v2.js?' + version);
     loadScript('assets/js/nostrachat-images-firestore.js?' + version);
@@ -51,6 +63,7 @@ window.NOSTRA_DAMUS_VISION_ENDPOINT = "https://script.google.com/macros/s/AKfycb
   }
 
   if (path.indexOf('nostrachat-admin.html') !== -1 || path.endsWith('/nostrachat-admin')) {
+    loadAdSense();
     loadScript('assets/js/nostrachat-admin-mathjax.js?' + version);
     loadScript('assets/js/nostrachat-admin-users.js?' + version);
     loadScript('assets/js/nostrachat-admin-images.js?' + version);
