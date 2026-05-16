@@ -9,6 +9,50 @@
     return /disponible|analizando|Solicitud enviada|alcanzado|ocupado/i.test(String(text || ''));
   }
 
+  function injectDamusLayoutStyle(){
+    if(document.getElementById('nostrachat-damus-layout-style')) return;
+    var style = document.createElement('style');
+    style.id = 'nostrachat-damus-layout-style';
+    style.textContent = `
+      .nchat-msg.other .nchat-text[data-damus-formatted="1"]{
+        line-height:1.72!important;
+        letter-spacing:.01em;
+      }
+      .nchat-msg.other .nchat-text[data-damus-formatted="1"] strong{
+        display:block!important;
+        margin:18px 0 8px!important;
+        padding:9px 12px!important;
+        border-radius:14px!important;
+        background:linear-gradient(135deg,rgba(0,194,209,.10),rgba(255,148,30,.08))!important;
+        border:1px solid rgba(0,194,209,.16)!important;
+        color:#061426!important;
+        font-size:15px!important;
+        line-height:1.25!important;
+      }
+      .nchat-msg.other .nchat-text[data-damus-formatted="1"] strong:first-child{margin-top:4px!important;}
+      .nchat-msg.other .nchat-text[data-damus-formatted="1"] mjx-container[jax="CHTML"][display="true"]{
+        display:block!important;
+        text-align:center!important;
+        margin:12px 0!important;
+        padding:8px 10px!important;
+        max-width:100%!important;
+        overflow-x:auto!important;
+        overflow-y:hidden!important;
+        background:rgba(255,255,255,.65)!important;
+        border-radius:12px!important;
+      }
+      .nchat-msg.other .nchat-text[data-damus-formatted="1"] mjx-container:not([display="true"]){
+        margin:0 2px!important;
+      }
+      @media(max-width:640px){
+        .nchat-msg.other .nchat-text[data-damus-formatted="1"]{line-height:1.68!important;font-size:14px!important;}
+        .nchat-msg.other .nchat-text[data-damus-formatted="1"] strong{font-size:14px!important;margin:16px 0 7px!important;padding:8px 10px!important;}
+        .nchat-msg.other .nchat-text[data-damus-formatted="1"] mjx-container[jax="CHTML"][display="true"]{font-size:96%!important;}
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
   function applyBetaLabel(){
     document.querySelectorAll('[data-damus-id]').forEach(function(btn){
       var mode = btn.getAttribute('data-damus-mode') || 'image';
@@ -34,6 +78,15 @@
       'Actúa como DAMUS Académico, tutor experto del Grupo Nostradamus para postulantes UNI y otros exámenes exigentes.',
       'Resuelve ejercicios con rigor docente, no solo marcando la clave.',
       intro,
+      '',
+      'DISTRIBUCIÓN OBLIGATORIA PARA QUE SE LEA BIEN EN CELULAR:',
+      'Escribe como separata corta, no como bloque corrido.',
+      'Cada sección debe tener párrafos breves de máximo 2 o 3 líneas.',
+      'Separa cada paso con subtítulos claros: Paso 1, Paso 2, Paso 3.',
+      'Coloca las fórmulas importantes en una línea aparte usando \\[ ... \\].',
+      'Evita mezclar fórmulas largas dentro de párrafos extensos.',
+      'Cuando haya dos o más condiciones, preséntalas como lista ordenada.',
+      'Cuando obtengas una condición final, destácala en una línea independiente.',
       '',
       'Mantén esta estructura obligatoria:',
       '📌 Tema probable:',
@@ -73,7 +126,7 @@
         if(endpoint && url.indexOf(endpoint) === 0 && init && typeof init.body === 'string'){
           var data = JSON.parse(init.body || '{}');
           data.prompt = advancedPrompt(data.studentText || '', data.mode || 'text');
-          data.promptVersion = 'damus-solucionarios-v1';
+          data.promptVersion = 'damus-solucionarios-layout-v2';
           init = Object.assign({}, init, { body: JSON.stringify(data) });
         }
       }catch(e){ console.warn('DAMUS prompt avanzado no aplicado:', e); }
@@ -97,6 +150,7 @@
   }
 
   function init(){
+    injectDamusLayoutStyle();
     patchDamusFetch();
     applyBetaLabel();
     startObserver();
