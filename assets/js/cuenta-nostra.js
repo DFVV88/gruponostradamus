@@ -59,6 +59,17 @@ function injectCuentaStyles(){
   const style = document.createElement('style');
   style.id = 'cuenta-nostra-dynamic-style';
   style.textContent = `
+    .portal-nostra{margin-bottom:24px;}
+    .portal-nostra.hidden{display:none!important;}
+    .portal-nostra h2{font-family:'Baloo 2';font-size:38px;line-height:1;color:#061426;margin:0 0 8px;}
+    .portal-nostra .portal-lead{margin:0 0 18px;color:#4b5d70;font-size:17px;line-height:1.55;}
+    .portal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+    .portal-card{border:1px solid rgba(7,140,149,.16);background:linear-gradient(180deg,#fff,#f8fdff);border-radius:22px;padding:20px;box-shadow:0 12px 32px rgba(6,20,38,.06);display:flex;flex-direction:column;gap:10px;}
+    .portal-card strong{display:block;color:#061426;font-size:22px;line-height:1.2;}
+    .portal-card p{margin:0;color:#5f6b7a;line-height:1.45;font-size:15px;}
+    .portal-card .btn{margin-top:auto;width:100%;}
+    .flow-panel.hidden{display:none!important;}
+    .flow-back{margin-bottom:16px;}
     .login-benefits-preview{display:none;margin-top:22px;border-top:1px solid rgba(7,140,149,.16);padding-top:22px;}
     .login-benefits-preview.show{display:block;}
     .login-benefits-preview h3{font-family:'Baloo 2';font-size:32px;line-height:1;color:#061426;margin:0 0 8px;}
@@ -68,9 +79,49 @@ function injectCuentaStyles(){
     .login-benefit-card strong{display:block;color:#061426;font-size:18px;margin-bottom:6px;}
     .login-benefit-card p{margin:0;color:#5f6b7a;line-height:1.45;font-size:14px;}
     .login-benefit-card.active-benefit{border-color:rgba(11,99,255,.22);}
-    @media(max-width:900px){.login-benefits-grid{grid-template-columns:1fr;}}
+    @media(max-width:900px){.portal-grid,.login-benefits-grid{grid-template-columns:1fr;}}
   `;
   document.head.appendChild(style);
+}
+
+function ensurePortal(){
+  if(!authBox || $('portal-nostra')) return;
+  const portal = document.createElement('section');
+  portal.id = 'portal-nostra';
+  portal.className = 'portal-nostra';
+  portal.innerHTML = `
+    <h2>Portal del Alumno Nostra</h2>
+    <p class="portal-lead">Sigue el orden correcto: primero registro, luego validación administrativa, después activación de NostraCUENTA y finalmente acceso a beneficios.</p>
+    <div class="portal-grid">
+      <article class="portal-card">
+        <strong>📝 Nuevo alumno</strong>
+        <p>Si aún no iniciaste el proceso, completa primero tu registro para que Coordinación pueda revisar tus datos.</p>
+        <a class="btn btn-primary" href="registro.html">Ir a registro</a>
+      </article>
+      <article class="portal-card">
+        <strong>🔐 Alumno aprobado</strong>
+        <p>Usa esta opción solo si Coordinación ya aprobó tu matrícula y te asignó correo institucional.</p>
+        <button class="btn btn-blue" type="button" data-flow="activar">Activar NostraCUENTA</button>
+      </article>
+      <article class="portal-card">
+        <strong>✅ Cuenta activa</strong>
+        <p>Ingresa con tu usuario corto y contraseña para ver NostraCHAT, clases en vivo y beneficios.</p>
+        <button class="btn btn-light" type="button" data-flow="ingresar">Ingresar</button>
+      </article>
+    </div>`;
+  authBox.insertBefore(portal, authBox.firstElementChild);
+}
+
+function ensureBackButtons(){
+  [activateForm, loginForm].forEach(form => {
+    if(!form || form.querySelector('.flow-back')) return;
+    const back = document.createElement('button');
+    back.type = 'button';
+    back.className = 'btn btn-light flow-back';
+    back.textContent = '← Volver al portal';
+    back.addEventListener('click', () => showPortal());
+    form.insertBefore(back, form.firstElementChild);
+  });
 }
 
 function ensureLoginBenefitsPreview(){
@@ -107,29 +158,59 @@ function updateHeroForTab(tab){
     if(cardText) cardText.textContent = 'Esta sección es para alumnos con NostraCUENTA activa por Coordinación.';
     if(cardNote) cardNote.textContent = 'Si tu cuenta aún está pendiente, primero solicita la activación administrativa.';
     if(preview) preview.classList.add('show');
-  }else{
+  }else if(tab === 'activar'){
     if(title) title.textContent = 'Activa tu Cuenta Nostra';
     if(lead) lead.textContent = 'Usa el correo institucional que te envió Coordinación para crear tu usuario corto. Luego podrás ingresar a tus beneficios académicos desde este panel.';
     if(cardTitle) cardTitle.textContent = 'Importante';
     if(cardText) cardText.textContent = 'Este acceso es solo para alumnos con matrícula aprobada y correo institucional asignado.';
     if(cardNote) cardNote.textContent = 'NostraCHAT será uno de tus beneficios, no la puerta principal de registro.';
     if(preview) preview.classList.remove('show');
+  }else{
+    if(title) title.textContent = 'Portal del Alumno Nostra';
+    if(lead) lead.textContent = 'Primero realiza tu registro. Luego Coordinación valida tu matrícula y recién podrás activar o ingresar a tu NostraCUENTA.';
+    if(cardTitle) cardTitle.textContent = 'Orden correcto';
+    if(cardText) cardText.textContent = 'La NostraCUENTA es para alumnos con proceso validado y correo institucional asignado.';
+    if(cardNote) cardNote.textContent = 'Si eres nuevo, comienza por el registro antes de activar tu cuenta.';
+    if(preview) preview.classList.remove('show');
   }
+}
+
+function showPortal(){
+  const portal = $('portal-nostra');
+  const tabs = document.querySelector('.tabs');
+  if(portal) portal.classList.remove('hidden');
+  if(tabs) tabs.classList.add('hidden');
+  activateForm.classList.add('hidden');
+  loginForm.classList.add('hidden');
+  const preview = $('login-benefits-preview');
+  if(preview) preview.classList.remove('show');
+  updateHeroForTab('portal');
+}
+
+function showFlow(tab){
+  const portal = $('portal-nostra');
+  const tabs = document.querySelector('.tabs');
+  if(portal) portal.classList.add('hidden');
+  if(tabs) tabs.classList.remove('hidden');
+  document.querySelectorAll('[data-tab]').forEach(b => b.classList.toggle('active', b.getAttribute('data-tab') === tab));
+  activateForm.classList.toggle('hidden', tab !== 'activar');
+  loginForm.classList.toggle('hidden', tab !== 'ingresar');
+  updateHeroForTab(tab);
+  authBox.scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
 function patchUI(){
   applyCuentaNav();
   injectCuentaStyles();
+  ensurePortal();
+  ensureBackButtons();
   ensureLoginBenefitsPreview();
 
   document.querySelectorAll('[data-tab]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const tab = btn.getAttribute('data-tab');
-      document.querySelectorAll('[data-tab]').forEach(b => b.classList.toggle('active', b === btn));
-      activateForm.classList.toggle('hidden', tab !== 'activar');
-      loginForm.classList.toggle('hidden', tab !== 'ingresar');
-      updateHeroForTab(tab);
-    });
+    btn.addEventListener('click', () => showFlow(btn.getAttribute('data-tab')));
+  });
+  document.querySelectorAll('[data-flow]').forEach(btn => {
+    btn.addEventListener('click', () => showFlow(btn.getAttribute('data-flow')));
   });
 
   if(loginForm){
@@ -175,13 +256,13 @@ function patchUI(){
     btn.style.width = '100%';
     btn.style.marginBottom = '18px';
     btn.textContent = '✅ Paso 1: Validar con Microsoft 365';
-    activateForm.insertBefore(btn, activateForm.firstElementChild);
+    const first = activateForm.querySelector('.flow-back') ? activateForm.querySelector('.flow-back').nextElementSibling : activateForm.firstElementChild;
+    activateForm.insertBefore(btn, first);
     btn.addEventListener('click', verifyMicrosoft);
     msg(activateMsg,'info','Primero valida tu correo institucional con Microsoft 365. No escribas tu clave institucional en esta página.');
   }
 
-  const activeTab = document.querySelector('[data-tab].active');
-  updateHeroForTab(activeTab ? activeTab.getAttribute('data-tab') : 'activar');
+  showPortal();
 }
 
 function authError(err){
@@ -282,8 +363,7 @@ async function activate(e){
     verified = { email:'', name:'' };
 
     setTimeout(() => {
-      const loginTab = document.querySelector('[data-tab="ingresar"]');
-      if(loginTab) loginTab.click();
+      showFlow('ingresar');
       msg(loginMsg,'info','Tu cuenta ya fue creada. Ingresa cuando Coordinación active tu acceso.');
     }, 1200);
   }catch(err){
