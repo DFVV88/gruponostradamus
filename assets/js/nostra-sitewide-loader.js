@@ -7,7 +7,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-44';
+  var VERSION = '2026-45';
   var ADSENSE_CLIENT = 'ca-pub-9810053992087127';
 
   function assetAlreadyLoaded(urlPart) {
@@ -40,6 +40,7 @@
     loadJS('assets/js/nostra-ortografia-extra.js?v=' + VERSION);
     loadJS('assets/js/shared-header.js?v=' + VERSION);
     loadJS('assets/js/nostrachat-menu-link.js?v=' + VERSION);
+    loadJS('assets/js/nostra-cuenta-menu-link.js?v=' + VERSION);
     loadJS('assets/js/nostra-contact-whatsapp-fix.js?v=' + VERSION);
     loadJS('assets/js/nostrachat-index-section.js?v=' + VERSION);
     loadJS('assets/js/nostra-noticias-uni-pro.js?v=' + VERSION);
