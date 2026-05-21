@@ -1,0 +1,209 @@
+<!doctype html>
+<html class="no-js" lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>NostraShop | Libros y folletos nivel UNI</title>
+  <meta name="author" content="Grupo de Estudio Nostradamus">
+  <meta name="description" content="NostraShop: tienda académica del Grupo Nostradamus con libros, folletos, separatas, simulacros y solucionarios nivel UNI para postulantes.">
+  <meta name="keywords" content="NostraShop, libros UNI, folletos UNI, separatas UNI, solucionarios UNI, simulacros UNI, Grupo Nostradamus">
+  <meta name="robots" content="INDEX,FOLLOW">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="shortcut icon" href="assets/img/favicons/iocon-ostradamus.png" type="image/x-icon">
+  <link rel="icon" href="assets/img/favicons/iocon-ostradamus.png" type="image/x-icon">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Jost:wght@300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/fontawesome.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/nostra-modern.css">
+  <link rel="stylesheet" href="assets/css/nostra-home.css">
+  <link rel="stylesheet" href="assets/css/nostra-futurista.css?v=5">
+  <link rel="stylesheet" href="assets/css/nostrashop-libros.css?v=1">
+</head>
+
+<body class="nostrashop-page">
+  <div class="nostra-shop-topbar">
+    <div class="container">
+      <a href="index.html" class="nostra-back-link">← Volver a Grupo Nostradamus</a>
+      <span>Material académico para postulantes UNI</span>
+    </div>
+  </div>
+
+  <header class="nostra-shop-header">
+    <div class="container nostra-shop-nav">
+      <a href="index.html" class="nostra-shop-brand" aria-label="Grupo Nostradamus">
+        <img src="assets/img/logo.png" alt="Grupo Nostradamus">
+      </a>
+
+      <nav class="nostra-shop-menu" aria-label="Menú NostraShop">
+        <a href="#catalogo">Catálogo</a>
+        <a href="#categorias">Categorías</a>
+        <a href="#como-comprar">Cómo comprar</a>
+      </nav>
+
+      <button class="nostra-cart-button" id="cartButton" type="button" onclick="NostraShop.openCart()">
+        🛒 Carrito <span id="cartCount">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="nostra-shop-hero">
+      <div class="container">
+        <div class="nostra-shop-hero-grid">
+          <div class="nostra-shop-hero-content">
+            <span class="nostra-shop-kicker">NostraShop Académico</span>
+            <h1>Libros, folletos y material nivel UNI para estudiar con método.</h1>
+            <p>
+              Una tienda académica del Grupo Nostradamus para postulantes que buscan material ordenado,
+              exigente y alineado al estilo de preparación UNI.
+            </p>
+
+            <div class="nostra-shop-actions">
+              <a href="#catalogo" class="nostra-primary-btn">Ver catálogo</a>
+              <button type="button" class="nostra-secondary-btn" onclick="NostraShop.refreshCatalog()">
+                Actualizar catálogo
+              </button>
+            </div>
+
+            <div class="nostra-shop-stats">
+              <div><strong>UNI</strong><span>Nivel exigente</span></div>
+              <div><strong>Sheets</strong><span>Stock editable</span></div>
+              <div><strong>Físico/Digital</strong><span>Formatos flexibles</span></div>
+            </div>
+          </div>
+
+          <div class="nostra-shop-hero-card">
+            <div class="book-stack" aria-hidden="true">
+              <span>📘</span>
+              <span>📗</span>
+              <span>📕</span>
+            </div>
+            <h2>Material seleccionado</h2>
+            <p>Separado por curso, categoría, tipo y disponibilidad.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="categorias" class="nostra-shop-section">
+      <div class="container">
+        <div class="nostra-section-title">
+          <span>Categorías</span>
+          <h2>Encuentra material por curso o tipo de preparación</h2>
+        </div>
+
+        <div class="nostra-category-strip" id="categoryStrip">
+          <button type="button" class="active" data-category="todos">Todos</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="catalogo" class="nostra-shop-section catalog-section">
+      <div class="container">
+        <div class="nostra-catalog-head">
+          <div>
+            <span class="nostra-shop-kicker">Catálogo conectado</span>
+            <h2>Libros y folletos disponibles</h2>
+            <p>El catálogo está preparado para actualizarse desde Google Sheets mediante Apps Script.</p>
+          </div>
+
+          <div class="nostra-filter-box">
+            <label for="typeFilter">Tipo</label>
+            <select id="typeFilter" onchange="NostraShop.applyFilters()">
+              <option value="todos">Todos</option>
+              <option value="Libro">Libro</option>
+              <option value="Folleto">Folleto</option>
+              <option value="Separata">Separata</option>
+              <option value="Simulacro">Simulacro</option>
+              <option value="Solucionario">Solucionario</option>
+              <option value="Pack">Pack</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="nostra-products-grid" id="productsGrid">
+          <div class="nostra-loading">Cargando materiales...</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="como-comprar" class="nostra-shop-section">
+      <div class="container">
+        <div class="nostra-section-title">
+          <span>Proceso</span>
+          <h2>Cómo comprar tu material académico</h2>
+        </div>
+
+        <div class="nostra-steps-grid">
+          <article>
+            <strong>1</strong>
+            <h3>Elige el material</h3>
+            <p>Filtra por curso, tipo o formato y agrega al carrito los libros o folletos que necesitas.</p>
+          </article>
+          <article>
+            <strong>2</strong>
+            <h3>Completa tus datos</h3>
+            <p>Indica nombre, celular, correo, modalidad y observaciones para coordinar la entrega.</p>
+          </article>
+          <article>
+            <strong>3</strong>
+            <h3>Confirmamos tu pedido</h3>
+            <p>El equipo de Nostradamus valida stock, pago y entrega del material físico o digital.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="nostra-cart-backdrop" id="cartBackdrop" onclick="NostraShop.closeCart()"></div>
+  <aside class="nostra-cart-panel" id="cartPanel" aria-label="Carrito de compras">
+    <div class="nostra-cart-header">
+      <div>
+        <span>NostraShop</span>
+        <h2>Tu pedido</h2>
+      </div>
+      <button type="button" onclick="NostraShop.closeCart()" aria-label="Cerrar carrito">×</button>
+    </div>
+
+    <div id="cartItems" class="nostra-cart-items"></div>
+
+    <div class="nostra-cart-total">
+      <div><span>Subtotal</span><strong id="cartSubtotal">S/ 0.00</strong></div>
+      <div><span>Entrega</span><strong id="cartShipping">A coordinar</strong></div>
+      <div class="final"><span>Total</span><strong id="cartTotal">S/ 0.00</strong></div>
+    </div>
+
+    <form id="orderForm" class="nostra-order-form">
+      <h3>Datos para coordinar</h3>
+      <input name="name" placeholder="Nombre completo" required>
+      <input name="phone" placeholder="Celular / WhatsApp" required>
+      <input name="email" type="email" placeholder="Correo electrónico" required>
+      <select name="delivery" required>
+        <option value="Recojo en sede">Recojo en sede</option>
+        <option value="Delivery físico">Delivery físico</option>
+        <option value="Entrega digital">Entrega digital</option>
+      </select>
+      <textarea name="notes" placeholder="Observaciones: curso, sede, horario o consulta"></textarea>
+      <button type="submit" class="nostra-primary-btn">Enviar pedido</button>
+      <div id="orderStatus" class="nostra-order-status"></div>
+    </form>
+  </aside>
+
+  <div class="nostra-toast" id="toast">Producto agregado</div>
+
+  <footer class="nostra-shop-footer">
+    <div class="container">
+      <strong>Grupo Nostradamus</strong>
+      <span>NostraShop · Material académico nivel UNI</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/nostrashop-libros.js?v=1"></script>
+</body>
+</html>
