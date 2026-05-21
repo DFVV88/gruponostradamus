@@ -43,6 +43,17 @@ function validInstitutionalEmail(e){ return lower(e).endsWith(DOMAIN); }
 function msg(el,type,text){ if(el){ el.className = 'msg ' + type; el.innerHTML = text; } }
 function value(form,name){ return clean(form.elements[name] && form.elements[name].value); }
 
+function applyCuentaNav(){
+  const menu = document.querySelector('header.nav .menu');
+  if(!menu) return;
+  menu.innerHTML = `
+    <a href="index.html">Inicio</a>
+    <a href="ciclos.html">Ciclos</a>
+    <a href="cachimbos.html">Cachimbos</a>
+    <a href="blog.html">Noticias</a>
+    <a href="clases-en-vivo.html">Clases en vivo</a>`;
+}
+
 function injectCuentaStyles(){
   if(document.getElementById('cuenta-nostra-dynamic-style')) return;
   const style = document.createElement('style');
@@ -107,6 +118,7 @@ function updateHeroForTab(tab){
 }
 
 function patchUI(){
+  applyCuentaNav();
   injectCuentaStyles();
   ensureLoginBenefitsPreview();
 
