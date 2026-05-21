@@ -21,6 +21,7 @@ const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 let verified = { email:'', name:'' };
+let activationInProgress = false;
 
 const $ = id => document.getElementById(id);
 const authBox = $('auth-box');
@@ -78,6 +79,16 @@ function patchUI(){
     if(email){ email.readOnly = true; email.placeholder = 'Primero valida con Microsoft 365'; }
     const pass = activateForm.elements.password;
     if(pass){ pass.placeholder = 'Contraseña para NostraCUENTA, no clave Microsoft'; }
+
+    const username = activateForm.elements.username;
+    if(username){
+      username.setAttribute('autocomplete','username');
+      username.addEventListener('input', () => {
+        const fixed = lower(username.value);
+        if(username.value !== fixed) username.value = fixed;
+      });
+    }
+
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.id = 'ms-verify-btn';
@@ -97,6 +108,7 @@ function authError(err){
   if(code === 'auth/operation-not-allowed') return 'El proveedor Microsoft no está habilitado en Firebase Authentication.';
   if(code === 'auth/popup-closed-by-user') return 'Cerraste la ventana de Microsoft antes de terminar.';
   if(code === 'auth/email-already-in-use') return 'Ese usuario corto ya fue registrado. Ingresa con tu usuario y contraseña.';
+  if(code === 'permission-denied' || code === 'firestore/permission-denied') return 'La cuenta se creó en Authentication, pero Firestore rechazó guardar el perfil. Revisa reglas/campos permitidos.';
   return 'No se pudo completar. Código: ' + html(code || err.message || 'sin código');
 }
 
@@ -113,9 +125,15 @@ async function verifyMicrosoft(){
       verified = { email:'', name:'' };
       return msg(activateMsg,'err','Ese correo no pertenece al dominio institucional ' + DOMAIN + '. Usa el correo que Coordinación te envió.');
     }
+
     verified = { email, name };
     activateForm.elements.institutionalEmail.value = email;
     if(activateForm.elements.name && !activateForm.elements.name.value) activateForm.elements.name.value = name;
+
+    // Cerramos la sesión Microsoft antes de crear la cuenta interna.
+    // Así evitamos conflictos entre el usuario Microsoft y el usuario corto de Firebase Auth.
+    await signOut(auth);
+
     msg(activateMsg,'ok','Correo institucional verificado: <b>' + html(email) + '</b>. Ahora crea tu usuario corto.');
   }catch(err){
     console.error(err);
@@ -125,26 +143,42 @@ async function verifyMicrosoft(){
 
 async function activate(e){
   e.preventDefault();
+
+  if(activationInProgress) return;
+  activationInProgress = true;
+
+  const submitBtn = activateForm.querySelector('button[type="submit"]');
+  if(submitBtn) submitBtn.disabled = true;
+
   const username = lower(value(activateForm,'username'));
   const name = clean(value(activateForm,'name'));
   const pass = activateForm.elements.password && activateForm.elements.password.value;
-  if(!verified.email) return msg(activateMsg,'err','Primero valida tu correo con Microsoft 365.');
-  if(!validUsername(username)) return msg(activateMsg,'err','Usuario corto inválido. Usa 5 a 20 caracteres: letras, números, punto o guion bajo.');
-  if(name.length < 5) return msg(activateMsg,'err','Escribe nombres y apellidos completos.');
-  if(!validPass(pass)) return msg(activateMsg,'err','La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula y un número.');
+
+  if(activateForm.elements.username) activateForm.elements.username.value = username;
+
   try{
-    msg(activateMsg,'info','Creando NostraCUENTA...');
+    if(!verified.email) throw new Error('Primero valida tu correo con Microsoft 365.');
+    if(!validUsername(username)) throw new Error('Usuario corto inválido. Usa 5 a 20 caracteres: letras minúsculas, números, punto o guion bajo.');
+    if(name.length < 5) throw new Error('Escribe nombres y apellidos completos.');
+    if(!validPass(pass)) throw new Error('La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula y un número.');
+
+    msg(activateMsg,'info','Verificando usuario corto...');
     const unameRef = doc(db,'usernames',username);
-    if((await getDoc(unameRef)).exists()) return msg(activateMsg,'err','Ese usuario corto ya existe. Elige otro.');
-    const cred = await createUserWithEmailAndPassword(auth, internalEmail(username), pass);
+    if((await getDoc(unameRef)).exists()) throw new Error('Ese usuario corto ya existe. Elige otro.');
+
+    msg(activateMsg,'info','Creando acceso interno...');
+    const authEmail = internalEmail(username);
+    const cred = await createUserWithEmailAndPassword(auth, authEmail, pass);
+
+    msg(activateMsg,'info','Guardando perfil de NostraCUENTA...');
     const profile = {
       uid: cred.user.uid,
-      username,
+      username: username,
       usernameLower: username,
-      authEmail: internalEmail(username),
+      authEmail: authEmail,
       institutionalEmail: verified.email,
       microsoftVerified: true,
-      name,
+      name: name,
       role: 'student',
       roleLabel: 'Alumno',
       detail: 'NostraCUENTA',
@@ -153,12 +187,31 @@ async function activate(e){
       createdAt: serverTimestamp()
     };
     await setDoc(doc(db,'users',cred.user.uid), profile);
-    await setDoc(unameRef, { uid: cred.user.uid, institutionalEmail: verified.email, createdAt: serverTimestamp() });
-    msg(activateMsg,'ok','NostraCUENTA creada. Coordinación debe activar tu acceso para usar todos los beneficios.');
-    document.querySelector('[data-tab="ingresar"]').click();
+
+    msg(activateMsg,'info','Reservando usuario corto...');
+    await setDoc(unameRef, {
+      uid: cred.user.uid,
+      institutionalEmail: verified.email,
+      createdAt: serverTimestamp()
+    });
+
+    msg(activateMsg,'ok','✅ NostraCUENTA creada correctamente. Coordinación debe activar tu acceso para usar todos los beneficios.');
+
+    if(loginForm && loginForm.elements.email) loginForm.elements.email.value = username;
+    activateForm.reset();
+    verified = { email:'', name:'' };
+
+    setTimeout(() => {
+      const loginTab = document.querySelector('[data-tab="ingresar"]');
+      if(loginTab) loginTab.click();
+      msg(loginMsg,'info','Tu cuenta ya fue creada. Ingresa cuando Coordinación active tu acceso.');
+    }, 1200);
   }catch(err){
-    console.error(err);
-    msg(activateMsg,'err',authError(err));
+    console.error('Error creando NostraCUENTA:', err);
+    msg(activateMsg,'err','❌ ' + authError(err));
+  }finally{
+    activationInProgress = false;
+    if(submitBtn) submitBtn.disabled = false;
   }
 }
 
@@ -196,7 +249,7 @@ logoutBtn && logoutBtn.addEventListener('click', () => signOut(auth).then(() => 
 patchUI();
 
 onAuthStateChanged(auth, async user => {
-  if(!user) return;
+  if(!user || activationInProgress) return;
   try{
     const snap = await getDoc(doc(db,'users',user.uid));
     if(snap.exists() && snap.data().status === 'active') showStudent(snap.data());
