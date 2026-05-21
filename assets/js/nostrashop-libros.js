@@ -1,7 +1,7 @@
 const NostraShop = (() => {
   const CONFIG = {
     storeName: 'NostraShop Académico',
-    apiUrl: '',
+    apiUrl: 'https://script.google.com/macros/s/AKfycbzpII3Z-AYy9ruHd2V4Zc5pbWpQpGa4RJRw10O3Acks3bvg_k9KdG0ZFHw7lhOP8QpSxg/exec',
     whatsapp: '51993750351'
   };
 
