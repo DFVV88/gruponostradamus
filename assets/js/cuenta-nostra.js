@@ -43,13 +43,80 @@ function validInstitutionalEmail(e){ return lower(e).endsWith(DOMAIN); }
 function msg(el,type,text){ if(el){ el.className = 'msg ' + type; el.innerHTML = text; } }
 function value(form,name){ return clean(form.elements[name] && form.elements[name].value); }
 
+function injectCuentaStyles(){
+  if(document.getElementById('cuenta-nostra-dynamic-style')) return;
+  const style = document.createElement('style');
+  style.id = 'cuenta-nostra-dynamic-style';
+  style.textContent = `
+    .login-benefits-preview{display:none;margin-top:22px;border-top:1px solid rgba(7,140,149,.16);padding-top:22px;}
+    .login-benefits-preview.show{display:block;}
+    .login-benefits-preview h3{font-family:'Baloo 2';font-size:32px;line-height:1;color:#061426;margin:0 0 8px;}
+    .login-benefits-preview .preview-lead{margin:0 0 16px;color:#4b5d70;font-size:16px;line-height:1.55;}
+    .login-benefits-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+    .login-benefit-card{border:1px solid rgba(7,140,149,.16);background:linear-gradient(180deg,#fff,#f8fdff);border-radius:20px;padding:16px;box-shadow:0 10px 26px rgba(6,20,38,.05);}
+    .login-benefit-card strong{display:block;color:#061426;font-size:18px;margin-bottom:6px;}
+    .login-benefit-card p{margin:0;color:#5f6b7a;line-height:1.45;font-size:14px;}
+    .login-benefit-card.active-benefit{border-color:rgba(11,99,255,.22);}
+    @media(max-width:900px){.login-benefits-grid{grid-template-columns:1fr;}}
+  `;
+  document.head.appendChild(style);
+}
+
+function ensureLoginBenefitsPreview(){
+  if(!loginForm || $('login-benefits-preview')) return;
+  const preview = document.createElement('section');
+  preview.id = 'login-benefits-preview';
+  preview.className = 'login-benefits-preview';
+  preview.innerHTML = `
+    <h3>Mis beneficios</h3>
+    <p class="preview-lead">Al ingresar con tu NostraCUENTA activa verás tus accesos académicos en un solo panel.</p>
+    <div class="login-benefits-grid">
+      <article class="login-benefit-card active-benefit"><strong>💬 NostraCHAT</strong><p>Comunidad académica y acompañamiento.</p></article>
+      <article class="login-benefit-card active-benefit"><strong>🔴 Clases en vivo</strong><p>Acceso a sesiones virtuales según ciclo.</p></article>
+      <article class="login-benefit-card"><strong>📢 Comunicados</strong><p>Avisos oficiales y novedades institucionales.</p></article>
+      <article class="login-benefit-card"><strong>📚 Materiales</strong><p>Recursos académicos por ciclo.</p></article>
+      <article class="login-benefit-card"><strong>💳 Mis pagos</strong><p>Cuotas, deudas y pagos próximamente.</p></article>
+      <article class="login-benefit-card"><strong>🛟 Soporte</strong><p>Ayuda por WhatsApp y coordinación.</p></article>
+    </div>`;
+  loginForm.insertAdjacentElement('afterend', preview);
+}
+
+function updateHeroForTab(tab){
+  const title = document.querySelector('.hero h1');
+  const lead = document.querySelector('.hero .lead');
+  const cardTitle = document.querySelector('.hero .card h2');
+  const cardText = document.querySelector('.hero .card p');
+  const cardNote = document.querySelector('.hero .card .note');
+  const preview = $('login-benefits-preview');
+
+  if(tab === 'ingresar'){
+    if(title) title.textContent = 'Ingresa a tus beneficios';
+    if(lead) lead.textContent = 'Accede con tu usuario corto y contraseña para entrar a NostraCHAT, clases en vivo, comunicados y demás beneficios académicos.';
+    if(cardTitle) cardTitle.textContent = 'Tus accesos';
+    if(cardText) cardText.textContent = 'Esta sección es para alumnos con NostraCUENTA activa por Coordinación.';
+    if(cardNote) cardNote.textContent = 'Si tu cuenta aún está pendiente, primero solicita la activación administrativa.';
+    if(preview) preview.classList.add('show');
+  }else{
+    if(title) title.textContent = 'Activa tu Cuenta Nostra';
+    if(lead) lead.textContent = 'Usa el correo institucional que te envió Coordinación para crear tu usuario corto. Luego podrás ingresar a tus beneficios académicos desde este panel.';
+    if(cardTitle) cardTitle.textContent = 'Importante';
+    if(cardText) cardText.textContent = 'Este acceso es solo para alumnos con matrícula aprobada y correo institucional asignado.';
+    if(cardNote) cardNote.textContent = 'NostraCHAT será uno de tus beneficios, no la puerta principal de registro.';
+    if(preview) preview.classList.remove('show');
+  }
+}
+
 function patchUI(){
+  injectCuentaStyles();
+  ensureLoginBenefitsPreview();
+
   document.querySelectorAll('[data-tab]').forEach(btn => {
     btn.addEventListener('click', () => {
       const tab = btn.getAttribute('data-tab');
       document.querySelectorAll('[data-tab]').forEach(b => b.classList.toggle('active', b === btn));
       activateForm.classList.toggle('hidden', tab !== 'activar');
       loginForm.classList.toggle('hidden', tab !== 'ingresar');
+      updateHeroForTab(tab);
     });
   });
 
@@ -100,6 +167,9 @@ function patchUI(){
     btn.addEventListener('click', verifyMicrosoft);
     msg(activateMsg,'info','Primero valida tu correo institucional con Microsoft 365. No escribas tu clave institucional en esta página.');
   }
+
+  const activeTab = document.querySelector('[data-tab].active');
+  updateHeroForTab(activeTab ? activeTab.getAttribute('data-tab') : 'activar');
 }
 
 function authError(err){
@@ -130,8 +200,6 @@ async function verifyMicrosoft(){
     activateForm.elements.institutionalEmail.value = email;
     if(activateForm.elements.name && !activateForm.elements.name.value) activateForm.elements.name.value = name;
 
-    // Cerramos la sesión Microsoft antes de crear la cuenta interna.
-    // Así evitamos conflictos entre el usuario Microsoft y el usuario corto de Firebase Auth.
     await signOut(auth);
 
     msg(activateMsg,'ok','Correo institucional verificado: <b>' + html(email) + '</b>. Ahora crea tu usuario corto.');
