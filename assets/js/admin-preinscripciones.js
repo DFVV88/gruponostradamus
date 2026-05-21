@@ -1,6 +1,6 @@
 /* ==================================================
    Grupo Nostradamus - Admin Preinscripciones
-   Lee y actualiza preinscripciones desde Firebase.
+   Lee y actualiza preinscripciones + activa NostraCUENTAS.
 ================================================== */
 import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
@@ -22,6 +22,7 @@ const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 let records = [];
+let accounts = [];
 let currentId = null;
 let currentMode = 'ficha';
 
@@ -51,7 +52,33 @@ function estadoBadge(value){
   if(value === 'pago_en_revision' || value === 'contactado') return badge(value,'orange');
   return badge(value || 'nuevo','');
 }
+function accountStatusBadge(value){
+  if(value === 'active') return badge('Activa','green');
+  if(value === 'blocked') return badge('Bloqueada','red');
+  return badge(value || 'Pendiente','orange');
+}
 function showApp(isAdmin){ els.authCard.classList.toggle('hidden', isAdmin); els.adminPanel.classList.toggle('hidden', !isAdmin); els.logout.classList.toggle('hidden', !isAdmin); }
+
+function ensureAccountsPanel(){
+  if(document.getElementById('nostra-accounts-panel')) return;
+  const panel = document.createElement('div');
+  panel.className = 'panel';
+  panel.id = 'nostra-accounts-panel';
+  panel.style.marginTop = '22px';
+  panel.innerHTML = `
+    <h2 style="font-family:'Baloo 2';font-size:38px;line-height:1;color:#061426;margin:0 0 8px;">NostraCUENTAS</h2>
+    <p style="color:#4b5d70;font-size:17px;margin:0 0 16px;">Activa aquí a los alumnos que ya validaron Microsoft 365 y crearon usuario corto.</p>
+    <div class="toolbar" style="grid-template-columns:1.5fr 1fr auto;">
+      <input id="account-search" placeholder="Buscar por nombre, usuario o correo institucional">
+      <select id="account-filter"><option value="pending">Pendientes</option><option value="active">Activas</option><option value="">Todas</option></select>
+      <button class="btn btn-blue" id="accounts-refresh-btn">Actualizar cuentas</button>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>Alumno</th><th>Usuario corto</th><th>Correo institucional</th><th>Estado</th><th>Acción</th></tr></thead><tbody id="account-rows"><tr><td colspan="5">Cargando...</td></tr></tbody></table></div>`;
+  els.adminPanel.appendChild(panel);
+  document.getElementById('account-search').addEventListener('input', renderAccountsTable);
+  document.getElementById('account-filter').addEventListener('change', renderAccountsTable);
+  document.getElementById('accounts-refresh-btn').addEventListener('click', loadAccounts);
+}
 
 async function loadRecords(){
   els.rows.innerHTML = '<tr><td colspan="7">Cargando preinscripciones...</td></tr>';
@@ -63,6 +90,58 @@ async function loadRecords(){
   }catch(err){
     console.error(err);
     els.rows.innerHTML = '<tr><td colspan="7">No se pudo cargar. Verifica login y reglas de Firebase.</td></tr>';
+  }
+}
+
+async function loadAccounts(){
+  ensureAccountsPanel();
+  const body = document.getElementById('account-rows');
+  body.innerHTML = '<tr><td colspan="5">Cargando NostraCUENTAS...</td></tr>';
+  try{
+    const snap = await getDocs(query(collection(db, 'users'), orderBy('createdAt', 'desc'), limit(300)));
+    accounts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderAccountsTable();
+  }catch(err){
+    console.error(err);
+    body.innerHTML = '<tr><td colspan="5">No se pudo cargar NostraCUENTAS. Revisa permisos.</td></tr>';
+  }
+}
+
+function filteredAccounts(){
+  const term = clean(document.getElementById('account-search')?.value).toLowerCase();
+  const status = document.getElementById('account-filter')?.value ?? 'pending';
+  return accounts.filter(a => {
+    const hay = [a.name, a.username, a.institutionalEmail, a.authEmail].map(clean).join(' ').toLowerCase();
+    return (!term || hay.includes(term)) && (!status || a.status === status);
+  });
+}
+
+function renderAccountsTable(){
+  const body = document.getElementById('account-rows');
+  if(!body) return;
+  const data = filteredAccounts();
+  if(!data.length){ body.innerHTML = '<tr><td colspan="5">No hay NostraCUENTAS con ese filtro.</td></tr>'; return; }
+  body.innerHTML = data.map(a => `
+    <tr>
+      <td><b>${clean(a.name)}</b><br><small>${clean(a.roleLabel) || 'Alumno'}</small></td>
+      <td>${clean(a.username)}</td>
+      <td>${clean(a.institutionalEmail)}</td>
+      <td>${accountStatusBadge(a.status)}</td>
+      <td>${a.status === 'active' ? '<span class="badge green">Ya activa</span>' : `<button class="mini" data-activate-account="${a.id}">Activar acceso</button>`}</td>
+    </tr>`).join('');
+}
+
+async function activateAccount(uid){
+  const account = accounts.find(a => a.id === uid);
+  if(!account) return;
+  if(!confirm('¿Activar NostraCUENTA para ' + (account.name || account.username) + '?')) return;
+  try{
+    await updateDoc(doc(db, 'users', uid), { status: 'active', blocked: false, activatedAt: serverTimestamp(), updatedAt: serverTimestamp() });
+    await loadAccounts();
+    alert('NostraCUENTA activada correctamente. El alumno ya puede ingresar.');
+  }catch(err){
+    console.error(err);
+    alert('No se pudo activar la cuenta. Revisa reglas de Firebase.');
   }
 }
 
@@ -153,7 +232,14 @@ async function rejectCurrent(){
 
 els.googleLogin.addEventListener('click', async () => { try{ message(els.authMsg,'info','Abriendo Google...'); await signInWithPopup(auth, provider); }catch(err){ console.error(err); message(els.authMsg,'err','No se pudo iniciar sesión con Google.'); } });
 els.logout.addEventListener('click', () => signOut(auth));
-els.refresh.addEventListener('click', loadRecords); els.search.addEventListener('input', renderTable); els.estadoFilter.addEventListener('change', renderTable); els.pagoFilter.addEventListener('change', renderTable);
+els.refresh.addEventListener('click', () => { loadRecords(); loadAccounts(); }); els.search.addEventListener('input', renderTable); els.estadoFilter.addEventListener('change', renderTable); els.pagoFilter.addEventListener('change', renderTable);
 els.closeModal.addEventListener('click', closeModal); els.modalBack.addEventListener('click', e => { if(e.target === els.modalBack) closeModal(); }); els.saveBtn.addEventListener('click', saveChanges); els.approveBtn.addEventListener('click', approveMatricula); els.rejectBtn.addEventListener('click', rejectCurrent);
-document.addEventListener('click', e => { const open = e.target.closest('[data-open]'); const pay = e.target.closest('[data-pay]'); if(open) openModal(open.dataset.open, 'ficha'); if(pay) openModal(pay.dataset.pay, 'pago'); });
-onAuthStateChanged(auth, async user => { if(!user){ showApp(false); return; } if((user.email || '').toLowerCase() !== ADMIN_EMAIL){ showApp(false); message(els.authMsg,'err','Este correo no está autorizado: ' + (user.email || 'sin correo')); await signOut(auth); return; } showApp(true); await loadRecords(); });
+document.addEventListener('click', e => {
+  const open = e.target.closest('[data-open]');
+  const pay = e.target.closest('[data-pay]');
+  const activate = e.target.closest('[data-activate-account]');
+  if(open) openModal(open.dataset.open, 'ficha');
+  if(pay) openModal(pay.dataset.pay, 'pago');
+  if(activate) activateAccount(activate.dataset.activateAccount);
+});
+onAuthStateChanged(auth, async user => { if(!user){ showApp(false); return; } if((user.email || '').toLowerCase() !== ADMIN_EMAIL){ showApp(false); message(els.authMsg,'err','Este correo no está autorizado: ' + (user.email || 'sin correo')); await signOut(auth); return; } showApp(true); ensureAccountsPanel(); await loadRecords(); await loadAccounts(); });
