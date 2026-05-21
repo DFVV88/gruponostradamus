@@ -35,11 +35,15 @@
     if(data.celular.length < 9) return 'Escribe un celular válido.';
     if(data.correo.indexOf('@') === -1) return 'Escribe un correo personal válido.';
     if(!data.ciclo) return 'Selecciona un ciclo de interés.';
+    if(!data.metodoPagoPreferido) return 'Selecciona una forma de pago para continuar el proceso.';
     if(!data.confirmacion) return 'Debes aceptar que Coordinación se comunique contigo para continuar el proceso.';
     return '';
   }
 
   function collect(){
+    var metodoPago = value('metodoPagoPreferido');
+    var estadoPago = metodoPago === 'pago_online' ? 'pendiente_pago_online' : 'pendiente_envio_voucher';
+
     return {
       nombre: value('nombre'),
       dni: value('dni'),
@@ -53,6 +57,14 @@
       celularApoderado: value('celularApoderado'),
       comentario: value('comentario'),
       confirmacion: value('confirmacion'),
+
+      metodoPagoPreferido: metodoPago,
+      metodoPagoLabel: metodoPago === 'pago_online' ? 'Pago en línea' : 'Voucher por WhatsApp',
+      estadoPago: estadoPago,
+      pagoValidado: false,
+      pagoObservacion: '',
+      asesorAsignado: '',
+
       estado: 'nuevo',
       origen: 'web_preinscripcion',
       tipo: 'preinscripcion_inicial',
@@ -95,10 +107,13 @@
       data.updatedAt = ctx.fs.serverTimestamp();
       return ctx.fs.addDoc(ctx.fs.collection(ctx.db, 'preinscripciones'), data);
     }).then(function(ref){
-      msg('ok', '✅ Preinscripción registrada correctamente.<br><small>Código de solicitud: ' + ref.id + '</small><br>Coordinación revisará tus datos y se comunicará contigo.');
+      var extra = data.metodoPagoPreferido === 'voucher_whatsapp'
+        ? '<br>Forma de pago elegida: voucher por WhatsApp. Un asesor verificará el comprobante antes de aprobar la matrícula.'
+        : '<br>Forma de pago elegida: pago en línea. Coordinación activará o confirmará el enlace de pago correspondiente.';
+      msg('ok', '✅ Preinscripción registrada correctamente.<br><small>Código de solicitud: ' + ref.id + '</small>' + extra + '<br>Coordinación revisará tus datos y se comunicará contigo.');
       form.reset();
       if(typeof gtag === 'function'){
-        gtag('event','preinscripcion_firebase_guardada',{event_category:'lead',event_label:data.ciclo});
+        gtag('event','preinscripcion_firebase_guardada',{event_category:'lead',event_label:data.ciclo, metodo_pago:data.metodoPagoPreferido});
       }
     }).catch(function(err){
       console.error('Error guardando preinscripción:', err);
