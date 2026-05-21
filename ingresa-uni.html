@@ -37,6 +37,10 @@
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-WZ5RPX4C');</script>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) - Grupo Nostradamus -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WZ5RPX4C"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- /Google Tag Manager (noscript) - Grupo Nostradamus -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WZ5RPX4C" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="topbar">🚀 Preparación UNI con WEB NOSTRA · Registro + NostraCUENTA + Microsoft 365 + clases en vivo + NostraCHAT + DAMUS</div>
   <header><div class="wrap nav"><a class="logo" href="index.html" aria-label="Grupo Nostradamus"><img src="assets/img/logo.png" alt="Grupo de Estudio Nostradamus"><span>Grupo Nostradamus</span></a><nav class="navlinks" aria-label="Navegación principal"><a href="#preparacion">Preparación</a><a href="#ecosistema">WEB NOSTRA</a><a href="#flujo">Ruta del alumno</a><a href="#ciclos">Ciclos</a><a class="btn btn-whatsapp" href="https://wa.me/51993750351?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20los%20ciclos%20de%20preparaci%C3%B3n%20UNI%20en%20Grupo%20Nostradamus.%0A%0AMi%20nombre%20es%3A%0AEstoy%20interesado%20en%3A%0AMi%20nivel%20actual%20es%3A" target="_blank" rel="noopener noreferrer">WhatsApp</a></nav></div></header>
@@ -56,5 +60,27 @@
   <footer><div class="wrap">© Grupo Nostradamus — La ruta que transforma alumnos en cachimbos.</div></footer>
   <script src="assets/js/nostra-sitewide-loader.js?v=2026-45" defer></script>
   <script>(function(){function cleanText(value){return(value||"").replace(/\s+/g," ").trim().slice(0,120)}function pageName(){var p=location.pathname||"/";return(p==="/"||p.endsWith("/"))?"home":(p.split("/").pop().replace(".html","")||"home")}function sendEvent(name,params){if(typeof window.gtag!=="function")return;window.gtag("event",name,Object.assign({page_name:pageName(),page_path:location.pathname,page_url:location.href},params||{}))}document.addEventListener("click",function(event){var link=event.target&&event.target.closest?event.target.closest("a"):null;if(!link||!link.href)return;var href=link.href.toLowerCase();var text=(link.textContent||"").toLowerCase();var label=cleanText(link.getAttribute("aria-label")||link.textContent||link.href||"sin_texto");if(href.indexOf("wa.me")!==-1||href.indexOf("whatsapp")!==-1){sendEvent("click_whatsapp",{event_category:"lead",event_label:label,link_url:link.href,conversion_type:"whatsapp"});return}if(href.indexOf("registro.html")!==-1||text.indexOf("registro")!==-1||text.indexOf("registrarme")!==-1){sendEvent("click_registro",{event_category:"conversion",event_label:label,link_url:link.href});return}if(href.indexOf("cuenta-nostra.html")!==-1||text.indexOf("nostracuenta")!==-1){sendEvent("click_nostracuenta",{event_category:"engagement",event_label:label,link_url:link.href});return}if(text.indexOf("damus")!==-1){sendEvent("click_damus",{event_category:"engagement",event_label:label,link_url:link.href});return}},true)})();</script>
+<!-- Conversion tracking - Grupo Nostradamus -->
+<script>
+(function(){
+  function cleanText(value){return (value || "").replace(/\s+/g," ").trim().slice(0,120);}
+  function pageName(){var p=location.pathname||"/";return (p==="/"||p.endsWith("/"))?"home":(p.split("/").pop().replace(".html","")||"home");}
+  function sendEvent(name, params){
+    if(typeof window.gtag!=="function") return;
+    window.gtag("event", name, Object.assign({page_name: pageName(), page_path: location.pathname, page_url: location.href}, params || {}));
+  }
+  document.addEventListener("click", function(event){
+    var link = event.target && event.target.closest ? event.target.closest("a") : null;
+    if(!link || !link.href) return;
+    var href = link.href.toLowerCase();
+    var text = (link.textContent || "").toLowerCase();
+    var label = cleanText(link.getAttribute("aria-label") || link.textContent || link.href || "sin_texto");
+    if(href.indexOf("wa.me") !== -1 || href.indexOf("whatsapp") !== -1){sendEvent("click_whatsapp", {event_category:"lead", event_label:label, link_url:link.href, conversion_type:"whatsapp"}); return;}
+    if(href.indexOf("clases-en-vivo.html") !== -1 || href.indexOf("teams.microsoft.com") !== -1 || text.indexOf("clases en vivo") !== -1){sendEvent("click_clases_en_vivo", {event_category:"engagement", event_label:label, link_url:link.href}); return;}
+    if(text.indexOf("matric") !== -1 || text.indexOf("informes") !== -1 || text.indexOf("vacante") !== -1 || text.indexOf("quiero ingresar") !== -1 || href.indexOf("ingresa-uni.html") !== -1){sendEvent("click_comercial", {event_category:"conversion", event_label:label, link_url:link.href});}
+  }, true);
+})();
+</script>
+<!-- /Conversion tracking - Grupo Nostradamus -->
 </body>
 </html>
