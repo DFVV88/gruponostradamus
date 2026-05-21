@@ -52,6 +52,27 @@ function patchUI(){
     });
   });
 
+  if(loginForm){
+    const loginInput = loginForm.elements.email;
+    if(loginInput){
+      loginInput.type = 'text';
+      loginInput.placeholder = 'Ej. juanperez';
+      loginInput.setAttribute('autocomplete','username');
+      loginInput.removeAttribute('inputmode');
+      const label = loginInput.closest('label');
+      const span = label && label.querySelector('span');
+      if(span) span.textContent = 'Usuario corto *';
+    }
+    const passInput = loginForm.elements.password;
+    if(passInput){
+      const label = passInput.closest('label');
+      const span = label && label.querySelector('span');
+      if(span) span.textContent = 'Contraseña NostraCUENTA *';
+    }
+    const submit = loginForm.querySelector('button[type="submit"]');
+    if(submit) submit.textContent = 'Ingresar a NostraCUENTA';
+  }
+
   if(activateForm && !$('ms-verify-btn')){
     const email = activateForm.elements.institutionalEmail;
     if(email){ email.readOnly = true; email.placeholder = 'Primero valida con Microsoft 365'; }
