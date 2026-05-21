@@ -72,6 +72,7 @@
     loadJS('assets/js/nostra-live-classes-fix.js?v=' + VERSION);
     loadJS('assets/js/nostra-offer-hard-uniform.js?v=' + VERSION);
     loadJS('assets/js/nostra-video-slide-2-zoom-fix.js?v=' + VERSION);
+    loadJS('assets/js/nostra-registro-button.js?v=' + VERSION);
   }
 
   if (document.readyState === 'loading') {
