@@ -14,6 +14,7 @@
     appId: '1:869749182265:web:5f5c9174680585f142e2e8'
   };
 
+  var WHATSAPP_ASESOR = '51993750351';
   var form = document.getElementById('preinscripcion-form');
   var box = document.getElementById('preinscripcion-message');
   if(!form || !box) return;
@@ -90,6 +91,20 @@
     return firebaseReady;
   }
 
+  function voucherButtonHtml(data, id){
+    var text = [
+      'Hola Nostradamus, soy ' + data.nombre + '.',
+      'Mi código de preinscripción es: ' + id + '.',
+      'Ciclo de interés: ' + data.ciclo + '.',
+      'DNI: ' + data.dni + '.',
+      'Adjunto mi voucher para validación del pago inicial.'
+    ].join('\n');
+
+    var url = 'https://wa.me/' + WHATSAPP_ASESOR + '?text=' + encodeURIComponent(text);
+    return '<br><br><a href="' + url + '" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:13px 18px;background:linear-gradient(135deg,#25d366,#078c95);color:#fff;font-weight:950;text-decoration:none;">📲 Enviar voucher por WhatsApp</a>' +
+      '<br><small>Cuando abras WhatsApp, adjunta la imagen o captura del voucher en ese mismo chat.</small>';
+  }
+
   form.addEventListener('submit', function(e){
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -107,9 +122,12 @@
       data.updatedAt = ctx.fs.serverTimestamp();
       return ctx.fs.addDoc(ctx.fs.collection(ctx.db, 'preinscripciones'), data);
     }).then(function(ref){
-      var extra = data.metodoPagoPreferido === 'voucher_whatsapp'
-        ? '<br>Forma de pago elegida: voucher por WhatsApp. Un asesor verificará el comprobante antes de aprobar la matrícula.'
-        : '<br>Forma de pago elegida: pago en línea. Coordinación activará o confirmará el enlace de pago correspondiente.';
+      var extra = '';
+      if(data.metodoPagoPreferido === 'voucher_whatsapp'){
+        extra = '<br>Forma de pago elegida: voucher por WhatsApp. Un asesor verificará el comprobante antes de aprobar la matrícula.' + voucherButtonHtml(data, ref.id);
+      } else {
+        extra = '<br>Forma de pago elegida: pago en línea. Coordinación activará o confirmará el enlace de pago correspondiente.';
+      }
       msg('ok', '✅ Preinscripción registrada correctamente.<br><small>Código de solicitud: ' + ref.id + '</small>' + extra + '<br>Coordinación revisará tus datos y se comunicará contigo.');
       form.reset();
       if(typeof gtag === 'function'){
