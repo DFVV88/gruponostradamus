@@ -4,6 +4,40 @@
    hacia landings y artículos de posicionamiento orgánico.
 ================================================== */
 (function(){
+  function createPlataformaSection(){
+    if(document.getElementById('nostra-plataforma-home')) return;
+
+    var target = document.getElementById('about-sec') || document.getElementById('course-sec') || document.body;
+    if(!target || !target.parentNode) return;
+
+    var section = document.createElement('section');
+    section.id = 'nostra-plataforma-home';
+    section.className = 'space';
+    section.style.background = 'linear-gradient(180deg,#ffffff 0%,#eef8fa 100%)';
+    section.innerHTML = '' +
+      '<div class="container">' +
+        '<div class="title-area text-center mb-35">' +
+          '<span class="sub-title"><i class="fal fa-laptop me-2"></i> Ecosistema académico digital</span>' +
+          '<h2 class="sec-title">NostraPLATAFORMA: beneficios conectados para tu preparación</h2>' +
+          '<p style="max-width:900px;margin:16px auto 0;font-size:18px;line-height:1.7;color:#4b5d70;">En el Grupo de Estudio Nostradamus no solo recibes clases: formas parte de una plataforma académica conectada para acceder a tu cuenta, clases, comunidad, materiales y beneficios según tu estado académico.</p>' +
+        '</div>' +
+        '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;">' +
+          '<article style="background:#fff;border:1px solid rgba(7,140,149,.16);border-radius:24px;padding:24px;box-shadow:0 16px 42px rgba(6,20,38,.08);"><strong style="display:block;color:#061426;font-size:23px;margin-bottom:8px;">🔐 NostraCUENTA</strong><p style="margin:0;color:#4b5d70;line-height:1.6;">Acceso principal para nuevo alumno, alumno aprobado o cuenta activa.</p></article>' +
+          '<article style="background:#fff;border:1px solid rgba(7,140,149,.16);border-radius:24px;padding:24px;box-shadow:0 16px 42px rgba(6,20,38,.08);"><strong style="display:block;color:#061426;font-size:23px;margin-bottom:8px;">🔴 Clases en vivo</strong><p style="margin:0;color:#4b5d70;line-height:1.6;">Ingreso rápido a sesiones académicas mediante Microsoft Teams.</p></article>' +
+          '<article style="background:#fff;border:1px solid rgba(7,140,149,.16);border-radius:24px;padding:24px;box-shadow:0 16px 42px rgba(6,20,38,.08);"><strong style="display:block;color:#061426;font-size:23px;margin-bottom:8px;">💬 NostraCHAT</strong><p style="margin:0;color:#4b5d70;line-height:1.6;">Comunidad interna para acompañamiento, consultas y comunicación académica.</p></article>' +
+          '<article style="background:#fff;border:1px solid rgba(7,140,149,.16);border-radius:24px;padding:24px;box-shadow:0 16px 42px rgba(6,20,38,.08);"><strong style="display:block;color:#061426;font-size:23px;margin-bottom:8px;">📚 Material académico</strong><p style="margin:0;color:#4b5d70;line-height:1.6;">Recursos, separatas, simulacros y documentos de apoyo para estudiar mejor.</p></article>' +
+          '<article style="background:#fff;border:1px solid rgba(7,140,149,.16);border-radius:24px;padding:24px;box-shadow:0 16px 42px rgba(6,20,38,.08);"><strong style="display:block;color:#061426;font-size:23px;margin-bottom:8px;">📢 Comunicados oficiales</strong><p style="margin:0;color:#4b5d70;line-height:1.6;">Avisos, horarios, evaluaciones, cambios de clase y mensajes institucionales.</p></article>' +
+          '<article style="background:#fff;border:1px solid rgba(7,140,149,.16);border-radius:24px;padding:24px;box-shadow:0 16px 42px rgba(6,20,38,.08);"><strong style="display:block;color:#061426;font-size:23px;margin-bottom:8px;">💳 Pagos y matrícula</strong><p style="margin:0;color:#4b5d70;line-height:1.6;">Consulta futura de cuotas, pagos, deudas, ciclo, aula, turno y estado académico.</p></article>' +
+        '</div>' +
+        '<div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:32px;">' +
+          '<a href="cuenta-nostra.html" class="th-btn style3">Ingresar a NostraCUENTA <i class="fas fa-arrow-right ms-2"></i></a>' +
+          '<a href="ciclos.html" class="th-btn style6">Ver ciclos académicos</a>' +
+        '</div>' +
+      '</div>';
+
+    target.parentNode.insertBefore(section, target);
+  }
+
   function createSeoSection(){
     if(document.getElementById('nostra-seo-internal-links')) return;
 
@@ -47,9 +81,14 @@
     target.parentNode.insertBefore(section, target);
   }
 
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', createSeoSection);
-  }else{
+  function init(){
+    createPlataformaSection();
     createSeoSection();
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  }else{
+    init();
   }
 })();
