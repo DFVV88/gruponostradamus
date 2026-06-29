@@ -17,9 +17,9 @@
       #hero .slick-slide,
       #hero .slick-slide > div,
       #hero .th-hero-slide {
-        min-height: 600px !important;
-        height: 600px !important;
-        max-height: 600px !important;
+        min-height: 680px !important;
+        height: 680px !important;
+        max-height: 680px !important;
       }
 
       #hero .th-hero-slide {
@@ -32,8 +32,8 @@
         position: absolute !important;
         inset: 0 !important;
         width: 100% !important;
-        height: 600px !important;
-        min-height: 600px !important;
+        height: 680px !important;
+        min-height: 680px !important;
         background-size: cover !important;
         background-repeat: no-repeat !important;
         background-position: center center !important;
@@ -42,60 +42,72 @@
       #hero .th-hero-slide > .container {
         position: relative !important;
         z-index: 3 !important;
-        height: 600px !important;
-        min-height: 600px !important;
+        height: 680px !important;
+        min-height: 680px !important;
         display: flex !important;
-        align-items: center !important;
+        align-items: flex-start !important;
+        padding-top: 110px !important;
+        padding-bottom: 40px !important;
       }
 
-      /* Slider 1: que se vea completo */
+      /* Slider 1: texto completo, más arriba y sin corte */
       #hero .nostra-home-hero,
       #hero .nostra-future-hero {
         padding-top: 0 !important;
         padding-bottom: 0 !important;
         margin-top: 0 !important;
-        max-width: 760px !important;
+        max-width: 730px !important;
+      }
+
+      #hero .nostra-home-hero .hero-subtitle {
+        margin-bottom: 14px !important;
+        padding: 9px 18px !important;
+        font-size: clamp(12px, 1.05vw, 16px) !important;
       }
 
       #hero .nostra-home-hero h1,
       #hero .nostra-future-hero h1 {
-        font-size: clamp(31px, 3.7vw, 52px) !important;
-        line-height: 1.05 !important;
-        margin-top: 12px !important;
-        margin-bottom: 18px !important;
+        font-size: clamp(30px, 3.35vw, 48px) !important;
+        line-height: 1.04 !important;
+        margin-top: 10px !important;
+        margin-bottom: 15px !important;
       }
 
       #hero .nostra-home-hero p,
       #hero .nostra-future-hero p {
-        font-size: clamp(15px, 1.32vw, 19px) !important;
-        line-height: 1.5 !important;
-        margin-bottom: 16px !important;
+        font-size: clamp(15px, 1.18vw, 18px) !important;
+        line-height: 1.45 !important;
+        margin-bottom: 13px !important;
       }
 
       #hero .nostra-alert {
-        margin-bottom: 18px !important;
-        padding: 10px 18px !important;
+        margin-bottom: 15px !important;
+        padding: 9px 16px !important;
       }
 
       #hero .nostra-home-actions {
-        margin-top: 4px !important;
+        margin-top: 2px !important;
+        gap: 12px !important;
       }
 
-      /* Slider 2: miniatura YouTube centrada */
+      /* Slider 2: miniatura YouTube más arriba y centrada horizontalmente */
       #hero .th-hero-slide:has(.frame-video) > .container,
       #hero .th-hero-slide:has(.nostra-youtube-thumb) > .container,
-      #hero .th-hero-slide:has(.nostra-video-thumb-restore) > .container {
+      #hero .th-hero-slide:has(.nostra-video-thumb-restore) > .container,
+      #hero .nostra-video-slide-fix > .container {
         display: flex !important;
-        align-items: center !important;
+        align-items: flex-start !important;
         justify-content: center !important;
-        padding-top: 0 !important;
+        padding-top: 135px !important;
         padding-bottom: 0 !important;
       }
 
       #hero .contenido-max-slider.contenido-min-slider-tovideo,
-      #hero .contenido-min-slider-tovideo {
-        width: min(760px, 66vw) !important;
-        max-width: 760px !important;
+      #hero .contenido-min-slider-tovideo,
+      #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo,
+      #hero .nostra-video-slide-fix .contenido-min-slider-tovideo {
+        width: min(720px, 62vw) !important;
+        max-width: 720px !important;
         margin-left: auto !important;
         margin-right: auto !important;
         padding: 0 !important;
@@ -110,7 +122,7 @@
         top: auto !important;
         bottom: auto !important;
         z-index: 4 !important;
-        transform: translate(0, 0) !important;
+        transform: translateY(-28px) !important;
       }
 
       #hero iframe.frame-video,
@@ -122,7 +134,7 @@
         aspect-ratio: 16 / 9 !important;
         height: auto !important;
         min-height: 0 !important;
-        max-height: 428px !important;
+        max-height: 405px !important;
         border-radius: 22px !important;
         overflow: hidden !important;
         border: 1px solid rgba(255,255,255,.30) !important;
@@ -163,19 +175,62 @@
         #hero .th-hero-bg,
         #hero .img-min-slider,
         #hero .th-hero-slide > .container {
+          min-height: 620px !important;
+          height: 620px !important;
+          max-height: 620px !important;
+        }
+
+        #hero .th-hero-slide > .container {
+          padding-top: 95px !important;
+        }
+
+        #hero .th-hero-slide:has(.frame-video) > .container,
+        #hero .th-hero-slide:has(.nostra-youtube-thumb) > .container,
+        #hero .th-hero-slide:has(.nostra-video-thumb-restore) > .container,
+        #hero .nostra-video-slide-fix > .container {
+          padding-top: 115px !important;
+        }
+
+        #hero .contenido-max-slider.contenido-min-slider-tovideo,
+        #hero .contenido-min-slider-tovideo,
+        #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo,
+        #hero .nostra-video-slide-fix .contenido-min-slider-tovideo {
+          width: min(680px, 72vw) !important;
+          max-width: 680px !important;
+          transform: translateY(-20px) !important;
+        }
+      }
+
+      @media (max-width: 991px) {
+        #hero,
+        #hero .hero-slider-6,
+        #hero .slick-list,
+        #hero .slick-track,
+        #hero .slick-slide,
+        #hero .slick-slide > div,
+        #hero .th-hero-slide,
+        #hero .th-hero-bg,
+        #hero .img-min-slider,
+        #hero .th-hero-slide > .container {
           min-height: 560px !important;
           height: 560px !important;
           max-height: 560px !important;
         }
 
+        #hero .th-hero-slide > .container {
+          padding-top: 78px !important;
+        }
+
         #hero .contenido-max-slider.contenido-min-slider-tovideo,
-        #hero .contenido-min-slider-tovideo {
-          width: min(700px, 76vw) !important;
-          max-width: 700px !important;
+        #hero .contenido-min-slider-tovideo,
+        #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo,
+        #hero .nostra-video-slide-fix .contenido-min-slider-tovideo {
+          width: min(600px, 84vw) !important;
+          max-width: 600px !important;
         }
       }
 
-      @media (max-width: 991px) {
+      @media (max-width: 767px) {
         #hero,
         #hero .hero-slider-6,
         #hero .slick-list,
@@ -191,33 +246,10 @@
           max-height: 520px !important;
         }
 
-        #hero .contenido-max-slider.contenido-min-slider-tovideo,
-        #hero .contenido-min-slider-tovideo {
-          width: min(620px, 84vw) !important;
-          max-width: 620px !important;
-        }
-      }
-
-      @media (max-width: 767px) {
-        #hero,
-        #hero .hero-slider-6,
-        #hero .slick-list,
-        #hero .slick-track,
-        #hero .slick-slide,
-        #hero .slick-slide > div,
-        #hero .th-hero-slide,
-        #hero .th-hero-bg,
-        #hero .img-min-slider,
-        #hero .th-hero-slide > .container {
-          min-height: 500px !important;
-          height: 500px !important;
-          max-height: 500px !important;
-        }
-
         #hero .th-hero-slide > .container {
           justify-content: center !important;
           text-align: center !important;
-          padding-top: 18px !important;
+          padding-top: 38px !important;
           padding-bottom: 24px !important;
         }
 
@@ -229,7 +261,7 @@
 
         #hero .nostra-home-hero h1,
         #hero .nostra-future-hero h1 {
-          font-size: 30px !important;
+          font-size: 29px !important;
         }
 
         #hero .nostra-home-hero p,
@@ -237,10 +269,20 @@
           font-size: 15px !important;
         }
 
+        #hero .th-hero-slide:has(.frame-video) > .container,
+        #hero .th-hero-slide:has(.nostra-youtube-thumb) > .container,
+        #hero .th-hero-slide:has(.nostra-video-thumb-restore) > .container,
+        #hero .nostra-video-slide-fix > .container {
+          padding-top: 92px !important;
+        }
+
         #hero .contenido-max-slider.contenido-min-slider-tovideo,
-        #hero .contenido-min-slider-tovideo {
+        #hero .contenido-min-slider-tovideo,
+        #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo,
+        #hero .nostra-video-slide-fix .contenido-min-slider-tovideo {
           width: calc(100vw - 34px) !important;
           max-width: 410px !important;
+          transform: translateY(-12px) !important;
         }
 
         #hero iframe.frame-video,
