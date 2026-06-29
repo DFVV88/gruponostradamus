@@ -98,7 +98,7 @@
         min-height: auto !important;
       }
 
-      /* Slider 2: miniatura YouTube más arriba y centrada horizontalmente */
+      /* Slider 2: miniatura YouTube más arriba en PC y centrada horizontalmente */
       #hero .th-hero-slide:has(.frame-video) > .container,
       #hero .th-hero-slide:has(.nostra-youtube-thumb) > .container,
       #hero .th-hero-slide:has(.nostra-video-thumb-restore) > .container,
@@ -106,7 +106,7 @@
         display: flex !important;
         align-items: flex-start !important;
         justify-content: center !important;
-        padding-top: 78px !important;
+        padding-top: 32px !important;
         padding-bottom: 0 !important;
       }
 
@@ -130,7 +130,7 @@
         top: auto !important;
         bottom: auto !important;
         z-index: 4 !important;
-        transform: translateY(-54px) !important;
+        transform: translateY(-118px) !important;
       }
 
       #hero iframe.frame-video,
@@ -201,7 +201,7 @@
         #hero .th-hero-slide:has(.nostra-youtube-thumb) > .container,
         #hero .th-hero-slide:has(.nostra-video-thumb-restore) > .container,
         #hero .nostra-video-slide-fix > .container {
-          padding-top: 70px !important;
+          padding-top: 32px !important;
         }
 
         #hero .contenido-max-slider.contenido-min-slider-tovideo,
@@ -210,7 +210,7 @@
         #hero .nostra-video-slide-fix .contenido-min-slider-tovideo {
           width: min(680px, 72vw) !important;
           max-width: 680px !important;
-          transform: translateY(-44px) !important;
+          transform: translateY(-96px) !important;
         }
       }
 
