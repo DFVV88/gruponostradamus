@@ -17,9 +17,9 @@
       #hero .slick-slide,
       #hero .slick-slide > div,
       #hero .th-hero-slide {
-        min-height: 680px !important;
-        height: 680px !important;
-        max-height: 680px !important;
+        min-height: 690px !important;
+        height: 690px !important;
+        max-height: 690px !important;
       }
 
       #hero .th-hero-slide {
@@ -32,8 +32,8 @@
         position: absolute !important;
         inset: 0 !important;
         width: 100% !important;
-        height: 680px !important;
-        min-height: 680px !important;
+        height: 690px !important;
+        min-height: 690px !important;
         background-size: cover !important;
         background-repeat: no-repeat !important;
         background-position: center center !important;
@@ -42,12 +42,12 @@
       #hero .th-hero-slide > .container {
         position: relative !important;
         z-index: 3 !important;
-        height: 680px !important;
-        min-height: 680px !important;
+        height: 690px !important;
+        min-height: 690px !important;
         display: flex !important;
         align-items: flex-start !important;
-        padding-top: 110px !important;
-        padding-bottom: 40px !important;
+        padding-top: 58px !important;
+        padding-bottom: 30px !important;
       }
 
       /* Slider 1: texto completo, más arriba y sin corte */
@@ -56,38 +56,44 @@
         padding-top: 0 !important;
         padding-bottom: 0 !important;
         margin-top: 0 !important;
-        max-width: 730px !important;
+        max-width: 690px !important;
       }
 
       #hero .nostra-home-hero .hero-subtitle {
-        margin-bottom: 14px !important;
-        padding: 9px 18px !important;
-        font-size: clamp(12px, 1.05vw, 16px) !important;
+        margin-bottom: 12px !important;
+        padding: 8px 17px !important;
+        font-size: clamp(12px, 1vw, 15px) !important;
       }
 
       #hero .nostra-home-hero h1,
       #hero .nostra-future-hero h1 {
-        font-size: clamp(30px, 3.35vw, 48px) !important;
-        line-height: 1.04 !important;
-        margin-top: 10px !important;
-        margin-bottom: 15px !important;
+        font-size: clamp(29px, 3.05vw, 44px) !important;
+        line-height: 1.03 !important;
+        margin-top: 8px !important;
+        margin-bottom: 13px !important;
       }
 
       #hero .nostra-home-hero p,
       #hero .nostra-future-hero p {
-        font-size: clamp(15px, 1.18vw, 18px) !important;
-        line-height: 1.45 !important;
-        margin-bottom: 13px !important;
+        font-size: clamp(14px, 1.12vw, 17px) !important;
+        line-height: 1.42 !important;
+        margin-bottom: 11px !important;
       }
 
       #hero .nostra-alert {
-        margin-bottom: 15px !important;
-        padding: 9px 16px !important;
+        margin-bottom: 12px !important;
+        padding: 8px 15px !important;
+        font-size: 15px !important;
       }
 
       #hero .nostra-home-actions {
-        margin-top: 2px !important;
-        gap: 12px !important;
+        margin-top: 0 !important;
+        gap: 10px !important;
+      }
+
+      #hero .nostra-home-actions .th-btn {
+        padding: 14px 20px !important;
+        min-height: auto !important;
       }
 
       /* Slider 2: miniatura YouTube más arriba y centrada horizontalmente */
@@ -98,7 +104,7 @@
         display: flex !important;
         align-items: flex-start !important;
         justify-content: center !important;
-        padding-top: 135px !important;
+        padding-top: 78px !important;
         padding-bottom: 0 !important;
       }
 
@@ -122,7 +128,7 @@
         top: auto !important;
         bottom: auto !important;
         z-index: 4 !important;
-        transform: translateY(-28px) !important;
+        transform: translateY(-54px) !important;
       }
 
       #hero iframe.frame-video,
@@ -181,14 +187,14 @@
         }
 
         #hero .th-hero-slide > .container {
-          padding-top: 95px !important;
+          padding-top: 52px !important;
         }
 
         #hero .th-hero-slide:has(.frame-video) > .container,
         #hero .th-hero-slide:has(.nostra-youtube-thumb) > .container,
         #hero .th-hero-slide:has(.nostra-video-thumb-restore) > .container,
         #hero .nostra-video-slide-fix > .container {
-          padding-top: 115px !important;
+          padding-top: 70px !important;
         }
 
         #hero .contenido-max-slider.contenido-min-slider-tovideo,
@@ -197,7 +203,7 @@
         #hero .nostra-video-slide-fix .contenido-min-slider-tovideo {
           width: min(680px, 72vw) !important;
           max-width: 680px !important;
-          transform: translateY(-20px) !important;
+          transform: translateY(-44px) !important;
         }
       }
 
@@ -218,7 +224,7 @@
         }
 
         #hero .th-hero-slide > .container {
-          padding-top: 78px !important;
+          padding-top: 44px !important;
         }
 
         #hero .contenido-max-slider.contenido-min-slider-tovideo,
@@ -249,7 +255,7 @@
         #hero .th-hero-slide > .container {
           justify-content: center !important;
           text-align: center !important;
-          padding-top: 38px !important;
+          padding-top: 32px !important;
           padding-bottom: 24px !important;
         }
 
@@ -261,19 +267,19 @@
 
         #hero .nostra-home-hero h1,
         #hero .nostra-future-hero h1 {
-          font-size: 29px !important;
+          font-size: 28px !important;
         }
 
         #hero .nostra-home-hero p,
         #hero .nostra-future-hero p {
-          font-size: 15px !important;
+          font-size: 14px !important;
         }
 
         #hero .th-hero-slide:has(.frame-video) > .container,
         #hero .th-hero-slide:has(.nostra-youtube-thumb) > .container,
         #hero .th-hero-slide:has(.nostra-video-thumb-restore) > .container,
         #hero .nostra-video-slide-fix > .container {
-          padding-top: 92px !important;
+          padding-top: 66px !important;
         }
 
         #hero .contenido-max-slider.contenido-min-slider-tovideo,
@@ -282,7 +288,7 @@
         #hero .nostra-video-slide-fix .contenido-min-slider-tovideo {
           width: calc(100vw - 34px) !important;
           max-width: 410px !important;
-          transform: translateY(-12px) !important;
+          transform: translateY(-28px) !important;
         }
 
         #hero iframe.frame-video,
