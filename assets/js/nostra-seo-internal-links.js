@@ -46,7 +46,7 @@
         min-height: 690px !important;
         display: flex !important;
         align-items: flex-start !important;
-        padding-top: 58px !important;
+        padding-top: 38px !important;
         padding-bottom: 30px !important;
       }
 
@@ -188,7 +188,7 @@
         }
 
         #hero .th-hero-slide > .container {
-          padding-top: 52px !important;
+          padding-top: 38px !important;
         }
 
         #hero .th-hero-slide:has(.frame-video) > .container,
@@ -225,7 +225,7 @@
         }
 
         #hero .th-hero-slide > .container {
-          padding-top: 44px !important;
+          padding-top: 30px !important;
         }
 
         #hero .nostra-home-hero,
@@ -261,7 +261,7 @@
         #hero .th-hero-slide > .container {
           justify-content: center !important;
           text-align: center !important;
-          padding-top: 32px !important;
+          padding-top: 22px !important;
           padding-bottom: 24px !important;
         }
 
