@@ -277,7 +277,7 @@
           margin-top: 0 !important;
           margin-left: 0 !important;
           max-width: 100% !important;
-          transform: translateY(-36px) !important;
+          transform: translateY(-64px) !important;
         }
 
         #hero .nostra-home-hero h1,
