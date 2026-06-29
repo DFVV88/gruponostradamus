@@ -50,12 +50,13 @@
         padding-bottom: 30px !important;
       }
 
-      /* Slider 1: texto completo, más arriba y sin corte */
+      /* Slider 1: texto completo, más arriba y ligeramente a la derecha */
       #hero .nostra-home-hero,
       #hero .nostra-future-hero {
         padding-top: 0 !important;
         padding-bottom: 0 !important;
         margin-top: 0 !important;
+        margin-left: clamp(28px, 3.2vw, 72px) !important;
         max-width: 690px !important;
       }
 
@@ -227,6 +228,11 @@
           padding-top: 44px !important;
         }
 
+        #hero .nostra-home-hero,
+        #hero .nostra-future-hero {
+          margin-left: 18px !important;
+        }
+
         #hero .contenido-max-slider.contenido-min-slider-tovideo,
         #hero .contenido-min-slider-tovideo,
         #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo,
@@ -262,6 +268,7 @@
         #hero .nostra-home-hero,
         #hero .nostra-future-hero {
           margin-top: 0 !important;
+          margin-left: 0 !important;
           max-width: 100% !important;
         }
 
