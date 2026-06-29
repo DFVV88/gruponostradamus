@@ -4,6 +4,172 @@
    hacia landings y artículos de posicionamiento orgánico.
 ================================================== */
 (function(){
+  function fixHomeSliders(){
+    if(document.getElementById('nostra-home-slider-position-fix')) return;
+
+    var style = document.createElement('style');
+    style.id = 'nostra-home-slider-position-fix';
+    style.textContent = `
+      /* ==================================================
+         Corrección de posición para Slider 1 y Slider 2
+         Mantiene estable el alto del hero y centra contenido/video.
+      ================================================== */
+      #hero,
+      #hero .hero-slider-6,
+      #hero .slick-list,
+      #hero .slick-track,
+      #hero .slick-slide,
+      #hero .slick-slide > div,
+      #hero .th-hero-slide {
+        min-height: clamp(560px, 72vh, 720px) !important;
+      }
+
+      #hero .th-hero-slide {
+        position: relative !important;
+        overflow: hidden !important;
+      }
+
+      #hero .th-hero-bg,
+      #hero .img-min-slider {
+        position: absolute !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        min-height: clamp(560px, 72vh, 720px) !important;
+        background-size: cover !important;
+        background-repeat: no-repeat !important;
+        background-position: center center !important;
+      }
+
+      #hero .th-hero-slide > .container {
+        position: relative !important;
+        z-index: 3 !important;
+        min-height: clamp(560px, 72vh, 720px) !important;
+        display: flex !important;
+        align-items: center !important;
+      }
+
+      /* Slider 1: texto principal */
+      #hero .nostra-home-hero,
+      #hero .nostra-future-hero {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        margin-top: -18px !important;
+        max-width: 780px !important;
+      }
+
+      #hero .nostra-home-hero h1,
+      #hero .nostra-future-hero h1 {
+        margin-top: 14px !important;
+        margin-bottom: 20px !important;
+      }
+
+      #hero .nostra-home-hero p,
+      #hero .nostra-future-hero p {
+        margin-bottom: 20px !important;
+      }
+
+      /* Slider 2: video centrado */
+      #hero .contenido-max-slider.contenido-min-slider-tovideo,
+      #hero .contenido-min-slider-tovideo {
+        width: min(920px, 82vw) !important;
+        max-width: 920px !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        min-height: auto !important;
+        height: auto !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        position: relative !important;
+        z-index: 4 !important;
+        transform: translateY(-18px) !important;
+      }
+
+      #hero iframe.frame-video,
+      #hero .contenido-min-slider-tovideo .frame-video {
+        display: block !important;
+        width: 100% !important;
+        aspect-ratio: 16 / 9 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: min(54vh, 520px) !important;
+        border-radius: 24px !important;
+        overflow: hidden !important;
+        border: 1px solid rgba(255,255,255,.30) !important;
+        background: #02070d !important;
+        box-shadow: 0 24px 70px rgba(0,0,0,.48), 0 0 32px rgba(0,194,209,.22) !important;
+      }
+
+      #hero .th-hero-slide:has(.frame-video) > .container {
+        justify-content: center !important;
+      }
+
+      @media (max-width: 991px) {
+        #hero,
+        #hero .hero-slider-6,
+        #hero .slick-list,
+        #hero .slick-track,
+        #hero .slick-slide,
+        #hero .slick-slide > div,
+        #hero .th-hero-slide,
+        #hero .th-hero-bg,
+        #hero .img-min-slider,
+        #hero .th-hero-slide > .container {
+          min-height: 540px !important;
+        }
+
+        #hero .contenido-max-slider.contenido-min-slider-tovideo,
+        #hero .contenido-min-slider-tovideo {
+          width: min(760px, 88vw) !important;
+          transform: translateY(-10px) !important;
+        }
+      }
+
+      @media (max-width: 767px) {
+        #hero,
+        #hero .hero-slider-6,
+        #hero .slick-list,
+        #hero .slick-track,
+        #hero .slick-slide,
+        #hero .slick-slide > div,
+        #hero .th-hero-slide,
+        #hero .th-hero-bg,
+        #hero .img-min-slider,
+        #hero .th-hero-slide > .container {
+          min-height: 500px !important;
+        }
+
+        #hero .th-hero-slide > .container {
+          justify-content: center !important;
+          text-align: center !important;
+          padding-top: 24px !important;
+          padding-bottom: 30px !important;
+        }
+
+        #hero .nostra-home-hero,
+        #hero .nostra-future-hero {
+          margin-top: 0 !important;
+          max-width: 100% !important;
+        }
+
+        #hero .contenido-max-slider.contenido-min-slider-tovideo,
+        #hero .contenido-min-slider-tovideo {
+          width: calc(100vw - 28px) !important;
+          max-width: 440px !important;
+          transform: translateY(0) !important;
+        }
+
+        #hero iframe.frame-video,
+        #hero .contenido-min-slider-tovideo .frame-video {
+          border-radius: 16px !important;
+          max-height: none !important;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
   function createPlataformaSection(){
     if(document.getElementById('nostra-plataforma-home')) return;
 
@@ -82,6 +248,7 @@
   }
 
   function init(){
+    fixHomeSliders();
     createPlataformaSection();
     createSeoSection();
   }
