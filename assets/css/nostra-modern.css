@@ -32,3 +32,29 @@ input, textarea, select, .form-control { border-radius: 14px !important; }
 @media (max-width: 991px) { .th-menu-area { background: linear-gradient(180deg, var(--nostra-dark), #0b2c45) !important; } .th-mobile-menu a { font-weight: 800; } }
 @media (max-width: 767px) { .space { padding-top: 65px; padding-bottom: 65px; } .sec-title { font-size: 30px; line-height: 1.18; } p { font-size: 16px; } .header-logo img { max-width: 165px; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* Fix crítico slider 2 PC: el container del video debe iniciar desde arriba del hero */
+@media (min-width: 768px) {
+  #hero .th-hero-slide:has(.contenido-min-slider-tovideo),
+  #hero .th-hero-slide:has(.frame-video) {
+    position: relative !important;
+    overflow: hidden !important;
+  }
+
+  #hero .th-hero-slide:has(.contenido-min-slider-tovideo) > .container,
+  #hero .th-hero-slide:has(.frame-video) > .container {
+    position: absolute !important;
+    inset: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: none !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+}
