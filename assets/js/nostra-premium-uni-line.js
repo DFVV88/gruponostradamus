@@ -16,7 +16,7 @@
     ['CICLO SEMIANUAL UNI','Nostra Power UNI'],['Ciclo Semianual UNI','Nostra Power UNI'],['Semianual UNI','Nostra Power UNI'],
     ['CICLO SEMESTRAL UNI','Nostra Élite UNI'],['Ciclo Semestral UNI','Nostra Élite UNI'],['Semestral UNI','Nostra Élite UNI'],
     ['CICLO REPASO UNI','Nostra Prime UNI'],['Ciclo Repaso UNI','Nostra Prime UNI'],['Ciclo repaso UNI','Nostra Prime UNI'],['Repaso UNI','Nostra Prime UNI'],
-    ['CICLO ÉLITE UNI','Nostra Talentum UNI'],['Ciclo Élite UNI','Nostra Talentum UNI'],['Ciclo Elite UNI','Nostra Talentum UNI'],['Élite UNI','Nostra Talentum UNI'],['Elite UNI','Nostra Talentum UNI']
+    ['CICLO ÉLITE UNI','Nostra Talentum UNI'],['CICLO ELITE UNI','Nostra Talentum UNI'],['Ciclo Élite UNI','Nostra Talentum UNI'],['Ciclo Elite UNI','Nostra Talentum UNI']
   ];
   var started=false;
 
@@ -79,6 +79,8 @@
     nodes.forEach(function(n){
       var v=n.nodeValue, original=v;
       reps.forEach(function(r){v=v.split(r[0]).join(r[1])});
+      if(file==='ciclo-semestral-uni.html')v=v.split('Nostra Nostra Talentum UNI').join('Nostra Élite UNI');
+      if(file==='ciclo-elite-uni.html')v=v.split('Nostra Nostra Talentum UNI').join('Nostra Talentum UNI');
       if(v!==original)n.nodeValue=v;
     });
   }
@@ -112,6 +114,8 @@
     document.querySelectorAll('.breadcumb-menu li,.breadcumb-menu a,.breadcumb-menu span').forEach(function(e){
       var v=e.textContent, original=v;
       reps.forEach(function(r){v=v.split(r[0]).join(r[1])});
+      if(file==='ciclo-semestral-uni.html')v=v.split('Nostra Nostra Talentum UNI').join('Nostra Élite UNI');
+      if(file==='ciclo-elite-uni.html')v=v.split('Nostra Nostra Talentum UNI').join('Nostra Talentum UNI');
       if(v!==original)e.textContent=v;
     });
     var p=document.querySelector('.course-description p');
