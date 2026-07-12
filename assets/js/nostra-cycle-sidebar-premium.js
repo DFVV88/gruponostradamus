@@ -1,5 +1,7 @@
-/* Grupo Nostradamus - Panel lateral persistente para todos los ciclos */
+/* Grupo Nostradamus - Panel lateral estable para todos los ciclos */
 (function () {
+  'use strict';
+
   var file = (location.pathname.split('/').pop() || '').toLowerCase();
   var cycles = {
     'ciclo-anual-uni.html': { name: 'Nostra 360 UNI', tag: 'Preparación integral. Formación completa.', icon: '🌐', badge: 'Ruta premium UNI' },
@@ -22,11 +24,12 @@
   var MAPA_UNI = 'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15609.098250165553!2d-77.04858391073591!3d-12.02460935322607!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105cf05f8bcc23b%3A0xa4969aade22a3db5!2sGRUPO%20NOSTRADAMUS%20UNI!5e0!3m2!1ses-419!2spe!4v1720420344476!5m2!1ses-419!2spe';
 
   function addStyle() {
-    if (document.getElementById('nostra-cycle-sidebar-premium-style')) return;
+    if (document.getElementById('nostra-cycle-sidebar-stable-style')) return;
     var style = document.createElement('style');
-    style.id = 'nostra-cycle-sidebar-premium-style';
+    style.id = 'nostra-cycle-sidebar-stable-style';
     style.textContent = `
-      .sidebar-area{display:block!important;visibility:visible!important;opacity:1!important;}
+      #nostra-cycle-panel-host{display:block!important;visibility:visible!important;opacity:1!important;position:relative!important;z-index:5!important;width:100%!important;}
+      #nostra-cycle-panel-host + .sidebar-area{display:none!important;}
       .nostra-cycle-panel{position:sticky;top:105px;border-radius:28px;overflow:hidden;background:radial-gradient(circle at 12% 12%,rgba(0,229,255,.18),transparent 34%),linear-gradient(155deg,#02070d 0%,#061426 46%,#063a48 100%);border:1px solid rgba(168,247,255,.24);box-shadow:0 28px 70px rgba(0,0,0,.18),0 0 34px rgba(0,194,209,.12);color:#fff;padding:24px;margin-bottom:18px;}
       .nostra-cycle-panel:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.06),transparent 38%,rgba(255,181,57,.08));pointer-events:none;}
       .nostra-cycle-panel>*{position:relative;z-index:2;}
@@ -49,7 +52,7 @@
       .nostra-cycle-detail-nav h4{margin:0 0 10px;color:#061426;font-size:16px;font-weight:950;}
       .nostra-cycle-detail-nav a{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 11px;margin-bottom:7px;border-radius:13px;background:#f4fbfc;color:#061426;font-size:13px;font-weight:850;text-decoration:none;border:1px solid rgba(0,137,150,.10);}
       .nostra-cycle-detail-nav a.active,.nostra-cycle-detail-nav a:hover{background:linear-gradient(135deg,#00c2d1,#008b96);color:#fff;}
-      @media(max-width:991px){.nostra-cycle-panel{position:relative;top:auto;margin-top:28px;}}
+      @media(max-width:991px){.nostra-cycle-panel{position:relative;top:auto;margin-top:28px;}#nostra-cycle-panel-host + .sidebar-area{display:none!important;}}
     `;
     document.head.appendChild(style);
   }
@@ -61,8 +64,8 @@
     }).join('') + '</div>';
   }
 
-  function panelHtml() {
-    return '<div class="nostra-cycle-panel" data-nostra-persistent-panel="1">' +
+  function contentHtml() {
+    return '<div class="nostra-cycle-panel">' +
       '<span class="nostra-cycle-panel__badge">' + data.icon + ' ' + data.badge + '</span>' +
       '<h3 class="nostra-cycle-panel__title">' + data.name + '</h3>' +
       '<p class="nostra-cycle-panel__tag">' + data.tag + '</p>' +
@@ -72,47 +75,43 @@
       '<div class="nostra-cycle-panel__trust"><span>✅ Cupos limitados</span><span>✅ Seguimiento académico</span><span>✅ Evaluaciones y práctica constante</span><span>✅ Plana docente especialista</span></div>' +
       '<div class="nostra-cycle-map"><h4>📍 Sede UNI</h4><p>Ubícanos cerca de la Universidad Nacional de Ingeniería.</p><iframe src="' + MAPA_UNI + '" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe></div>' +
       '<div class="nostra-cycle-side-note">Atención rápida por WhatsApp</div>' +
-    '</div>' + navHtml();
+      '</div>' + navHtml();
   }
 
-  function buildPanel() {
+  function mount() {
     addStyle();
     var sidebar = document.querySelector('.sidebar-area');
-    if (!sidebar) return false;
+    if (!sidebar || !sidebar.parentNode) return false;
 
-    var existing = sidebar.querySelector('.nostra-cycle-panel[data-nostra-persistent-panel="1"]');
-    var hasCorrectTitle = existing && existing.textContent.indexOf(data.name) !== -1;
-    if (hasCorrectTitle && sidebar.querySelector('.nostra-cycle-detail-nav')) return true;
+    var host = document.getElementById('nostra-cycle-panel-host');
+    if (!host) {
+      host = document.createElement('div');
+      host.id = 'nostra-cycle-panel-host';
+      sidebar.parentNode.insertBefore(host, sidebar);
+    }
 
-    sidebar.removeAttribute('data-nostra-cycle-panel');
-    sidebar.innerHTML = panelHtml();
+    if (!host.querySelector('.nostra-cycle-panel') || host.textContent.indexOf(data.name) === -1) {
+      host.innerHTML = contentHtml();
+    }
+
+    host.style.display = 'block';
+    host.style.visibility = 'visible';
+    host.style.opacity = '1';
+    sidebar.style.display = 'none';
     return true;
   }
 
-  function protectPanel() {
-    var sidebar = document.querySelector('.sidebar-area');
-    if (!sidebar || sidebar.getAttribute('data-nostra-panel-observed') === '1') return;
-    sidebar.setAttribute('data-nostra-panel-observed', '1');
-    var locked = false;
-    var observer = new MutationObserver(function () {
-      if (locked) return;
-      if (!sidebar.querySelector('.nostra-cycle-panel[data-nostra-persistent-panel="1"]')) {
-        locked = true;
-        setTimeout(function () { buildPanel(); locked = false; }, 60);
-      }
-    });
-    observer.observe(sidebar, { childList: true, subtree: false });
-  }
-
   function start() {
-    buildPanel();
-    protectPanel();
-    [250, 700, 1400, 2400, 4000, 6500, 9000].forEach(function (ms) {
-      setTimeout(function () { buildPanel(); protectPanel(); }, ms);
-    });
+    mount();
+    var attempts = 0;
+    var timer = setInterval(function () {
+      mount();
+      attempts += 1;
+      if (attempts >= 60) clearInterval(timer);
+    }, 1000);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
   else start();
-  window.addEventListener('load', start);
+  window.addEventListener('load', mount);
 })();
