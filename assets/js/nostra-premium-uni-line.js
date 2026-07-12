@@ -1,5 +1,5 @@
-/* Grupo Nostradamus - Nueva línea premium Nostra UNI
-   Versión segura: nombres premium + WhatsApp actualizado + ruta compacta.
+/* Grupo Nostradamus - Línea premium Nostra UNI
+   Versión segura: nombres premium, WhatsApp correcto y ruta compacta.
 */
 (function(){
   var file=(location.pathname.split('/').pop()||'index.html').toLowerCase();
@@ -11,39 +11,36 @@
     'ciclo-elite-uni.html':{n:'Nostra Talentum UNI',c:'TALENTUM',icon:'🏆',verb:'COMPITE',tag:'Talento superior para competir por primeros lugares.',d:'Nostra Talentum UNI es un programa especializado para estudiantes con nivel académico sobresaliente, preparados para competir por los primeros lugares del examen de admisión UNI. Desarrolla velocidad, precisión, estrategia, dominio de problemas de alta complejidad y respuesta bajo máxima exigencia.',ideal:'Donde el talento compite por los primeros lugares.'}
   };
   var routes=['ciclo-anual-uni.html','ciclo-semianual-uni.html','ciclo-semestral-uni.html','ciclo-repaso-uni.html','ciclo-elite-uni.html'];
-  var textReps=[
+  var reps=[
     ['CICLO ANUAL UNI','Nostra 360 UNI'],['Ciclo Anual UNI','Nostra 360 UNI'],['Anual UNI','Nostra 360 UNI'],
     ['CICLO SEMIANUAL UNI','Nostra Power UNI'],['Ciclo Semianual UNI','Nostra Power UNI'],['Semianual UNI','Nostra Power UNI'],
     ['CICLO SEMESTRAL UNI','Nostra Élite UNI'],['Ciclo Semestral UNI','Nostra Élite UNI'],['Semestral UNI','Nostra Élite UNI'],
     ['CICLO REPASO UNI','Nostra Prime UNI'],['Ciclo Repaso UNI','Nostra Prime UNI'],['Ciclo repaso UNI','Nostra Prime UNI'],['Repaso UNI','Nostra Prime UNI'],
-    ['CICLO ÉLITE UNI','Nostra Talentum UNI'],['Ciclo Élite UNI','Nostra Talentum UNI'],['Ciclo Elite UNI','Nostra Talentum UNI']
+    ['CICLO ÉLITE UNI','Nostra Talentum UNI'],['CICLO ELITE UNI','Nostra Talentum UNI'],['Ciclo Élite UNI','Nostra Talentum UNI'],['Ciclo Elite UNI','Nostra Talentum UNI']
   ];
-  var waReps=textReps.concat([['CICLO ELITE UNI','Nostra Talentum UNI'],['Elite UNI','Nostra Talentum UNI'],['Élite UNI','Nostra Talentum UNI']]);
   var started=false;
 
-  function normalizePremiumText(value, forWhatsApp){
+  function cleanPremium(value){
     var v=String(value||'');
-    var keepElite='__NOSTRA_ELITE_UNI__', keepTalentum='__NOSTRA_TALENTUM_UNI__';
+    var keepElite='__KEEP_NOSTRA_ELITE__',keepTalent='__KEEP_NOSTRA_TALENTUM__';
     v=v.split('Nostra Élite UNI').join(keepElite).split('Nostra Elite UNI').join(keepElite);
-    v=v.split('Nostra Talentum UNI').join(keepTalentum);
-    (forWhatsApp?waReps:textReps).forEach(function(r){v=v.split(r[0]).join(r[1])});
+    v=v.split('Nostra Talentum UNI').join(keepTalent);
+    reps.forEach(function(r){v=v.split(r[0]).join(r[1])});
     v=v.split('Nostra Nostra 360 UNI').join('Nostra 360 UNI')
        .split('Nostra Nostra Power UNI').join('Nostra Power UNI')
+       .split('Nostra Nostra Élite UNI').join('Nostra Élite UNI')
        .split('Nostra Nostra Prime UNI').join('Nostra Prime UNI')
-       .split('Nostra Nostra Talentum UNI').join('Nostra Talentum UNI')
-       .split('Nostra Nostra Élite UNI').join('Nostra Élite UNI');
-    return v.split(keepElite).join('Nostra Élite UNI').split(keepTalentum).join('Nostra Talentum UNI');
+       .split('Nostra Nostra Talentum UNI').join('Nostra Talentum UNI');
+    return v.split(keepElite).join('Nostra Élite UNI').split(keepTalent).join('Nostra Talentum UNI');
   }
 
-  function meta(name,val){var m=document.querySelector('meta[name="'+name+'"]');if(!m){m=document.createElement('meta');m.name=name;document.head.appendChild(m)}if(m.content!==val)m.content=val;}
+  function meta(name,val){var m=document.querySelector('meta[name="'+name+'"]');if(!m){m=document.createElement('meta');m.name=name;document.head.appendChild(m)}if(m.content!==val)m.content=val}
   function wa(name){return 'https://wa.me/51993750351?text='+encodeURIComponent('Hola Nostradamus, quiero informes sobre '+name+'.')}
   function hidePreloaderSafe(){setTimeout(function(){var p=document.querySelector('.preloader');if(p){p.style.display='none';p.style.opacity='0';p.style.visibility='hidden'}},4500)}
 
   function addStyle(){
-    var old=document.getElementById('nostra-ruta-premium-style');
-    if(old)old.remove();
-    var s=document.createElement('style');
-    s.id='nostra-ruta-premium-style';
+    var old=document.getElementById('nostra-ruta-premium-style');if(old)old.remove();
+    var s=document.createElement('style');s.id='nostra-ruta-premium-style';
     s.textContent=`
       #nostra-ruta-premium{position:relative!important;overflow:hidden!important;padding:92px 0 88px!important;background:radial-gradient(circle at 12% 18%,rgba(0,194,209,.30),transparent 31%),radial-gradient(circle at 88% 78%,rgba(255,181,57,.18),transparent 30%),linear-gradient(135deg,#02070d 0%,#061426 38%,#063a48 68%,#078c95 100%)!important;color:#fff!important;}
       #nostra-ruta-premium:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:46px 46px;opacity:.5;pointer-events:none;}
@@ -54,7 +51,7 @@
       .nostra-ruta-lead{max-width:930px;margin:0 auto 36px!important;color:rgba(255,255,255,.88)!important;font-size:clamp(17px,1.45vw,21px)!important;line-height:1.58!important;font-weight:750;}
       .nostra-ruta-grid{position:relative;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;text-align:left;align-items:stretch;}
       .nostra-ruta-grid:before{content:"";position:absolute;left:5%;right:5%;top:36px;height:3px;background:linear-gradient(90deg,transparent,#00e5ff,#ffb539,#00e5ff,transparent);box-shadow:0 0 18px rgba(0,229,255,.48);opacity:.58;}
-      .nostra-ruta-card{position:relative;min-height:156px;padding:17px 16px 16px;border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.135),rgba(255,255,255,.055));border:1px solid rgba(255,255,255,.19);box-shadow:0 16px 40px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.16);backdrop-filter:blur(10px);color:#fff!important;text-decoration:none!important;overflow:hidden;transform:translateY(0);transition:transform .24s ease,box-shadow .24s ease,border-color .24s ease;}
+      .nostra-ruta-card{position:relative;min-height:156px;padding:17px 16px 16px;border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.135),rgba(255,255,255,.055));border:1px solid rgba(255,255,255,.19);box-shadow:0 16px 40px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.16);backdrop-filter:blur(10px);color:#fff!important;text-decoration:none!important;overflow:hidden;transition:transform .24s ease,box-shadow .24s ease,border-color .24s ease;}
       .nostra-ruta-card:before{content:"";position:absolute;inset:-1px;background:linear-gradient(135deg,rgba(0,229,255,0),rgba(0,229,255,.20),rgba(255,181,57,.16),rgba(0,229,255,0));opacity:0;transition:.24s;pointer-events:none;}
       .nostra-ruta-card:after{content:"→";position:absolute;right:15px;top:15px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.16);color:#a8f7ff;font-weight:950;}
       .nostra-ruta-card:hover{transform:translateY(-8px);border-color:rgba(168,247,255,.58);box-shadow:0 24px 54px rgba(0,0,0,.32),0 0 34px rgba(0,194,209,.18);}
@@ -72,16 +69,32 @@
     document.head.appendChild(s);
   }
 
-  function replaceText(){if(!document.body)return;var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode:function(n){var p=n.parentElement;if(!p||/script|style|textarea|input/i.test(p.tagName))return NodeFilter.FILTER_REJECT;return NodeFilter.FILTER_ACCEPT;}}),nodes=[];while(w.nextNode())nodes.push(w.currentNode);nodes.forEach(function(n){var v=normalizePremiumText(n.nodeValue,false);if(v!==n.nodeValue)n.nodeValue=v});}
-  function normalizeWhatsAppLinks(){document.querySelectorAll('a[href]').forEach(function(a){var href=a.getAttribute('href')||'';if(!/(wa\.me|whatsapp\.com)/i.test(href))return;try{var u=new URL(href,location.href);var text=u.searchParams.get('text');if(text){var next=normalizePremiumText(text,true);if(next!==text){u.searchParams.set('text',next);a.setAttribute('href',u.toString())}}}catch(e){try{var d=decodeURIComponent(href),f=normalizePremiumText(d,true);if(f!==d)a.setAttribute('href',f)}catch(err){}}});}
+  function replaceText(){if(!document.body)return;var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode:function(n){var p=n.parentElement;if(!p||/script|style|textarea|input/i.test(p.tagName))return NodeFilter.FILTER_REJECT;return NodeFilter.FILTER_ACCEPT;}}),nodes=[];while(w.nextNode())nodes.push(w.currentNode);nodes.forEach(function(n){var v=cleanPremium(n.nodeValue);if(v!==n.nodeValue)n.nodeValue=v});}
+
+  function normalizeWhatsAppLinks(forceCurrent){
+    var current=map[file];
+    document.querySelectorAll('a[href]').forEach(function(a){
+      var href=a.getAttribute('href')||'';
+      if(!/(wa\.me|whatsapp\.com)/i.test(href))return;
+      try{
+        var u=new URL(href,location.href);
+        var text=u.searchParams.get('text')||'';
+        if(current && forceCurrent!==false){u.searchParams.set('text','Hola Nostradamus, quiero informes sobre '+current.n+'.');a.setAttribute('href',u.toString());return;}
+        if(text){var next=cleanPremium(text);if(next!==text){u.searchParams.set('text',next);a.setAttribute('href',u.toString())}}
+      }catch(e){try{var d=decodeURIComponent(href),f=cleanPremium(d);if(f!==d)a.setAttribute('href',f)}catch(err){}}
+    });
+  }
+
   function updateSelects(){document.querySelectorAll('select[name="ciclo"]').forEach(function(s){if(s.getAttribute('data-nostra-premium-select')==='1')return;var keep=['Nostra 360 UNI','Nostra Power UNI','Nostra Élite UNI','Nostra Prime UNI','Nostra Talentum UNI','Ciclo IEN','Paralelo CEPRE UNI','Ciclo Verano UNI','NostraMÓDULOS','Proyecto Escolar'];s.innerHTML='<option value="">Seleccionar programa</option>'+keep.map(function(x){return '<option>'+x+'</option>'}).join('');s.setAttribute('data-nostra-premium-select','1');});}
   function schema(d){var sc=document.getElementById('nostra-schema-course');var data={'@context':'https://schema.org','@type':'Course','name':d.n,'description':d.d+' '+d.ideal,'provider':{'@type':'EducationalOrganization','name':'Grupo Nostradamus'},'educationalLevel':'Preuniversitario','inLanguage':'es-PE','url':location.href};if(!sc){sc=document.createElement('script');sc.type='application/ld+json';sc.id='nostra-schema-course';document.head.appendChild(sc)}var text=JSON.stringify(data);if(sc.textContent!==text)sc.textContent=text;}
-  function detail(){var d=map[file];if(!d)return;document.title=d.n+' | Grupo Nostradamus Premium';meta('description',d.d+' '+d.ideal);meta('keywords','Grupo Nostradamus Premium, '+d.n+', preparación UNI, ruta Nostra UNI, academia UNI, simulacros UNI');['.breadcumb-title','.course-title','h1.breadcumb-title','.breadcumb-content h1'].forEach(function(sel){document.querySelectorAll(sel).forEach(function(e){if(e.textContent!==d.n)e.textContent=d.n})});document.querySelectorAll('.breadcumb-menu li,.breadcumb-menu a,.breadcumb-menu span').forEach(function(e){var v=normalizePremiumText(e.textContent,false);if(v!==e.textContent)e.textContent=v});var p=document.querySelector('.course-description p');if(p&&p.getAttribute('data-nostra-premium-copy')!=='1'){p.innerHTML=d.d+'<br><br><strong>'+d.tag+'</strong><span class="nostra-cycle-ideal"> '+d.ideal+'</span>';p.setAttribute('data-nostra-premium-copy','1')}var h=document.querySelector('.nostra-cycle-hero__title');if(h&&h.textContent!==d.tag)h.textContent=d.tag;var ht=document.querySelector('.nostra-cycle-hero__text');if(ht&&ht.textContent!==d.d)ht.textContent=d.d;document.querySelectorAll('a[href*="wa.me"],a[href*="whatsapp.com"]').forEach(function(a){if((a.textContent||'').toLowerCase().indexOf('informes')>-1)a.href=wa(d.n)});schema(d);}
+
+  function detail(){var d=map[file];if(!d)return;document.title=d.n+' | Grupo Nostradamus Premium';meta('description',d.d+' '+d.ideal);meta('keywords','Grupo Nostradamus Premium, '+d.n+', preparación UNI, ruta Nostra UNI, academia UNI, simulacros UNI');['.breadcumb-title','.course-title','h1.breadcumb-title','.breadcumb-content h1'].forEach(function(sel){document.querySelectorAll(sel).forEach(function(e){if(e.textContent!==d.n)e.textContent=d.n})});document.querySelectorAll('.breadcumb-menu li,.breadcumb-menu a,.breadcumb-menu span').forEach(function(e){var v=cleanPremium(e.textContent);if(v!==e.textContent)e.textContent=v});var p=document.querySelector('.course-description p');if(p&&p.getAttribute('data-nostra-premium-copy')!=='1'){p.innerHTML=d.d+'<br><br><strong>'+d.tag+'</strong><span class="nostra-cycle-ideal"> '+d.ideal+'</span>';p.setAttribute('data-nostra-premium-copy','1')}var h=document.querySelector('.nostra-cycle-hero__title');if(h&&h.textContent!==d.tag)h.textContent=d.tag;var ht=document.querySelector('.nostra-cycle-hero__text');if(ht&&ht.textContent!==d.d)ht.textContent=d.d;schema(d);}
   function navNames(){routes.forEach(function(r){var d=map[r];document.querySelectorAll('a[href$="'+r+'"]').forEach(function(a){if(a.textContent!==d.n)a.textContent=d.n})})}
-  function premiumBlock(){addStyle();var target=document.querySelector('#course-sec,.course-area,.space');if(!target)return;var sec=document.getElementById('nostra-ruta-premium');if(!sec){sec=document.createElement('section');sec.id='nostra-ruta-premium';target.parentNode.insertBefore(sec,target)}sec.setAttribute('data-ruta-version','compact-2026');sec.innerHTML='<div class="nostra-ruta-wrap"><span class="nostra-ruta-kicker">✦ Nueva línea premium Nostra UNI</span><h2 class="nostra-ruta-title">La Ruta Nostra UNI</h2><p class="nostra-ruta-lead">No todos los postulantes comienzan desde el mismo punto. Identificamos su nivel, entendemos su historia y le asignamos el programa que realmente necesita para avanzar con exigencia.</p><div class="nostra-ruta-grid">'+routes.map(function(r){var d=map[r];return '<a class="nostra-ruta-card" href="'+r+'"><span class="nostra-ruta-number">'+d.icon+'</span><b class="nostra-ruta-name">'+d.n+'</b><span class="nostra-ruta-verb">'+d.verb+'</span><span class="nostra-ruta-tag">'+d.tag+'</span></a>'}).join('')+'</div><h3 class="nostra-ruta-motto"><span>360 forma.</span> Power transforma. Élite perfecciona. Prime define. Talentum compite.</h3></div>';}
-  function run(){addStyle();replaceText();updateSelects();detail();navNames();normalizeWhatsAppLinks();if(file==='index.html'||file===''||location.pathname==='/'||file==='ciclos.html')premiumBlock()}
-  function start(){if(started)return;started=true;hidePreloaderSafe();run();[350,900,1600,2600,3800].forEach(function(ms){setTimeout(run,ms)})}
-  document.addEventListener('click',function(e){var a=e.target&&e.target.closest?e.target.closest('a[href]'):null;if(a&&/(wa\.me|whatsapp\.com)/i.test(a.href))normalizeWhatsAppLinks()},true);
+  function premiumBlock(){addStyle();var old=document.getElementById('nostra-ruta-premium');if(old)old.remove();var target=document.querySelector('#course-sec,.course-area,.space');if(!target)return;var sec=document.createElement('section');sec.id='nostra-ruta-premium';sec.innerHTML='<div class="nostra-ruta-wrap"><span class="nostra-ruta-kicker">✦ Nueva línea premium Nostra UNI</span><h2 class="nostra-ruta-title">La Ruta Nostra UNI</h2><p class="nostra-ruta-lead">No todos los postulantes comienzan desde el mismo punto. Identificamos su nivel, entendemos su historia y le asignamos el programa que realmente necesita para avanzar con exigencia.</p><div class="nostra-ruta-grid">'+routes.map(function(r){var d=map[r];return '<a class="nostra-ruta-card" href="'+r+'"><span class="nostra-ruta-number">'+d.icon+'</span><b class="nostra-ruta-name">'+d.n+'</b><span class="nostra-ruta-verb">'+d.verb+'</span><span class="nostra-ruta-tag">'+d.tag+'</span></a>'}).join('')+'</div><h3 class="nostra-ruta-motto"><span>360 forma.</span> Power transforma. Élite perfecciona. Prime define. Talentum compite.</h3></div>';target.parentNode.insertBefore(sec,target);}
+
+  function run(){addStyle();replaceText();updateSelects();detail();navNames();normalizeWhatsAppLinks(true);if(file==='index.html'||file===''||location.pathname==='/'||file==='ciclos.html')premiumBlock();}
+  function start(){if(started)return;started=true;hidePreloaderSafe();run();[350,900,1600,2600,3800].forEach(function(ms){setTimeout(run,ms)});}
+  document.addEventListener('click',function(e){var a=e.target&&e.target.closest?e.target.closest('a[href]'):null;if(a&&/(wa\.me|whatsapp\.com)/i.test(a.href))normalizeWhatsAppLinks(true)},true);
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
   window.addEventListener('load',function(){run();hidePreloaderSafe()});
 })();
