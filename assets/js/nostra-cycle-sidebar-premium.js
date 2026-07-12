@@ -1,4 +1,4 @@
-/* Grupo Nostradamus - Panel lateral para todos los ciclos */
+/* Grupo Nostradamus - Panel lateral persistente para todos los ciclos */
 (function () {
   var file = (location.pathname.split('/').pop() || '').toLowerCase();
   var cycles = {
@@ -26,7 +26,8 @@
     var style = document.createElement('style');
     style.id = 'nostra-cycle-sidebar-premium-style';
     style.textContent = `
-      .nostra-cycle-panel{position:sticky;top:105px;border-radius:28px;overflow:hidden;background:radial-gradient(circle at 12% 12%,rgba(0,229,255,.18),transparent 34%),linear-gradient(155deg,#02070d 0%,#061426 46%,#063a48 100%);border:1px solid rgba(168,247,255,.24);box-shadow:0 28px 70px rgba(0,0,0,.18),0 0 34px rgba(0,194,209,.12);color:#fff;padding:24px;}
+      .sidebar-area{display:block!important;visibility:visible!important;opacity:1!important;}
+      .nostra-cycle-panel{position:sticky;top:105px;border-radius:28px;overflow:hidden;background:radial-gradient(circle at 12% 12%,rgba(0,229,255,.18),transparent 34%),linear-gradient(155deg,#02070d 0%,#061426 46%,#063a48 100%);border:1px solid rgba(168,247,255,.24);box-shadow:0 28px 70px rgba(0,0,0,.18),0 0 34px rgba(0,194,209,.12);color:#fff;padding:24px;margin-bottom:18px;}
       .nostra-cycle-panel:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.06),transparent 38%,rgba(255,181,57,.08));pointer-events:none;}
       .nostra-cycle-panel>*{position:relative;z-index:2;}
       .nostra-cycle-panel__badge{display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(168,247,255,.26);color:#a8f7ff;font-weight:900;font-size:13px;text-transform:uppercase;letter-spacing:.5px;}
@@ -44,44 +45,71 @@
       .nostra-cycle-map p{margin:0 0 12px;color:rgba(255,255,255,.72);font-size:14px;line-height:1.45;}
       .nostra-cycle-map iframe{width:100%!important;height:210px!important;border:0!important;border-radius:18px;filter:saturate(1.08) contrast(1.03);}
       .nostra-cycle-side-note{margin-top:13px;color:#a8f7ff;font-weight:850;font-size:13px;text-align:center;}
+      .nostra-cycle-detail-nav{margin-top:18px;padding:15px;border-radius:20px;background:#fff;border:1px solid rgba(0,137,150,.12);box-shadow:0 12px 28px rgba(6,20,38,.08);}
+      .nostra-cycle-detail-nav h4{margin:0 0 10px;color:#061426;font-size:16px;font-weight:950;}
+      .nostra-cycle-detail-nav a{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 11px;margin-bottom:7px;border-radius:13px;background:#f4fbfc;color:#061426;font-size:13px;font-weight:850;text-decoration:none;border:1px solid rgba(0,137,150,.10);}
+      .nostra-cycle-detail-nav a.active,.nostra-cycle-detail-nav a:hover{background:linear-gradient(135deg,#00c2d1,#008b96);color:#fff;}
       @media(max-width:991px){.nostra-cycle-panel{position:relative;top:auto;margin-top:28px;}}
     `;
     document.head.appendChild(style);
   }
 
+  function navHtml() {
+    return '<div class="nostra-cycle-detail-nav"><h4>Todos los ciclos</h4>' + Object.keys(cycles).map(function (url) {
+      var item = cycles[url];
+      return '<a class="' + (url === file ? 'active' : '') + '" href="' + url + '"><span>' + item.name + '</span><span>›</span></a>';
+    }).join('') + '</div>';
+  }
+
+  function panelHtml() {
+    return '<div class="nostra-cycle-panel" data-nostra-persistent-panel="1">' +
+      '<span class="nostra-cycle-panel__badge">' + data.icon + ' ' + data.badge + '</span>' +
+      '<h3 class="nostra-cycle-panel__title">' + data.name + '</h3>' +
+      '<p class="nostra-cycle-panel__tag">' + data.tag + '</p>' +
+      '<a class="nostra-cycle-panel__btn nostra-cycle-panel__btn--wa" href="' + WHATSAPP + '" target="_blank" rel="noopener noreferrer">💬 Solicitar informes</a>' +
+      '<a class="nostra-cycle-panel__btn nostra-cycle-panel__btn--pre" href="' + PREINSCRIPCION + '">📝 Preinscribirme ahora</a>' +
+      '<a class="nostra-cycle-panel__btn nostra-cycle-panel__btn--live" href="' + CLASES + '">🔴 Clases en vivo</a>' +
+      '<div class="nostra-cycle-panel__trust"><span>✅ Cupos limitados</span><span>✅ Seguimiento académico</span><span>✅ Evaluaciones y práctica constante</span><span>✅ Plana docente especialista</span></div>' +
+      '<div class="nostra-cycle-map"><h4>📍 Sede UNI</h4><p>Ubícanos cerca de la Universidad Nacional de Ingeniería.</p><iframe src="' + MAPA_UNI + '" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe></div>' +
+      '<div class="nostra-cycle-side-note">Atención rápida por WhatsApp</div>' +
+    '</div>' + navHtml();
+  }
+
   function buildPanel() {
     addStyle();
     var sidebar = document.querySelector('.sidebar-area');
-    if (!sidebar || sidebar.getAttribute('data-nostra-cycle-panel') === '1') return;
-    sidebar.setAttribute('data-nostra-cycle-panel', '1');
-    sidebar.innerHTML = `
-      <div class="nostra-cycle-panel">
-        <span class="nostra-cycle-panel__badge">${data.icon} ${data.badge}</span>
-        <h3 class="nostra-cycle-panel__title">${data.name}</h3>
-        <p class="nostra-cycle-panel__tag">${data.tag}</p>
-        <a class="nostra-cycle-panel__btn nostra-cycle-panel__btn--wa" href="${WHATSAPP}" target="_blank" rel="noopener noreferrer">💬 Solicitar informes</a>
-        <a class="nostra-cycle-panel__btn nostra-cycle-panel__btn--pre" href="${PREINSCRIPCION}">📝 Preinscribirme ahora</a>
-        <a class="nostra-cycle-panel__btn nostra-cycle-panel__btn--live" href="${CLASES}">🔴 Clases en vivo</a>
-        <div class="nostra-cycle-panel__trust">
-          <span>✅ Cupos limitados</span>
-          <span>✅ Seguimiento académico</span>
-          <span>✅ Evaluaciones y práctica constante</span>
-          <span>✅ Plana docente especialista</span>
-        </div>
-        <div class="nostra-cycle-map">
-          <h4>📍 Sede UNI</h4>
-          <p>Ubícanos cerca de la Universidad Nacional de Ingeniería.</p>
-          <iframe src="${MAPA_UNI}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-        </div>
-        <div class="nostra-cycle-side-note">Atención rápida por WhatsApp</div>
-      </div>
-    `;
+    if (!sidebar) return false;
+
+    var existing = sidebar.querySelector('.nostra-cycle-panel[data-nostra-persistent-panel="1"]');
+    var hasCorrectTitle = existing && existing.textContent.indexOf(data.name) !== -1;
+    if (hasCorrectTitle && sidebar.querySelector('.nostra-cycle-detail-nav')) return true;
+
+    sidebar.removeAttribute('data-nostra-cycle-panel');
+    sidebar.innerHTML = panelHtml();
+    return true;
+  }
+
+  function protectPanel() {
+    var sidebar = document.querySelector('.sidebar-area');
+    if (!sidebar || sidebar.getAttribute('data-nostra-panel-observed') === '1') return;
+    sidebar.setAttribute('data-nostra-panel-observed', '1');
+    var locked = false;
+    var observer = new MutationObserver(function () {
+      if (locked) return;
+      if (!sidebar.querySelector('.nostra-cycle-panel[data-nostra-persistent-panel="1"]')) {
+        locked = true;
+        setTimeout(function () { buildPanel(); locked = false; }, 60);
+      }
+    });
+    observer.observe(sidebar, { childList: true, subtree: false });
   }
 
   function start() {
     buildPanel();
-    setTimeout(buildPanel, 500);
-    setTimeout(buildPanel, 1500);
+    protectPanel();
+    [250, 700, 1400, 2400, 4000, 6500, 9000].forEach(function (ms) {
+      setTimeout(function () { buildPanel(); protectPanel(); }, ms);
+    });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
