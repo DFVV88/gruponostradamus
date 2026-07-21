@@ -1,6 +1,7 @@
 /* ==================================================
    Grupo Nostradamus - Parte 2 Nostra 360 UNI
-   Muestra precios guardados en Firebase y conserva respaldo local.
+   Muestra precios guardados en Firebase en la sección
+   oficial: PRECIOS ACADÉMICOS — Nuestros planes para tu futuro.
 ================================================== */
 (function(){
   'use strict';
@@ -11,10 +12,10 @@
   var PROGRAM_ID = 'nostra-360-uni';
   var PROGRAM_NAME = 'Nostra 360 UNI';
   var DEFAULT_PLANS = [
-    {id:'presencial-turno-manana',nombre:'Presencial - Turno Mañana',tipoCobro:'mensual',precio:400,matricula:0,activo:true,beneficios:['Clases en aulas equipadas','Atención personalizada','Materiales impresos']},
-    {id:'presencial-full',nombre:'Presencial - FULL',tipoCobro:'mensual',precio:500,matricula:0,activo:true,beneficios:['Clases en aulas equipadas','Atención personalizada','Materiales impresos','Experiencia práctica']},
-    {id:'virtual-turno-manana',nombre:'Virtual - Turno Mañana',tipoCobro:'mensual',precio:200,matricula:0,activo:true,beneficios:['Acceso a materiales 24/7','Plataforma interactiva','Flexibilidad horaria']},
-    {id:'virtual-full',nombre:'Virtual - FULL',tipoCobro:'mensual',precio:300,matricula:0,activo:true,beneficios:['Acceso a materiales 24/7','Plataforma interactiva','Flexibilidad horaria','Interacción en tiempo real']}
+    {id:'presencial-turno-manana',nombre:'Presencial - Turno Mañana',tipoCobro:'mensual',precio:400,matricula:0,activo:true,destacado:false,beneficios:['Clases en aulas equipadas','Atención personalizada','Materiales impresos']},
+    {id:'presencial-full',nombre:'Presencial - FULL',tipoCobro:'mensual',precio:500,matricula:0,activo:true,destacado:true,beneficios:['Clases en aulas equipadas','Atención personalizada','Materiales impresos','Experiencia práctica']},
+    {id:'virtual-turno-manana',nombre:'Virtual - Turno Mañana',tipoCobro:'mensual',precio:200,matricula:0,activo:true,destacado:false,beneficios:['Acceso a materiales 24/7','Plataforma interactiva','Flexibilidad horaria']},
+    {id:'virtual-full',nombre:'Virtual - FULL',tipoCobro:'mensual',precio:300,matricula:0,activo:true,destacado:true,beneficios:['Acceso a materiales 24/7','Plataforma interactiva','Flexibilidad horaria','Interacción en tiempo real']}
   ];
   var firebaseConfig = {
     apiKey:'AIzaSyCO5jiS9vcEMmBMkGoD5XnNPm_OQILehkM',
@@ -27,7 +28,7 @@
 
   var currentPlans = DEFAULT_PLANS;
 
-  function clean(value){ return String(value == null ? '' : value).trim(); }
+  function clean(value){ return String(value == null ? '' : value).replace(/\s+/g,' ').trim(); }
   function esc(value){
     return String(value == null ? '' : value).replace(/[&<>'"]/g,function(c){
       return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c];
@@ -49,7 +50,8 @@
   }
   function normalizePlan(plan,index){
     var fallback = DEFAULT_PLANS[index] || DEFAULT_PLANS[0];
-    var benefits = Array.isArray(plan && plan.beneficios) ? plan.beneficios.map(clean).filter(Boolean).slice(0,8) : fallback.beneficios;
+    var sourceBenefits = Array.isArray(plan && plan.beneficios) ? plan.beneficios : fallback.beneficios;
+    var normalizedBenefits = sourceBenefits.map(clean).filter(Boolean).slice(0,8);
     return {
       id:clean(plan && plan.id) || fallback.id,
       nombre:clean(plan && plan.nombre) || fallback.nombre,
@@ -57,7 +59,8 @@
       precio:num(plan && plan.precio != null ? plan.precio : fallback.precio),
       matricula:num(plan && plan.matricula),
       activo:!plan || plan.activo !== false,
-      beneficios:benefits.length ? benefits : fallback.beneficios,
+      destacado:!!(plan && plan.destacado === true),
+      beneficios:normalizedBenefits.length ? normalizedBenefits : fallback.beneficios,
       promocionActiva:!!(plan && plan.promocionActiva === true),
       precioPromocional:num(plan && plan.precioPromocional),
       promocionHasta:clean(plan && plan.promocionHasta)
@@ -77,18 +80,82 @@
     if(document.getElementById('nostra360-stage2-style')) return;
     var style = document.createElement('style');
     style.id = 'nostra360-stage2-style';
-    style.textContent = '.nostra360-old{display:block;font-size:17px;color:#7c8998;text-decoration:line-through;margin-bottom:4px}.nostra360-promo{display:inline-flex;margin-top:9px;padding:5px 10px;border-radius:999px;background:#fff3df;color:#8a4c00;font-size:12px;font-weight:900}.price-card .th-btn{white-space:normal!important;text-align:center}';
+    style.textContent = [
+      '.nostra360-old{display:block;font-size:17px;color:#7c8998;text-decoration:line-through;margin-bottom:4px}',
+      '.nostra360-promo{display:inline-flex;margin-top:9px;padding:5px 10px;border-radius:999px;background:#fff3df;color:#8a4c00;font-size:12px;font-weight:900}',
+      '[data-nostra360-official-pricing="1"] .price-card .th-btn{white-space:normal!important;text-align:center}',
+      '[data-nostra360-official-pricing="1"]{scroll-margin-top:110px}'
+    ].join('');
     document.head.appendChild(style);
   }
   function benefitsHtml(plan){
     var items = [];
     if(num(plan.matricula) > 0) items.push('Matrícula: ' + money(plan.matricula));
     items = items.concat(plan.beneficios || []);
-    return items.slice(0,8).map(function(item){ return '<li><i class="far fa-check-circle"></i> ' + esc(item) + '</li>'; }).join('');
+    return items.slice(0,8).map(function(item){
+      return '<li><i class="far fa-check-circle"></i> ' + esc(item) + '</li>';
+    }).join('');
+  }
+  function locateOfficialPricingSection(){
+    var sections = Array.prototype.slice.call(document.querySelectorAll('section'));
+    return sections.find(function(section){
+      var title = section.querySelector('.title-area .sec-title');
+      var subtitle = section.querySelector('.title-area .sub-title');
+      var titleText = clean(title && title.textContent).toLowerCase();
+      var subtitleText = clean(subtitle && subtitle.textContent).toLowerCase();
+      return section.querySelectorAll('.price-card').length >= 4 &&
+        (titleText.indexOf('nuestros planes para tu futuro') !== -1 || subtitleText.indexOf('precios academicos') !== -1 || subtitleText.indexOf('precios académicos') !== -1);
+    }) || null;
+  }
+  function restoreDescriptionSchedule(){
+    var pane = document.getElementById('Coursedescription');
+    if(!pane) return;
+
+    var rows = Array.prototype.slice.call(pane.querySelectorAll('.row.gy-4.justify-content-center'));
+    var row = rows.find(function(item){ return item.querySelector('.price-card'); });
+    if(!row) return;
+
+    var looksLikePricing = row.querySelector('.price-card_content') ||
+      row.querySelectorAll('.price-card').length !== 2 ||
+      row.querySelector('[data-nostra-plan-id]');
+
+    if(looksLikePricing){
+      row.innerHTML =
+        '<div class="col-xl-6 col-md-6">' +
+          '<div class="price-card">' +
+            '<div class="price-card_top">' +
+              '<h3 class="price-card_title">Turno Mañana</h3>' +
+              '<h4 class="price-card_price">Lunes a Sábado <span class="horario-ciclo">(8:00 a.m. a 1:00 p.m.)</span><span class="horario-ciclo">Más dos tardes RM y RV</span></h4>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="col-xl-6 col-md-6">' +
+          '<div class="price-card">' +
+            '<div class="price-card_top">' +
+              '<h3 class="price-card_title">Turno Único - Full</h3>' +
+              '<h4 class="price-card_price">Lunes a Viernes <span class="horario-ciclo">(8:00 a.m. a 6:00 p.m.)</span></h4>' +
+              '<h4 class="price-card_price">Sábados <span class="horario-ciclo">(8:00 a.m. a 1:00 p.m.)</span></h4>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+    }
+
+    document.querySelectorAll('.nostra-pricing-note').forEach(function(note){ note.remove(); });
   }
   function apply(){
     addStyles();
-    var cards = Array.prototype.slice.call(document.querySelectorAll('.price-card'));
+    restoreDescriptionSchedule();
+
+    var section = locateOfficialPricingSection();
+    if(!section) return false;
+
+    section.setAttribute('data-nostra360-official-pricing','1');
+    var subtitle = section.querySelector('.title-area .sub-title');
+    var heading = section.querySelector('.title-area .sec-title');
+    if(subtitle) subtitle.innerHTML = '<i class="fal fa-book me-1"></i> PRECIOS ACADÉMICOS';
+    if(heading) heading.textContent = 'Nuestros planes para tu futuro';
+
+    var cards = Array.prototype.slice.call(section.querySelectorAll('.price-card')).slice(0,4);
     if(cards.length < 4) return false;
 
     currentPlans.slice(0,4).forEach(function(plan,index){
@@ -101,8 +168,10 @@
       var promo = promoActive(plan);
       var amount = promo ? plan.precioPromocional : plan.precio;
       var duration = plan.tipoCobro === 'unico' ? '/PAGO ÚNICO' : '/MENSUAL';
+      var column = card.closest('.col-xl-3, .col-md-6');
 
       if(title) title.textContent = plan.nombre;
+      card.classList.toggle('active',plan.destacado === true);
       if(price){
         price.innerHTML = (promo ? '<span class="nostra360-old">' + money(plan.precio) + '</span>' : '') + money(amount) + ' <span class="duration">' + duration + '</span>';
         var previousBadge = card.querySelector('.nostra360-promo');
@@ -116,7 +185,8 @@
       }
       if(list) list.innerHTML = benefitsHtml(plan);
       card.setAttribute('data-nostra-plan-id',plan.id);
-      card.style.display = plan.activo === false ? 'none' : '';
+      if(column) column.style.display = plan.activo === false ? 'none' : '';
+      else card.style.display = plan.activo === false ? 'none' : '';
       if(link){
         link.href = preUrl(plan);
         link.removeAttribute('target');
@@ -161,8 +231,8 @@
     var timer = setInterval(function(){
       apply();
       attempts += 1;
-      if(attempts >= 40) clearInterval(timer);
-    },500);
+      if(attempts >= 50) clearInterval(timer);
+    },400);
     loadRemote();
   }
 
