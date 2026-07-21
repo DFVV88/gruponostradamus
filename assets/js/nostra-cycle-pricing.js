@@ -182,6 +182,11 @@
     var section = locatePricingSection();
     if(!section) return false;
     section.setAttribute('data-nostra-product-pricing','1');
+    if(section.getAttribute('data-nostra-remote-pricing') === '1'){
+      removeDescriptionSchedule();
+      updateSidebar();
+      return true;
+    }
     var subtitle = section.querySelector('.title-area .sub-title');
     var heading = section.querySelector('.title-area .sec-title');
     if(subtitle) subtitle.innerHTML = '<i class="fal fa-book me-1"></i> PRECIOS ACADÉMICOS';
@@ -233,6 +238,7 @@
     var section = locatePricingSection();
     if(!section) return false;
     section.setAttribute('data-nostra-product-pricing','1');
+    section.setAttribute('data-nostra-remote-pricing','1');
     var subtitle = section.querySelector('.title-area .sub-title');
     var heading = section.querySelector('.title-area .sec-title');
     if(subtitle) subtitle.innerHTML = '<i class="fal fa-book me-1"></i> PRECIOS ACADÉMICOS';
