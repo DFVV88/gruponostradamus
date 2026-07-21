@@ -1,6 +1,7 @@
 /* ==================================================
    Grupo Nostradamus - Nostra 360 UNI
    Precios, promociones y horarios dinámicos desde Firebase.
+   Los horarios se muestran únicamente dentro de cada plan.
 ================================================== */
 (function(){
   'use strict';
@@ -29,7 +30,9 @@
 
   var currentPlans = DEFAULT_PLANS.map(normalizePlan);
 
-  function clean(value){ return String(value == null ? '' : value).replace(/\s+/g,' ').trim(); }
+  function clean(value){
+    return String(value == null ? '' : value).replace(/\s+/g,' ').trim();
+  }
   function esc(value){
     return String(value == null ? '' : value).replace(/[&<>'"]/g,function(c){
       return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c];
@@ -82,9 +85,9 @@
     return 'preinscripcion.html?' + params.toString();
   }
   function addStyles(){
-    if(document.getElementById('nostra360-stage3-style')) return;
+    if(document.getElementById('nostra360-stage4-style')) return;
     var style = document.createElement('style');
-    style.id = 'nostra360-stage3-style';
+    style.id = 'nostra360-stage4-style';
     style.textContent = [
       '.nostra360-old{display:block;font-size:17px;color:#7c8998;text-decoration:line-through;margin-bottom:4px}',
       '.nostra360-promo{display:inline-flex;margin-top:9px;padding:5px 10px;border-radius:999px;background:#fff3df;color:#8a4c00;font-size:12px;font-weight:900}',
@@ -94,11 +97,7 @@
       '.nostra360-plan-schedule span{display:block;line-height:1.42}',
       '.nostra360-plan-schedule .day{font-weight:900;color:#078c95}',
       '.nostra360-plan-schedule .time{font-size:14px;font-weight:750}',
-      '.nostra360-plan-schedule .extra{font-size:13px;font-weight:800;color:#4c6374;margin-top:3px}',
-      '#Coursedescription .nostra360-description-schedule .price-card_price{display:flex;flex-direction:column;gap:4px}',
-      '#Coursedescription .nostra360-description-schedule .day{display:block;color:#078c95;font-size:clamp(25px,3vw,42px);font-weight:800;line-height:1.08}',
-      '#Coursedescription .nostra360-description-schedule .time{display:block;color:#061426;font-size:18px;font-weight:600;line-height:1.35}',
-      '#Coursedescription .nostra360-description-schedule .extra{display:block;color:#061426;font-size:17px;font-weight:650;line-height:1.35;margin-top:2px}'
+      '.nostra360-plan-schedule .extra{font-size:13px;font-weight:800;color:#4c6374;margin-top:3px}'
     ].join('');
     document.head.appendChild(style);
   }
@@ -107,12 +106,9 @@
     if(/^más\b/i.test(line) || /^incluye\b/i.test(line)) return 'extra';
     return 'day';
   }
-  function scheduleHtml(lines,context){
+  function scheduleHtml(lines){
     return lines.map(function(line){
-      var cls = scheduleLineClass(line);
-      var text = line;
-      if(context === 'description' && cls === 'time' && text.charAt(0) !== '(') text = '(' + text + ')';
-      return '<span class="' + cls + '">' + esc(text) + '</span>';
+      return '<span class="' + scheduleLineClass(line) + '">' + esc(line) + '</span>';
     }).join('');
   }
   function benefitsHtml(plan){
@@ -134,34 +130,16 @@
         (titleText.indexOf('nuestros planes para tu futuro') !== -1 || subtitleText.indexOf('precios academicos') !== -1 || subtitleText.indexOf('precios académicos') !== -1);
     }) || null;
   }
-  function locateDescriptionScheduleRow(){
+  function removeDescriptionSchedule(){
     var pane = document.getElementById('Coursedescription');
-    if(!pane) return null;
+    if(!pane) return false;
     var rows = Array.prototype.slice.call(pane.querySelectorAll('.row.gy-4.justify-content-center'));
-    return rows.find(function(item){ return item.querySelector('.price-card'); }) || null;
-  }
-  function descriptionCardHtml(plan,index){
-    var title = index === 0 ? 'Turno mañana' : 'Turno Único - Full';
-    var visible = plan.activo === false ? ' style="display:none"' : '';
-    return '<div class="col-xl-6 col-md-6"' + visible + '>' +
-      '<div class="price-card nostra360-description-schedule">' +
-        '<div class="price-card_top">' +
-          '<h3 class="price-card_title">' + title + '</h3>' +
-          '<div class="price-card_price">' + scheduleHtml(plan.horarioLineas,'description') + '</div>' +
-        '</div>' +
-      '</div>' +
-    '</div>';
-  }
-  function renderDescriptionSchedules(){
-    var row = locateDescriptionScheduleRow();
+    var row = rows.find(function(item){
+      var cards = item.querySelectorAll('.price-card');
+      return cards.length === 2 && !item.querySelector('.price-card_content');
+    });
     if(!row) return false;
-    var signature = JSON.stringify(currentPlans.slice(0,2).map(function(plan){
-      return [plan.activo,plan.horarioLineas];
-    }));
-    if(row.getAttribute('data-nostra360-schedule-signature') === signature) return true;
-    row.innerHTML = descriptionCardHtml(currentPlans[0],0) + descriptionCardHtml(currentPlans[1],1);
-    row.setAttribute('data-nostra360-schedule-signature',signature);
-    document.querySelectorAll('.nostra-pricing-note').forEach(function(note){ note.remove(); });
+    row.remove();
     return true;
   }
   function renderCardSchedule(card,plan){
@@ -175,12 +153,12 @@
       if(checklist) content.insertBefore(schedule,checklist);
       else content.insertBefore(schedule,content.firstChild);
     }
-    schedule.innerHTML = scheduleHtml(plan.horarioLineas,'price');
+    schedule.innerHTML = scheduleHtml(plan.horarioLineas);
     schedule.style.display = plan.horarioLineas.length ? '' : 'none';
   }
   function apply(){
     addStyles();
-    renderDescriptionSchedules();
+    removeDescriptionSchedule();
 
     var section = locateOfficialPricingSection();
     if(!section) return false;
