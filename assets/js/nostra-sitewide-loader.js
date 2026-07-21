@@ -7,7 +7,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-60';
+  var VERSION = '2026-61';
   var ADSENSE_CLIENT = 'ca-pub-9810053992087127';
 
   function assetAlreadyLoaded(urlPart) {
@@ -79,6 +79,7 @@
     loadJS('assets/js/nostra-premium-uni-line.js?v=' + VERSION);
     loadJS('assets/js/nostra-index-preinscripcion-cta.js?v=' + VERSION);
     loadJS('assets/js/nostra-cycle-pricing.js?v=' + VERSION);
+    loadJS('assets/js/nostra-cycle-description-meta.js?v=' + VERSION);
     loadJS('assets/js/nostra-cycle-sidebar-premium.js?v=' + VERSION);
   }
 
