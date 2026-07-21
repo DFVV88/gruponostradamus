@@ -81,6 +81,10 @@
     '</div>';
   }
 
+  function setText(element,text){
+    if(element && element.textContent !== text) element.textContent = text;
+  }
+
   function focusNostra360(){
     var panel = document.getElementById('nostra-pricing-admin-panel');
     var grid = document.getElementById('nostra-program-grid');
@@ -96,9 +100,12 @@
     var heading = panel.querySelector('.np-head h2');
     var copy = panel.querySelector('.np-head p');
     var help = panel.querySelector('.np-help');
-    if(heading) heading.textContent = 'Parte 1 · Precios de Nostra 360 UNI';
-    if(copy) copy.textContent = 'Primero verificaremos únicamente los cuatro planes de Nostra 360. Los demás ciclos se incorporarán después de aprobar esta prueba.';
-    if(help) help.innerHTML = '<b>Planes verificados:</b> Presencial mañana S/400, Presencial FULL S/500, Virtual mañana S/200 y Virtual FULL S/300. Todos son cobros mensuales.';
+    setText(heading,'Parte 1 · Precios de Nostra 360 UNI');
+    setText(copy,'Primero verificaremos únicamente los cuatro planes de Nostra 360. Los demás ciclos se incorporarán después de aprobar esta prueba.');
+    if(help && help.getAttribute('data-nostra360-help') !== '1'){
+      help.innerHTML = '<b>Planes verificados:</b> Presencial mañana S/400, Presencial FULL S/500, Virtual mañana S/200 y Virtual FULL S/300. Todos son cobros mensuales.';
+      help.setAttribute('data-nostra360-help','1');
+    }
 
     var saveAll = document.getElementById('nostra-pricing-save-all');
     if(saveAll){
@@ -118,16 +125,17 @@
     var saveOne = card.querySelector('[data-save-program]');
     if(saveOne){
       saveOne.disabled = true;
-      saveOne.textContent = 'Guardar se habilitará en la siguiente parte';
+      setText(saveOne,'Guardar se habilitará en la siguiente parte');
       saveOne.title = 'Primero habilitaremos las reglas seguras de Firebase.';
       saveOne.style.opacity = '.65';
       saveOne.style.cursor = 'not-allowed';
     }
 
     var message = document.getElementById('nostra-pricing-message');
-    if(message){
+    if(message && message.getAttribute('data-nostra360-message') !== '1'){
       message.className = 'msg info';
       message.innerHTML = '✅ Nostra 360 fue cargado con los cuatro planes y precios verificados. En esta parte solo revisaremos la visualización y la selección del plan. El guardado se habilitará al configurar Firebase de forma segura.';
+      message.setAttribute('data-nostra360-message','1');
     }
     return true;
   }
@@ -138,15 +146,8 @@
     var timer = setInterval(function(){
       focusNostra360();
       attempts += 1;
-      if(attempts >= 40) clearInterval(timer);
+      if(attempts >= 60) clearInterval(timer);
     },500);
-
-    var root = document.getElementById('admin-panel');
-    if(root && window.MutationObserver){
-      var observer = new MutationObserver(function(){ focusNostra360(); });
-      observer.observe(root,{childList:true,subtree:true});
-      setTimeout(function(){ observer.disconnect(); },30000);
-    }
   }
 
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded',start);
