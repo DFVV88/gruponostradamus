@@ -151,10 +151,11 @@
     var located = locatePricingSection();
     if(!located) return false;
     var plans = Array.isArray(data.planes) ? data.planes.filter(function(plan){ return plan && plan.activo !== false && num(plan.precio) > 0; }) : [];
-    if(data.publicado === false || !plans.length){
+    if(data.publicado === false){
       located.row.innerHTML = '<div class="col-12"><div class="nostra-pricing-unavailable">El tarifario de este programa se encuentra en actualización. Solicita información por WhatsApp.</div></div>';
       return true;
     }
+    if(!plans.length) return false;
     located.row.innerHTML = plans.map(function(plan,index){ return cardHtml(plan,index,plans.length); }).join('');
     var oldNote = located.section.querySelector('.nostra-pricing-note');
     if(oldNote) oldNote.remove();
