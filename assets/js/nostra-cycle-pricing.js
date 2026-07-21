@@ -7,8 +7,12 @@
   'use strict';
 
   var file = (location.pathname.split('/').pop() || '').toLowerCase();
+
+  /* Nostra 360 usa un controlador específico para conservar
+     la sección oficial de precios al final de su subpágina. */
+  if(file === 'ciclo-anual-uni.html') return;
+
   var PROGRAMS = {
-    'ciclo-anual-uni.html': { id:'nostra-360-uni', name:'Nostra 360 UNI' },
     'ciclo-semianual-uni.html': { id:'nostra-power-uni', name:'Nostra Power UNI' },
     'ciclo-semestral-uni.html': { id:'nostra-elite-uni', name:'Nostra Élite UNI' },
     'ciclo-repaso-uni.html': { id:'nostra-prime-uni', name:'Nostra Prime UNI' },
