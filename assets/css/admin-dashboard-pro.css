@@ -1,0 +1,182 @@
+/* ==================================================
+   Grupo Nostradamus - Panel administrativo profesional
+   Interfaz modular, compacta y adaptable.
+================================================== */
+:root{
+  --admin-bg:#eef4f6;
+  --admin-surface:#ffffff;
+  --admin-navy:#061426;
+  --admin-navy-2:#0a2635;
+  --admin-teal:#078c95;
+  --admin-teal-soft:#eaf8f9;
+  --admin-orange:#ff941e;
+  --admin-green:#18a66a;
+  --admin-red:#d92d20;
+  --admin-muted:#647482;
+  --admin-line:#dce9ed;
+  --admin-shadow:0 20px 55px rgba(6,20,38,.09);
+}
+
+body{background:var(--admin-bg)!important}
+body.admin-dashboard-ready{overflow-x:hidden}
+body.admin-dashboard-ready>.top{display:none}
+body.admin-dashboard-ready>.nav{width:min(1480px,96%);padding:12px 0}
+body.admin-dashboard-ready>.nav .logo span{font-size:15px}
+body.admin-dashboard-ready>.nav .logo img{width:48px}
+body.admin-dashboard-ready>.nav>div{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+body.admin-dashboard-ready>.nav .btn{padding:9px 13px;font-size:13px}
+body.admin-dashboard-ready main.wrap{width:min(1480px,96%);margin:0 auto 34px}
+
+.admin-pro-shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:22px;align-items:start}
+.admin-pro-sidebar{position:sticky;top:14px;min-height:calc(100vh - 28px);padding:20px 15px;border-radius:26px;background:linear-gradient(180deg,#02070d 0%,#07333b 58%,#078c95 145%);color:#fff;box-shadow:0 22px 58px rgba(2,7,13,.22);overflow:hidden}
+.admin-pro-sidebar:before{content:"";position:absolute;width:190px;height:190px;border-radius:50%;right:-90px;top:-75px;background:rgba(255,148,30,.16);filter:blur(2px)}
+.admin-pro-sidebar-brand{position:relative;display:flex;align-items:center;gap:11px;padding:4px 6px 20px;border-bottom:1px solid rgba(255,255,255,.13)}
+.admin-pro-sidebar-brand img{width:45px;height:45px;object-fit:contain;background:#fff;border-radius:14px;padding:5px}
+.admin-pro-sidebar-brand strong{display:block;font-family:'Baloo 2';font-size:19px;line-height:1.05}
+.admin-pro-sidebar-brand small{display:block;color:rgba(255,255,255,.67);font-size:11px;font-weight:750;margin-top:3px}
+.admin-pro-nav{position:relative;display:grid;gap:6px;margin-top:18px}
+.admin-pro-nav-label{padding:10px 12px 4px;color:rgba(255,255,255,.48);font-size:10px;font-weight:950;letter-spacing:1.15px;text-transform:uppercase}
+.admin-pro-nav button{width:100%;display:flex;align-items:center;gap:11px;border:0;border-radius:14px;padding:11px 12px;background:transparent;color:rgba(255,255,255,.76);font:inherit;font-size:14px;font-weight:850;text-align:left;cursor:pointer;transition:.2s ease}
+.admin-pro-nav button:hover{background:rgba(255,255,255,.09);color:#fff;transform:translateX(2px)}
+.admin-pro-nav button.active{background:linear-gradient(135deg,rgba(255,148,30,.95),rgba(7,140,149,.9));color:#fff;box-shadow:0 10px 24px rgba(0,0,0,.17)}
+.admin-pro-nav-icon{width:28px;height:28px;display:grid;place-items:center;border-radius:9px;background:rgba(255,255,255,.09);font-size:14px;flex:0 0 auto}
+.admin-pro-nav button.active .admin-pro-nav-icon{background:rgba(255,255,255,.19)}
+.admin-pro-sidebar-foot{position:absolute;left:15px;right:15px;bottom:16px;padding:13px;border-radius:15px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);font-size:11px;line-height:1.45}
+
+.admin-pro-main{min-width:0}
+.admin-pro-topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px;padding:17px 20px;border:1px solid rgba(7,140,149,.12);border-radius:22px;background:rgba(255,255,255,.88);box-shadow:0 12px 38px rgba(6,20,38,.06);backdrop-filter:blur(12px)}
+.admin-pro-topbar-left{display:flex;align-items:center;gap:13px;min-width:0}
+.admin-pro-menu-toggle{display:none;width:42px;height:42px;border:1px solid var(--admin-line);border-radius:13px;background:#fff;color:var(--admin-navy);font-size:20px;cursor:pointer}
+.admin-pro-topbar h1{font-family:'Baloo 2';font-size:clamp(27px,3vw,38px);line-height:1;color:var(--admin-navy);margin:0}
+.admin-pro-topbar p{margin:4px 0 0;color:var(--admin-muted);font-size:13px;font-weight:650}
+.admin-pro-topbar-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.admin-pro-topbar-actions a{white-space:nowrap}
+
+.admin-pro-view{display:none;animation:adminFade .22s ease}
+.admin-pro-view.active{display:block}
+@keyframes adminFade{from{opacity:.25;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+.admin-pro-overview-hero{position:relative;overflow:hidden;padding:27px;border-radius:26px;background:linear-gradient(135deg,#061426 0%,#075861 58%,#078c95 110%);color:#fff;box-shadow:var(--admin-shadow);margin-bottom:17px}
+.admin-pro-overview-hero:after{content:"";position:absolute;width:270px;height:270px;border-radius:50%;right:-100px;top:-125px;background:radial-gradient(circle,rgba(255,148,30,.5),rgba(255,148,30,0) 68%)}
+.admin-pro-overview-hero h1{position:relative;font-family:'Baloo 2';font-size:clamp(34px,5vw,53px);line-height:.98;color:#fff;margin:0 0 8px}
+.admin-pro-overview-hero p{position:relative;max-width:760px;margin:0;color:rgba(255,255,255,.78);font-size:16px;line-height:1.55}
+.admin-pro-overview-hero .admin-pro-date{position:relative;display:inline-flex;margin-top:17px;padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.1);font-size:11px;font-weight:850}
+
+body.admin-dashboard-ready .stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-bottom:17px}
+body.admin-dashboard-ready .stat{border:1px solid rgba(7,140,149,.13);border-radius:19px;padding:16px;background:#fff;box-shadow:0 10px 28px rgba(6,20,38,.045)}
+body.admin-dashboard-ready .stat strong{font-family:'Baloo 2';font-size:31px;line-height:1;color:var(--admin-teal)}
+body.admin-dashboard-ready .stat span{display:block;margin-top:5px;color:var(--admin-muted);font-size:12px;font-weight:800}
+
+.admin-pro-quick-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.admin-pro-quick-card{position:relative;overflow:hidden;border:1px solid rgba(7,140,149,.13);border-radius:21px;padding:19px;background:#fff;box-shadow:0 12px 32px rgba(6,20,38,.05);cursor:pointer;transition:.2s ease;text-align:left;font:inherit}
+.admin-pro-quick-card:hover{transform:translateY(-3px);box-shadow:0 18px 38px rgba(6,20,38,.09);border-color:rgba(7,140,149,.3)}
+.admin-pro-quick-card .icon{width:40px;height:40px;display:grid;place-items:center;border-radius:13px;background:var(--admin-teal-soft);font-size:19px;margin-bottom:13px}
+.admin-pro-quick-card strong{display:block;color:var(--admin-navy);font-family:'Baloo 2';font-size:21px;line-height:1.05}
+.admin-pro-quick-card span{display:block;color:var(--admin-muted);font-size:12px;line-height:1.45;margin-top:5px}
+.admin-pro-quick-card em{display:block;margin-top:12px;color:var(--admin-teal);font-size:11px;font-style:normal;font-weight:950;text-transform:uppercase;letter-spacing:.35px}
+
+.admin-pro-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:2px 0 15px}
+.admin-pro-section-head h2{font-family:'Baloo 2';font-size:35px;line-height:1;color:var(--admin-navy);margin:0}
+.admin-pro-section-head p{margin:6px 0 0;color:var(--admin-muted);font-size:14px}
+.admin-pro-section-note{padding:8px 12px;border-radius:999px;background:var(--admin-teal-soft);color:#075b65;font-size:11px;font-weight:900;white-space:nowrap}
+.admin-pro-empty{padding:28px;border:1px dashed #bcd6dc;border-radius:22px;background:rgba(255,255,255,.65);color:var(--admin-muted);text-align:center;font-weight:750}
+
+body.admin-dashboard-ready .panel{border:1px solid rgba(7,140,149,.13);border-radius:22px;padding:19px;box-shadow:0 14px 38px rgba(6,20,38,.055);background:#fff}
+body.admin-dashboard-ready .toolbar{grid-template-columns:minmax(220px,1.5fr) minmax(150px,.7fr) minmax(150px,.7fr) auto;gap:9px;margin-bottom:13px}
+body.admin-dashboard-ready .toolbar input,body.admin-dashboard-ready .toolbar select{border-color:var(--admin-line);border-radius:12px;padding:10px 11px;font-size:13px;background:#fbfdfe}
+body.admin-dashboard-ready .table-wrap{border-radius:16px;border-color:var(--admin-line)}
+body.admin-dashboard-ready th{padding:11px 10px;background:#f3f9fa;font-size:10px;letter-spacing:.35px}
+body.admin-dashboard-ready td{padding:11px 10px;font-size:13px}
+body.admin-dashboard-ready .mini{padding:6px 9px;font-size:11px}
+
+/* Tarifario compacto */
+body.admin-dashboard-ready #nostra-pricing-admin-panel{margin:0;background:#fff}
+body.admin-dashboard-ready #nostra-pricing-admin-panel .np-head{align-items:center;margin-bottom:12px}
+body.admin-dashboard-ready #nostra-pricing-admin-panel .np-head h2{font-size:34px}
+body.admin-dashboard-ready #nostra-pricing-admin-panel .np-head p{font-size:13px;max-width:700px}
+body.admin-dashboard-ready #nostra-pricing-admin-panel .np-compliance{display:none}
+body.admin-dashboard-ready #nostra-pricing-admin-panel .np-help{font-size:12px;padding:12px 14px;margin:10px 0 12px;border-radius:14px}
+.admin-project-status{margin:9px 0 13px;border:1px solid var(--admin-line);border-radius:14px;background:#fafdfd;overflow:hidden}
+.admin-project-status summary{cursor:pointer;padding:11px 13px;color:var(--admin-navy);font-size:12px;font-weight:900;list-style:none}
+.admin-project-status summary::-webkit-details-marker{display:none}
+.admin-project-status summary:after{content:'+';float:right;color:var(--admin-teal);font-size:16px}
+.admin-project-status[open] summary:after{content:'−'}
+.admin-project-status .np-compliance{display:grid!important;margin:0;padding:0 12px 12px;grid-template-columns:repeat(4,1fr)}
+body.admin-dashboard-ready .np-grid{gap:12px}
+body.admin-dashboard-ready .np-program{padding:15px;border-radius:18px;box-shadow:none;background:#fcfefe}
+body.admin-dashboard-ready .np-program-head h3{font-size:25px}
+body.admin-dashboard-ready .np-general{gap:8px;margin:11px 0}
+body.admin-dashboard-ready .np-program input,body.admin-dashboard-ready .np-program select,body.admin-dashboard-ready .np-program textarea{padding:9px 10px;border-radius:10px;font-size:13px}
+body.admin-dashboard-ready .np-program label span,body.admin-dashboard-ready .np-plan label span{font-size:9px;letter-spacing:.35px}
+body.admin-dashboard-ready .np-plans{gap:8px}
+body.admin-dashboard-ready .np-plan{padding:0;border-radius:15px;background:#fff;overflow:hidden;transition:.2s ease}
+body.admin-dashboard-ready .np-plan-top{margin:0;padding:12px 13px;background:#f6fbfc;cursor:pointer;border-bottom:1px solid transparent}
+body.admin-dashboard-ready .np-plan:not(.admin-plan-collapsed) .np-plan-top{border-bottom-color:var(--admin-line);background:#eef8fa}
+body.admin-dashboard-ready .np-plan-title{display:flex;align-items:center;gap:9px;font-size:13px;min-width:0}
+.admin-plan-chevron{width:24px;height:24px;display:grid;place-items:center;border-radius:8px;background:#fff;border:1px solid var(--admin-line);color:var(--admin-teal);font-size:13px;transition:.2s ease;flex:0 0 auto}
+.np-plan:not(.admin-plan-collapsed) .admin-plan-chevron{transform:rotate(90deg);background:var(--admin-teal);color:#fff;border-color:var(--admin-teal)}
+.admin-plan-summary{display:flex;align-items:center;gap:7px;min-width:0;flex-wrap:wrap}
+.admin-plan-summary-name{color:var(--admin-navy);font-weight:950}
+.admin-plan-summary-price{color:var(--admin-teal);font-weight:950}
+.admin-plan-summary-badge{display:inline-flex;padding:4px 7px;border-radius:999px;background:#fff3df;color:#8a4c00;font-size:9px;font-weight:950}
+.admin-plan-summary-badge.off{background:#eef2f4;color:#687782}
+body.admin-dashboard-ready .np-plan-grid{grid-template-columns:1.25fr .72fr .72fr .72fr;gap:8px;padding:12px}
+body.admin-dashboard-ready .np-plan.admin-plan-collapsed .np-plan-grid{display:none}
+body.admin-dashboard-ready .np-plan.admin-plan-collapsed{border-color:#e5eef0}
+body.admin-dashboard-ready .np-promo{gap:8px;padding:9px;border-radius:12px}
+body.admin-dashboard-ready .np-preview{padding:8px 10px;font-size:11px;border-radius:11px}
+body.admin-dashboard-ready .np-footer{margin-top:11px}
+body.admin-dashboard-ready .np-footer .btn{padding:9px 13px;font-size:12px}
+body.admin-dashboard-ready .np-status{font-size:10px}
+
+/* NostraCUENTAS */
+body.admin-dashboard-ready #nostra-accounts-panel{margin:0!important}
+body.admin-dashboard-ready #nostra-accounts-panel>h2{font-size:32px!important}
+body.admin-dashboard-ready #nostra-accounts-panel>p{font-size:13px!important}
+
+.admin-pro-overlay{display:none}
+
+@media(max-width:1100px){
+  .admin-pro-shell{grid-template-columns:220px minmax(0,1fr);gap:15px}
+  .admin-pro-sidebar{padding:17px 12px}
+  .admin-pro-quick-grid{grid-template-columns:1fr 1fr}
+  body.admin-dashboard-ready .toolbar{grid-template-columns:1fr 1fr}
+  body.admin-dashboard-ready .np-plan-grid{grid-template-columns:1fr 1fr}
+}
+
+@media(max-width:820px){
+  body.admin-dashboard-ready>.nav{display:none}
+  body.admin-dashboard-ready main.wrap{width:100%;padding:10px;margin:0}
+  .admin-pro-shell{display:block}
+  .admin-pro-sidebar{position:fixed;z-index:10020;left:10px;top:10px;bottom:10px;width:min(280px,84vw);min-height:auto;transform:translateX(calc(-100% - 24px));transition:.24s ease}
+  body.admin-menu-open .admin-pro-sidebar{transform:none}
+  .admin-pro-overlay{display:block;position:fixed;z-index:10010;inset:0;background:rgba(2,7,13,.48);opacity:0;pointer-events:none;transition:.2s ease}
+  body.admin-menu-open .admin-pro-overlay{opacity:1;pointer-events:auto}
+  .admin-pro-menu-toggle{display:grid;place-items:center}
+  .admin-pro-topbar{position:sticky;top:8px;z-index:1000;padding:12px 13px;border-radius:17px}
+  .admin-pro-topbar h1{font-size:25px}
+  .admin-pro-topbar p{display:none}
+  .admin-pro-topbar-actions{display:none}
+  .admin-pro-overview-hero{padding:22px}
+  body.admin-dashboard-ready .stats{grid-template-columns:1fr 1fr}
+  .admin-pro-quick-grid{grid-template-columns:1fr}
+  .admin-pro-section-head{display:block}
+  .admin-pro-section-note{display:inline-flex;margin-top:9px}
+  body.admin-dashboard-ready .toolbar{display:grid;grid-template-columns:1fr}
+  body.admin-dashboard-ready .toolbar .btn{width:100%}
+  body.admin-dashboard-ready #nostra-pricing-admin-panel .np-head{display:block}
+  body.admin-dashboard-ready #nostra-pricing-admin-panel .np-actions{margin-top:10px;justify-content:flex-start}
+  .admin-project-status .np-compliance{grid-template-columns:1fr 1fr!important}
+}
+
+@media(max-width:560px){
+  body.admin-dashboard-ready .stats{grid-template-columns:1fr 1fr}
+  body.admin-dashboard-ready .stat{padding:13px}
+  body.admin-dashboard-ready .stat strong{font-size:26px}
+  body.admin-dashboard-ready .panel{padding:13px;border-radius:17px}
+  body.admin-dashboard-ready .np-plan-grid{grid-template-columns:1fr}
+  body.admin-dashboard-ready .np-general{grid-template-columns:1fr}
+  body.admin-dashboard-ready .np-general .wide,body.admin-dashboard-ready .np-plan-grid .wide{grid-column:auto}
+  body.admin-dashboard-ready .np-promo{grid-template-columns:1fr}
+  .admin-plan-summary-price{width:100%;padding-left:33px}
+}
