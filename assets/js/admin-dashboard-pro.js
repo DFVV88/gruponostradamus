@@ -14,10 +14,9 @@
 
   var shellReady = false;
   var syncQueued = false;
-  var currentView = 'resumen';
   var observer = null;
 
-  function el(tag,className,html){
+  function create(tag,className,html){
     var node = document.createElement(tag);
     if(className) node.className = className;
     if(html != null) node.innerHTML = html;
@@ -40,7 +39,7 @@
   }
 
   function buildSidebar(){
-    var aside = el('aside','admin-pro-sidebar');
+    var aside = create('aside','admin-pro-sidebar');
     aside.innerHTML =
       '<div class="admin-pro-sidebar-brand">' +
         '<img src="assets/img/logo.png" alt="Grupo Nostradamus">' +
@@ -54,12 +53,14 @@
         navButton('preinscripciones','◎','Preinscripciones') +
         navButton('cuentas','◇','NostraCUENTAS') +
       '</nav>' +
-      '<div class="admin-pro-sidebar-foot"><b>Grupo Nostradamus</b><br>Los cambios de tarifas se publican desde Firebase y conservan historial administrativo.</div>';
+      '<div class="admin-pro-sidebar-foot"><b>Grupo Nostradamus</b><br>Gestión académica y comercial centralizada.' +
+        '<button type="button" class="btn btn-red" data-admin-pro-logout style="width:100%;margin-top:10px;padding:8px 10px;font-size:11px">Cerrar sesión</button>' +
+      '</div>';
     return aside;
   }
 
   function buildTopbar(){
-    var top = el('header','admin-pro-topbar');
+    var top = create('header','admin-pro-topbar');
     top.innerHTML =
       '<div class="admin-pro-topbar-left">' +
         '<button type="button" class="admin-pro-menu-toggle" aria-label="Abrir menú">☰</button>' +
@@ -73,7 +74,7 @@
   }
 
   function buildQuickGrid(){
-    var grid = el('div','admin-pro-quick-grid');
+    var grid = create('div','admin-pro-quick-grid');
     grid.innerHTML =
       '<button class="admin-pro-quick-card" type="button" data-admin-view="ciclos"><span class="icon">▦</span><strong>Ciclos y planes</strong><span>Edita precios, matrículas, promociones, beneficios y horarios.</span><em>Abrir tarifario →</em></button>' +
       '<button class="admin-pro-quick-card" type="button" data-admin-view="preinscripciones"><span class="icon">◎</span><strong>Preinscripciones</strong><span>Revisa solicitudes, pagos pendientes y matrículas listas.</span><em>Revisar solicitudes →</em></button>' +
@@ -86,46 +87,43 @@
     var admin = document.getElementById('admin-panel');
     if(!admin || document.getElementById('admin-pro-shell')) return;
 
-    var hero = Array.prototype.slice.call(admin.children).find(function(node){ return node.classList && node.classList.contains('hero'); });
-    var stats = Array.prototype.slice.call(admin.children).find(function(node){ return node.classList && node.classList.contains('stats'); });
-    var prePanel = Array.prototype.slice.call(admin.children).find(function(node){
-      return node.classList && node.classList.contains('panel') && !node.id;
-    });
+    var children = Array.prototype.slice.call(admin.children);
+    var hero = children.find(function(node){ return node.classList && node.classList.contains('hero'); });
+    var stats = children.find(function(node){ return node.classList && node.classList.contains('stats'); });
+    var prePanel = children.find(function(node){ return node.classList && node.classList.contains('panel') && !node.id; });
 
-    var shell = el('div','admin-pro-shell');
+    var shell = create('div','admin-pro-shell');
     shell.id = 'admin-pro-shell';
     var sidebar = buildSidebar();
-    var main = el('div','admin-pro-main');
-    var topbar = buildTopbar();
-    var views = el('div','admin-pro-views');
+    var main = create('div','admin-pro-main');
+    var views = create('div','admin-pro-views');
 
-    var overview = el('section','admin-pro-view');
+    var overview = create('section','admin-pro-view');
     overview.id = 'admin-view-resumen';
     overview.dataset.adminViewPanel = 'resumen';
     if(hero){
       hero.className = 'admin-pro-overview-hero';
-      var date = el('span','admin-pro-date',todayLabel());
-      hero.appendChild(date);
+      hero.appendChild(create('span','admin-pro-date',todayLabel()));
       overview.appendChild(hero);
     }else{
-      overview.appendChild(el('div','admin-pro-overview-hero','<h1>Gestión administrativa</h1><p>Administra Grupo Nostradamus desde un solo lugar.</p><span class="admin-pro-date">' + todayLabel() + '</span>'));
+      overview.appendChild(create('div','admin-pro-overview-hero','<h1>Gestión administrativa</h1><p>Administra Grupo Nostradamus desde un solo lugar.</p><span class="admin-pro-date">' + todayLabel() + '</span>'));
     }
     if(stats) overview.appendChild(stats);
     overview.appendChild(buildQuickGrid());
 
-    var cycles = el('section','admin-pro-view');
+    var cycles = create('section','admin-pro-view');
     cycles.id = 'admin-view-ciclos';
     cycles.dataset.adminViewPanel = 'ciclos';
     cycles.innerHTML = sectionHead('Ciclos y planes','Edita un producto a la vez para mantener el panel ordenado.','Cambios guardados en Firebase') +
       '<div class="admin-pro-empty" id="admin-cycles-placeholder">Cargando el editor de ciclos y planes...</div>';
 
-    var pre = el('section','admin-pro-view');
+    var pre = create('section','admin-pro-view');
     pre.id = 'admin-view-preinscripciones';
     pre.dataset.adminViewPanel = 'preinscripciones';
     pre.innerHTML = sectionHead('Preinscripciones','Busca alumnos, valida pagos y administra el proceso de matrícula.','Hasta 200 registros recientes');
     if(prePanel) pre.appendChild(prePanel);
 
-    var accounts = el('section','admin-pro-view');
+    var accounts = create('section','admin-pro-view');
     accounts.id = 'admin-view-cuentas';
     accounts.dataset.adminViewPanel = 'cuentas';
     accounts.innerHTML = sectionHead('NostraCUENTAS','Gestiona las cuentas institucionales sin mezclar esta información con el tarifario.','Microsoft 365') +
@@ -135,20 +133,20 @@
     views.appendChild(cycles);
     views.appendChild(pre);
     views.appendChild(accounts);
-    main.appendChild(topbar);
+    main.appendChild(buildTopbar());
     main.appendChild(views);
     shell.appendChild(sidebar);
     shell.appendChild(main);
     admin.insertBefore(shell,admin.firstChild);
 
-    var overlay = el('button','admin-pro-overlay');
+    var overlay = create('button','admin-pro-overlay');
     overlay.type = 'button';
     overlay.setAttribute('aria-label','Cerrar menú');
     document.body.appendChild(overlay);
 
     shellReady = true;
     document.body.classList.add('admin-dashboard-ready');
-    bindNavigation();
+    bindEvents();
     startObserver(admin);
 
     var saved = '';
@@ -157,7 +155,7 @@
     queueSync();
   }
 
-  function bindNavigation(){
+  function bindEvents(){
     document.addEventListener('click',function(event){
       var target = event.target.closest('[data-admin-view]');
       if(target){
@@ -165,11 +163,12 @@
         showView(target.dataset.adminView);
       }
 
-      if(event.target.closest('.admin-pro-menu-toggle')){
-        document.body.classList.toggle('admin-menu-open');
-      }
-      if(event.target.closest('.admin-pro-overlay')){
-        document.body.classList.remove('admin-menu-open');
+      if(event.target.closest('.admin-pro-menu-toggle')) document.body.classList.toggle('admin-menu-open');
+      if(event.target.closest('.admin-pro-overlay')) document.body.classList.remove('admin-menu-open');
+
+      if(event.target.closest('[data-admin-pro-logout]')){
+        var logout = document.getElementById('logout-btn');
+        if(logout) logout.click();
       }
 
       var planTop = event.target.closest('.np-plan-top');
@@ -178,13 +177,11 @@
         if(plan) plan.classList.toggle('admin-plan-collapsed');
       }
 
-      var collapse = event.target.closest('[data-admin-collapse-plans]');
-      if(collapse){
+      if(event.target.closest('[data-admin-collapse-plans]')){
         var panel = document.getElementById('nostra-pricing-admin-panel');
         if(panel) panel.querySelectorAll('.np-plan').forEach(function(plan){ plan.classList.add('admin-plan-collapsed'); });
       }
-      var expand = event.target.closest('[data-admin-expand-plans]');
-      if(expand){
+      if(event.target.closest('[data-admin-expand-plans]')){
         var pricing = document.getElementById('nostra-pricing-admin-panel');
         if(pricing) pricing.querySelectorAll('.np-plan').forEach(function(plan){ plan.classList.remove('admin-plan-collapsed'); });
       }
@@ -202,7 +199,6 @@
 
   function showView(view){
     if(!VIEW_META[view]) view = 'resumen';
-    currentView = view;
     document.querySelectorAll('[data-admin-view-panel]').forEach(function(panel){
       panel.classList.toggle('active',panel.dataset.adminViewPanel === view);
     });
@@ -211,8 +207,8 @@
     });
     var title = document.getElementById('admin-pro-view-title');
     var description = document.getElementById('admin-pro-view-description');
-    if(title) title.textContent = VIEW_META[view].title;
-    if(description) description.textContent = VIEW_META[view].description;
+    if(title && title.textContent !== VIEW_META[view].title) title.textContent = VIEW_META[view].title;
+    if(description && description.textContent !== VIEW_META[view].description) description.textContent = VIEW_META[view].description;
     document.body.classList.remove('admin-menu-open');
     try{ localStorage.setItem('nostraAdminView',view); }catch(_){ /* sin almacenamiento */ }
     window.scrollTo({top:0,behavior:'smooth'});
@@ -250,7 +246,6 @@
       if(accountPlaceholder) accountPlaceholder.remove();
       accounts.appendChild(accountsPanel);
     }
-
     if(pricingPanel) decoratePricingPanel(pricingPanel);
   }
 
@@ -259,14 +254,17 @@
     if(head){
       var title = head.querySelector('h2');
       var paragraph = head.querySelector('p');
-      if(title) title.textContent = 'Ciclos y planes';
-      if(paragraph) paragraph.textContent = 'Abre únicamente el plan que deseas editar. Los demás permanecen cerrados para mantener una vista limpia.';
+      var desiredTitle = 'Ciclos y planes';
+      var desiredText = 'Abre únicamente el plan que deseas editar. Los demás permanecen cerrados para mantener una vista limpia.';
+      if(title && title.textContent !== desiredTitle) title.textContent = desiredTitle;
+      if(paragraph && paragraph.textContent !== desiredText) paragraph.textContent = desiredText;
+
       var actions = head.querySelector('.np-actions');
       if(actions && !actions.querySelector('[data-admin-collapse-plans]')){
-        var collapse = el('button','btn btn-light','Cerrar planes');
+        var collapse = create('button','btn btn-light','Cerrar planes');
         collapse.type = 'button';
         collapse.dataset.adminCollapsePlans = '1';
-        var expand = el('button','btn btn-light','Abrir planes');
+        var expand = create('button','btn btn-light','Abrir planes');
         expand.type = 'button';
         expand.dataset.adminExpandPlans = '1';
         actions.insertBefore(collapse,actions.firstChild);
@@ -276,23 +274,18 @@
 
     var compliance = panel.querySelector('.np-compliance');
     if(compliance && !compliance.closest('.admin-project-status')){
-      var details = el('details','admin-project-status');
-      var summary = el('summary','','Estado de implementación');
+      var details = create('details','admin-project-status');
+      details.appendChild(create('summary','','Estado de implementación'));
       compliance.parentNode.insertBefore(details,compliance);
-      details.appendChild(summary);
       details.appendChild(compliance);
     }
 
-    panel.querySelectorAll('.np-plan').forEach(function(plan,index){
-      decoratePlan(plan,index);
-    });
+    panel.querySelectorAll('.np-plan').forEach(function(plan,index){ decoratePlan(plan,index); });
   }
 
   function decoratePlan(plan,index){
-    var top = plan.querySelector('.np-plan-top');
     var title = plan.querySelector('.np-plan-title');
-    if(!top || !title) return;
-
+    if(!title) return;
     if(!plan.dataset.adminPlanReady){
       plan.dataset.adminPlanReady = '1';
       if(index !== 0) plan.classList.add('admin-plan-collapsed');
@@ -301,7 +294,7 @@
     updatePlanSummary(plan);
   }
 
-  function value(plan,field){
+  function fieldValue(plan,field){
     var input = plan.querySelector('[data-plan-field="' + field + '"]');
     if(!input) return '';
     if(input.type === 'checkbox') return input.checked;
@@ -314,22 +307,28 @@
     return 'S/ ' + (Number.isInteger(amount) ? amount.toFixed(0) : amount.toFixed(2));
   }
 
+  function setText(node,text){
+    if(node && node.textContent !== text) node.textContent = text;
+  }
+
   function updatePlanSummary(plan){
     var name = plan.querySelector('.admin-plan-summary-name');
     var price = plan.querySelector('.admin-plan-summary-price');
     var badge = plan.querySelector('.admin-plan-summary-badge');
     if(!name || !price || !badge) return;
 
-    var planName = value(plan,'nombre') || 'Plan sin nombre';
-    var regular = value(plan,'precio');
-    var promoOn = value(plan,'promocionActiva') === true;
-    var promo = value(plan,'precioPromocional');
-    var active = value(plan,'activo') !== false;
+    var planName = fieldValue(plan,'nombre') || 'Plan sin nombre';
+    var regular = fieldValue(plan,'precio');
+    var promoOn = fieldValue(plan,'promocionActiva') === true;
+    var promo = fieldValue(plan,'precioPromocional');
+    var active = fieldValue(plan,'activo') !== false;
+    var badgeText = !active ? 'Inactivo' : (promoOn && Number(promo) > 0 ? 'Promoción' : 'Activo');
+    var priceText = promoOn && Number(promo) > 0 ? money(promo) + ' promo' : money(regular);
 
-    name.textContent = planName;
-    price.textContent = promoOn && Number(promo) > 0 ? money(promo) + ' promo' : money(regular);
+    setText(name,planName);
+    setText(price,priceText);
+    setText(badge,badgeText);
     badge.classList.toggle('off',!active || !promoOn);
-    badge.textContent = !active ? 'Inactivo' : (promoOn && Number(promo) > 0 ? 'Promoción' : 'Activo');
   }
 
   function init(){
