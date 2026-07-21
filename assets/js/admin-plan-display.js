@@ -117,3 +117,7 @@ onAuthStateChanged(auth,user => {
   ensureObserver();
   loadRecords();
 });
+
+import('./admin-nostra360-stage1.js?v=2026-01').catch(error => {
+  console.warn('No se pudo cargar la etapa verificada de Nostra 360:',error);
+});
