@@ -7,7 +7,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-58';
+  var VERSION = '2026-59';
   var ADSENSE_CLIENT = 'ca-pub-9810053992087127';
 
   function assetAlreadyLoaded(urlPart) {
