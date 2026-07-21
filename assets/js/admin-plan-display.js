@@ -117,7 +117,3 @@ onAuthStateChanged(auth,user => {
   ensureObserver();
   loadRecords();
 });
-
-import('./admin-nostra360-stage2.js?v=2026-03').catch(error => {
-  console.warn('No se pudo cargar el editor de Nostra 360:',error);
-});
