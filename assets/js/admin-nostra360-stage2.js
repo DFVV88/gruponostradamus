@@ -1,6 +1,6 @@
 /* ==================================================
    Grupo Nostradamus - Parte 2
-   Editor exclusivo de Nostra 360 UNI con Firebase.
+   Editor de precios, promociones y horarios de Nostra 360 UNI.
 ================================================== */
 import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
@@ -22,11 +22,14 @@ const PROGRAM_NAME = 'Nostra 360 UNI';
 const PROGRAM_ROUTE = 'ciclo-anual-uni.html';
 const DESCRIPTION = 'Preparación integral desde las bases hasta el nivel de admisión UNI.';
 
+const MORNING_SCHEDULE = ['Lunes a Sábado','8:00 a.m. a 1:00 p.m.','Más dos tardes RM y RV'];
+const FULL_SCHEDULE = ['Lunes a Viernes','8:00 a.m. a 6:00 p.m.','Sábados','8:00 a.m. a 1:00 p.m.'];
+
 const DEFAULT_PLANS = [
-  {id:'presencial-turno-manana',nombre:'Presencial - Turno Mañana',tipoCobro:'mensual',precio:400,matricula:0,activo:true,destacado:false,promocionActiva:false,precioPromocional:0,promocionHasta:'',beneficios:['Clases en aulas equipadas','Atención personalizada','Materiales impresos']},
-  {id:'presencial-full',nombre:'Presencial - FULL',tipoCobro:'mensual',precio:500,matricula:0,activo:true,destacado:true,promocionActiva:false,precioPromocional:0,promocionHasta:'',beneficios:['Clases en aulas equipadas','Atención personalizada','Materiales impresos','Experiencia práctica']},
-  {id:'virtual-turno-manana',nombre:'Virtual - Turno Mañana',tipoCobro:'mensual',precio:200,matricula:0,activo:true,destacado:false,promocionActiva:false,precioPromocional:0,promocionHasta:'',beneficios:['Acceso a materiales 24/7','Plataforma interactiva','Flexibilidad horaria']},
-  {id:'virtual-full',nombre:'Virtual - FULL',tipoCobro:'mensual',precio:300,matricula:0,activo:true,destacado:true,promocionActiva:false,precioPromocional:0,promocionHasta:'',beneficios:['Acceso a materiales 24/7','Plataforma interactiva','Flexibilidad horaria','Interacción en tiempo real']}
+  {id:'presencial-turno-manana',nombre:'Presencial - Turno Mañana',tipoCobro:'mensual',precio:400,matricula:0,activo:true,destacado:false,promocionActiva:false,precioPromocional:0,promocionHasta:'',horarioLineas:MORNING_SCHEDULE,beneficios:['Clases en aulas equipadas','Atención personalizada','Materiales impresos']},
+  {id:'presencial-full',nombre:'Presencial - FULL',tipoCobro:'mensual',precio:500,matricula:0,activo:true,destacado:true,promocionActiva:false,precioPromocional:0,promocionHasta:'',horarioLineas:FULL_SCHEDULE,beneficios:['Clases en aulas equipadas','Atención personalizada','Materiales impresos','Experiencia práctica']},
+  {id:'virtual-turno-manana',nombre:'Virtual - Turno Mañana',tipoCobro:'mensual',precio:200,matricula:0,activo:true,destacado:false,promocionActiva:false,precioPromocional:0,promocionHasta:'',horarioLineas:MORNING_SCHEDULE,beneficios:['Acceso a materiales 24/7','Plataforma interactiva','Flexibilidad horaria']},
+  {id:'virtual-full',nombre:'Virtual - FULL',tipoCobro:'mensual',precio:300,matricula:0,activo:true,destacado:true,promocionActiva:false,precioPromocional:0,promocionHasta:'',horarioLineas:FULL_SCHEDULE,beneficios:['Acceso a materiales 24/7','Plataforma interactiva','Flexibilidad horaria','Interacción en tiempo real']}
 ];
 
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
@@ -44,10 +47,10 @@ function num(value){
   return Number.isFinite(parsed) && parsed >= 0 ? Math.round(parsed * 100) / 100 : 0;
 }
 function money(value){ return 'S/ ' + num(value).toFixed(2); }
-function benefits(value,fallback){
+function lineList(value,fallback,max){
   const list = Array.isArray(value) ? value : clean(value).split(/\r?\n/);
-  const normalized = list.map(clean).filter(Boolean).slice(0,8);
-  return normalized.length ? normalized : fallback;
+  const normalized = list.map(clean).filter(Boolean).slice(0,max || 8);
+  return normalized.length ? normalized : [...fallback];
 }
 function normalizePlan(plan,index){
   const fallback = DEFAULT_PLANS[index];
@@ -62,7 +65,8 @@ function normalizePlan(plan,index){
     promocionActiva:plan?.promocionActiva === true,
     precioPromocional:num(plan?.precioPromocional),
     promocionHasta:clean(plan?.promocionHasta),
-    beneficios:benefits(plan?.beneficios,fallback.beneficios)
+    horarioLineas:lineList(plan?.horarioLineas,fallback.horarioLineas,6),
+    beneficios:lineList(plan?.beneficios,fallback.beneficios,8)
   };
 }
 function setMessage(type,text){
@@ -84,6 +88,11 @@ function planHtml(plan,index){
       <label><span>Tipo de cobro</span><select data-plan-field="tipoCobro"><option value="mensual" ${p.tipoCobro === 'mensual' ? 'selected' : ''}>Mensual</option><option value="unico" ${p.tipoCobro === 'unico' ? 'selected' : ''}>Pago único</option></select></label>
       <label><span>Precio regular (S/)</span><input type="number" min="0" step="0.01" data-plan-field="precio" value="${p.precio || ''}"></label>
       <label><span>Matrícula (S/)</span><input type="number" min="0" step="0.01" data-plan-field="matricula" value="${p.matricula || ''}" placeholder="Opcional"></label>
+      <label class="wide np-schedule-editor">
+        <span>Horario del plan — una línea por dato</span>
+        <textarea data-plan-field="horarioLineas" placeholder="Lunes a Sábado&#10;8:00 a.m. a 1:00 p.m.&#10;Más dos tardes RM y RV">${esc(p.horarioLineas.join('\n'))}</textarea>
+        <small>Este horario aparecerá en la tarjeta de precios. En los dos planes presenciales también actualizará la sección Descripción.</small>
+      </label>
       <label class="wide"><span>Beneficios — uno por línea</span><textarea data-plan-field="beneficios">${esc(p.beneficios.join('\n'))}</textarea></label>
       <div class="np-promo">
         <label class="np-check"><input type="checkbox" data-plan-field="promocionActiva" ${p.promocionActiva ? 'checked' : ''}> Promoción</label>
@@ -107,6 +116,7 @@ function readPlan(element,index){
     promocionActiva:!!get('promocionActiva')?.checked,
     precioPromocional:get('precioPromocional')?.value,
     promocionHasta:get('promocionHasta')?.value,
+    horarioLineas:get('horarioLineas')?.value,
     beneficios:get('beneficios')?.value
   },index);
 }
@@ -117,6 +127,7 @@ function updatePreview(element){
   if(!preview) return;
   let text = `${plan.nombre}: ${money(plan.precio)} ${plan.tipoCobro === 'mensual' ? 'mensual' : 'pago único'}`;
   if(plan.matricula > 0) text += ` · Matrícula: ${money(plan.matricula)}`;
+  if(plan.horarioLineas.length) text += ` · Horario: ${plan.horarioLineas.join(' / ')}`;
   if(plan.promocionActiva && plan.precioPromocional > 0){
     text += ` · Promoción: ${money(plan.precioPromocional)}`;
     if(plan.promocionHasta) text += ` hasta ${plan.promocionHasta}`;
@@ -142,6 +153,7 @@ function validate(program){
   if(program.publicado && !active.length) return 'Debe existir por lo menos un plan activo.';
   for(const plan of active){
     if(plan.precio <= 0) return `El plan “${plan.nombre}” necesita un precio mayor que cero.`;
+    if(!plan.horarioLineas.length) return `Agrega el horario del plan “${plan.nombre}”.`;
     if(plan.promocionActiva && plan.precioPromocional <= 0) return `La promoción de “${plan.nombre}” necesita un precio.`;
     if(plan.promocionActiva && plan.precioPromocional >= plan.precio) return `La promoción de “${plan.nombre}” debe ser menor que el precio regular.`;
     if(plan.promocionActiva && !plan.promocionHasta) return `Indica la fecha final de la promoción de “${plan.nombre}”.`;
@@ -153,22 +165,30 @@ function payload(program,isNew){
     nombre:PROGRAM_NAME,ruta:PROGRAM_ROUTE,orden:1,descripcion:program.descripcion,
     publicado:program.publicado,fechaInicio:program.fechaInicio,duracion:program.duracion,
     planes:program.planes.map((plan,index) => ({...plan,orden:index + 1})),
-    moneda:'PEN',esquemaPrecios:2,actualizadoPor:currentUser?.email || ADMIN_EMAIL,
+    moneda:'PEN',esquemaPrecios:3,actualizadoPor:currentUser?.email || ADMIN_EMAIL,
     updatedAt:serverTimestamp()
   };
   if(isNew) data.createdAt = serverTimestamp();
   return data;
 }
+function addLocalStyles(){
+  if(document.getElementById('nostra360-admin-schedule-style')) return;
+  const style = document.createElement('style');
+  style.id = 'nostra360-admin-schedule-style';
+  style.textContent = '.np-schedule-editor textarea{min-height:112px}.np-schedule-editor small{display:block;margin-top:6px;color:#607080;font-weight:750;line-height:1.4;text-transform:none;letter-spacing:0}';
+  document.head.appendChild(style);
+}
 function prepare(card,data){
   const panel = document.getElementById('nostra-pricing-admin-panel');
   const grid = document.getElementById('nostra-program-grid');
   if(!panel || !grid || !card) return;
+  addLocalStyles();
 
   grid.querySelectorAll('.np-program').forEach(item => { item.style.display = item === card ? '' : 'none'; });
-  panel.querySelector('.np-head h2').textContent = 'Parte 2 · Guardar precios de Nostra 360 UNI';
-  panel.querySelector('.np-head p').textContent = 'Edita los cuatro planes y guarda. Los demás ciclos continúan bloqueados durante esta prueba.';
+  panel.querySelector('.np-head h2').textContent = 'Parte 2 · Precios y horarios de Nostra 360 UNI';
+  panel.querySelector('.np-head p').textContent = 'Edita precios, promociones, beneficios y horarios de los cuatro planes. Guarda todo desde este mismo panel.';
   const help = panel.querySelector('.np-help');
-  if(help) help.innerHTML = '<b>Seguridad:</b> los visitantes solo podrán leer precios. Únicamente tu cuenta administradora podrá modificar Nostra 360.';
+  if(help) help.innerHTML = '<b>Horario:</b> escribe una línea por dato. Los cambios aparecerán en las tarjetas de precios y en la sección Descripción de los planes presenciales.';
   const saveAll = document.getElementById('nostra-pricing-save-all');
   if(saveAll) saveAll.style.display = 'none';
   const add = card.querySelector('[data-add-plan]');
@@ -204,7 +224,7 @@ function prepare(card,data){
     const button = oldButton.cloneNode(true);
     oldButton.replaceWith(button);
     button.disabled = false;
-    button.textContent = 'Guardar Nostra 360 UNI';
+    button.textContent = 'Guardar precios y horarios';
     button.style.opacity = '1';
     button.style.cursor = 'pointer';
     button.addEventListener('click',event => {
@@ -219,22 +239,22 @@ function prepare(card,data){
 async function mount(card){
   if(!card || card.dataset.nostra360Stage2 === 'loading' || card.dataset.nostra360Stage2 === 'ready') return;
   card.dataset.nostra360Stage2 = 'loading';
-  setMessage('info','Verificando los precios guardados de Nostra 360...');
+  setMessage('info','Verificando precios y horarios guardados de Nostra 360...');
   try{
     const snapshot = await getDoc(doc(db,COLLECTION,PROGRAM_ID));
     if(snapshot.exists()){
       prepare(card,snapshot.data());
-      setMessage('ok','✅ Se cargaron los últimos precios guardados. Puedes modificarlos y volver a guardar.');
+      setMessage('ok','✅ Se cargaron los últimos precios y horarios. Puedes modificarlos y volver a guardar.');
     }else{
       prepare(card,{publicado:true,planes:DEFAULT_PLANS});
-      setMessage('info','Se muestran los cuatro precios verificados. El primer guardado creará el tarifario de Nostra 360.');
+      setMessage('info','Se muestran los precios y horarios verificados como base. El primer guardado creará el tarifario.');
     }
   }catch(error){
-    console.warn('Regla pendiente para programas_publicos:',error);
+    console.warn('No se pudo leer programas_publicos:',error);
     prepare(card,{publicado:true,planes:DEFAULT_PLANS});
     setMessage('err',error?.code === 'permission-denied'
-      ? 'Firebase todavía no permite acceder a “programas_publicos”. El editor ya está listo; falta publicar la regla segura de la Parte 2.'
-      : 'No se pudo comprobar Firebase. Se mantienen los precios verificados como respaldo.');
+      ? 'Firebase no permitió acceder a “programas_publicos”. Revisa las reglas antes de guardar.'
+      : 'No se pudo comprobar Firebase. Se mantienen los datos verificados como respaldo.');
   }
 }
 async function save(card,button){
@@ -242,29 +262,29 @@ async function save(card,button){
   const program = readProgram(card);
   const error = validate(program);
   if(error) return setMessage('err',error);
-  if(!confirm('¿Guardar estos precios de Nostra 360 UNI?')) return;
+  if(!confirm('¿Guardar estos precios y horarios de Nostra 360 UNI?')) return;
 
   try{
     saving = true;
     button.disabled = true;
     button.textContent = 'Guardando...';
-    setMessage('info','Guardando los cuatro planes de Nostra 360...');
+    setMessage('info','Guardando precios, promociones y horarios de Nostra 360...');
     const ref = doc(db,COLLECTION,PROGRAM_ID);
     let exists = false;
     try{ exists = (await getDoc(ref)).exists(); }catch(_){ /* setDoc mostrará el permiso real */ }
     await setDoc(ref,payload(program,!exists),{merge:true});
-    setMessage('ok','✅ Precios guardados correctamente. Actualiza la página de Nostra 360 para verificar el cambio.');
+    setMessage('ok','✅ Precios y horarios guardados correctamente. Actualiza la página de Nostra 360 para verificar los cambios.');
     const status = card.querySelector('.np-status');
     if(status) status.textContent = 'Última edición: ahora';
   }catch(errorSave){
     console.error('No se pudo guardar Nostra 360:',errorSave);
     setMessage('err',errorSave?.code === 'permission-denied'
-      ? 'No se pudo guardar porque la regla segura de Firebase todavía no está publicada. Los valores escritos permanecen en pantalla.'
+      ? 'No se pudo guardar porque Firebase rechazó el permiso. Los valores escritos permanecen en pantalla.'
       : 'No se pudo guardar. Revisa la conexión e intenta nuevamente.');
   }finally{
     saving = false;
     button.disabled = false;
-    button.textContent = 'Guardar Nostra 360 UNI';
+    button.textContent = 'Guardar precios y horarios';
   }
 }
 function findCard(){
