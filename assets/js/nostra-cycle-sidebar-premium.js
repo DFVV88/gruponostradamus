@@ -4,22 +4,22 @@
 
   var file = (location.pathname.split('/').pop() || '').toLowerCase();
   var cycles = {
-    'ciclo-anual-uni.html': { name: 'Nostra 360 UNI', tag: 'Preparación integral. Formación completa.', icon: '🌐', badge: 'Ruta premium UNI' },
-    'ciclo-semianual-uni.html': { name: 'Nostra Power UNI', tag: 'Corrige tus errores. Potencia tu nivel.', icon: '⚡', badge: 'Ruta premium UNI' },
-    'ciclo-semestral-uni.html': { name: 'Nostra Élite UNI', tag: 'Estuviste cerca. Ahora ve por tu vacante.', icon: '🎯', badge: 'Ruta premium UNI' },
-    'ciclo-repaso-uni.html': { name: 'Nostra Prime UNI', tag: 'Tu máximo nivel. Tu momento decisivo.', icon: '🚀', badge: 'Ruta premium UNI' },
-    'ciclo-elite-uni.html': { name: 'Nostra Talentum UNI', tag: 'Talento superior. Exigencia máxima.', icon: '🏆', badge: 'Ruta premium UNI' },
-    'ciclo-ien.html': { name: 'Ciclo IEN', tag: 'Preparación académica enfocada, práctica y progresiva.', icon: '📘', badge: 'Programa especializado' },
-    'ciclo-proyecto-escolar.html': { name: 'Proyecto Escolar', tag: 'Refuerzo, nivelación y acompañamiento académico escolar.', icon: '🎒', badge: 'Programa escolar' },
-    'ciclo-paralelo-cepre-uni.html': { name: 'Paralelo CEPRE UNI', tag: 'Acompañamiento estratégico para estudiantes de CEPRE UNI.', icon: '🏛️', badge: 'Programa paralelo UNI' },
-    'ciclo-verano-uni.html': { name: 'Ciclo Verano UNI', tag: 'Avanza en vacaciones con base, práctica y método.', icon: '☀️', badge: 'Programa de verano' }
+    'ciclo-anual-uni.html': { id:'nostra-360-uni', name: 'Nostra 360 UNI', tag: 'Preparación integral. Formación completa.', icon: '🌐', badge: 'Ruta premium UNI' },
+    'ciclo-semianual-uni.html': { id:'nostra-power-uni', name: 'Nostra Power UNI', tag: 'Corrige tus errores. Potencia tu nivel.', icon: '⚡', badge: 'Ruta premium UNI' },
+    'ciclo-semestral-uni.html': { id:'nostra-elite-uni', name: 'Nostra Élite UNI', tag: 'Estuviste cerca. Ahora ve por tu vacante.', icon: '🎯', badge: 'Ruta premium UNI' },
+    'ciclo-repaso-uni.html': { id:'nostra-prime-uni', name: 'Nostra Prime UNI', tag: 'Tu máximo nivel. Tu momento decisivo.', icon: '🚀', badge: 'Ruta premium UNI' },
+    'ciclo-elite-uni.html': { id:'nostra-talentum-uni', name: 'Nostra Talentum UNI', tag: 'Talento superior. Exigencia máxima.', icon: '🏆', badge: 'Programa especial de alto rendimiento' },
+    'ciclo-ien.html': { id:'ciclo-ien', name: 'Ciclo IEN', tag: 'Preparación académica enfocada, práctica y progresiva.', icon: '📘', badge: 'Programa especializado' },
+    'ciclo-proyecto-escolar.html': { id:'proyecto-escolar', name: 'Proyecto Escolar', tag: 'Refuerzo, nivelación y acompañamiento académico escolar.', icon: '🎒', badge: 'Programa escolar' },
+    'ciclo-paralelo-cepre-uni.html': { id:'paralelo-cepre-uni', name: 'Paralelo CEPRE UNI', tag: 'Acompañamiento estratégico para estudiantes de CEPRE UNI.', icon: '🏛️', badge: 'Programa paralelo UNI' },
+    'ciclo-verano-uni.html': { id:'ciclo-verano-uni', name: 'Ciclo Verano UNI', tag: 'Avanza en vacaciones con base, práctica y método.', icon: '☀️', badge: 'Programa de verano' }
   };
 
   var data = cycles[file];
   if (!data) return;
 
   var WHATSAPP = 'https://wa.me/51993750351?text=' + encodeURIComponent('Hola Nostradamus, quiero informes sobre ' + data.name + '.');
-  var PREINSCRIPCION = 'https://gruponostradamus.edu.pe/preinscripcion.html';
+  var PREINSCRIPCION = 'https://gruponostradamus.edu.pe/preinscripcion.html?programa=' + encodeURIComponent(data.id) + '&programaNombre=' + encodeURIComponent(data.name);
   var CLASES = 'https://gruponostradamus.edu.pe/clases-en-vivo.html';
   var MAPA_UNI = 'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15609.098250165553!2d-77.04858391073591!3d-12.02460935322607!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105cf05f8bcc23b%3A0xa4969aade22a3db5!2sGRUPO%20NOSTRADAMUS%20UNI!5e0!3m2!1ses-419!2spe!4v1720420344476!5m2!1ses-419!2spe';
 
