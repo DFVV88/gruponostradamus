@@ -50,6 +50,8 @@
     }
   ];
 
+  var READY_MESSAGE = '✅ Nostra 360 fue cargado con los cuatro planes y precios verificados. En esta parte solo revisaremos la visualización y la selección del plan. El guardado se habilitará al configurar Firebase de forma segura.';
+
   function esc(value){
     return String(value == null ? '' : value).replace(/[&<>'"]/g,function(c){
       return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c];
@@ -132,10 +134,9 @@
     }
 
     var message = document.getElementById('nostra-pricing-message');
-    if(message && message.getAttribute('data-nostra360-message') !== '1'){
+    if(message && (message.className !== 'msg info' || message.innerHTML !== READY_MESSAGE)){
       message.className = 'msg info';
-      message.innerHTML = '✅ Nostra 360 fue cargado con los cuatro planes y precios verificados. En esta parte solo revisaremos la visualización y la selección del plan. El guardado se habilitará al configurar Firebase de forma segura.';
-      message.setAttribute('data-nostra360-message','1');
+      message.innerHTML = READY_MESSAGE;
     }
     return true;
   }
