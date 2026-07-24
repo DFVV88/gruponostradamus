@@ -1,6 +1,7 @@
 /* ==================================================
    Grupo Nostradamus - Preinscripciones Firebase
    Programa y plan pueden llegar precargados desde cada ciclo.
+   El turno se obtiene automáticamente del plan seleccionado.
 ================================================== */
 (function(){
   'use strict';
@@ -52,6 +53,25 @@
   function money(value){ return 'S/ ' + num(value).toFixed(2); }
   function msg(type,text){ box.className = 'form-message ' + type; box.innerHTML = text; }
   function value(name){ return clean(form.elements[name] && form.elements[name].value); }
+  function normalized(value){
+    return clean(value).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  }
+  function turnoFromPlan(planName){
+    var name = normalized(planName);
+    if(!name) return '';
+    if(name.indexOf('manana') !== -1) return 'Mañana';
+    if(name.indexOf('tarde') !== -1) return 'Tarde';
+    if(name.indexOf('noche') !== -1) return 'Noche';
+    if(name.indexOf('full') !== -1 || name.indexOf('unico') !== -1) return 'FULL';
+    return '';
+  }
+  function removeLegacyTurnoField(){
+    var control = form.elements.turno;
+    if(!control) return;
+    var field = control.closest('.field');
+    if(field) field.remove();
+    else control.remove();
+  }
   function programBy(valueToFind){
     var search = clean(valueToFind).toLowerCase();
     return PROGRAMS.find(function(item){
@@ -81,7 +101,7 @@
     if(!cycleField) return;
     var label = document.createElement('label');
     label.className = 'field';
-    label.innerHTML = '<span>Plan / modalidad</span><select name="plan"><option value="">Selecciona primero un programa</option></select><div class="form-help">Puedes cambiar el plan antes de enviar la preinscripción.</div>';
+    label.innerHTML = '<span>Plan / modalidad</span><select name="plan"><option value="">Selecciona primero un programa</option></select><div class="form-help">El turno se asignará automáticamente de acuerdo con el plan elegido.</div>';
     cycleField.insertAdjacentElement('afterend',label);
 
     var summary = document.createElement('div');
@@ -116,10 +136,12 @@
       return;
     }
     var current = selectedPlan.promocionVigente ? selectedPlan.precioPromocional : selectedPlan.precio;
+    var assignedTurn = turnoFromPlan(selectedPlan.nombre);
     summary.style.display = 'block';
     summary.innerHTML = '<b>Plan seleccionado:</b> ' + esc(selectedPlan.nombre) +
       (num(current) > 0 ? ' · <b>' + money(current) + '</b> ' + (selectedPlan.tipoCobro === 'unico' ? 'pago único' : 'mensual') : '') +
       (num(selectedPlan.matricula) > 0 ? ' · Matrícula: ' + money(selectedPlan.matricula) : '') +
+      (assignedTurn ? ' · Turno: ' + esc(assignedTurn) : '') +
       '<br><small>El monto definitivo será verificado por el sistema antes de generar el pago.</small>';
   }
 
@@ -198,6 +220,7 @@
     });
   }
 
+  removeLegacyTurnoField();
   updatePremiumCycles();
   ensurePlanField();
   var initialProgram = selectedProgram();
@@ -240,7 +263,7 @@
       precioReferencia:selectedPlan ? (selectedPlan.promocionVigente ? selectedPlan.precioPromocional : selectedPlan.precio) : 0,
       matriculaReferencia:selectedPlan ? selectedPlan.matricula : 0,
       tipoCobroReferencia:selectedPlan ? selectedPlan.tipoCobro : '',
-      turno:value('turno'),
+      turno:selectedPlan ? turnoFromPlan(selectedPlan.nombre) : '',
       apoderado:value('apoderado'),
       celularApoderado:value('celularApoderado'),
       comentario:value('comentario'),
