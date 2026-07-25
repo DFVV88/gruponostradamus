@@ -1,15 +1,24 @@
 /* ==================================================
-   Grupo Nostradamus - Loader global restaurado + analytics
+   Grupo Nostradamus - Cargador global optimizado
+   Carga únicamente los módulos necesarios por página.
 ================================================== */
 (function () {
+  'use strict';
+
   var path = window.location.pathname.toLowerCase();
+  var file = path.split('/').pop() || 'index.html';
   var isIq100 = path.indexOf('iq100.html') !== -1;
-  var isCiclosCatalog = /(?:^|\/)ciclos(?:\.html)?\/?$/.test(path);
-  var isHomePage = path === '/' || path.endsWith('/index.html') || path.endsWith('/');
+  var isAdminPage = file === 'admin.html' || file.indexOf('admin-') === 0;
+  var isHomePage = path === '/' || file === 'index.html' || file === '';
+  var isCiclosCatalog = file === 'ciclos.html' || path.endsWith('/ciclos');
+  var isCycleDetail = /^ciclo-.*\.html$/.test(file);
+  var isNewsPage = file === 'blog.html' || file === 'noticias.html';
+  var isCachimbosPage = file === 'cachimbos.html';
+  var isCommercialLanding = file === 'ingresa-uni.html';
 
-  if (isIq100) return;
+  if (isIq100 || isAdminPage) return;
 
-  var VERSION = '2026-74';
+  var VERSION = '2026-75';
   var ADSENSE_CLIENT = 'ca-pub-9810053992087127';
 
   function assetAlreadyLoaded(urlPart) {
@@ -17,11 +26,20 @@
   }
 
   function loadJS(src) {
-    if (assetAlreadyLoaded(src.split('?')[0])) return;
+    var cleanSrc = src.split('?')[0];
+    if (assetAlreadyLoaded(cleanSrc)) return;
+
     var script = document.createElement('script');
     script.src = src;
+    script.async = false;
     script.defer = true;
     document.body.appendChild(script);
+  }
+
+  function loadModules(modules) {
+    modules.forEach(function (name) {
+      loadJS('assets/js/' + name + '?v=' + VERSION);
+    });
   }
 
   function loadAdSense() {
@@ -33,108 +51,142 @@
     document.head.appendChild(script);
   }
 
-  function prehideLegacyCiclosCatalog() {
-    if (!isCiclosCatalog || document.getElementById('nostra-ciclos-legacy-prehide')) return;
+  function addPrehideStyle(id, css) {
+    if (document.getElementById(id)) return;
     var style = document.createElement('style');
-    style.id = 'nostra-ciclos-legacy-prehide';
-    style.textContent = '#course-sec .tab-menu1.filter-menu-active,#course-sec .filter-active{display:none!important;visibility:hidden!important}';
+    style.id = id;
+    style.textContent = css;
     document.head.appendChild(style);
   }
 
-  function prehideLegacyPlataforma() {
-    if (!isHomePage || document.getElementById('nostra-plataforma-legacy-prehide')) return;
-    var style = document.createElement('style');
-    style.id = 'nostra-plataforma-legacy-prehide';
-    style.textContent = '#nostra-plataforma-home{overflow-anchor:none!important}#nostra-plataforma-home:not([data-np-ready="1"]){min-height:360px!important}#nostra-plataforma-home:not([data-np-ready="1"])>.container>:not(.title-area){display:none!important}';
-    document.head.appendChild(style);
+  function prehidePageContent() {
+    if (isCiclosCatalog) {
+      addPrehideStyle(
+        'nostra-ciclos-legacy-prehide',
+        '#course-sec .tab-menu1.filter-menu-active,#course-sec .filter-active{display:none!important;visibility:hidden!important}'
+      );
+    }
+
+    if (!isHomePage) return;
+
+    addPrehideStyle(
+      'nostra-plataforma-legacy-prehide',
+      '#nostra-plataforma-home{overflow-anchor:none!important}#nostra-plataforma-home:not([data-np-ready="1"]){min-height:360px!important}#nostra-plataforma-home:not([data-np-ready="1"])>.container>:not(.title-area){display:none!important}'
+    );
+    addPrehideStyle(
+      'nostra-home-cycles-prehide',
+      '#course-sec{overflow-anchor:none!important}#course-sec:not([data-nhc-ready="1"]){min-height:330px!important}#course-sec:not([data-nhc-ready="1"]) .filter-active{display:none!important;visibility:hidden!important}'
+    );
+    addPrehideStyle(
+      'nostra-home-news-prehide',
+      '#blog-sec{overflow-anchor:none!important}#blog-sec:not([data-nin-ready="1"]){min-height:330px!important}#blog-sec:not([data-nin-ready="1"])>.container>*{visibility:hidden!important}'
+    );
   }
 
-  function prehideHomeCycles() {
-    if (!isHomePage || document.getElementById('nostra-home-cycles-prehide')) return;
-    var style = document.createElement('style');
-    style.id = 'nostra-home-cycles-prehide';
-    style.textContent = '#course-sec{overflow-anchor:none!important}#course-sec:not([data-nhc-ready="1"]){min-height:330px!important}#course-sec:not([data-nhc-ready="1"]) .filter-active{display:none!important;visibility:hidden!important}';
-    document.head.appendChild(style);
+  function loadEarlyPageModules() {
+    if (isHomePage) {
+      loadModules([
+        'nostra-plataforma-accordion.js',
+        'nostra-home-cycles-accordion.js',
+        'nostra-index-noticias-pro.js'
+      ]);
+    }
+
+    if (isCiclosCatalog) {
+      loadModules([
+        'nostra-ciclos-catalog-dynamic.js',
+        'nostra-ciclos-cards-premium.js',
+        'nostra-ciclos-links.js'
+      ]);
+    }
   }
 
-  function prehideHomeNews() {
-    if (!isHomePage || document.getElementById('nostra-home-news-prehide')) return;
-    var style = document.createElement('style');
-    style.id = 'nostra-home-news-prehide';
-    style.textContent = '#blog-sec{overflow-anchor:none!important}#blog-sec:not([data-nin-ready="1"]){min-height:330px!important}#blog-sec:not([data-nin-ready="1"])>.container>*{visibility:hidden!important}';
-    document.head.appendChild(style);
+  function loadGlobalModules() {
+    loadModules([
+      'nostra-activity-controller.js',
+      'nostra-analytics.js',
+      'nostra-seo-meta.js',
+      'nostra-schema-jsonld.js',
+      'nostra-ortografia-global.js',
+      'nostra-ortografia-extra.js',
+      'shared-header.js',
+      'nostrachat-menu-link.js',
+      'nostra-cuenta-menu-link.js',
+      'nostra-contact-whatsapp-fix.js',
+      'nostra-uni-campus-only.js',
+      'nostra-footer-pro.js',
+      'nostra-footer-logo-white-bg.js',
+      'nostra-button-fix.js',
+      'nostra-whatsapp-inscripcion.js',
+      'nostra-content-polish.js',
+      'nostra-page-polish.js',
+      'nostra-mobile-menu-pro.js',
+      'nostra-mobile-menu-clean-fix.js',
+      'nostra-performance-pro.js',
+      'nostra-social-seo.js',
+      'nostra-header-footer-premium.js',
+      'nostra-live-classes-fix.js',
+      'nostra-registro-button.js',
+      'nostra-footer-horizontal.js',
+      'nostra-footer-brand-copy.js',
+      'nostra-footer-brand-layout.js'
+    ]);
   }
 
-  function loadLegacyCiclosEnhancements() {
-    if (isCiclosCatalog) return;
-    loadJS('assets/js/nostra-ciclos-design-pro.js?v=' + VERSION);
-    loadJS('assets/js/nostra-ciclos-copy-pro.js?v=' + VERSION);
-    loadJS('assets/js/nostra-ciclos-horarios-fix.js?v=' + VERSION);
-    loadJS('assets/js/nostra-ciclos-layout-fix.js?v=' + VERSION);
-    loadJS('assets/js/nostra-ciclos-turnos-final.js?v=' + VERSION);
-    loadJS('assets/js/nostra-ciclos-paralelo-horario-fix.js?v=' + VERSION);
+  function loadHomeModules() {
+    if (!isHomePage) return;
+    loadModules([
+      'nostrachat-index-section.js',
+      'nostra-ingresantes-counter-pro.js',
+      'nostra-faq-index-pro.js',
+      'nostra-grid-fix.js',
+      'nostra-offer-section-fix.js',
+      'nostra-offer-uniform-override.js',
+      'nostra-offer-hard-uniform.js',
+      'nostra-video-slide-2-zoom-fix.js',
+      'nostra-cuenta-home-button.js',
+      'nostra-premium-uni-line.js',
+      'nostra-index-preinscripcion-cta.js'
+    ]);
+  }
+
+  function loadCycleDetailModules() {
+    if (!isCycleDetail) return;
+    loadModules([
+      'nostra-ciclo-detalle-pro.js',
+      'nostra-offer-section-fix.js',
+      'nostra-offer-uniform-override.js',
+      'nostra-offer-hard-uniform.js',
+      'nostra-cycle-pricing.js',
+      'nostra-cycle-description-meta.js',
+      'nostra-cycle-sidebar-premium.js'
+    ]);
+  }
+
+  function loadOtherPageModules() {
+    if (isNewsPage) loadModules(['nostra-noticias-uni-pro.js']);
+    if (isCachimbosPage) loadModules(['nostra-cachimbos-tabs.js']);
+    if (isCommercialLanding) {
+      loadModules([
+        'nostra-offer-section-fix.js',
+        'nostra-offer-uniform-override.js',
+        'nostra-offer-hard-uniform.js'
+      ]);
+    }
   }
 
   function init() {
-    prehideLegacyCiclosCatalog();
-    prehideLegacyPlataforma();
-    prehideHomeCycles();
-    prehideHomeNews();
-    loadJS('assets/js/nostra-plataforma-accordion.js?v=' + VERSION);
-    loadJS('assets/js/nostra-home-cycles-accordion.js?v=' + VERSION);
-    loadJS('assets/js/nostra-index-noticias-pro.js?v=' + VERSION);
+    prehidePageContent();
+    loadEarlyPageModules();
+    loadGlobalModules();
+    loadHomeModules();
+    loadCycleDetailModules();
+    loadOtherPageModules();
     loadAdSense();
-    loadJS('assets/js/nostra-analytics.js?v=' + VERSION);
-    loadJS('assets/js/nostra-seo-meta.js?v=' + VERSION);
-    loadJS('assets/js/nostra-schema-jsonld.js?v=' + VERSION);
-    loadJS('assets/js/nostra-ortografia-global.js?v=' + VERSION);
-    loadJS('assets/js/nostra-ortografia-extra.js?v=' + VERSION);
-    loadJS('assets/js/shared-header.js?v=' + VERSION);
-    loadJS('assets/js/nostrachat-menu-link.js?v=' + VERSION);
-    loadJS('assets/js/nostra-cuenta-menu-link.js?v=' + VERSION);
-    loadJS('assets/js/nostra-contact-whatsapp-fix.js?v=' + VERSION);
-    loadJS('assets/js/nostrachat-index-section.js?v=' + VERSION);
-    loadJS('assets/js/nostra-noticias-uni-pro.js?v=' + VERSION);
-    loadJS('assets/js/nostra-uni-campus-only.js?v=' + VERSION);
-    loadJS('assets/js/nostra-ingresantes-counter-pro.js?v=' + VERSION);
-    loadJS('assets/js/nostra-faq-index-pro.js?v=' + VERSION);
-    loadLegacyCiclosEnhancements();
-    loadJS('assets/js/nostra-ciclos-catalog-dynamic.js?v=' + VERSION);
-    loadJS('assets/js/nostra-ciclos-cards-premium.js?v=' + VERSION);
-    loadJS('assets/js/nostra-ciclo-detalle-pro.js?v=' + VERSION);
-    loadJS('assets/js/nostra-ciclos-links.js?v=' + VERSION);
-    loadJS('assets/js/nostra-grid-fix.js?v=' + VERSION);
-    loadJS('assets/js/nostra-footer-pro.js?v=' + VERSION);
-    loadJS('assets/js/nostra-footer-logo-white-bg.js?v=' + VERSION);
-    loadJS('assets/js/nostra-button-fix.js?v=' + VERSION);
-    loadJS('assets/js/nostra-whatsapp-inscripcion.js?v=' + VERSION);
-    loadJS('assets/js/nostra-content-polish.js?v=' + VERSION);
-    loadJS('assets/js/nostra-page-polish.js?v=' + VERSION);
-    loadJS('assets/js/nostra-cachimbos-tabs.js?v=' + VERSION);
-    loadJS('assets/js/nostra-mobile-menu-pro.js?v=' + VERSION);
-    loadJS('assets/js/nostra-mobile-menu-clean-fix.js?v=' + VERSION);
-    loadJS('assets/js/nostra-performance-pro.js?v=' + VERSION);
-    loadJS('assets/js/nostra-social-seo.js?v=' + VERSION);
-    loadJS('assets/js/nostra-offer-section-fix.js?v=' + VERSION);
-    loadJS('assets/js/nostra-offer-uniform-override.js?v=' + VERSION);
-    loadJS('assets/js/nostra-header-footer-premium.js?v=' + VERSION);
-    loadJS('assets/js/nostra-live-classes-fix.js?v=' + VERSION);
-    loadJS('assets/js/nostra-offer-hard-uniform.js?v=' + VERSION);
-    loadJS('assets/js/nostra-video-slide-2-zoom-fix.js?v=' + VERSION);
-    loadJS('assets/js/nostra-registro-button.js?v=' + VERSION);
-    loadJS('assets/js/nostra-cuenta-home-button.js?v=' + VERSION);
-    loadJS('assets/js/nostra-premium-uni-line.js?v=' + VERSION);
-    loadJS('assets/js/nostra-index-preinscripcion-cta.js?v=' + VERSION);
-    loadJS('assets/js/nostra-cycle-pricing.js?v=' + VERSION);
-    loadJS('assets/js/nostra-cycle-description-meta.js?v=' + VERSION);
-    loadJS('assets/js/nostra-cycle-sidebar-premium.js?v=' + VERSION);
-    loadJS('assets/js/nostra-footer-horizontal.js?v=' + VERSION);
-    loadJS('assets/js/nostra-footer-brand-copy.js?v=' + VERSION);
-    loadJS('assets/js/nostra-footer-brand-layout.js?v=' + VERSION);
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', init, { once:true });
   } else {
     init();
   }
