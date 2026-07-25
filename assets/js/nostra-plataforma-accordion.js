@@ -1,6 +1,6 @@
 /* ==================================================
    Grupo Nostradamus - NostraPLATAFORMA desplegable en el inicio
-   Mantiene el contenido original y reduce la altura inicial del index.
+   Mantiene el contenido original, evita saltos de scroll y no interfiere con Clases en vivo.
 ================================================== */
 (function () {
   'use strict';
@@ -18,6 +18,7 @@
       #nostra-plataforma-home{
         position:relative!important;
         overflow:hidden!important;
+        overflow-anchor:none!important;
         padding:54px 0!important;
         background:
           radial-gradient(circle at 12% 15%,rgba(0,194,209,.11),transparent 28%),
@@ -45,36 +46,46 @@
         line-height:1.55!important;
       }
       #nostra-plataforma-home .np-toggle{
-        position:relative;
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        gap:18px;
-        width:min(820px,100%);
-        min-height:68px;
-        margin:0 auto;
-        padding:14px 17px 14px 21px;
-        border:1px solid rgba(0,194,209,.28);
-        border-radius:22px;
+        position:relative!important;
+        isolation:isolate!important;
+        display:flex!important;
+        align-items:center!important;
+        justify-content:space-between!important;
+        gap:18px!important;
+        width:min(820px,100%)!important;
+        min-height:68px!important;
+        margin:0 auto!important;
+        padding:14px 17px 14px 21px!important;
+        border:1px solid rgba(0,194,209,.28)!important;
+        border-radius:22px!important;
         background:
           radial-gradient(circle at 85% 15%,rgba(0,194,209,.20),transparent 34%),
-          linear-gradient(135deg,#061426,#0a2a3c 65%,#075b65);
-        color:#fff;
-        box-shadow:0 18px 44px rgba(6,20,38,.16),0 0 24px rgba(0,194,209,.09);
-        text-align:left;
-        cursor:pointer;
-        transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;
+          linear-gradient(135deg,#061426,#0a2a3c 65%,#075b65)!important;
+        color:#fff!important;
+        box-shadow:0 18px 44px rgba(6,20,38,.16),0 0 24px rgba(0,194,209,.09)!important;
+        font-family:'Jost',Arial,sans-serif!important;
+        text-align:left!important;
+        text-transform:none!important;
+        animation:none!important;
+        cursor:pointer!important;
+        transform:none!important;
+        transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease!important;
       }
+      #nostra-plataforma-home .np-toggle::before,
+      #nostra-plataforma-home .np-toggle::after{display:none!important;content:none!important;animation:none!important;}
       #nostra-plataforma-home .np-toggle:hover,
       #nostra-plataforma-home .np-toggle:focus-visible{
-        transform:translateY(-3px);
-        border-color:rgba(0,212,223,.58);
-        box-shadow:0 24px 52px rgba(6,20,38,.21),0 0 30px rgba(0,194,209,.17);
-        outline:none;
+        transform:translateY(-3px)!important;
+        border-color:rgba(0,212,223,.58)!important;
+        background:
+          radial-gradient(circle at 85% 15%,rgba(0,194,209,.25),transparent 34%),
+          linear-gradient(135deg,#061426,#0b3448 65%,#08727c)!important;
+        box-shadow:0 24px 52px rgba(6,20,38,.21),0 0 30px rgba(0,194,209,.17)!important;
+        outline:none!important;
       }
       #nostra-plataforma-home .np-toggle__copy{display:flex;flex-direction:column;gap:2px;min-width:0;}
-      #nostra-plataforma-home .np-toggle__copy strong{color:#fff;font-size:15px;font-weight:950;letter-spacing:.1px;}
-      #nostra-plataforma-home .np-toggle__copy small{color:rgba(255,255,255,.72);font-size:12px;font-weight:700;line-height:1.35;}
+      #nostra-plataforma-home .np-toggle__copy strong{color:#fff!important;font-size:15px!important;font-weight:950!important;letter-spacing:.1px!important;}
+      #nostra-plataforma-home .np-toggle__copy small{color:rgba(255,255,255,.72)!important;font-size:12px!important;font-weight:700!important;line-height:1.35!important;}
       #nostra-plataforma-home .np-toggle__icon{
         display:grid;
         place-items:center;
@@ -136,9 +147,9 @@
         #nostra-plataforma-home[data-np-open="true"]{padding:50px 0!important;}
         #nostra-plataforma-home .np-head h2{font-size:30px!important;}
         #nostra-plataforma-home .np-head p{font-size:14.5px!important;}
-        #nostra-plataforma-home .np-toggle{min-height:64px;padding:12px 13px 12px 16px;border-radius:18px;}
-        #nostra-plataforma-home .np-toggle__copy strong{font-size:14px;}
-        #nostra-plataforma-home .np-toggle__copy small{font-size:11px;}
+        #nostra-plataforma-home .np-toggle{min-height:64px!important;padding:12px 13px 12px 16px!important;border-radius:18px!important;}
+        #nostra-plataforma-home .np-toggle__copy strong{font-size:14px!important;}
+        #nostra-plataforma-home .np-toggle__copy small{font-size:11px!important;}
         #nostra-plataforma-home .np-toggle__icon{width:38px;height:38px;border-radius:12px;}
         #nostra-plataforma-home .np-benefits-grid{grid-template-columns:1fr!important;}
         #nostra-plataforma-home .np-benefits-grid article{min-height:auto!important;}
@@ -154,7 +165,7 @@
     document.head.appendChild(style);
   }
 
-  function setState(section, open, shouldReturn) {
+  function setState(section, open) {
     var button = section.querySelector('.np-toggle');
     var panel = section.querySelector('.np-panel');
     var label = section.querySelector('.np-toggle__label');
@@ -166,13 +177,13 @@
     panel.setAttribute('aria-hidden', open ? 'false' : 'true');
     if (label) label.textContent = open ? 'Ocultar beneficios de la plataforma' : 'Ver beneficios de la plataforma';
     if (icon) icon.textContent = open ? '−' : '+';
+  }
 
-    if (!open && shouldReturn) {
-      window.setTimeout(function () {
-        var rect = section.getBoundingClientRect();
-        if (rect.top < 72) section.scrollIntoView({ behavior:'smooth', block:'start' });
-      }, 120);
-    }
+  function clearWrongLiveState(button) {
+    if (!button) return;
+    button.classList.remove('nostra-live-pro', 'nostra-live', 'btn-live', 'btn-live-mobile');
+    button.removeAttribute('data-nostra-live-fixed');
+    button.removeAttribute('href');
   }
 
   function enhance() {
@@ -191,6 +202,12 @@
     var actions = grid && grid.nextElementSibling;
     if (!grid || !actions) return false;
 
+    var scrollX = window.scrollX || 0;
+    var scrollY = window.scrollY || 0;
+    var root = document.documentElement;
+    var previousAnchor = root.style.overflowAnchor;
+    root.style.overflowAnchor = 'none';
+
     addStyles();
     container.classList.add('np-shell');
     head.classList.add('np-head');
@@ -203,9 +220,10 @@
     var button = document.createElement('button');
     button.type = 'button';
     button.className = 'np-toggle';
+    button.setAttribute('data-nostra-ignore-live', 'true');
     button.setAttribute('aria-expanded', 'false');
     button.setAttribute('aria-controls', 'nostra-plataforma-beneficios');
-    button.innerHTML = '<span class="np-toggle__copy"><strong class="np-toggle__label">Ver beneficios de la plataforma</strong><small>Cuenta, clases en vivo, comunidad, materiales, comunicados y pagos</small></span><span class="np-toggle__icon" aria-hidden="true">+</span>';
+    button.innerHTML = '<span class="np-toggle__copy"><strong class="np-toggle__label">Ver beneficios de la plataforma</strong><small>Cuenta, sesiones virtuales, comunidad, materiales, comunicados y pagos</small></span><span class="np-toggle__icon" aria-hidden="true">+</span>';
 
     var panel = document.createElement('div');
     panel.id = 'nostra-plataforma-beneficios';
@@ -220,12 +238,16 @@
     head.insertAdjacentElement('afterend', button);
     button.insertAdjacentElement('afterend', panel);
 
+    clearWrongLiveState(button);
     section.setAttribute('data-np-ready', '1');
-    setState(section, false, false);
+    setState(section, false);
 
-    button.addEventListener('click', function () {
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      clearWrongLiveState(button);
       var open = section.getAttribute('data-np-open') !== 'true';
-      setState(section, open, !open);
+      setState(section, open);
       if (typeof window.gtag === 'function') {
         window.gtag('event', 'toggle_nostraplataforma', {
           event_category: 'engagement',
@@ -233,6 +255,14 @@
           page_name: 'home'
         });
       }
+    });
+
+    window.requestAnimationFrame(function () {
+      window.scrollTo(scrollX, scrollY);
+      window.requestAnimationFrame(function () {
+        window.scrollTo(scrollX, scrollY);
+        root.style.overflowAnchor = previousAnchor;
+      });
     });
 
     return true;
@@ -254,7 +284,7 @@
         window.clearInterval(timer);
         observer.disconnect();
       }
-    }, 250);
+    }, 150);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
