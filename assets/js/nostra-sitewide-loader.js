@@ -9,7 +9,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-73';
+  var VERSION = '2026-74';
   var ADSENSE_CLIENT = 'ca-pub-9810053992087127';
 
   function assetAlreadyLoaded(urlPart) {
@@ -130,6 +130,7 @@
     loadJS('assets/js/nostra-cycle-sidebar-premium.js?v=' + VERSION);
     loadJS('assets/js/nostra-footer-horizontal.js?v=' + VERSION);
     loadJS('assets/js/nostra-footer-brand-copy.js?v=' + VERSION);
+    loadJS('assets/js/nostra-footer-brand-layout.js?v=' + VERSION);
   }
 
   if (document.readyState === 'loading') {
