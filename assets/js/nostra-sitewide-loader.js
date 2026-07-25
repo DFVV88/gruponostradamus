@@ -18,7 +18,7 @@
 
   if (isIq100 || isAdminPage) return;
 
-  var VERSION = '2026-80';
+  var VERSION = '2026-81';
   var ADSENSE_CLIENT = 'ca-pub-9810053992087127';
 
   function assetAlreadyLoaded(urlPart) {
@@ -149,7 +149,8 @@
       'nostra-offer-hard-uniform.js',
       'nostra-video-slide-2-zoom-fix.js',
       'nostra-cuenta-home-button.js',
-      'nostra-index-preinscripcion-cta.js'
+      'nostra-index-preinscripcion-cta.js',
+      'nostra-index-contacto-v2.js'
     ]);
   }
 
