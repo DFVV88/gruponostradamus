@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Propuesta de portada | Grupo Nostradamus</title>
+  <link rel="icon" href="assets/img/favicons/iocon-ostradamus.png" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --navy:#061426;
+      --navy-2:#0a2a3c;
+      --cyan:#00c2d1;
+      --teal:#078c95;
+      --gold:#f4a51c;
+      --gold-2:#ffd36a;
+      --ink:#10243c;
+      --muted:#647487;
+      --line:#dce8eb;
+      --soft:#f4f8fa;
+      --white:#fff;
+      --shadow:0 24px 60px rgba(6,20,38,.12);
+      --radius:28px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:#edf3f6;color:var(--ink);font-family:"Jost",sans-serif;line-height:1.55}
+    a{text-decoration:none}
+    button{font:inherit}
+    img{display:block;max-width:100%}
+    .container{width:min(1180px,92%);margin:auto}
+    .preview-bar{position:sticky;top:0;z-index:1000;background:#02070d;color:#fff;border-bottom:1px solid rgba(0,194,209,.28);box-shadow:0 8px 25px rgba(0,0,0,.18)}
+    .preview-bar__inner{min-height:42px;display:flex;align-items:center;justify-content:center;gap:10px;text-align:center;font-size:12px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
+    .preview-dot{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan)}
+    .site-header{position:relative;z-index:20;background:rgba(255,255,255,.96);border-bottom:1px solid rgba(6,20,38,.08);backdrop-filter:blur(14px)}
+    .site-header__inner{min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .brand img{width:180px;height:auto}
+    .main-nav{display:flex;align-items:center;gap:24px}
+    .main-nav a{color:var(--ink);font-size:14px;font-weight:800}
+    .main-nav a:hover{color:var(--teal)}
+    .header-cta{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:11px 18px;border-radius:15px;background:linear-gradient(135deg,var(--gold-2),var(--gold),var(--cyan));color:var(--navy)!important;box-shadow:0 12px 26px rgba(244,165,28,.2)}
+    .hero{position:relative;overflow:hidden;min-height:620px;display:flex;align-items:center;background:linear-gradient(90deg,rgba(2,7,13,.96),rgba(6,20,38,.86) 52%,rgba(6,20,38,.48)),url('assets/img/slider/slider-1.jpg') center/cover no-repeat;color:#fff}
+    .hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:44px 44px;opacity:.45}
+    .hero:after{content:"";position:absolute;width:520px;height:520px;border-radius:50%;right:-180px;top:-140px;background:radial-gradient(circle,rgba(0,194,209,.32),transparent 68%)}
+    .hero__content{position:relative;z-index:2;max-width:820px;padding:92px 0}
+    .eyebrow{display:inline-flex;align-items:center;gap:9px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(168,247,255,.28);color:#a8f7ff;font-size:12px;font-weight:900;letter-spacing:.8px;text-transform:uppercase}
+    h1,h2,h3{font-family:"Baloo 2",sans-serif}
+    .hero h1{margin:20px 0 18px;font-size:clamp(46px,6.5vw,82px);line-height:.98;letter-spacing:-2px;color:#fff}
+    .hero h1 span{background:linear-gradient(135deg,#fff,#a8f7ff 45%,#ffd36a);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .hero p{max-width:760px;margin:0 0 28px;color:rgba(255,255,255,.8);font-size:clamp(17px,1.7vw,21px)}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:12px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:52px;padding:13px 22px;border-radius:16px;font-weight:900;transition:transform .2s ease,box-shadow .2s ease,filter .2s ease}
+    .btn:hover{transform:translateY(-3px);filter:brightness(1.04)}
+    .btn-primary{background:linear-gradient(135deg,var(--gold-2),var(--gold) 42%,var(--cyan));color:var(--navy);box-shadow:0 16px 34px rgba(244,165,28,.24)}
+    .btn-secondary{background:rgba(255,255,255,.08);border:1px solid rgba(168,247,255,.3);color:#fff;box-shadow:0 12px 28px rgba(0,0,0,.18)}
+    .trust-strip{position:relative;z-index:5;margin-top:-42px}
+    .trust-grid{display:grid;grid-template-columns:repeat(4,1fr);overflow:hidden;border-radius:24px;background:#fff;border:1px solid rgba(0,194,209,.16);box-shadow:var(--shadow)}
+    .trust-item{padding:24px 22px;text-align:center;border-right:1px solid var(--line)}
+    .trust-item:last-child{border-right:0}
+    .trust-item strong{display:block;color:var(--navy);font-family:"Baloo 2";font-size:34px;line-height:1}
+    .trust-item span{display:block;margin-top:5px;color:var(--muted);font-size:13px;font-weight:800;text-transform:uppercase}
+    .section{padding:86px 0}
+    .section--soft{background:linear-gradient(180deg,#f8fbfc,#eef4f6)}
+    .section--dark{position:relative;overflow:hidden;background:radial-gradient(circle at 12% 18%,rgba(0,194,209,.25),transparent 30%),radial-gradient(circle at 88% 76%,rgba(244,165,28,.16),transparent 30%),linear-gradient(135deg,#02070d,#061426 45%,#074852);color:#fff}
+    .section--dark:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:42px 42px}
+    .section__head{position:relative;z-index:2;display:flex;align-items:flex-end;justify-content:space-between;gap:26px;margin-bottom:30px}
+    .section__head--center{display:block;text-align:center;max-width:850px;margin:0 auto 34px}
+    .kicker{display:inline-flex;margin-bottom:8px;color:var(--teal);font-size:12px;font-weight:950;letter-spacing:.8px;text-transform:uppercase}
+    .section--dark .kicker{color:#a8f7ff}
+    .section__title{margin:0;color:var(--navy);font-size:clamp(34px,4vw,54px);line-height:1}
+    .section--dark .section__title{color:#fff}
+    .section__copy{max-width:760px;margin:8px 0 0;color:var(--muted);font-size:16px}
+    .section--dark .section__copy{color:rgba(255,255,255,.74)}
+    .route-grid{position:relative;z-index:2;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+    .route-card{position:relative;min-height:222px;padding:20px 17px;border-radius:24px;background:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,.055));border:1px solid rgba(255,255,255,.18);box-shadow:0 18px 42px rgba(0,0,0,.22);color:#fff;overflow:hidden;transition:.25s}
+    .route-card:before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent,rgba(255,255,255,.08),transparent);transform:translateX(-130%);transition:.6s}
+    .route-card:hover{transform:translateY(-8px);border-color:rgba(168,247,255,.5);box-shadow:0 28px 60px rgba(0,0,0,.32),0 0 30px rgba(0,194,209,.16)}
+    .route-card:hover:before{transform:translateX(130%)}
+    .route-number{width:46px;height:46px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(135deg,var(--cyan),var(--teal),var(--gold));font-size:21px;box-shadow:0 10px 24px rgba(0,194,209,.2)}
+    .route-card h3{margin:15px 0 6px;color:#fff;font-size:21px;line-height:1.05}
+    .route-verb{display:inline-flex;padding:5px 9px;border-radius:999px;background:rgba(244,165,28,.14);border:1px solid rgba(244,165,28,.32);color:#ffda85;font-size:10px;font-weight:950;text-transform:uppercase}
+    .route-card p{margin:12px 0 0;color:rgba(255,255,255,.72);font-size:13px;line-height:1.42}
+    .route-motto{position:relative;z-index:2;margin:32px 0 0;text-align:center;color:#fff;font-family:"Baloo 2";font-size:clamp(24px,3vw,40px);font-weight:800}
+    .accordion-stack{display:grid;gap:14px}
+    .accordion-item{overflow:hidden;border:1px solid rgba(7,140,149,.17);border-radius:24px;background:#fff;box-shadow:0 14px 34px rgba(6,20,38,.07)}
+    .accordion-trigger{width:100%;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:22px 24px;border:0;background:transparent;color:var(--navy);text-align:left;cursor:pointer}
+    .accordion-trigger__title{display:flex;align-items:center;gap:14px}
+    .accordion-icon{width:46px;height:46px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(135deg,var(--navy),var(--teal));color:#fff;font-size:20px;box-shadow:0 12px 24px rgba(7,140,149,.16)}
+    .accordion-trigger strong{display:block;font-family:"Baloo 2";font-size:24px;line-height:1.05}
+    .accordion-trigger small{display:block;margin-top:3px;color:var(--muted);font-size:13px}
+    .accordion-chevron{width:40px;height:40px;display:grid;place-items:center;border-radius:13px;background:#edf8fa;color:var(--teal);font-size:22px;font-weight:900;transition:transform .2s ease}
+    .accordion-trigger[aria-expanded="true"] .accordion-chevron{transform:rotate(45deg);background:var(--navy);color:#fff}
+    .accordion-panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}
+    .accordion-panel[data-open="true"]{grid-template-rows:1fr}
+    .accordion-panel__inner{overflow:hidden}
+    .accordion-content{padding:0 24px 24px}
+    .program-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+    .program-card{display:flex;flex-direction:column;min-height:210px;padding:18px;border-radius:20px;background:linear-gradient(180deg,#f9fcfd,#eef7f9);border:1px solid #dcebed;transition:.22s}
+    .program-card:hover{transform:translateY(-5px);border-color:rgba(0,194,209,.32);box-shadow:0 16px 34px rgba(6,20,38,.09)}
+    .program-card__top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .program-code{display:inline-flex;padding:5px 8px;border-radius:999px;background:var(--navy);color:#fff;font-size:10px;font-weight:900}
+    .program-card h3{margin:14px 0 5px;color:var(--navy);font-size:23px;line-height:1.05}
+    .program-card p{margin:0 0 16px;color:var(--muted);font-size:13.5px}
+    .program-actions{display:flex;gap:8px;margin-top:auto}
+    .program-actions a{flex:1;display:flex;align-items:center;justify-content:center;min-height:40px;padding:9px 10px;border-radius:13px;font-size:11px;font-weight:900;text-align:center}
+    .program-details{background:#fff;border:1px solid #cfe2e6;color:var(--teal)}
+    .program-pre{background:linear-gradient(135deg,var(--gold),var(--cyan),var(--navy));color:#fff}
+    .benefit-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:18px}
+    .benefit-card{padding:22px;border-radius:22px;background:#fff;border:1px solid rgba(7,140,149,.16);box-shadow:0 14px 30px rgba(6,20,38,.07)}
+    .benefit-card span{font-size:26px}
+    .benefit-card h3{margin:12px 0 6px;color:var(--navy);font-size:20px}
+    .benefit-card p{margin:0;color:var(--muted);font-size:13.5px}
+    .method-toggle,.promo-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 21px;border:1px solid rgba(0,194,209,.2);border-radius:20px;background:linear-gradient(135deg,#061426,#0a2a3c 68%,#075b65);color:#fff;cursor:pointer;box-shadow:0 16px 34px rgba(6,20,38,.14)}
+    .method-toggle strong,.promo-toggle strong{font-size:16px}
+    .expandable{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}
+    .expandable[data-open="true"]{grid-template-rows:1fr}
+    .expandable__inner{overflow:hidden}
+    .method-detail{margin-top:14px;padding:24px;border-radius:22px;background:#fff;border:1px solid var(--line);color:var(--muted);box-shadow:0 14px 32px rgba(6,20,38,.06)}
+    .method-detail ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0;padding:0;list-style:none}
+    .method-detail li{padding:13px 14px;border-radius:14px;background:#f5fafb;color:var(--ink);font-size:13.5px;font-weight:700}
+    .promo-shell{padding:0}
+    .promo-toggle{background:linear-gradient(135deg,#02070d,#061426 55%,#087d84);border-radius:24px;padding:24px}
+    .promo-toggle__text{display:flex;align-items:center;gap:15px;text-align:left}
+    .promo-badge{width:52px;height:52px;display:grid;place-items:center;border-radius:17px;background:linear-gradient(135deg,var(--gold-2),var(--gold));color:var(--navy);font-size:24px}
+    .promo-toggle small{display:block;margin-top:3px;color:rgba(255,255,255,.68)}
+    .promo-detail{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;margin-top:14px;padding:24px;border-radius:22px;background:#fff;border:1px solid var(--line);box-shadow:0 14px 32px rgba(6,20,38,.07)}
+    .promo-detail h3{margin:0 0 8px;color:var(--navy);font-size:25px}
+    .promo-detail p{margin:0;color:var(--muted)}
+    .promo-detail__actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+    .results-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:stretch}
+    .results-panel{padding:32px;border-radius:28px;background:linear-gradient(135deg,#061426,#0a2a3c 65%,#075b65);color:#fff;box-shadow:var(--shadow)}
+    .results-panel h2{margin:0 0 10px;color:#fff;font-size:clamp(34px,4vw,54px);line-height:1}
+    .results-panel p{margin:0;color:rgba(255,255,255,.74)}
+    .results-mini{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:25px}
+    .results-mini div{padding:16px;border-radius:17px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+    .results-mini strong{display:block;font-size:25px;font-family:"Baloo 2"}
+    .results-mini span{color:rgba(255,255,255,.7);font-size:12px}
+    .results-image{position:relative;overflow:hidden;min-height:360px;border-radius:28px;background:url('assets/img/gallery/universidad-ingenieria-1.png') center/cover no-repeat;box-shadow:var(--shadow)}
+    .results-image:after{content:"Más de 3000 alumnos lograron su ingreso a la UNI";position:absolute;inset:auto 20px 20px;padding:18px;border-radius:18px;background:rgba(2,7,13,.82);border:1px solid rgba(168,247,255,.22);color:#fff;font-family:"Baloo 2";font-size:22px;font-weight:800;backdrop-filter:blur(10px)}
+    .faq-list{display:grid;gap:12px}
+    .faq-item{overflow:hidden;border-radius:19px;background:#fff;border:1px solid var(--line);box-shadow:0 10px 28px rgba(6,20,38,.05)}
+    .faq-question{width:100%;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:18px 20px;border:0;background:#fff;color:var(--navy);font-weight:900;text-align:left;cursor:pointer}
+    .faq-answer{display:grid;grid-template-rows:0fr;transition:grid-template-rows .25s ease}
+    .faq-answer[data-open="true"]{grid-template-rows:1fr}
+    .faq-answer>div{overflow:hidden}
+    .faq-answer p{margin:0;padding:0 20px 20px;color:var(--muted)}
+    .news-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    .news-card{overflow:hidden;border-radius:24px;background:#fff;border:1px solid var(--line);box-shadow:0 14px 34px rgba(6,20,38,.07);transition:.22s}
+    .news-card:hover{transform:translateY(-6px);box-shadow:0 24px 52px rgba(6,20,38,.12)}
+    .news-card img{width:100%;aspect-ratio:16/9;object-fit:cover}
+    .news-card__body{padding:18px}
+    .news-card small{color:var(--teal);font-weight:900;text-transform:uppercase}
+    .news-card h3{margin:8px 0 12px;color:var(--navy);font-size:21px;line-height:1.12}
+    .news-card a{color:var(--teal);font-size:12px;font-weight:950}
+    .final-cta{padding:48px 0;background:radial-gradient(circle at 15% 35%,rgba(0,194,209,.24),transparent 30%),radial-gradient(circle at 88% 20%,rgba(244,165,28,.22),transparent 28%),linear-gradient(135deg,#02070d,#061426 55%,#07515a);color:#fff}
+    .final-cta__box{display:grid;grid-template-columns:1fr auto;align-items:center;gap:28px;padding:32px;border-radius:28px;background:rgba(255,255,255,.075);border:1px solid rgba(168,247,255,.2);box-shadow:0 24px 60px rgba(0,0,0,.22)}
+    .final-cta h2{margin:0 0 8px;color:#fff;font-size:clamp(32px,4vw,50px);line-height:1}
+    .final-cta p{margin:0;color:rgba(255,255,255,.74)}
+    .final-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    footer{padding:28px 0;background:#02070d;color:rgba(255,255,255,.62);font-size:13px}
+    .footer-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .footer-inner img{width:150px;filter:brightness(0) invert(1)}
+    @media(max-width:1050px){
+      .route-grid{grid-template-columns:repeat(2,1fr)}
+      .program-grid{grid-template-columns:repeat(2,1fr)}
+      .benefit-grid{grid-template-columns:repeat(2,1fr)}
+      .news-grid{grid-template-columns:repeat(2,1fr)}
+      .trust-grid{grid-template-columns:repeat(2,1fr)}
+      .trust-item:nth-child(2){border-right:0}
+      .trust-item:nth-child(-n+2){border-bottom:1px solid var(--line)}
+      .results-grid{grid-template-columns:1fr}
+    }
+    @media(max-width:820px){
+      .main-nav{display:none}
+      .hero{min-height:570px}
+      .hero__content{padding:78px 0 96px}
+      .section{padding:66px 0}
+      .section__head{display:block}
+      .program-grid,.news-grid{grid-template-columns:1fr}
+      .method-detail ul{grid-template-columns:1fr}
+      .promo-detail,.final-cta__box{grid-template-columns:1fr}
+      .promo-detail__actions,.final-actions{justify-content:flex-start}
+    }
+    @media(max-width:600px){
+      .brand img{width:142px}
+      .site-header__inner{min-height:66px}
+      .header-cta{padding:9px 12px;font-size:12px}
+      .hero h1{font-size:44px}
+      .hero-actions{display:grid}
+      .btn{width:100%}
+      .trust-strip{margin-top:-28px}
+      .trust-grid{grid-template-columns:1fr 1fr}
+      .trust-item{padding:18px 10px}
+      .trust-item strong{font-size:28px}
+      .route-grid,.benefit-grid{grid-template-columns:1fr}
+      .accordion-trigger{padding:18px 16px}
+      .accordion-content{padding:0 16px 18px}
+      .accordion-trigger strong{font-size:20px}
+      .accordion-trigger small{display:none}
+      .program-grid{grid-template-columns:1fr}
+      .program-actions{display:grid}
+      .results-mini{grid-template-columns:1fr}
+      .results-image{min-height:280px}
+      .results-image:after{font-size:18px}
+      .footer-inner{display:block;text-align:center}
+      .footer-inner img{margin:0 auto 12px}
+    }
+  </style>
+</head>
+<body>
+  <div class="preview-bar">
+    <div class="container preview-bar__inner"><span class="preview-dot"></span>Vista previa independiente · No reemplaza el index actual</div>
+  </div>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="index.html"><img src="assets/img/logo.png" alt="Grupo Nostradamus"></a>
+      <nav class="main-nav" aria-label="Navegación de la propuesta">
+        <a href="#ruta">Ruta Nostra</a>
+        <a href="#programas">Programas</a>
+        <a href="#metodologia">Metodología</a>
+        <a href="#resultados">Resultados</a>
+      </nav>
+      <a class="header-cta" href="preinscripcion.html">Preinscribirme</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero__content">
+        <span class="eyebrow">✦ Preparación especializada UNI</span>
+        <h1>Ingresa a la UNI con <span>método, tecnología y resultados</span></h1>
+        <p>Una portada más compacta, ordenada y orientada a que cada estudiante encuentre rápidamente el programa que necesita.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="preinscripcion.html">📝 Iniciar preinscripción</a>
+          <a class="btn btn-secondary" href="#programas">Explorar programas</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="trust-strip">
+      <div class="container trust-grid">
+        <div class="trust-item"><strong>16 años</strong><span>de experiencia</span></div>
+        <div class="trust-item"><strong>3000+</strong><span>ingresantes UNI</span></div>
+        <div class="trust-item"><strong>Modalidad</strong><span>presencial y virtual</span></div>
+        <div class="trust-item"><strong>Seguimiento</strong><span>académico permanente</span></div>
+      </div>
+    </div>
+
+    <section class="section section--dark" id="ruta">
+      <div class="container">
+        <div class="section__head section__head--center">
+          <span class="kicker">Nueva línea premium UNI</span>
+          <h2 class="section__title">La Ruta Nostra UNI</h2>
+          <p class="section__copy">Cinco programas diferenciados para cinco etapas reales de preparación.</p>
+        </div>
+        <div class="route-grid">
+          <a class="route-card" href="ciclo-anual-uni.html"><span class="route-number">360</span><h3>Nostra 360 UNI</h3><span class="route-verb">Forma</span><p>Formación integral desde las bases hasta el nivel exigido por la UNI.</p></a>
+          <a class="route-card" href="ciclo-semianual-uni.html"><span class="route-number">⚡</span><h3>Nostra Power UNI</h3><span class="route-verb">Transforma</span><p>Corrige debilidades, reorganiza conocimientos y eleva tu rendimiento.</p></a>
+          <a class="route-card" href="ciclo-semestral-uni.html"><span class="route-number">🎯</span><h3>Nostra Élite UNI</h3><span class="route-verb">Perfecciona</span><p>Para postulantes competitivos que estuvieron cerca de ingresar.</p></a>
+          <a class="route-card" href="ciclo-repaso-uni.html"><span class="route-number">🚀</span><h3>Nostra Prime UNI</h3><span class="route-verb">Define</span><p>Repaso estratégico para la etapa decisiva antes del examen.</p></a>
+          <a class="route-card" href="ciclo-elite-uni.html"><span class="route-number">🏆</span><h3>Nostra Talentum UNI</h3><span class="route-verb">Compite</span><p>Alto rendimiento para estudiantes de nivel académico sobresaliente.</p></a>
+        </div>
+        <div class="route-motto">360 forma. Power transforma. Élite perfecciona. Prime define. Talentum compite.</div>
+      </div>
+    </section>
+
+    <section class="section section--soft" id="programas">
+      <div class="container">
+        <div class="section__head">
+          <div><span class="kicker">Programas académicos</span><h2 class="section__title">Todo lo que ofrecemos, sin una página interminable</h2><p class="section__copy">La Línea Premium aparece abierta. Las demás categorías se despliegan solo cuando el visitante desea explorarlas.</p></div>
+        </div>
+
+        <div class="accordion-stack" data-accordion-group="programas">
+          <article class="accordion-item">
+            <button class="accordion-trigger" type="button" aria-expanded="true" data-accordion-trigger="premium">
+              <span class="accordion-trigger__title"><span class="accordion-icon">✦</span><span><strong>Línea Premium UNI</strong><small>Cinco programas para cada etapa de preparación.</small></span></span><span class="accordion-chevron">+</span>
+            </button>
+            <div class="accordion-panel" data-accordion-panel="premium" data-open="true"><div class="accordion-panel__inner"><div class="accordion-content"><div class="program-grid">
+              <article class="program-card"><div class="program-card__top"><span class="program-code">360 · FORMA</span></div><h3>Nostra 360 UNI</h3><p>Preparación integral desde cero hasta nivel admisión UNI.</p><div class="program-actions"><a class="program-details" href="ciclo-anual-uni.html">Ver detalles</a><a class="program-pre" href="preinscripcion.html?programa=nostra-360-uni&programaNombre=Nostra%20360%20UNI">Preinscribirme</a></div></article>
+              <article class="program-card"><div class="program-card__top"><span class="program-code">POWER · TRANSFORMA</span></div><h3>Nostra Power UNI</h3><p>Corrección de debilidades y transformación del rendimiento.</p><div class="program-actions"><a class="program-details" href="ciclo-semianual-uni.html">Ver detalles</a><a class="program-pre" href="preinscripcion.html?programa=nostra-power-uni&programaNombre=Nostra%20Power%20UNI">Preinscribirme</a></div></article>
+              <article class="program-card"><div class="program-card__top"><span class="program-code">ÉLITE · PERFECCIONA</span></div><h3>Nostra Élite UNI</h3><p>Perfeccionamiento para postulantes competitivos.</p><div class="program-actions"><a class="program-details" href="ciclo-semestral-uni.html">Ver detalles</a><a class="program-pre" href="preinscripcion.html?programa=nostra-elite-uni&programaNombre=Nostra%20%C3%89lite%20UNI">Preinscribirme</a></div></article>
+              <article class="program-card"><div class="program-card__top"><span class="program-code">PRIME · DEFINE</span></div><h3>Nostra Prime UNI</h3><p>Repaso estratégico para la fase final antes del examen.</p><div class="program-actions"><a class="program-details" href="ciclo-repaso-uni.html">Ver detalles</a><a class="program-pre" href="preinscripcion.html?programa=nostra-prime-uni&programaNombre=Nostra%20Prime%20UNI">Preinscribirme</a></div></article>
+              <article class="program-card"><div class="program-card__top"><span class="program-code">TALENTUM · COMPITE</span></div><h3>Nostra Talentum UNI</h3><p>Programa especial de alto rendimiento académico.</p><div class="program-actions"><a class="program-details" href="ciclo-elite-uni.html">Ver detalles</a><a class="program-pre" href="preinscripcion.html?programa=nostra-talentum-uni&programaNombre=Nostra%20Talentum%20UNI">Preinscribirme</a></div></article>
+            </div></div></div></div>
+          </article>
+
+          <article class="accordion-item">
+            <button class="accordion-trigger" type="button" aria-expanded="false" data-accordion-trigger="escolar">
+              <span class="accordion-trigger__title"><span class="accordion-icon">🎒</span><span><strong>Preparación Escolar</strong><small>Programas para formación progresiva y acompañamiento.</small></span></span><span class="accordion-chevron">+</span>
+            </button>
+            <div class="accordion-panel" data-accordion-panel="escolar" data-open="false"><div class="accordion-panel__inner"><div class="accordion-content"><div class="program-grid">
+              <article class="program-card"><div class="program-card__top"><span class="program-code">IEN UNI</span></div><h3>IEN UNI</h3><p>Preparación progresiva para el Ingreso Escolar Nacional UNI.</p><div class="program-actions"><a class="program-details" href="ciclo-ien.html">Ver detalles</a><a class="program-pre" href="preinscripcion.html?programa=ciclo-ien&programaNombre=IEN%20UNI">Preinscribirme</a></div></article>
+              <article class="program-card"><div class="program-card__top"><span class="program-code">ESCOLAR</span></div><h3>Proyecto Escolar</h3><p>Refuerzo, nivelación y seguimiento académico continuo.</p><div class="program-actions"><a class="program-details" href="ciclo-proyecto-escolar.html">Ver detalles</a><a class="program-pre" href="preinscripcion.html?programa=proyecto-escolar&programaNombre=Proyecto%20Escolar">Preinscribirme</a></div></article>
+            </div></div></div></div>
+          </article>
+
+          <article class="accordion-item">
+            <button class="accordion-trigger" type="button" aria-expanded="false" data-accordion-trigger="complementarios">
+              <span class="accordion-trigger__title"><span class="accordion-icon">🏛️</span><span><strong>Programas Complementarios UNI</strong><small>Refuerzo estratégico para necesidades específicas.</small></span></span><span class="accordion-chevron">+</span>
+            </button>
+            <div class="accordion-panel" data-accordion-panel="complementarios" data-open="false"><div class="accordion-panel__inner"><div class="accordion-content"><div class="program-grid">
+              <article class="program-card"><div class="program-card__top"><span class="program-code">CEPRE UNI</span></div><h3>Paralelo CEPRE UNI</h3><p>Refuerzo paralelo, práctica adicional y seguimiento académico.</p><div class="program-actions"><a class="program-details" href="ciclo-paralelo-cepre-uni.html">Ver detalles</a><a class="program-pre" href="preinscripcion.html?programa=paralelo-cepre-uni&programaNombre=Paralelo%20CEPRE%20UNI">Preinscribirme</a></div></article>
+              <article class="program-card"><div class="program-card__top"><span class="program-code">VERANO</span></div><h3>Ciclo Verano UNI</h3><p>Avance intensivo de vacaciones para fortalecer bases.</p><div class="program-actions"><a class="program-details" href="ciclo-verano-uni.html">Ver detalles</a><a class="program-pre" href="preinscripcion.html?programa=ciclo-verano-uni&programaNombre=Ciclo%20Verano%20UNI">Preinscribirme</a></div></article>
+            </div></div></div></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="metodologia">
+      <div class="container">
+        <div class="section__head"><div><span class="kicker">Metodología Nostradamus</span><h2 class="section__title">Lo esencial visible. Los detalles, bajo demanda.</h2><p class="section__copy">Cuatro beneficios principales permanecen visibles; la explicación extensa se despliega solo cuando el visitante desea conocer el proceso.</p></div></div>
+        <div class="benefit-grid">
+          <article class="benefit-card"><span>👨‍🏫</span><h3>Docentes especialistas</h3><p>Preparación orientada al estándar y exigencia del examen UNI.</p></article>
+          <article class="benefit-card"><span>🧠</span><h3>Práctica intensiva</h3><p>Entrenamiento constante con problemas de alta exigencia.</p></article>
+          <article class="benefit-card"><span>📊</span><h3>Simulacros y análisis</h3><p>Evaluación, revisión de errores y mejora progresiva.</p></article>
+          <article class="benefit-card"><span>🎯</span><h3>Seguimiento académico</h3><p>Acompañamiento para fortalecer rendimiento y disciplina.</p></article>
+        </div>
+        <button class="method-toggle" type="button" aria-expanded="false" data-expand-trigger="metodo"><strong>Ver cómo funciona nuestra metodología completa</strong><span>+</span></button>
+        <div class="expandable" data-expand-panel="metodo" data-open="false"><div class="expandable__inner"><div class="method-detail"><ul><li>Diagnóstico del nivel académico inicial.</li><li>Asignación del programa según etapa y objetivos.</li><li>Teoría organizada y práctica progresiva.</li><li>Simulacros tipo admisión UNI.</li><li>Análisis de errores y retroalimentación.</li><li>Seguimiento de asistencia y rendimiento.</li></ul></div></div></div>
+      </div>
+    </section>
+
+    <section class="section section--soft">
+      <div class="container promo-shell">
+        <button class="promo-toggle" type="button" aria-expanded="false" data-expand-trigger="promociones">
+          <span class="promo-toggle__text"><span class="promo-badge">%</span><span><strong>Promociones y beneficios vigentes</strong><small>Consulta descuentos, campañas y facilidades disponibles.</small></span></span><span>+</span>
+        </button>
+        <div class="expandable" data-expand-panel="promociones" data-open="false"><div class="expandable__inner"><div class="promo-detail"><div><h3>Beneficios sujetos a campaña</h3><p>Las promociones pueden variar según programa, fecha de matrícula y modalidad. Solicita información actualizada antes de completar tu inscripción.</p></div><div class="promo-detail__actions"><a class="btn btn-primary" href="preinscripcion.html">Preinscribirme</a><a class="btn" style="background:#16b85b;color:#fff" href="https://wa.me/51993750351?text=Hola%20Nostradamus,%20quiero%20conocer%20las%20promociones%20vigentes." target="_blank" rel="noopener">Consultar por WhatsApp</a></div></div></div></div>
+      </div>
+    </section>
+
+    <section class="section" id="resultados">
+      <div class="container results-grid">
+        <div class="results-panel"><span class="eyebrow">Resultados que respaldan</span><h2>Una trayectoria construida con método y constancia</h2><p>La experiencia institucional, el entrenamiento académico y el acompañamiento se presentan en un solo bloque de confianza.</p><div class="results-mini"><div><strong>16 años</strong><span>preparando futuros ingenieros</span></div><div><strong>3000+</strong><span>alumnos ingresantes</span></div><div><strong>UNI</strong><span>especialización académica</span></div><div><strong>Presencial + virtual</strong><span>modalidades disponibles</span></div></div></div>
+        <div class="results-image" role="img" aria-label="Universidad Nacional de Ingeniería"></div>
+      </div>
+    </section>
+
+    <section class="section section--soft" id="faq">
+      <div class="container">
+        <div class="section__head section__head--center"><span class="kicker">Preguntas frecuentes</span><h2 class="section__title">Resuelve tus dudas rápidamente</h2><p class="section__copy">La sección permanece desplegable, pero con el mismo lenguaje visual del resto de la portada.</p></div>
+        <div class="faq-list">
+          <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">¿Qué programa debo elegir?<span>+</span></button><div class="faq-answer" data-open="false"><div><p>La elección depende de tu base académica, experiencia previa, cercanía al examen y nivel competitivo. Puedes explorar la Ruta Nostra o solicitar orientación personalizada.</p></div></div></article>
+          <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">¿Hay modalidad presencial y virtual?<span>+</span></button><div class="faq-answer" data-open="false"><div><p>Los planes disponibles dependen de cada programa. Revisa la página específica del ciclo o completa la preinscripción para recibir orientación.</p></div></div></article>
+          <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">¿Cómo puedo preinscribirme?<span>+</span></button><div class="faq-answer" data-open="false"><div><p>Completa el formulario de preinscripción con tus datos y el programa elegido. El equipo académico revisará la información y te contactará para continuar el proceso.</p></div></div></article>
+          <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">¿Las clases quedan grabadas?<span>+</span></button><div class="faq-answer" data-open="false"><div><p>El acceso a grabaciones y recursos depende del plan contratado. Confirma los beneficios vigentes al momento de matricularte.</p></div></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section__head"><div><span class="kicker">Noticias académicas</span><h2 class="section__title">Contenido útil sin alargar la portada</h2></div><a class="btn" style="background:#fff;border:1px solid var(--line);color:var(--teal)" href="blog.html">Ver todas las noticias</a></div>
+        <div class="news-grid">
+          <article class="news-card"><img src="assets/img/blog/1-modalidades.jpg" alt="Modalidades de ingreso UNI"><div class="news-card__body"><small>Admisión UNI</small><h3>Conoce las modalidades para ingresar a la UNI</h3><a href="blog1.html">Leer más →</a></div></article>
+          <article class="news-card"><img src="assets/img/blog/2-estrategiasyconsejos.jpg" alt="Estrategias para el examen UNI"><div class="news-card__body"><small>Preparación</small><h3>Examen UNI: estrategias y consejos clave</h3><a href="blog2.html">Leer más →</a></div></article>
+          <article class="news-card"><img src="assets/img/blog/3-guia.jpg" alt="Orientación vocacional"><div class="news-card__body"><small>Orientación</small><h3>Guía para elegir una carrera profesional</h3><a href="blog3.html">Leer más →</a></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta" id="contacto">
+      <div class="container final-cta__box"><div><span class="eyebrow">Cupos limitados</span><h2>Tu preparación no puede seguir esperando</h2><p>Un solo cierre comercial reemplaza los llamados repetidos de la portada actual.</p></div><div class="final-actions"><a class="btn btn-primary" href="preinscripcion.html">📝 Reservar mi vacante</a><a class="btn btn-secondary" href="https://wa.me/51993750351?text=Hola%20Nostradamus,%20necesito%20orientaci%C3%B3n%20para%20elegir%20mi%20programa." target="_blank" rel="noopener">💬 Necesito orientación</a></div></div>
+    </section>
+  </main>
+
+  <footer><div class="container footer-inner"><img src="assets/img/logo.png" alt="Grupo Nostradamus"><span>Propuesta visual de portada · Página independiente para evaluación</span></div></footer>
+
+  <script>
+    (function(){
+      function toggleAccordion(button){
+        var id=button.getAttribute('data-accordion-trigger');
+        var panel=document.querySelector('[data-accordion-panel="'+id+'"]');
+        if(!panel)return;
+        var open=button.getAttribute('aria-expanded')==='true';
+        var group=button.closest('[data-accordion-group]');
+        if(group){
+          group.querySelectorAll('[data-accordion-trigger]').forEach(function(item){item.setAttribute('aria-expanded','false');});
+          group.querySelectorAll('[data-accordion-panel]').forEach(function(item){item.setAttribute('data-open','false');});
+        }
+        if(!open){button.setAttribute('aria-expanded','true');panel.setAttribute('data-open','true');}
+      }
+      function toggleExpandable(button){
+        var id=button.getAttribute('data-expand-trigger');
+        var panel=document.querySelector('[data-expand-panel="'+id+'"]');
+        if(!panel)return;
+        var open=button.getAttribute('aria-expanded')==='true';
+        button.setAttribute('aria-expanded',String(!open));
+        panel.setAttribute('data-open',String(!open));
+      }
+      document.addEventListener('click',function(event){
+        var accordion=event.target.closest('[data-accordion-trigger]');
+        if(accordion){toggleAccordion(accordion);return;}
+        var expand=event.target.closest('[data-expand-trigger]');
+        if(expand){toggleExpandable(expand);return;}
+        var faq=event.target.closest('.faq-question');
+        if(faq){
+          var answer=faq.nextElementSibling;
+          var open=faq.getAttribute('aria-expanded')==='true';
+          faq.setAttribute('aria-expanded',String(!open));
+          if(answer)answer.setAttribute('data-open',String(!open));
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
