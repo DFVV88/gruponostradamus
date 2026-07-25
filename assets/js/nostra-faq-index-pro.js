@@ -1,57 +1,61 @@
 /* ==================================================
    Grupo Nostradamus - FAQ INTERACTIVO PRO en index
-   Reemplaza el bloque antiguo de preguntas frecuentes.
-   Quita los íconos de ojo y usa acordeón moderno con CTA.
+   Contenido actualizado para la arquitectura académica vigente.
 ================================================== */
 (function () {
+  'use strict';
+
   var file = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
   var isIndex = file === 'index.html' || file === '' || window.location.pathname === '/';
   if (!isIndex) return;
 
-  var whatsappURL = 'https://wa.me/51993750351?text=' + encodeURIComponent('Hola Nostradamus, quiero orientación para elegir el ciclo adecuado y prepararme para la UNI.');
+  var initialized = false;
+  var resizeTimer = 0;
+  var whatsappURL = 'https://wa.me/51993750351?text=' + encodeURIComponent(
+    'Hola Nostradamus, quiero orientación para elegir el programa UNI adecuado según mi nivel.'
+  );
 
   var faqs = [
     {
-      tag: 'Nivel',
+      tag: 'Programa ideal',
       icon: '🎯',
-      q: '¿Qué ciclo debo elegir según mi nivel?',
-      a: 'Si empiezas desde cero, el Ciclo Anual UNI es la ruta más completa. Si ya tienes base y necesitas ordenar conocimientos, el Semianual o Semestral pueden ayudarte a corregir vacíos y elevar tu rendimiento. Si estás cerca del examen, el Repaso UNI refuerza los temas más frecuentes.'
+      q: '¿Qué programa debo elegir según mi nivel?',
+      a: '<strong>Nostra 360 UNI</strong> forma desde las bases; <strong>Nostra Power UNI</strong> corrige debilidades de una preparación anterior; <strong>Nostra Élite UNI</strong> perfecciona a quienes estuvieron cerca de ingresar; <strong>Nostra Prime UNI</strong> prepara la etapa final antes del examen; y <strong>Nostra Talentum UNI</strong> entrena a estudiantes de alto rendimiento. También contamos con IEN UNI, Proyecto Escolar, Paralelo CEPRE UNI y Ciclo Verano UNI. <a href="ciclos.html">Compara todos los programas</a>.'
     },
     {
-      tag: 'Modalidad',
+      tag: 'Modalidad y recursos',
       icon: '💻',
       q: '¿Las clases son presenciales, virtuales o grabadas?',
-      a: 'Trabajamos con clases presenciales y apoyo virtual. Usamos Microsoft 365 para organizar recursos académicos, materiales, comunicados y grabaciones disponibles según la dinámica de cada ciclo.'
+      a: 'La modalidad depende del programa elegido. Contamos con clases presenciales y sesiones virtuales mediante Microsoft Teams. A través de <strong>NostraCUENTA</strong>, el estudiante puede acceder a recursos académicos, comunicados y servicios institucionales; además, <strong>NostraCHAT</strong> facilita la comunicación académica. La disponibilidad de grabaciones y materiales se confirma según cada programa.'
     },
     {
       tag: 'Matrícula',
       icon: '📝',
       q: '¿Cómo puedo matricularme o separar mi vacante?',
-      a: 'Solicita informes por WhatsApp, indícanos tu nivel actual y el ciclo de interés. Un asesor confirmará cupos disponibles, te orientará y te enviará los pasos para separar tu matrícula.'
+      a: 'Primero solicita orientación y cuéntanos tu nivel, si ya postulaste y cuándo rendirás el examen. Un asesor te ayudará a elegir el programa, confirmará horarios y cupos, y te indicará el proceso de pago y matrícula. También puedes completar ahora la <a href="preinscripcion.html">preinscripción en línea</a> para registrar tus datos.'
     },
     {
       tag: 'Preparación',
       icon: '📚',
       q: '¿Qué incluye la preparación en Grupo Nostradamus?',
-      a: 'Incluye teoría ordenada, práctica constante, evaluaciones, simulacros tipo admisión, acompañamiento académico, seguimiento y una ruta de trabajo enfocada en mejorar el rendimiento del postulante hacia la UNI.'
+      a: 'La preparación integra teoría orientada al nivel UNI, práctica intensiva, problemas de alta exigencia, evaluaciones, simulacros tipo admisión, análisis de errores, material académico especializado, docentes especialistas y seguimiento del rendimiento. El objetivo es que cada estudiante avance con método, disciplina y una estrategia adecuada para su nivel.'
     },
     {
       tag: 'Escolares',
       icon: '🚀',
-      q: '¿También preparan a escolares?',
-      a: 'Sí. Proyecto Escolar está pensado para estudiantes que desean adelantarse desde el colegio, fortalecer bases en Matemáticas, Ciencias y Aptitud Académica, y construir una visión preuniversitaria desde temprano.'
+      q: '¿Grupo Nostradamus también prepara a escolares?',
+      a: 'Sí. <strong>Proyecto Escolar</strong> fortalece Matemáticas, Ciencias, Aptitud Académica y hábitos de estudio; <strong>IEN UNI</strong> acompaña la preparación vinculada al Ingreso Escolar Nacional; y <strong>Ciclo Verano UNI</strong> permite avanzar intensivamente durante las vacaciones. La recomendación depende del grado, la base académica y el objetivo del estudiante.'
     },
     {
-      tag: 'Postulantes',
+      tag: 'Ya postulé',
       icon: '🔥',
-      q: '¿Qué pasa si ya postulé y no ingresé?',
-      a: 'Primero evaluamos tu base y tus errores más frecuentes. Según tu nivel, tiempo disponible y cercanía al examen, podemos recomendarte Semestral, Repaso, Élite u otra ruta más conveniente.'
+      q: '¿Qué programa me conviene si ya postulé y no ingresé?',
+      a: 'Analizamos tu puntaje, tus errores frecuentes y la distancia respecto de la vacante. Si todavía existen vacíos importantes, la ruta recomendada suele ser <strong>Nostra Power UNI</strong>; si quedaste cerca, <strong>Nostra Élite UNI</strong>; si estás en la etapa decisiva, <strong>Nostra Prime UNI</strong>; y si ya tienes rendimiento sobresaliente, <strong>Nostra Talentum UNI</strong>. La orientación final se realiza según tu diagnóstico.'
     }
   ];
 
   function injectStyles() {
-    var old = document.getElementById('nostra-faq-index-pro-style');
-    if (old) old.remove();
+    if (document.getElementById('nostra-faq-index-pro-style')) return;
 
     var style = document.createElement('style');
     style.id = 'nostra-faq-index-pro-style';
@@ -99,7 +103,7 @@
       }
       body .nostra-faq-pro-title{
         margin:0 !important;
-        max-width:850px !important;
+        max-width:900px !important;
         color:#061426 !important;
         font-size:clamp(34px,4.4vw,64px) !important;
         line-height:1.02 !important;
@@ -115,7 +119,7 @@
       }
       body .nostra-faq-pro-title span{color:#008b96 !important;}
       body .nostra-faq-pro-intro{
-        max-width:760px !important;
+        max-width:790px !important;
         margin:15px 0 0 !important;
         color:#506173 !important;
         font-size:16.5px !important;
@@ -123,14 +127,14 @@
         font-weight:650 !important;
       }
       body .nostra-faq-pro-head-card{
-        width:270px !important;
+        width:285px !important;
         padding:18px !important;
         border-radius:24px !important;
         background:linear-gradient(135deg,#061426,#083044 62%,#008b96) !important;
         color:#fff !important;
         box-shadow:0 22px 48px rgba(6,20,38,.17),0 0 34px rgba(0,194,209,.15) !important;
       }
-      body .nostra-faq-pro-head-card strong{display:block !important;font-size:24px !important;font-weight:950 !important;line-height:1 !important;color:#a8f7ff !important;}
+      body .nostra-faq-pro-head-card strong{display:block !important;font-size:23px !important;font-weight:950 !important;line-height:1.08 !important;color:#a8f7ff !important;}
       body .nostra-faq-pro-head-card span{display:block !important;margin-top:8px !important;font-size:13.5px !important;font-weight:700 !important;line-height:1.35 !important;color:rgba(255,255,255,.82) !important;}
       body .nostra-faq-pro-grid{
         display:grid !important;
@@ -218,7 +222,7 @@
       }
       body .nostra-faq-pro-toggle::before{content:'+' !important;line-height:1 !important;}
       body .nostra-faq-pro-item.active .nostra-faq-pro-toggle{background:#008b96 !important;color:#fff !important;transform:rotate(45deg) !important;}
-      body .nostra-faq-pro-answer{max-height:0 !important;overflow:hidden !important;transition:max-height .32s ease !important;}
+      body .nostra-faq-pro-answer{max-height:0;overflow:hidden !important;transition:max-height .34s ease !important;}
       body .nostra-faq-pro-answer-inner{
         margin:0 19px 19px 79px !important;
         padding:16px 18px !important;
@@ -230,7 +234,8 @@
         line-height:1.65 !important;
         font-weight:650 !important;
       }
-      body .nostra-faq-pro-item.active .nostra-faq-pro-answer{max-height:260px !important;}
+      body .nostra-faq-pro-answer-inner strong{color:#061426 !important;font-weight:900 !important;}
+      body .nostra-faq-pro-answer-inner a{color:#007f89 !important;font-weight:900 !important;text-decoration:underline !important;text-underline-offset:3px !important;}
       body .nostra-faq-pro-visual{
         position:relative !important;
         min-height:100% !important;
@@ -287,6 +292,7 @@
       body .nostra-faq-pro-wa{background:linear-gradient(135deg,#25d366,#13a54d,#061426) !important;box-shadow:0 14px 28px rgba(37,211,102,.26) !important;}
       body .nostra-faq-pro-actions{display:flex !important;flex-wrap:wrap !important;gap:12px !important;margin-top:18px !important;}
       body .nostra-faq-pro-btn{background:linear-gradient(135deg,#008b96,#05313d 55%,#061426) !important;box-shadow:0 16px 32px rgba(0,139,150,.22) !important;}
+      body .nostra-faq-pro-btn--gold{background:linear-gradient(135deg,#ffbd42,#f08b17 55%,#8c4b00) !important;}
       body .nostra-faq-pro-btn:hover,
       body .nostra-faq-pro-wa:hover{color:#fff !important;transform:translateY(-2px) !important;}
       @media(max-width:1199px){
@@ -297,7 +303,7 @@
       }
       @media(max-width:575px){
         body .nostra-faq-pro-section{padding:58px 0 !important;}
-        body .nostra-faq-pro-panel{padding:12px !important;border-radius:24px !important;}
+        body .nostra-faq-pro-panel{padding:12px !important;border-radius:24px !important;backdrop-filter:none !important;}
         body .nostra-faq-pro-question{grid-template-columns:auto 1fr auto !important;gap:10px !important;padding:15px !important;}
         body .nostra-faq-pro-ico{width:38px !important;height:38px !important;border-radius:13px !important;font-size:17px !important;}
         body .nostra-faq-pro-question-title{font-size:15px !important;}
@@ -312,103 +318,144 @@
   }
 
   function normalize(text) {
-    return (text || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim();
+    return (text || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
   }
 
   function findFAQSection() {
     var candidates = Array.from(document.querySelectorAll('section, .space, .space-top, .space-bottom'));
-    return candidates.find(function (el) {
-      if (el.dataset && el.dataset.nostraFaqPro === '2') return false;
-      var txt = normalize(el.textContent);
-      return txt.indexOf('preguntas frecuentes estudiantiles') !== -1 ||
-        txt.indexOf('resuelve tus dudas') !== -1 ||
-        txt.indexOf('como puedo acceder a la intranet') !== -1 ||
-        (txt.indexOf('que ciclos ofrece') !== -1 && txt.indexOf('grupo de estudio nostradamus') !== -1);
+    return candidates.find(function (element) {
+      if (element.dataset && element.dataset.nostraFaqPro === '3') return false;
+      var text = normalize(element.textContent);
+      return text.indexOf('preguntas frecuentes estudiantiles') !== -1 ||
+        text.indexOf('resuelve tus dudas') !== -1 ||
+        text.indexOf('como puedo acceder a la intranet') !== -1 ||
+        (text.indexOf('que ciclos ofrece') !== -1 && text.indexOf('grupo de estudio nostradamus') !== -1);
     });
   }
 
   function getExistingImage(section) {
-    var img = section ? section.querySelector('img') : null;
-    return img && img.getAttribute('src') ? img.getAttribute('src') : 'assets/img/normal/about_5_1.jpg';
+    var image = section ? section.querySelector('img') : null;
+    return image && image.getAttribute('src') ? image.getAttribute('src') : 'assets/img/normal/about_5_1.jpg';
   }
 
   function faqHTML(item, index) {
+    var answerId = 'nostra-faq-answer-' + index;
     return '' +
       '<div class="nostra-faq-pro-item ' + (index === 0 ? 'active' : '') + '">' +
-        '<button class="nostra-faq-pro-question" type="button" aria-expanded="' + (index === 0 ? 'true' : 'false') + '">' +
+        '<button class="nostra-faq-pro-question" type="button" aria-expanded="' + (index === 0 ? 'true' : 'false') + '" aria-controls="' + answerId + '">' +
           '<span class="nostra-faq-pro-ico">' + item.icon + '</span>' +
           '<span class="nostra-faq-pro-qtext"><span class="nostra-faq-pro-tag">' + item.tag + '</span><span class="nostra-faq-pro-question-title">' + item.q + '</span></span>' +
           '<span class="nostra-faq-pro-toggle" aria-hidden="true"></span>' +
         '</button>' +
-        '<div class="nostra-faq-pro-answer"><div class="nostra-faq-pro-answer-inner">' + item.a + '</div></div>' +
+        '<div class="nostra-faq-pro-answer" id="' + answerId + '"><div class="nostra-faq-pro-answer-inner">' + item.a + '</div></div>' +
       '</div>';
   }
 
-  function buildSection(imgSrc) {
+  function buildSection(imageSource) {
     return '' +
       '<div class="container nostra-faq-pro-wrap">' +
         '<div class="nostra-faq-pro-head">' +
           '<div>' +
             '<span class="nostra-faq-pro-kicker">💬 Centro de ayuda para postulantes</span>' +
-            '<h2 class="nostra-faq-pro-title">Preguntas frecuentes para <span>elegir tu ruta UNI</span></h2>' +
-            '<p class="nostra-faq-pro-intro">Convierte tus dudas en una decisión clara: nivel, modalidad, matrícula, recursos académicos y acompañamiento antes de empezar tu preparación.</p>' +
+            '<h2 class="nostra-faq-pro-title">Preguntas frecuentes para <span>elegir tu programa UNI</span></h2>' +
+            '<p class="nostra-faq-pro-intro">Resuelve tus dudas sobre programas, modalidad, matrícula, recursos académicos y acompañamiento antes de comenzar tu preparación.</p>' +
           '</div>' +
-          '<div class="nostra-faq-pro-head-card"><strong>6 dudas clave</strong><span>Respuestas rápidas para elegir mejor tu ciclo y solicitar informes sin perder tiempo.</span></div>' +
+          '<div class="nostra-faq-pro-head-card"><strong>Encuentra tu programa ideal</strong><span>Seis respuestas claras para elegir la preparación que realmente necesitas.</span></div>' +
         '</div>' +
         '<div class="nostra-faq-pro-grid">' +
           '<div class="nostra-faq-pro-panel">' +
             '<div class="nostra-faq-pro-list">' + faqs.map(faqHTML).join('') + '</div>' +
             '<div class="nostra-faq-pro-actions">' +
-              '<a class="nostra-faq-pro-btn" href="ciclos.html">Ver ciclos académicos</a>' +
-              '<a class="nostra-faq-pro-btn" target="_blank" rel="noopener" href="' + whatsappURL + '">Consultar por WhatsApp</a>' +
+              '<a class="nostra-faq-pro-btn" href="ciclos.html">Ver programas académicos</a>' +
+              '<a class="nostra-faq-pro-btn nostra-faq-pro-btn--gold" href="preinscripcion.html">Preinscribirme</a>' +
+              '<a class="nostra-faq-pro-btn" target="_blank" rel="noopener noreferrer" href="' + whatsappURL + '">Consultar por WhatsApp</a>' +
             '</div>' +
           '</div>' +
           '<div class="nostra-faq-pro-visual">' +
-            '<img src="' + imgSrc + '" alt="Preguntas frecuentes Grupo Nostradamus">' +
+            '<img src="' + imageSource + '" alt="Orientación para elegir un programa UNI en Grupo Nostradamus" loading="lazy" decoding="async">' +
             '<div class="nostra-faq-pro-card">' +
-              '<h3>¿Aún no sabes qué ciclo elegir?</h3>' +
-              '<p>Cuéntanos tu nivel actual, si ya postulaste y cuándo deseas rendir examen. Te orientamos hacia la ruta más conveniente.</p>' +
-              '<a class="nostra-faq-pro-wa" target="_blank" rel="noopener" href="' + whatsappURL + '"><i class="fab fa-whatsapp"></i> Hablar con un asesor</a>' +
+              '<h3>¿Aún no sabes qué programa elegir?</h3>' +
+              '<p>Cuéntanos tu nivel, si ya postulaste y cuándo rendirás el examen. Te orientaremos hacia la ruta académica más conveniente.</p>' +
+              '<a class="nostra-faq-pro-wa" target="_blank" rel="noopener noreferrer" href="' + whatsappURL + '"><i class="fab fa-whatsapp"></i> Hablar con un asesor</a>' +
             '</div>' +
           '</div>' +
         '</div>' +
       '</div>';
   }
 
+  function closeItem(item) {
+    item.classList.remove('active');
+    var button = item.querySelector('.nostra-faq-pro-question');
+    var answer = item.querySelector('.nostra-faq-pro-answer');
+    if (button) button.setAttribute('aria-expanded', 'false');
+    if (answer) answer.style.maxHeight = '0px';
+  }
+
+  function openItem(item) {
+    item.classList.add('active');
+    var button = item.querySelector('.nostra-faq-pro-question');
+    var answer = item.querySelector('.nostra-faq-pro-answer');
+    if (button) button.setAttribute('aria-expanded', 'true');
+    if (answer) answer.style.maxHeight = answer.scrollHeight + 'px';
+  }
+
+  function refreshActiveAnswer(section) {
+    var active = section.querySelector('.nostra-faq-pro-item.active');
+    if (!active) return;
+    var answer = active.querySelector('.nostra-faq-pro-answer');
+    if (answer) answer.style.maxHeight = answer.scrollHeight + 'px';
+  }
+
   function bindAccordion(section) {
-    section.querySelectorAll('.nostra-faq-pro-question').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var item = btn.closest('.nostra-faq-pro-item');
-        var active = item.classList.contains('active');
-        section.querySelectorAll('.nostra-faq-pro-item').forEach(function (el) {
-          el.classList.remove('active');
-          var b = el.querySelector('.nostra-faq-pro-question');
-          if (b) b.setAttribute('aria-expanded', 'false');
-        });
-        if (!active) {
-          item.classList.add('active');
-          btn.setAttribute('aria-expanded', 'true');
-        }
+    var items = Array.from(section.querySelectorAll('.nostra-faq-pro-item'));
+    items.forEach(function (item) {
+      var button = item.querySelector('.nostra-faq-pro-question');
+      if (!button) return;
+
+      button.addEventListener('click', function () {
+        var wasActive = item.classList.contains('active');
+        items.forEach(closeItem);
+        if (!wasActive) openItem(item);
       });
     });
+
+    var first = section.querySelector('.nostra-faq-pro-item.active');
+    if (first) window.requestAnimationFrame(function () { openItem(first); });
+
+    window.addEventListener('resize', function () {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(function () { refreshActiveAnswer(section); }, 160);
+    }, { passive:true });
   }
 
   function init() {
+    if (initialized) return true;
     injectStyles();
+
     var section = findFAQSection();
-    if (!section) return;
-    var imgSrc = getExistingImage(section);
-    section.className = (section.className || '') + ' nostra-faq-pro-section';
-    section.innerHTML = buildSection(imgSrc);
-    section.dataset.nostraFaqPro = '2';
+    if (!section) return false;
+
+    var imageSource = getExistingImage(section);
+    section.classList.add('nostra-faq-pro-section');
+    section.innerHTML = buildSection(imageSource);
+    section.dataset.nostraFaqPro = '3';
     bindAccordion(section);
+    initialized = true;
+    return true;
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
-  window.addEventListener('load', function () {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once:true });
+  } else {
     init();
-    setTimeout(init, 500);
-    setTimeout(init, 1200);
-  });
+  }
+
+  window.addEventListener('load', function () {
+    if (!initialized) init();
+  }, { once:true });
 })();
