@@ -2,7 +2,7 @@
    Grupo Nostradamus - Acceso a Clases en Vivo PRO
    Redirige los botones de CLASES EN VIVO a una página interna
    y aplica un estilo premium con brillo, pulso y efecto hover.
-   No afecta iq100.html.
+   No afecta iq100.html ni controles internos de otros módulos.
 ================================================== */
 (function () {
   var path = window.location.pathname.toLowerCase();
@@ -18,6 +18,18 @@
       .replace(/[\u0300-\u036f]/g, '')
       .replace(/\s+/g, ' ')
       .trim();
+  }
+
+  function isIgnoredLiveElement(el) {
+    if (!el) return false;
+    if (el.matches && el.matches('.np-toggle,[data-nostra-ignore-live="true"]')) return true;
+    return !!(el.closest && el.closest('.np-toggle,[data-nostra-ignore-live="true"]'));
+  }
+
+  function clearIgnoredLiveState(el) {
+    if (!el) return;
+    el.classList.remove('nostra-live-pro', 'nostra-live', 'btn-live', 'btn-live-mobile');
+    el.removeAttribute('data-nostra-live-fixed');
   }
 
   function injectLiveButtonStyles() {
@@ -151,7 +163,7 @@
   }
 
   function isLiveElement(el) {
-    if (!el) return false;
+    if (!el || isIgnoredLiveElement(el)) return false;
     var text = normalizeText(el.textContent || '');
     var href = normalizeText(el.getAttribute && el.getAttribute('href') || '');
     var cls = normalizeText(el.className || '');
@@ -178,7 +190,7 @@
   }
 
   function makeInternalLiveLink(link, label) {
-    if (!link) return;
+    if (!link || isIgnoredLiveElement(link)) return;
 
     link.setAttribute('href', LIVE_PAGE_URL);
     link.removeAttribute('target');
@@ -195,6 +207,10 @@
     injectLiveButtonStyles();
 
     document.querySelectorAll('a, button, .btn-live, .btn-live-mobile, .nostra-live, .dropdown-link > a').forEach(function (el) {
+      if (isIgnoredLiveElement(el)) {
+        clearIgnoredLiveState(el);
+        return;
+      }
       if (isLiveElement(el)) {
         if (el.tagName && el.tagName.toLowerCase() === 'a') {
           makeInternalLiveLink(el, 'CLASES EN VIVO');
@@ -207,6 +223,7 @@
     });
 
     document.querySelectorAll('.dropdown-menu a, .sub-menu a').forEach(function (link) {
+      if (isIgnoredLiveElement(link)) return;
       var text = normalizeText(link.textContent);
       var href = normalizeText(link.getAttribute('href') || '');
       if ((href.indexOf('teams.microsoft.com') !== -1 || href.indexOf('q10') !== -1) &&
@@ -218,7 +235,7 @@
 
   document.addEventListener('click', function (event) {
     var target = event.target && event.target.closest ? event.target.closest('a, button, .btn-live, .btn-live-mobile, .nostra-live, .dropdown-link > a') : null;
-    if (!target) return;
+    if (!target || isIgnoredLiveElement(target)) return;
 
     if (isLiveElement(target) || target.getAttribute('data-nostra-live-fixed') === 'internal-live-page') {
       if (target.tagName && target.tagName.toLowerCase() === 'a') return;
