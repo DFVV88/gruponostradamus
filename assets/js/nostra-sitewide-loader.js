@@ -18,7 +18,7 @@
 
   if (isIq100 || isAdminPage) return;
 
-  var VERSION = '2026-87';
+  var VERSION = '2026-88';
   var ADSENSE_CLIENT = 'ca-pub-9810053992087127';
 
   function assetAlreadyLoaded(urlPart) {
@@ -137,6 +137,7 @@
       'nostra-registro-button.js',
       'nostra-matricula-pago-cta.js',
       'nostra-footer-horizontal.js',
+      'nostra-legal-footer-links.js',
       'nostra-footer-brand-copy.js',
       'nostra-footer-brand-layout.js'
     ]);
