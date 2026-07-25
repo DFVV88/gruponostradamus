@@ -9,7 +9,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-71';
+  var VERSION = '2026-72';
   var ADSENSE_CLIENT = 'ca-pub-9810053992087127';
 
   function assetAlreadyLoaded(urlPart) {
@@ -128,6 +128,7 @@
     loadJS('assets/js/nostra-cycle-pricing.js?v=' + VERSION);
     loadJS('assets/js/nostra-cycle-description-meta.js?v=' + VERSION);
     loadJS('assets/js/nostra-cycle-sidebar-premium.js?v=' + VERSION);
+    loadJS('assets/js/nostra-footer-horizontal.js?v=' + VERSION);
   }
 
   if (document.readyState === 'loading') {
