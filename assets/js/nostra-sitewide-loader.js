@@ -4,10 +4,11 @@
 (function () {
   var path = window.location.pathname.toLowerCase();
   var isIq100 = path.indexOf('iq100.html') !== -1;
+  var isCiclosCatalog = /(?:^|\/)ciclos(?:\.html)?\/?$/.test(path);
 
   if (isIq100) return;
 
-  var VERSION = '2026-64';
+  var VERSION = '2026-65';
   var ADSENSE_CLIENT = 'ca-pub-9810053992087127';
 
   function assetAlreadyLoaded(urlPart) {
@@ -31,7 +32,26 @@
     document.head.appendChild(script);
   }
 
+  function prehideLegacyCiclosCatalog() {
+    if (!isCiclosCatalog || document.getElementById('nostra-ciclos-legacy-prehide')) return;
+    var style = document.createElement('style');
+    style.id = 'nostra-ciclos-legacy-prehide';
+    style.textContent = '#course-sec .tab-menu1.filter-menu-active,#course-sec .filter-active{display:none!important;visibility:hidden!important}';
+    document.head.appendChild(style);
+  }
+
+  function loadLegacyCiclosEnhancements() {
+    if (isCiclosCatalog) return;
+    loadJS('assets/js/nostra-ciclos-design-pro.js?v=' + VERSION);
+    loadJS('assets/js/nostra-ciclos-copy-pro.js?v=' + VERSION);
+    loadJS('assets/js/nostra-ciclos-horarios-fix.js?v=' + VERSION);
+    loadJS('assets/js/nostra-ciclos-layout-fix.js?v=' + VERSION);
+    loadJS('assets/js/nostra-ciclos-turnos-final.js?v=' + VERSION);
+    loadJS('assets/js/nostra-ciclos-paralelo-horario-fix.js?v=' + VERSION);
+  }
+
   function init() {
+    prehideLegacyCiclosCatalog();
     loadAdSense();
     loadJS('assets/js/nostra-analytics.js?v=' + VERSION);
     loadJS('assets/js/nostra-seo-meta.js?v=' + VERSION);
@@ -48,12 +68,7 @@
     loadJS('assets/js/nostra-uni-campus-only.js?v=' + VERSION);
     loadJS('assets/js/nostra-ingresantes-counter-pro.js?v=' + VERSION);
     loadJS('assets/js/nostra-faq-index-pro.js?v=' + VERSION);
-    loadJS('assets/js/nostra-ciclos-design-pro.js?v=' + VERSION);
-    loadJS('assets/js/nostra-ciclos-copy-pro.js?v=' + VERSION);
-    loadJS('assets/js/nostra-ciclos-horarios-fix.js?v=' + VERSION);
-    loadJS('assets/js/nostra-ciclos-layout-fix.js?v=' + VERSION);
-    loadJS('assets/js/nostra-ciclos-turnos-final.js?v=' + VERSION);
-    loadJS('assets/js/nostra-ciclos-paralelo-horario-fix.js?v=' + VERSION);
+    loadLegacyCiclosEnhancements();
     loadJS('assets/js/nostra-ciclos-catalog-dynamic.js?v=' + VERSION);
     loadJS('assets/js/nostra-ciclo-detalle-pro.js?v=' + VERSION);
     loadJS('assets/js/nostra-ciclos-links.js?v=' + VERSION);
