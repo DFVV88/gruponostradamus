@@ -18,7 +18,7 @@
 
   if (isIq100 || isAdminPage) return;
 
-  var VERSION = '2026-76';
+  var VERSION = '2026-77';
   var ADSENSE_CLIENT = 'ca-pub-9810053992087127';
 
   function assetAlreadyLoaded(urlPart) {
