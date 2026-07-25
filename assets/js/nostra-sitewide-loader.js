@@ -8,7 +8,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-65';
+  var VERSION = '2026-66';
   var ADSENSE_CLIENT = 'ca-pub-9810053992087127';
 
   function assetAlreadyLoaded(urlPart) {
@@ -70,6 +70,7 @@
     loadJS('assets/js/nostra-faq-index-pro.js?v=' + VERSION);
     loadLegacyCiclosEnhancements();
     loadJS('assets/js/nostra-ciclos-catalog-dynamic.js?v=' + VERSION);
+    loadJS('assets/js/nostra-ciclos-cards-premium.js?v=' + VERSION);
     loadJS('assets/js/nostra-ciclo-detalle-pro.js?v=' + VERSION);
     loadJS('assets/js/nostra-ciclos-links.js?v=' + VERSION);
     loadJS('assets/js/nostra-grid-fix.js?v=' + VERSION);
