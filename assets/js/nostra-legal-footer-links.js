@@ -1,6 +1,6 @@
 /* ==================================================
    Grupo Nostradamus - Enlaces legales globales
-   Inserta accesos visibles a términos, privacidad y devoluciones.
+   Inserta accesos visibles a términos, devoluciones, privacidad y reclamos.
 ================================================== */
 (function () {
   'use strict';
@@ -8,7 +8,8 @@
   var LINKS = [
     { href:'terminos-y-condiciones.html', label:'Términos y condiciones' },
     { href:'politica-cambios-devoluciones.html', label:'Cambios y devoluciones' },
-    { href:'politica-de-privacidad.html', label:'Política de privacidad' }
+    { href:'politica-de-privacidad.html', label:'Política de privacidad' },
+    { href:'libro-de-reclamaciones.html', label:'Libro de Reclamaciones' }
   ];
 
   function hasLink(container, href) {
