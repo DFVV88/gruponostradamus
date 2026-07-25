@@ -9,7 +9,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-70';
+  var VERSION = '2026-71';
   var ADSENSE_CLIENT = 'ca-pub-9810053992087127';
 
   function assetAlreadyLoaded(urlPart) {
@@ -57,6 +57,14 @@
     document.head.appendChild(style);
   }
 
+  function prehideHomeNews() {
+    if (!isHomePage || document.getElementById('nostra-home-news-prehide')) return;
+    var style = document.createElement('style');
+    style.id = 'nostra-home-news-prehide';
+    style.textContent = '#blog-sec{overflow-anchor:none!important}#blog-sec:not([data-nin-ready="1"]){min-height:330px!important}#blog-sec:not([data-nin-ready="1"])>.container>*{visibility:hidden!important}';
+    document.head.appendChild(style);
+  }
+
   function loadLegacyCiclosEnhancements() {
     if (isCiclosCatalog) return;
     loadJS('assets/js/nostra-ciclos-design-pro.js?v=' + VERSION);
@@ -71,8 +79,10 @@
     prehideLegacyCiclosCatalog();
     prehideLegacyPlataforma();
     prehideHomeCycles();
+    prehideHomeNews();
     loadJS('assets/js/nostra-plataforma-accordion.js?v=' + VERSION);
     loadJS('assets/js/nostra-home-cycles-accordion.js?v=' + VERSION);
+    loadJS('assets/js/nostra-index-noticias-pro.js?v=' + VERSION);
     loadAdSense();
     loadJS('assets/js/nostra-analytics.js?v=' + VERSION);
     loadJS('assets/js/nostra-seo-meta.js?v=' + VERSION);
@@ -85,7 +95,6 @@
     loadJS('assets/js/nostra-contact-whatsapp-fix.js?v=' + VERSION);
     loadJS('assets/js/nostrachat-index-section.js?v=' + VERSION);
     loadJS('assets/js/nostra-noticias-uni-pro.js?v=' + VERSION);
-    loadJS('assets/js/nostra-index-noticias-pro.js?v=' + VERSION);
     loadJS('assets/js/nostra-uni-campus-only.js?v=' + VERSION);
     loadJS('assets/js/nostra-ingresantes-counter-pro.js?v=' + VERSION);
     loadJS('assets/js/nostra-faq-index-pro.js?v=' + VERSION);
