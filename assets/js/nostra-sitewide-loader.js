@@ -18,7 +18,7 @@
 
   if (isIq100 || isAdminPage) return;
 
-  var VERSION = '2026-77';
+  var VERSION = '2026-78';
   var ADSENSE_CLIENT = 'ca-pub-9810053992087127';
 
   function assetAlreadyLoaded(urlPart) {
@@ -112,6 +112,7 @@
       'nostra-ortografia-global.js',
       'nostra-ortografia-extra.js',
       'shared-header.js',
+      'nostra-cycle-menu-labels.js',
       'nostrachat-menu-link.js',
       'nostra-cuenta-menu-link.js',
       'nostra-contact-whatsapp-fix.js',
