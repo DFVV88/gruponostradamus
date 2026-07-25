@@ -1,6 +1,6 @@
 /* ==================================================
    Grupo Nostradamus - Catálogo dinámico de ciclos
-   Resume cada producto y sincroniza datos desde Firebase.
+   Resume cada producto, sincroniza Firebase y añade navegación rápida.
 ================================================== */
 (function(){
   'use strict';
@@ -9,66 +9,21 @@
   if(file !== 'ciclos.html' && file !== 'ciclos') return;
 
   var PROGRAMS = [
-    {
-      id:'nostra-360-uni', nombre:'Nostra 360 UNI', ruta:'ciclo-anual-uni.html', grupo:'premium', orden:1,
-      promesa:'Formación integral desde las bases.',
-      ideal:'Estudiantes que están iniciando su preparación y necesitan construir una base completa.',
-      descripcion:'Preparación integral desde el nivel básico hasta alcanzar el rendimiento exigido por la UNI.'
-    },
-    {
-      id:'nostra-power-uni', nombre:'Nostra Power UNI', ruta:'ciclo-semianual-uni.html', grupo:'premium', orden:2,
-      promesa:'Corrige debilidades y transforma tu rendimiento.',
-      ideal:'Postulantes que ya estudiaron, pero necesitan reforzar vacíos y cambiar su estrategia.',
-      descripcion:'Programa intensivo para fortalecer conocimientos, corregir errores y elevar el nivel competitivo.'
-    },
-    {
-      id:'nostra-elite-uni', nombre:'Nostra Élite UNI', ruta:'ciclo-semestral-uni.html', grupo:'premium', orden:3,
-      promesa:'Perfeccionamiento para competir por una vacante.',
-      ideal:'Postulantes con buen nivel que estuvieron cerca de ingresar y necesitan mayor precisión.',
-      descripcion:'Entrenamiento avanzado para consolidar el dominio académico y mejorar el rendimiento en examen.'
-    },
-    {
-      id:'nostra-prime-uni', nombre:'Nostra Prime UNI', ruta:'ciclo-repaso-uni.html', grupo:'premium', orden:4,
-      promesa:'Preparación decisiva para la etapa final.',
-      ideal:'Postulantes que se encuentran a pocas semanas del examen de admisión UNI.',
-      descripcion:'Repaso estratégico, práctica intensiva y simulacros para llegar al examen con máxima seguridad.'
-    },
-    {
-      id:'nostra-talentum-uni', nombre:'Nostra Talentum UNI', ruta:'ciclo-elite-uni.html', grupo:'premium', orden:5,
-      promesa:'Alto rendimiento y máxima exigencia.',
-      ideal:'Estudiantes de nivel competitivo alto que buscan entrenamiento académico especializado.',
-      descripcion:'Programa especial para desarrollar rendimiento superior, disciplina y competencia académica.'
-    },
-    {
-      id:'ciclo-ien', nombre:'IEN UNI', ruta:'ciclo-ien.html', grupo:'escolar', orden:6,
-      promesa:'Preparación progresiva para el ingreso escolar UNI.',
-      ideal:'Escolares que desean prepararse con anticipación y desarrollar bases sólidas.',
-      descripcion:'Formación académica orientada al proceso de Ingreso Escolar Nacional de la UNI.'
-    },
-    {
-      id:'proyecto-escolar', nombre:'Proyecto Escolar', ruta:'ciclo-proyecto-escolar.html', grupo:'escolar', orden:7,
-      promesa:'Refuerzo y formación escolar continua.',
-      ideal:'Estudiantes que necesitan nivelación, acompañamiento y mejora sostenida en el colegio.',
-      descripcion:'Programa de refuerzo académico, nivelación y seguimiento para fortalecer el desempeño escolar.'
-    },
-    {
-      id:'paralelo-cepre-uni', nombre:'Paralelo CEPRE UNI', ruta:'ciclo-paralelo-cepre-uni.html', grupo:'complementario', orden:8,
-      promesa:'Acompañamiento estratégico para CEPRE UNI.',
-      ideal:'Alumnos de CEPRE UNI que requieren refuerzo, práctica adicional y seguimiento.',
-      descripcion:'Preparación complementaria alineada al avance de CEPRE UNI para mejorar resultados y competencia.'
-    },
-    {
-      id:'ciclo-verano-uni', nombre:'Ciclo Verano UNI', ruta:'ciclo-verano-uni.html', grupo:'complementario', orden:9,
-      promesa:'Avanza y fortalece tus bases en vacaciones.',
-      ideal:'Escolares y egresados que desean aprovechar el verano para elevar su nivel académico.',
-      descripcion:'Programa intensivo de vacaciones para reforzar fundamentos y avanzar en la preparación UNI.'
-    }
+    {id:'nostra-360-uni',nombre:'Nostra 360 UNI',ruta:'ciclo-anual-uni.html',grupo:'premium',orden:1,promesa:'Formación integral desde las bases.',ideal:'Estudiantes que están iniciando su preparación y necesitan construir una base completa.',descripcion:'Preparación integral desde el nivel básico hasta alcanzar el rendimiento exigido por la UNI.'},
+    {id:'nostra-power-uni',nombre:'Nostra Power UNI',ruta:'ciclo-semianual-uni.html',grupo:'premium',orden:2,promesa:'Corrige debilidades y transforma tu rendimiento.',ideal:'Postulantes que ya estudiaron, pero necesitan reforzar vacíos y cambiar su estrategia.',descripcion:'Programa intensivo para fortalecer conocimientos, corregir errores y elevar el nivel competitivo.'},
+    {id:'nostra-elite-uni',nombre:'Nostra Élite UNI',ruta:'ciclo-semestral-uni.html',grupo:'premium',orden:3,promesa:'Perfeccionamiento para competir por una vacante.',ideal:'Postulantes con buen nivel que estuvieron cerca de ingresar y necesitan mayor precisión.',descripcion:'Entrenamiento avanzado para consolidar el dominio académico y mejorar el rendimiento en examen.'},
+    {id:'nostra-prime-uni',nombre:'Nostra Prime UNI',ruta:'ciclo-repaso-uni.html',grupo:'premium',orden:4,promesa:'Preparación decisiva para la etapa final.',ideal:'Postulantes que se encuentran a pocas semanas del examen de admisión UNI.',descripcion:'Repaso estratégico, práctica intensiva y simulacros para llegar al examen con máxima seguridad.'},
+    {id:'nostra-talentum-uni',nombre:'Nostra Talentum UNI',ruta:'ciclo-elite-uni.html',grupo:'premium',orden:5,promesa:'Alto rendimiento y máxima exigencia.',ideal:'Estudiantes de nivel competitivo alto que buscan entrenamiento académico especializado.',descripcion:'Programa especial para desarrollar rendimiento superior, disciplina y competencia académica.'},
+    {id:'ciclo-ien',nombre:'IEN UNI',ruta:'ciclo-ien.html',grupo:'escolar',orden:6,promesa:'Preparación progresiva para el ingreso escolar UNI.',ideal:'Escolares que desean prepararse con anticipación y desarrollar bases sólidas.',descripcion:'Formación académica orientada al proceso de Ingreso Escolar Nacional de la UNI.'},
+    {id:'proyecto-escolar',nombre:'Proyecto Escolar',ruta:'ciclo-proyecto-escolar.html',grupo:'escolar',orden:7,promesa:'Refuerzo y formación escolar continua.',ideal:'Estudiantes que necesitan nivelación, acompañamiento y mejora sostenida en el colegio.',descripcion:'Programa de refuerzo académico, nivelación y seguimiento para fortalecer el desempeño escolar.'},
+    {id:'paralelo-cepre-uni',nombre:'Paralelo CEPRE UNI',ruta:'ciclo-paralelo-cepre-uni.html',grupo:'complementario',orden:8,promesa:'Acompañamiento estratégico para CEPRE UNI.',ideal:'Alumnos de CEPRE UNI que requieren refuerzo, práctica adicional y seguimiento.',descripcion:'Preparación complementaria alineada al avance de CEPRE UNI para mejorar resultados y competencia.'},
+    {id:'ciclo-verano-uni',nombre:'Ciclo Verano UNI',ruta:'ciclo-verano-uni.html',grupo:'complementario',orden:9,promesa:'Avanza y fortalece tus bases en vacaciones.',ideal:'Escolares y egresados que desean aprovechar el verano para elevar su nivel académico.',descripcion:'Programa intensivo de vacaciones para reforzar fundamentos y avanzar en la preparación UNI.'}
   ];
 
   var GROUPS = [
-    {id:'premium', titulo:'Línea Premium UNI', descripcion:'Una ruta diferenciada para cada etapa de tu preparación.'},
-    {id:'escolar', titulo:'Preparación Escolar', descripcion:'Formación progresiva, nivelación y acompañamiento académico.'},
-    {id:'complementario', titulo:'Programas Complementarios UNI', descripcion:'Refuerzo estratégico para etapas y necesidades específicas.'}
+    {id:'premium',titulo:'Línea Premium UNI',descripcion:'Una ruta diferenciada para cada etapa de tu preparación.'},
+    {id:'escolar',titulo:'Preparación Escolar',descripcion:'Formación progresiva, nivelación y acompañamiento académico.'},
+    {id:'complementario',titulo:'Programas Complementarios UNI',descripcion:'Refuerzo estratégico para etapas y necesidades específicas.'}
   ];
 
   var firebaseConfig = {
@@ -80,7 +35,9 @@
     appId:'1:869749182265:web:5f5c9174680585f142e2e8'
   };
 
-  var catalog = PROGRAMS.map(function(item){ return Object.assign({},item,{publicado:true,fechaInicio:'',duracion:'',planes:[]}); });
+  var catalog = PROGRAMS.map(function(item){
+    return Object.assign({},item,{publicado:true,fechaInicio:'',duracion:'',planes:[]});
+  });
 
   function clean(value){ return String(value == null ? '' : value).replace(/\s+/g,' ').trim(); }
   function esc(value){
@@ -92,6 +49,9 @@
     var parsed = Number(String(value == null ? '' : value).replace(',','.'));
     return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
   }
+  function normalized(value){
+    return clean(value).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  }
   function dateLabel(value){
     var raw = clean(value);
     if(!raw) return 'Por anunciar';
@@ -102,9 +62,6 @@
     var text = clean(value);
     if(text.length <= max) return text;
     return text.slice(0,max).replace(/\s+\S*$/,'') + '…';
-  }
-  function normalized(value){
-    return clean(value).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
   }
   function activePlans(program){
     return Array.isArray(program.planes) ? program.planes.filter(function(plan){
@@ -141,10 +98,15 @@
     if(!names.length) return '<span class="nc-chip nc-chip--muted">Modalidades por confirmar</span>';
     return names.map(function(name){ return '<span class="nc-chip">' + esc(name) + '</span>'; }).join('');
   }
+  function quickNavHtml(){
+    return '<nav class="nc-quick-nav" aria-label="Accesos rápidos a los programas">' + PROGRAMS.map(function(program){
+      return '<button type="button" class="nc-quick-nav__btn" data-nc-program="' + esc(program.id) + '"><span>' + String(program.orden).padStart(2,'0') + '</span>' + esc(program.nombre) + '</button>';
+    }).join('') + '</nav>';
+  }
   function cardHtml(program){
     var plans = activePlans(program);
     var description = shorten(program.descripcion || '',220) || program.promesa;
-    return '<article class="nc-card' + (program.publicado === false ? ' nc-card--paused' : '') + '">' +
+    return '<article id="programa-' + esc(program.id) + '" class="nc-card' + (program.publicado === false ? ' nc-card--paused' : '') + '" data-nc-card="' + esc(program.id) + '">' +
       '<div class="nc-card__top"><span class="nc-order">' + String(program.orden).padStart(2,'0') + '</span><span class="nc-status">' + esc(statusLabel(program)) + '</span></div>' +
       '<div class="nc-card__body">' +
         '<p class="nc-kicker">' + esc(program.promesa) + '</p>' +
@@ -171,6 +133,7 @@
       '<div class="nc-grid">' + products.map(cardHtml).join('') + '</div>' +
     '</section>';
   }
+
   function addStyles(){
     if(document.getElementById('nostra-ciclos-catalog-dynamic-style')) return;
     var style = document.createElement('style');
@@ -179,9 +142,13 @@
       '#course-sec[data-nostra-catalog="1"] .tab-menu1.filter-menu-active,#course-sec[data-nostra-catalog="1"] .filter-active{display:none!important}',
       '#nostra-ciclos-catalog{width:min(1220px,100%);margin:0 auto;padding:4px 0 34px}',
       '.nc-intro{margin:0 0 30px;padding:24px 26px;border-radius:24px;background:radial-gradient(circle at 90% 10%,rgba(0,194,209,.18),transparent 28%),linear-gradient(135deg,#061426,#0a2a3c 64%,#075b65);color:#fff;box-shadow:0 22px 52px rgba(6,20,38,.18)}',
-      '.nc-intro span{display:inline-flex;margin-bottom:9px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.10);font-size:11px;font-weight:900;letter-spacing:.5px;text-transform:uppercase}',
+      '.nc-intro>.nc-label{display:inline-flex;margin-bottom:9px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.10);font-size:11px;font-weight:900;letter-spacing:.5px;text-transform:uppercase}',
       '.nc-intro h2{margin:0 0 7px;color:#fff;font-family:"Baloo 2",sans-serif;font-size:clamp(31px,4vw,48px);line-height:1}',
-      '.nc-intro p{max-width:800px;margin:0;color:rgba(255,255,255,.78);font-size:16px;line-height:1.55}',
+      '.nc-intro>p{max-width:800px;margin:0;color:rgba(255,255,255,.78);font-size:16px;line-height:1.55}',
+      '.nc-quick-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:21px;padding-top:20px;border-top:1px solid rgba(255,255,255,.13)}',
+      '.nc-quick-nav__btn{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;min-width:0;min-height:49px;padding:10px 11px;border:1px solid rgba(255,255,255,.15);border-radius:15px;background:rgba(255,255,255,.075);color:#fff;font:900 12px/1.18 "Jost",sans-serif;text-align:center;cursor:pointer;transition:transform .2s ease,background .2s ease,border-color .2s ease,box-shadow .2s ease}',
+      '.nc-quick-nav__btn span{display:grid;place-items:center;flex:0 0 auto;width:24px;height:24px;border-radius:8px;background:rgba(0,194,209,.18);color:#8ff5fb;font-size:9px}',
+      '.nc-quick-nav__btn:hover,.nc-quick-nav__btn:focus-visible{transform:translateY(-3px);background:linear-gradient(135deg,#00c2d1,#078c95);border-color:rgba(255,255,255,.35);box-shadow:0 12px 25px rgba(0,194,209,.22);outline:none}',
       '.nc-group{margin:0 0 42px}',
       '.nc-group__head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin:0 0 17px;padding:0 4px}',
       '.nc-group__head span{display:block;color:#078c95;font-size:11px;font-weight:950;letter-spacing:.65px;text-transform:uppercase}',
@@ -189,8 +156,10 @@
       '.nc-group__head p{margin:0;color:#607080;font-size:14px}',
       '.nc-group__head>strong{flex:0 0 auto;padding:7px 11px;border-radius:999px;background:#eef8fa;color:#075b65;font-size:11px;font-weight:900}',
       '.nc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}',
-      '.nc-card{display:flex;flex-direction:column;min-width:0;overflow:hidden;border:1px solid rgba(7,140,149,.16);border-radius:24px;background:#fff;box-shadow:0 16px 42px rgba(6,20,38,.08);transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}',
+      '.nc-card{display:flex;flex-direction:column;min-width:0;overflow:hidden;scroll-margin-top:120px;border:1px solid rgba(7,140,149,.16);border-radius:24px;background:#fff;box-shadow:0 16px 42px rgba(6,20,38,.08);transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}',
       '.nc-card:hover{transform:translateY(-5px);border-color:rgba(7,140,149,.32);box-shadow:0 24px 56px rgba(6,20,38,.13)}',
+      '.nc-card--focus{border-color:#00c2d1!important;box-shadow:0 0 0 5px rgba(0,194,209,.15),0 28px 62px rgba(6,20,38,.17)!important;animation:ncCardFocus 1.45s ease}',
+      '@keyframes ncCardFocus{0%,100%{transform:translateY(0)}35%{transform:translateY(-8px)}}',
       '.nc-card--paused{opacity:.82}',
       '.nc-card__top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 17px 0}',
       '.nc-order{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:#061426;color:#fff;font-size:11px;font-weight:950}',
@@ -218,11 +187,12 @@
       '.nc-btn:hover{transform:translateY(-2px)}',
       '.nc-btn--details{border:1px solid #cfe1e5;background:#fff;color:#075b65!important}',
       '.nc-btn--pre{background:linear-gradient(135deg,#ff941e,#078c95 65%,#061426);color:#fff!important;box-shadow:0 10px 22px rgba(7,140,149,.18)}',
-      '@media(max-width:1100px){.nc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}',
-      '@media(max-width:700px){#nostra-ciclos-catalog{padding-bottom:16px}.nc-intro{padding:21px 18px}.nc-group{margin-bottom:34px}.nc-group__head{display:block}.nc-group__head>strong{display:inline-flex;margin-top:9px}.nc-grid{grid-template-columns:1fr}.nc-description,.nc-kicker{min-height:0}.nc-meta{grid-template-columns:1fr}.nc-actions{grid-template-columns:1fr}.nc-card h3{font-size:25px}}'
+      '@media(max-width:1100px){.nc-quick-nav{grid-template-columns:repeat(3,minmax(0,1fr))}.nc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}',
+      '@media(max-width:700px){#nostra-ciclos-catalog{padding-bottom:16px}.nc-intro{padding:21px 18px}.nc-quick-nav{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.nc-quick-nav__btn{min-height:46px;padding:9px 8px;font-size:10.5px}.nc-quick-nav__btn span{display:none}.nc-group{margin-bottom:34px}.nc-group__head{display:block}.nc-group__head>strong{display:inline-flex;margin-top:9px}.nc-grid{grid-template-columns:1fr}.nc-description,.nc-kicker{min-height:0}.nc-meta{grid-template-columns:1fr}.nc-actions{grid-template-columns:1fr}.nc-card h3{font-size:25px}}'
     ].join('');
     document.head.appendChild(style);
   }
+
   function locateSection(){
     return document.getElementById('course-sec') || Array.from(document.querySelectorAll('section')).find(function(section){
       return section.querySelector('.tab-menu1.filter-menu-active') && section.querySelector('.filter-active');
@@ -251,7 +221,7 @@
     var host = prepareHost();
     if(!host) return false;
     addStyles();
-    host.innerHTML = '<div class="nc-intro"><span>Encuentra tu ruta UNI</span><h2>Elige el programa correcto para tu etapa</h2><p>Compara rápidamente cada opción y revisa los detalles completos solo cuando encuentres el programa que mejor responde a tu nivel y objetivo.</p></div>' + GROUPS.map(groupHtml).join('');
+    host.innerHTML = '<div class="nc-intro"><span class="nc-label">Encuentra tu ruta UNI</span><h2>Elige el programa correcto para tu etapa</h2><p>Selecciona un programa para ir directamente a su fecha de inicio, duración, modalidades y opciones de preinscripción.</p>' + quickNavHtml() + '</div>' + GROUPS.map(groupHtml).join('');
     return true;
   }
   function mergeRemote(documents){
@@ -290,8 +260,22 @@
       console.warn('Se mantiene el catálogo base porque no se pudieron leer los productos:',error);
     });
   }
+  function bindQuickNavigation(){
+    document.addEventListener('click',function(event){
+      var button = event.target && event.target.closest ? event.target.closest('.nc-quick-nav__btn[data-nc-program]') : null;
+      if(!button) return;
+      var target = document.getElementById('programa-' + button.getAttribute('data-nc-program'));
+      if(!target) return;
+      target.scrollIntoView({behavior:'smooth',block:'start'});
+      target.classList.remove('nc-card--focus');
+      void target.offsetWidth;
+      target.classList.add('nc-card--focus');
+      window.setTimeout(function(){ target.classList.remove('nc-card--focus'); },1600);
+    });
+  }
   function start(){
     addStyles();
+    bindQuickNavigation();
     render();
     loadRemote();
     var attempts = 0;
