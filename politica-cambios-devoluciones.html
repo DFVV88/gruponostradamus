@@ -17,8 +17,26 @@
     .layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:25px;margin-top:-24px;margin-bottom:52px}.nav,.content{background:#fff;border:1px solid var(--line);box-shadow:0 22px 55px rgba(6,20,38,.09)}.nav{align-self:start;position:sticky;top:18px;padding:22px;border-radius:24px}.nav strong{display:block;margin-bottom:12px}.nav a{display:block;padding:8px 9px;border-radius:10px;color:#244253;font-size:13px;font-weight:750}.nav a:hover{background:var(--soft);text-decoration:none}.content{padding:clamp(24px,5vw,52px);border-radius:28px}.content h2{margin:34px 0 10px;font-size:24px;line-height:1.2}.content h2:first-of-type{margin-top:0}.content p,.content li{color:#3f5262}.content ul,.content ol{padding-left:22px}.summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0 28px}.summary div{padding:15px;border-radius:15px;background:var(--soft);border:1px solid var(--line)}.summary strong{display:block;margin-bottom:4px}.case{margin:14px 0;padding:17px 18px;border:1px solid var(--line);border-radius:16px;background:#fbfeff}.case h3{margin:0 0 7px;font-size:18px}.case p{margin:0}.notice{margin:24px 0;padding:17px 18px;border-left:4px solid var(--gold);border-radius:13px;background:#fff8e8;color:#624500}.legal-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:34px}.legal-links a{display:inline-flex;padding:10px 14px;border-radius:12px;background:var(--soft);border:1px solid var(--line);font-size:13px;font-weight:850}.footer{padding:25px 18px;background:#02070d;color:rgba(255,255,255,.72)}.footer__inner{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}.footer a{color:#a8f7ff}
     @media(max-width:820px){.layout{grid-template-columns:1fr;margin-top:-18px}.nav{position:relative;top:auto}.summary{grid-template-columns:1fr}.top{padding-bottom:38px}}
   </style>
+<!-- Google Analytics - Grupo Nostradamus -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SHGP6KW962"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-SHGP6KW962", { anonymize_ip: true });
+</script>
+<!-- /Google Analytics - Grupo Nostradamus -->
+<!-- Google Tag Manager - Grupo Nostradamus -->
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-WZ5RPX4C');
+</script>
+<!-- /Google Tag Manager - Grupo Nostradamus -->
 </head>
 <body>
+<!-- Google Tag Manager (noscript) - Grupo Nostradamus -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WZ5RPX4C"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- /Google Tag Manager (noscript) - Grupo Nostradamus -->
   <header class="top">
     <div class="top__inner">
       <a class="brand" href="index.html" aria-label="Ir al inicio de Grupo Nostradamus">
@@ -165,5 +183,27 @@
       <span>Grupo Nostradamus · Lima, Perú</span>
     </div>
   </footer>
+<!-- Conversion tracking - Grupo Nostradamus -->
+<script>
+(function(){
+  function cleanText(value){return (value || "").replace(/\s+/g," ").trim().slice(0,120);}
+  function pageName(){var p=location.pathname||"/";return (p==="/"||p.endsWith("/"))?"home":(p.split("/").pop().replace(".html","")||"home");}
+  function sendEvent(name, params){
+    if(typeof window.gtag!=="function") return;
+    window.gtag("event", name, Object.assign({page_name: pageName(), page_path: location.pathname, page_url: location.href}, params || {}));
+  }
+  document.addEventListener("click", function(event){
+    var link = event.target && event.target.closest ? event.target.closest("a") : null;
+    if(!link || !link.href) return;
+    var href = link.href.toLowerCase();
+    var text = (link.textContent || "").toLowerCase();
+    var label = cleanText(link.getAttribute("aria-label") || link.textContent || link.href || "sin_texto");
+    if(href.indexOf("wa.me") !== -1 || href.indexOf("whatsapp") !== -1){sendEvent("click_whatsapp", {event_category:"lead", event_label:label, link_url:link.href, conversion_type:"whatsapp"}); return;}
+    if(href.indexOf("clases-en-vivo.html") !== -1 || href.indexOf("teams.microsoft.com") !== -1 || text.indexOf("clases en vivo") !== -1){sendEvent("click_clases_en_vivo", {event_category:"engagement", event_label:label, link_url:link.href}); return;}
+    if(text.indexOf("matric") !== -1 || text.indexOf("informes") !== -1 || text.indexOf("vacante") !== -1 || text.indexOf("quiero ingresar") !== -1 || href.indexOf("ingresa-uni.html") !== -1){sendEvent("click_comercial", {event_category:"conversion", event_label:label, link_url:link.href});}
+  }, true);
+})();
+</script>
+<!-- /Conversion tracking - Grupo Nostradamus -->
 </body>
 </html>
