@@ -18,7 +18,7 @@
 
   if (isIq100 || isAdminPage) return;
 
-  var VERSION = '2026-82';
+  var VERSION = '2026-83';
   var ADSENSE_CLIENT = 'ca-pub-9810053992087127';
 
   function assetAlreadyLoaded(urlPart) {
@@ -82,11 +82,16 @@
       'nostra-home-news-prehide',
       '#blog-sec{overflow-anchor:none!important}#blog-sec:not([data-nin-ready="1"]){min-height:330px!important}#blog-sec:not([data-nin-ready="1"])>.container>*{visibility:hidden!important}'
     );
+    addPrehideStyle(
+      'nostra-home-results-prehide',
+      '.counter-area-2{overflow-anchor:none!important}.counter-area-2:not([data-nostra-results-ready="1"]){min-height:390px!important}.counter-area-2:not([data-nostra-results-ready="1"])>.container{visibility:hidden!important}'
+    );
   }
 
   function loadEarlyPageModules() {
     if (isHomePage) {
       loadModules([
+        'nostra-index-resultados-pro.js',
         'nostra-home-ruta-premium.js',
         'nostra-plataforma-accordion.js',
         'nostra-home-cycles-accordion.js',
