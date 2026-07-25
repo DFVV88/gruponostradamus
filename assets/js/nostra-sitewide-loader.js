@@ -18,7 +18,7 @@
 
   if (isIq100 || isAdminPage) return;
 
-  var VERSION = '2026-75';
+  var VERSION = '2026-76';
   var ADSENSE_CLIENT = 'ca-pub-9810053992087127';
 
   function assetAlreadyLoaded(urlPart) {
@@ -44,6 +44,7 @@
 
   function loadAdSense() {
     if (document.querySelector('script[src*="pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]')) return;
+
     var script = document.createElement('script');
     script.async = true;
     script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + ADSENSE_CLIENT;
@@ -86,6 +87,7 @@
   function loadEarlyPageModules() {
     if (isHomePage) {
       loadModules([
+        'nostra-home-ruta-premium.js',
         'nostra-plataforma-accordion.js',
         'nostra-home-cycles-accordion.js',
         'nostra-index-noticias-pro.js'
@@ -135,6 +137,7 @@
 
   function loadHomeModules() {
     if (!isHomePage) return;
+
     loadModules([
       'nostrachat-index-section.js',
       'nostra-ingresantes-counter-pro.js',
@@ -145,14 +148,15 @@
       'nostra-offer-hard-uniform.js',
       'nostra-video-slide-2-zoom-fix.js',
       'nostra-cuenta-home-button.js',
-      'nostra-premium-uni-line.js',
       'nostra-index-preinscripcion-cta.js'
     ]);
   }
 
   function loadCycleDetailModules() {
     if (!isCycleDetail) return;
+
     loadModules([
+      'nostra-premium-uni-line.js',
       'nostra-ciclo-detalle-pro.js',
       'nostra-offer-section-fix.js',
       'nostra-offer-uniform-override.js',
@@ -166,6 +170,7 @@
   function loadOtherPageModules() {
     if (isNewsPage) loadModules(['nostra-noticias-uni-pro.js']);
     if (isCachimbosPage) loadModules(['nostra-cachimbos-tabs.js']);
+
     if (isCommercialLanding) {
       loadModules([
         'nostra-offer-section-fix.js',
