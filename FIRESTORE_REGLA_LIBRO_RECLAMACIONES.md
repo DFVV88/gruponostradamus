@@ -10,9 +10,8 @@ La función `isAdmin()` debe conservar la definición que ya utiliza el panel ad
 
 ```javascript
 match /libro_reclamaciones/{reclamoId} {
-  // El consumidor puede crear una hoja, pero nunca leer reclamos existentes.
-  allow create: if request.auth == null
-    && request.resource.data.keys().hasOnly([
+  // Cualquier consumidor puede crear una hoja, pero nunca leer reclamos existentes.
+  allow create: if request.resource.data.keys().hasOnly([
       'codigo',
       'tipo',
       'consumidor',
