@@ -9,7 +9,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-69';
+  var VERSION = '2026-70';
   var ADSENSE_CLIENT = 'ca-pub-9810053992087127';
 
   function assetAlreadyLoaded(urlPart) {
@@ -49,6 +49,14 @@
     document.head.appendChild(style);
   }
 
+  function prehideHomeCycles() {
+    if (!isHomePage || document.getElementById('nostra-home-cycles-prehide')) return;
+    var style = document.createElement('style');
+    style.id = 'nostra-home-cycles-prehide';
+    style.textContent = '#course-sec{overflow-anchor:none!important}#course-sec:not([data-nhc-ready="1"]){min-height:330px!important}#course-sec:not([data-nhc-ready="1"]) .filter-active{display:none!important;visibility:hidden!important}';
+    document.head.appendChild(style);
+  }
+
   function loadLegacyCiclosEnhancements() {
     if (isCiclosCatalog) return;
     loadJS('assets/js/nostra-ciclos-design-pro.js?v=' + VERSION);
@@ -62,7 +70,9 @@
   function init() {
     prehideLegacyCiclosCatalog();
     prehideLegacyPlataforma();
+    prehideHomeCycles();
     loadJS('assets/js/nostra-plataforma-accordion.js?v=' + VERSION);
+    loadJS('assets/js/nostra-home-cycles-accordion.js?v=' + VERSION);
     loadAdSense();
     loadJS('assets/js/nostra-analytics.js?v=' + VERSION);
     loadJS('assets/js/nostra-seo-meta.js?v=' + VERSION);
