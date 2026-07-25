@@ -1,6 +1,6 @@
 /* ==================================================
    Grupo Nostradamus - CTA global de matrícula y pago
-   Unifica los botones que llevan a la preinscripción.
+   Unifica únicamente los botones que realmente llevan a la preinscripción.
 ================================================== */
 (function () {
   'use strict';
@@ -25,8 +25,12 @@
       /preinscribirme|inscribirme|matricularme/.test(currentText);
   }
 
+  function isPreinscriptionLink(link) {
+    return !!(link && link.matches && link.matches(SELECTOR));
+  }
+
   function updateButton(link) {
-    if (!isButtonLike(link)) return;
+    if (!isPreinscriptionLink(link) || !isButtonLike(link)) return;
 
     var icon = link.querySelector('i,svg');
     var iconHtml = icon ? icon.outerHTML : '';
@@ -52,7 +56,7 @@
     var observer = new MutationObserver(function (mutations) {
       mutations.forEach(function (mutation) {
         if (mutation.type === 'attributes') {
-          updateButton(mutation.target);
+          if (isPreinscriptionLink(mutation.target)) updateButton(mutation.target);
           return;
         }
 
