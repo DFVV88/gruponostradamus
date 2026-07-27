@@ -8,7 +8,6 @@
   var path = window.location.pathname.toLowerCase();
   var file = path.split('/').pop() || 'index.html';
   var isIq100 = path.indexOf('iq100.html') !== -1;
-  var isAdminPage = file === 'admin.html' || file.indexOf('admin-') === 0;
   var isHomePage = path === '/' || file === 'index.html' || file === '';
   var isCiclosCatalog = file === 'ciclos.html' || path.endsWith('/ciclos');
   var isCycleDetail = /^ciclo-.*\.html$/.test(file);
@@ -16,9 +15,9 @@
   var isCachimbosPage = file === 'cachimbos.html';
   var isCommercialLanding = file === 'ingresa-uni.html';
 
-  if (isIq100 || isAdminPage) return;
+  if (isIq100) return;
 
-  var VERSION = '2026-89';
+  var VERSION = '2026-90';
   var ADSENSE_CLIENT = 'ca-pub-9810053992087127';
 
   function assetAlreadyLoaded(urlPart) {
@@ -122,8 +121,6 @@
       'nostra-cuenta-menu-link.js',
       'nostra-contact-whatsapp-fix.js',
       'nostra-uni-campus-only.js',
-      'nostra-footer-pro.js',
-      'nostra-footer-logo-white-bg.js',
       'nostra-button-fix.js',
       'nostra-whatsapp-inscripcion.js',
       'nostra-content-polish.js',
@@ -136,10 +133,7 @@
       'nostra-live-classes-fix.js',
       'nostra-registro-button.js',
       'nostra-matricula-pago-cta.js',
-      'nostra-footer-horizontal.js',
-      'nostra-legal-footer-links.js',
-      'nostra-footer-brand-copy.js',
-      'nostra-footer-brand-layout.js'
+      'nostra-footer-universal.js'
     ]);
   }
 
