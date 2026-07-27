@@ -1,4 +1,4 @@
-name: Validar backend Culqi
+name: Validar integración Culqi
 
 on:
   workflow_dispatch:
@@ -9,13 +9,20 @@ on:
       - "functions/**"
       - "firebase.json"
       - ".firebaserc"
+      - "preinscripcion.html"
+      - "pago-exitoso.html"
+      - "pago-pendiente.html"
+      - "pago-rechazado.html"
+      - "assets/js/preinscripcion-culqi-preparacion.js"
+      - "assets/js/pago-culqi-resultado.js"
+      - "assets/js/culqi-public-config.js"
       - ".github/workflows/validate-culqi-backend.yml"
 
 permissions:
   contents: read
 
 concurrency:
-  group: validate-culqi-backend-${{ github.ref }}
+  group: validate-culqi-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -31,10 +38,23 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Instalar dependencias
+      - name: Instalar dependencias del backend
         working-directory: functions
         run: npm install --no-audit --no-fund
 
-      - name: Verificar sintaxis
+      - name: Verificar backend y pruebas de precios
         working-directory: functions
         run: npm run check
+
+      - name: Verificar JavaScript del checkout
+        run: |
+          node --check assets/js/preinscripcion-culqi-preparacion.js
+          node --check assets/js/pago-culqi-resultado.js
+          node --check assets/js/culqi-public-config.js
+
+      - name: Impedir llaves privadas en archivos públicos
+        run: |
+          if grep -R -n -E "sk_(test|live)_" assets/js preinscripcion.html pago-*.html; then
+            echo "Se encontró una llave privada de Culqi en archivos públicos."
+            exit 1
+          fi
