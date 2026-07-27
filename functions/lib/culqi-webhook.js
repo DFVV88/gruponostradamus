@@ -10,6 +10,26 @@ function clean(value) {
   return String(value == null ? '' : value).trim();
 }
 
+function normalizePayload(payload) {
+  if (Buffer.isBuffer(payload)) {
+    try {
+      const parsed = JSON.parse(payload.toString('utf8'));
+      return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+    } catch (_) {
+      return {};
+    }
+  }
+  if (typeof payload === 'string') {
+    try {
+      const parsed = JSON.parse(payload);
+      return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+    } catch (_) {
+      return {};
+    }
+  }
+  return payload && typeof payload === 'object' && !Array.isArray(payload) ? payload : {};
+}
+
 function firstValid(values, pattern) {
   for (const value of values) {
     const normalized = clean(value);
@@ -19,7 +39,7 @@ function firstValid(values, pattern) {
 }
 
 function explicitWebhookEventType(payload) {
-  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return '';
+  payload = normalizePayload(payload);
   const values = [
     payload.type,
     payload.event_type,
@@ -35,7 +55,7 @@ function explicitWebhookEventType(payload) {
 }
 
 function directChargeEventType(payload) {
-  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return '';
+  payload = normalizePayload(payload);
   if (clean(payload.object).toLowerCase() !== 'charge') return '';
 
   const chargeId = firstValid([payload.id, payload.chargeId, payload.charge_id], CHARGE_ID_RE);
@@ -76,7 +96,7 @@ function webhookEventType(payload) {
 }
 
 function webhookEventId(payload) {
-  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return '';
+  payload = normalizePayload(payload);
   return firstValid([
     payload.event_id,
     payload.eventId,
@@ -87,7 +107,7 @@ function webhookEventId(payload) {
 }
 
 function webhookChargeId(payload) {
-  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return '';
+  payload = normalizePayload(payload);
   const data = payload.data && typeof payload.data === 'object' ? payload.data : {};
   const dataObject = data.object && typeof data.object === 'object' ? data.object : {};
   const dataCharge = data.charge && typeof data.charge === 'object' ? data.charge : {};
@@ -181,6 +201,7 @@ function verifiedChargeSummary(charge) {
 
 module.exports = {
   CHARGE_ID_RE,
+  normalizePayload,
   webhookEventType,
   webhookEventId,
   webhookChargeId,
