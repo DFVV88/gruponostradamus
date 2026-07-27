@@ -1,4 +1,4 @@
-/* Grupo Nostradamus - Visibilidad de programa, plan y precio en administración */
+/* Grupo Nostradamus - Visibilidad de programa, plan y pago inicial en administración */
 import './admin-reclamos-panel.js?v=2026-01';
 import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
@@ -27,9 +27,30 @@ function esc(value){
 }
 function num(value){
   const parsed = Number(String(value == null ? '' : value).replace(',','.'));
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+  return Number.isFinite(parsed) && parsed > 0 ? Math.round(parsed * 100) / 100 : 0;
 }
 function money(value){ return 'S/ ' + num(value).toFixed(2); }
+function snapshot(record){
+  return record && typeof record.tarifarioSnapshot === 'object' && record.tarifarioSnapshot
+    ? record.tarifarioSnapshot
+    : {};
+}
+function totalInitial(record){
+  const snap = snapshot(record);
+  return num(record.totalInicial) || num(record.montoPagoInicial) || num(snap.totalInicial);
+}
+function appliedPrice(record){
+  const snap = snapshot(record);
+  return num(record.precioReferencia) || num(snap.precioAplicado);
+}
+function planName(record){
+  const snap = snapshot(record);
+  return clean(record.planAsignado || record.planNombre || snap.planNombre);
+}
+function purchaseConcept(record){
+  const snap = snapshot(record);
+  return clean(record.conceptoPagoInicial || snap.conceptoInicial);
+}
 
 function decorateRows(){
   const body = document.getElementById('rows');
@@ -43,7 +64,7 @@ function decorateRows(){
     if(cells.length < 4) return;
 
     cells[1].querySelectorAll('.nostra-admin-plan').forEach(el => el.remove());
-    const plan = clean(record.planAsignado || record.planNombre);
+    const plan = planName(record);
     if(plan){
       const line = document.createElement('small');
       line.className = 'nostra-admin-plan';
@@ -52,14 +73,22 @@ function decorateRows(){
       cells[1].appendChild(line);
     }
 
-    cells[3].querySelectorAll('.nostra-admin-price').forEach(el => el.remove());
+    cells[3].querySelectorAll('.nostra-admin-price,.nostra-admin-initial-total').forEach(el => el.remove());
     const assigned = num(record.pensionAcordada);
-    const reference = num(record.precioReferencia);
+    const reference = appliedPrice(record);
     if(assigned || reference){
       const line = document.createElement('small');
       line.className = 'nostra-admin-price';
       line.style.cssText = 'display:block;margin-top:5px;color:#4b5d70;font-weight:850;';
-      line.textContent = assigned ? 'Pensión acordada: ' + money(assigned) : 'Precio referencial: ' + money(reference);
+      line.textContent = assigned ? 'Pensión acordada: ' + money(assigned) : 'Precio del plan: ' + money(reference);
+      cells[3].appendChild(line);
+    }
+    const initial = totalInitial(record);
+    if(initial){
+      const line = document.createElement('small');
+      line.className = 'nostra-admin-initial-total';
+      line.style.cssText = 'display:block;margin-top:4px;color:#075b65;font-weight:950;';
+      line.textContent = 'Pago inicial: ' + money(initial);
       cells[3].appendChild(line);
     }
   });
@@ -70,7 +99,7 @@ async function loadRecords(){
     records = new Map(snap.docs.map(item => [item.id,{id:item.id,...item.data()}]));
     decorateRows();
   }catch(error){
-    console.warn('No se pudo complementar la tabla con planes:',error);
+    console.warn('No se pudo complementar la tabla con planes y montos:',error);
   }
 }
 function ensureObserver(){
@@ -85,21 +114,35 @@ function detail(label,value){
   div.innerHTML = '<b>' + esc(label) + '</b><span>' + esc(value || '-') + '</span>';
   return div;
 }
+function yesNo(value){ return value === true ? 'Sí' : 'No'; }
 async function decorateModal(id){
   try{
-    const snap = await getDoc(doc(db,'preinscripciones',id));
-    if(!snap.exists()) return;
-    const record = {id:snap.id,...snap.data()};
+    const snapDoc = await getDoc(doc(db,'preinscripciones',id));
+    if(!snapDoc.exists()) return;
+    const record = {id:snapDoc.id,...snapDoc.data()};
     records.set(id,record);
+    const pricing = snapshot(record);
     const grid = document.getElementById('detail-grid');
     if(!grid) return;
     grid.querySelectorAll('.nostra-plan-extra').forEach(el => el.remove());
-    grid.appendChild(detail('Plan elegido',record.planAsignado || record.planNombre));
-    if(num(record.precioReferencia)) grid.appendChild(detail('Precio referencial al registrarse',money(record.precioReferencia)));
+
+    grid.appendChild(detail('Código de solicitud',record.codigoSolicitud || record.id));
+    grid.appendChild(detail('Plan elegido',planName(record)));
+    grid.appendChild(detail('Modalidad',record.modalidad || pricing.modalidad));
+    grid.appendChild(detail('Turno',record.turno || pricing.turno));
+    grid.appendChild(detail('Concepto del pago inicial',purchaseConcept(record)));
+    if(appliedPrice(record)) grid.appendChild(detail('Precio aplicado del plan',money(appliedPrice(record))));
+    const enrollment = num(record.matriculaReferencia) || num(pricing.matricula);
+    grid.appendChild(detail('Matrícula',enrollment ? money(enrollment) : 'No aplica'));
+    if(totalInitial(record)) grid.appendChild(detail('Total inicial registrado',money(totalInitial(record))));
+    grid.appendChild(detail('Pagos posteriores',record.detallePagosPosteriores || pricing.detallePagosPosteriores));
+    grid.appendChild(detail('Precio validado por servidor',yesNo(record.precioValidadoServidor)));
+    grid.appendChild(detail('Aceptación legal',record.aceptaTerminos && record.aceptaCambiosDevoluciones && record.aceptaPrivacidad ? 'Sí · versión ' + clean(record.aceptacionLegalVersion || record.aceptacionLegal?.version) : 'No registrada'));
+
     if(num(record.pensionAcordada)) grid.appendChild(detail('Pensión acordada',money(record.pensionAcordada)));
     if(num(record.proximaCuotaMonto)) grid.appendChild(detail('Próxima cuota especial',money(record.proximaCuotaMonto)));
   }catch(error){
-    console.warn('No se pudo mostrar el plan en la ficha:',error);
+    console.warn('No se pudo mostrar el resumen de compra en la ficha:',error);
   }
 }
 
