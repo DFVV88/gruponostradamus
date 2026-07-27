@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pago recibido | Grupo Nostradamus</title>
+  <meta name="robots" content="NOINDEX,NOFOLLOW">
+  <link rel="shortcut icon" href="assets/img/favicons/iocon-ostradamus.png" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{--dark:#02070d;--navy:#061426;--teal:#078c95;--cyan:#00c2d1;--orange:#ff941e;--green:#25d366;--text:#172033;--muted:#5f6b7a;--danger:#b42318}*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Jost,Arial,sans-serif;color:var(--text);background:radial-gradient(circle at 12% 15%,rgba(0,194,209,.22),transparent 30%),radial-gradient(circle at 88% 82%,rgba(255,148,30,.18),transparent 28%),linear-gradient(135deg,var(--dark),var(--navy),#07333b);display:grid;place-items:center;padding:28px}.result-card{width:min(720px,100%);background:#fff;border-radius:30px;padding:clamp(25px,5vw,48px);box-shadow:0 30px 100px rgba(0,0,0,.34);text-align:center}.brand{display:inline-flex;align-items:center;gap:12px;margin-bottom:22px;color:var(--navy);font-weight:950}.brand img{width:68px}.result-icon{width:86px;height:86px;border-radius:50%;display:grid;place-items:center;margin:0 auto 18px;background:#eef8fa;color:var(--teal);font-size:40px;font-weight:950}body[data-verified-state="success"] .result-icon{background:#eaf9ee;color:#16833c}body[data-verified-state="rejected"] .result-icon,body[data-verified-state="error"] .result-icon{background:#fff0f0;color:var(--danger)}.kicker{display:block;color:var(--teal);font-weight:950;text-transform:uppercase;letter-spacing:.55px;font-size:13px}h1{font-family:'Baloo 2',Jost,sans-serif;font-size:clamp(38px,7vw,62px);line-height:.95;margin:10px 0 14px;color:var(--navy)}.description{margin:0 auto;color:#4b5d70;font-size:18px;line-height:1.6;max-width:600px}.details{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:26px 0;text-align:left}.details div{padding:14px;border-radius:16px;background:#f5fbfc;border:1px solid rgba(7,140,149,.15);min-width:0}.details span{display:block;color:#657485;font-size:11px;font-weight:950;text-transform:uppercase;letter-spacing:.35px;margin-bottom:4px}.details b{display:block;color:var(--navy);font-size:15px;overflow-wrap:anywhere}.actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}.result-btn{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:13px 20px;font-weight:950;text-decoration:none}.result-btn.primary{background:linear-gradient(135deg,var(--orange),var(--teal),var(--navy));color:#fff}.result-btn.whatsapp{background:linear-gradient(135deg,var(--green),var(--teal));color:#fff}.note{margin-top:20px;color:#6a7888;font-size:12px;line-height:1.45}@media(max-width:620px){body{padding:14px}.details{grid-template-columns:1fr}.actions{flex-direction:column}.result-btn{width:100%}}
+  </style>
+</head>
+<body data-verified-state="pending">
+  <main class="result-card">
+    <a class="brand" href="index.html"><img src="assets/img/logo.png" alt="Grupo Nostradamus"><span>Grupo Nostradamus</span></a>
+    <div class="result-icon" aria-hidden="true">✓</div>
+    <span class="kicker" id="payment-kicker">Verificando tu pago</span>
+    <h1 id="payment-title">Un momento...</h1>
+    <p class="description" id="payment-description">Consultando el estado real del pago en Firebase...</p>
+    <section class="details" id="payment-details"></section>
+    <div class="actions" id="payment-actions"></div>
+    <p class="note">La matrícula solo se considera aprobada cuando el sistema confirma el pago validado.</p>
+  </main>
+  <script src="assets/js/pago-culqi-resultado.js?v=2026-01" defer></script>
+  <script defer src="assets/js/nostra-footer-universal.js?v=2026-91" data-nostra-universal-footer="1"></script>
+</body>
+</html>
