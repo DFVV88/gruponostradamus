@@ -52,6 +52,44 @@ const directCulqiV2Payload = {
   }
 };
 
+const exactChargeFromCulqiPanel = {
+  object: 'charge',
+  id: 'chr_test_1V4HChBg9dxifYcQ',
+  creationDate: 1785183181797,
+  amount: 55000,
+  currentAmount: 55000,
+  currencyCode: 'PEN',
+  capture: true,
+  duplicated: false,
+  outcome: {
+    type: 'venta_exitosa',
+    code: 'AUT0000',
+    merchantMessage: 'La operación de venta ha sido autorizada exitosamente',
+    userMessage: 'Su compra ha sido exitosa'
+  },
+  metadata: {
+    preinscripcion_id: 'dZzNmpuHoRg40in5mnrb',
+    intento_pago_id: 'VxokCcBTOAuHSeCdNIkc',
+    codigo_solicitud: 'PRE-2026-DZZNMPUH',
+    programa_id: 'nostra-elite-uni',
+    plan_id: 'presencial-full',
+    dni: '00000007'
+  }
+};
+
+const wrappedCulqiEvent = {
+  id: 'evt_test_DZZNMPUH123',
+  type: 'charge.creation.succeeded',
+  creation_date: 1785183181797,
+  data: exactChargeFromCulqiPanel
+};
+
+const wrappedCulqiEventWithStringData = {
+  ...wrappedCulqiEvent,
+  id: 'evt_test_DZZNMPUH456',
+  data: JSON.stringify(exactChargeFromCulqiPanel)
+};
+
 test('extrae tipo, evento y cargo de un webhook anidado', () => {
   assert.equal(webhookEventType(payload), 'charge.creation.succeeded');
   assert.equal(webhookEventId(payload), 'evt_test_ABC123');
@@ -64,6 +102,20 @@ test('acepta el objeto charge directo que entrega Culqi Webhooks 2.0', () => {
   assert.equal(webhookEventId(directCulqiV2Payload), '');
   assert.equal(webhookChargeId(directCulqiV2Payload), 'chr_test_bh7cLg3qLnRx2hQO');
   assert.equal(classifyChargeEvent(webhookEventType(directCulqiV2Payload)), 'success');
+});
+
+test('procesa el campo data como objeto en el evento real de Culqi', () => {
+  assert.equal(webhookEventType(wrappedCulqiEvent), 'charge.creation.succeeded');
+  assert.equal(webhookEventId(wrappedCulqiEvent), 'evt_test_DZZNMPUH123');
+  assert.equal(webhookChargeId(wrappedCulqiEvent), 'chr_test_1V4HChBg9dxifYcQ');
+  assert.equal(classifyChargeEvent(webhookEventType(wrappedCulqiEvent)), 'success');
+});
+
+test('procesa el campo data serializado como texto JSON', () => {
+  assert.equal(webhookEventType(wrappedCulqiEventWithStringData), 'charge.creation.succeeded');
+  assert.equal(webhookEventId(wrappedCulqiEventWithStringData), 'evt_test_DZZNMPUH456');
+  assert.equal(webhookChargeId(wrappedCulqiEventWithStringData), 'chr_test_1V4HChBg9dxifYcQ');
+  assert.equal(classifyChargeEvent(webhookEventType(wrappedCulqiEventWithStringData)), 'success');
 });
 
 test('acepta el body binario que Cloud Functions recibe de Culqi', () => {
