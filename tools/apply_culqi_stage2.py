@@ -41,7 +41,7 @@ def main() -> None:
     pre_old = '  <script src="assets/js/preinscripcion-firebase.js?v=2026-03" defer></script>'
     pre_new = (
         '  <script src="assets/js/preinscripcion-culqi-preparacion.js?v=2026-02" defer></script>\n'
-        '  <script src="assets/js/preinscripcion-firebase.js?v=2026-04" defer></script>'
+        '  <script src="assets/js/preinscripcion-firebase.js?v=2026-05" defer></script>'
     )
     current_pre = pre.read_text(encoding="utf-8")
     if 'preinscripcion-culqi-preparacion.js?v=2026-01' in current_pre:
@@ -50,6 +50,13 @@ def main() -> None:
             'preinscripcion-culqi-preparacion.js?v=2026-02',
             1,
         )
+    if 'preinscripcion-firebase.js?v=2026-04' in current_pre:
+        current_pre = current_pre.replace(
+            'preinscripcion-firebase.js?v=2026-04',
+            'preinscripcion-firebase.js?v=2026-05',
+            1,
+        )
+    if current_pre != pre.read_text(encoding="utf-8"):
         pre.write_text(current_pre, encoding="utf-8")
         changed.append(pre.name)
     elif update(pre, pre_old, pre_new):
@@ -80,6 +87,21 @@ def main() -> None:
     },100);"""
     if replace_once(script, observer_old, observer_new):
         changed.append(str(script.relative_to(ROOT)))
+
+    legacy = ROOT / "assets/js/preinscripcion-firebase.js"
+    programs_old = """    {id:'nostra-talentum-uni',name:'Nostra Talentum UNI'},
+    {id:'ciclo-ien',name:'Ciclo IEN'},
+    {id:'paralelo-cepre-uni',name:'Paralelo CEPRE UNI'},
+    {id:'ciclo-verano-uni',name:'Ciclo Verano UNI'},
+    {id:'nostra-modulos',name:'NostraMÓDULOS'},
+    {id:'proyecto-escolar',name:'Proyecto Escolar'}"""
+    programs_new = """    {id:'nostra-talentum-uni',name:'Nostra Talentum UNI'},
+    {id:'ciclo-ien',name:'IEN UNI'},
+    {id:'proyecto-escolar',name:'Proyecto Escolar'},
+    {id:'paralelo-cepre-uni',name:'Paralelo CEPRE UNI'},
+    {id:'ciclo-verano-uni',name:'Ciclo Verano UNI'}"""
+    if replace_once(legacy, programs_old, programs_new):
+        changed.append(str(legacy.relative_to(ROOT)))
 
     print("Archivos actualizados:")
     for item in dict.fromkeys(changed):
