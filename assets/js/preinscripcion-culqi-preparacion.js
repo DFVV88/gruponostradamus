@@ -5,6 +5,7 @@
    - Prepara el monto nuevamente en Cloud Functions.
    - Tokeniza la tarjeta con Culqi Checkout Custom.
    - Envía únicamente el token al backend seguro.
+   - Completa autenticación Culqi 3DS cuando el banco la solicita.
 ================================================== */
 (function(){
   'use strict';
@@ -23,6 +24,7 @@
   var CHARGE_URL = API_BASE + 'culqiCreateCharge';
   var PUBLIC_CONFIG_URL = 'assets/js/culqi-public-config.js?v=2026-01';
   var CULQI_CHECKOUT_URL = 'https://js.culqi.com/checkout-js';
+  var CULQI_3DS_URL = 'https://3ds.culqi.com';
   var WHATSAPP_ASESOR = '51993750351';
   var LEGAL_VERSION = '2026-07-25';
   var INITIAL_TYPES = {
@@ -37,6 +39,8 @@
   var summaryRequest = 0;
   var activePayment = null;
   var culqiCheckout = null;
+  var active3DS = null;
+  var threeDSListenerInstalled = false;
   var scriptPromises = {};
 
   function clean(value){ return String(value == null ? '' : value).replace(/\s+/g,' ').trim(); }
@@ -403,7 +407,14 @@
         if(!/^pk_test_[A-Za-z0-9]+$/.test(key)){
           throw new Error('El pago en línea todavía no tiene configurada la llave pública de prueba de Culqi.');
         }
-        return loadScript(CULQI_CHECKOUT_URL,function(){ return typeof window.CulqiCheckout === 'function'; }).then(function(){ return key; });
+        return Promise.all([
+          loadScript(CULQI_CHECKOUT_URL,function(){ return typeof window.CulqiCheckout === 'function'; }),
+          loadScript(CULQI_3DS_URL,function(){ return Boolean(window.Culqi3DS); })
+        ]).then(function(){
+          window.Culqi3DS.publicKey = key;
+          install3DSListener();
+          return key;
+        });
       });
   }
   function postJson(url,payload){
@@ -427,6 +438,97 @@
       });
     });
   }
+  function reset3DSLibrary(){
+    active3DS = null;
+    if(window.Culqi3DS && typeof window.Culqi3DS.reset === 'function'){
+      try{ window.Culqi3DS.reset(); }catch(_){ }
+    }
+  }
+  function configure3DS(context,publicKey){
+    if(!window.Culqi3DS) throw new Error('No se pudo iniciar la seguridad 3DS de Culqi.');
+    var payment = context.prepared || {};
+    window.Culqi3DS.publicKey = publicKey;
+    window.Culqi3DS.settings = {
+      charge:{
+        totalAmount:Number(payment.montoCentimos) || 0,
+        returnUrl:location.origin + location.pathname,
+        currency:'PEN'
+      },
+      card:{email:clean(payment.correo || context.data.correo)}
+    };
+    window.Culqi3DS.options = {
+      showModal:true,
+      showLoading:true,
+      showIcon:true,
+      closeModalAction:function(){},
+      style:{btnColor:'#078c95',btnTextColor:'#ffffff'}
+    };
+  }
+  function install3DSListener(){
+    if(threeDSListenerInstalled) return;
+    threeDSListenerInstalled = true;
+    window.addEventListener('message',function(event){
+      if(event.origin !== window.location.origin || !active3DS || !active3DS.waiting) return;
+      var response = event.data && typeof event.data === 'object' ? event.data : {};
+      if(response.loading === true){
+        message('info','Verificando tu identidad con el banco. No cierres esta ventana...');
+        return;
+      }
+      if(response.parameters3DS){
+        var current = active3DS;
+        current.waiting = false;
+        message('info','Autenticación 3DS completada. Confirmando el pago...');
+        processCharge(current.context,current.tokenId,{
+          deviceFingerprintId:current.deviceFingerprintId,
+          authentication3DS:response.parameters3DS
+        });
+        return;
+      }
+      if(response.error){
+        var failed = active3DS;
+        reset3DSLibrary();
+        message('error','No se completó la autenticación 3DS: ' + esc(response.error) + '<br>' + restartButton(failed.context,failed.publicKey));
+      }
+    },false);
+  }
+  function generateDeviceFingerprint(context,publicKey){
+    configure3DS(context,publicKey);
+    return Promise.resolve(window.Culqi3DS.generateDevice()).then(function(deviceId){
+      var normalizedId = clean(deviceId);
+      if(!normalizedId) throw new Error('Culqi no pudo identificar de forma segura este dispositivo.');
+      return normalizedId;
+    });
+  }
+  function start3DSAuthentication(context,tokenId,deviceFingerprintId){
+    var publicKey = context.publicKey || (activePayment && activePayment.publicKey) || '';
+    configure3DS(context,publicKey);
+    active3DS = {
+      context:context,
+      tokenId:tokenId,
+      deviceFingerprintId:deviceFingerprintId,
+      publicKey:publicKey,
+      waiting:true
+    };
+    message('info','Tu banco solicita autenticación 3DS. Completa la verificación para continuar.');
+    try{
+      window.Culqi3DS.initAuthentication(tokenId);
+    }catch(error){
+      var failed = active3DS;
+      reset3DSLibrary();
+      message('error','No se pudo abrir la autenticación 3DS: ' + esc(error && error.message ? error.message : 'error técnico') + '<br>' + restartButton(failed.context,failed.publicKey));
+    }
+  }
+  function restartButton(context,publicKey){
+    window.nostraReiniciarPagoCulqi = function(){
+      resetCheckout();
+      reset3DSLibrary();
+      prepareOnlinePayment(context,publicKey).catch(function(error){
+        message('error','No se pudo generar un nuevo intento de pago: ' + esc(error && error.message ? error.message : 'error técnico'));
+      });
+    };
+    return '<button type="button" class="npc-pay-button" onclick="window.nostraReiniciarPagoCulqi()">Generar un nuevo intento de pago</button>';
+  }
+
   function resultUrl(page,context){
     var params = new URLSearchParams({
       pre:context.preinscripcionId,
@@ -442,6 +544,8 @@
   }
   function openCheckout(context,publicKey){
     resetCheckout();
+    reset3DSLibrary();
+    configure3DS(context,publicKey);
     var payment = context.prepared;
     var paymentMethods = {
       tarjeta:true,
@@ -490,7 +594,13 @@
       if(culqiCheckout.token && culqiCheckout.token.id){
         var tokenId = culqiCheckout.token.id;
         try{ culqiCheckout.close(); }catch(_){ }
-        processCharge(context,tokenId);
+        message('info','Preparando la verificación de seguridad del pago...');
+        generateDeviceFingerprint(context,publicKey).then(function(deviceFingerprintId){
+          processCharge(context,tokenId,{deviceFingerprintId:deviceFingerprintId});
+        }).catch(function(error){
+          console.error('No se pudo generar la huella 3DS:',error);
+          message('error','No se pudo iniciar la seguridad 3DS: ' + esc(error && error.message ? error.message : 'error técnico') + '<br>' + restartButton(context,publicKey));
+        });
         return;
       }
       var culqiError = culqiCheckout.error || {};
@@ -504,16 +614,23 @@
     return '<button type="button" class="npc-pay-button" onclick="window.nostraContinuarPagoCulqi()">' + esc(label || 'Abrir pago seguro') + '</button>' +
       '<span class="npc-secure">🔒 La información de la tarjeta se ingresa directamente en <b>Culqi</b> y no pasa por los servidores de Grupo Nostradamus.</span>';
   }
-  function processCharge(context,tokenId){
-    message('info','Procesando el pago de forma segura. No cierres esta ventana...');
-    postJson(CHARGE_URL,{
+  function processCharge(context,tokenId,security){
+    security = security || {};
+    message('info',security.authentication3DS
+      ? 'Confirmando el pago autenticado. No cierres esta ventana...'
+      : 'Procesando el pago de forma segura. No cierres esta ventana...');
+    var payload = {
       preinscripcionId:context.preinscripcionId,
       intentoPagoId:context.prepared.intentoPagoId,
       codigoSolicitud:context.codigoSolicitud,
-      tokenId:tokenId
-    }).then(function(response){
+      tokenId:tokenId,
+      deviceFingerprintId:security.deviceFingerprintId
+    };
+    if(security.authentication3DS) payload.authentication3DS = security.authentication3DS;
+    postJson(CHARGE_URL,payload).then(function(response){
       var payment = response.payment || {};
       if(payment.estado === 'aprobado'){
+        reset3DSLibrary();
         try{ sessionStorage.removeItem('nostra_culqi_pago_activo'); }catch(_){ }
         location.assign(resultUrl('pago-exitoso.html',context));
         return;
@@ -522,14 +639,20 @@
     }).catch(function(error){
       console.error('Cargo Culqi rechazado:',error);
       if(error.code === '3DS_REQUERIDO'){
-        location.assign(resultUrl('pago-pendiente.html',context));
+        start3DSAuthentication(context,tokenId,security.deviceFingerprintId);
+        return;
+      }
+      if(error.code === '3DS_PENDIENTE' || error.code === '3DS_CONTEXTO_INVALIDO' || error.code === '3DS_NO_SOLICITADO'){
+        reset3DSLibrary();
+        message('error',esc(error.message || 'El intento 3DS ya no puede continuar.') + '<br>' + restartButton(context,context.publicKey));
         return;
       }
       if(error.code === 'PAGO_RECHAZADO' || error.status === 402){
+        reset3DSLibrary();
         location.assign(resultUrl('pago-rechazado.html',context));
         return;
       }
-      message('error','No se pudo completar el cargo: ' + esc(error.message || 'error técnico') + '<br>' + continueButton(context,activePayment.publicKey,'Reintentar pago'));
+      message('error','No se pudo completar el cargo: ' + esc(error.message || 'error técnico') + '<br>' + continueButton(context,context.publicKey || activePayment.publicKey,'Reintentar pago'));
     });
   }
   function prepareOnlinePayment(context,publicKey){

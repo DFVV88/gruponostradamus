@@ -21,6 +21,11 @@ const {
   splitName,
   peruPhone
 } = require('./lib/common');
+const {
+  normalizeDeviceFingerprint,
+  normalizeAuthentication3DS,
+  paymentContextHash
+} = require('./lib/culqi3ds');
 
 const app = getApps().length ? getApp() : initializeApp();
 const db = getFirestore(app);
@@ -218,7 +223,7 @@ function tokenEnvironment(token) {
   return match ? match[2] : '';
 }
 
-async function reserveCharge(preId, attemptId, code) {
+async function reserveCharge(preId, attemptId, code, flow) {
   const preRef = db.collection('preinscripciones').doc(preId);
   const attemptRef = db.collection('intentos_pago').doc(attemptId);
   const now = Timestamp.now();
@@ -246,6 +251,18 @@ async function reserveCharge(preId, attemptId, code) {
       };
     }
 
+    const waitingFor3DS = attempt.estado === 'requiere_3ds';
+    if (waitingFor3DS) {
+      if (!flow.authentication3DS) {
+        throw new PublicError(409, '3DS_PENDIENTE', 'Este intento está esperando la autenticación 3DS.');
+      }
+      if (!clean(attempt.culqi3DSContextHash) || attempt.culqi3DSContextHash !== flow.contextHash) {
+        throw new PublicError(409, '3DS_CONTEXTO_INVALIDO', 'La autenticación 3DS no corresponde al intento de pago.');
+      }
+    } else if (flow.authentication3DS) {
+      throw new PublicError(409, '3DS_NO_SOLICITADO', 'Culqi no solicitó autenticación 3DS para este intento.');
+    }
+
     assertPayable(pre);
     if (timestampMillis(attempt.expiresAt) <= now.toMillis()) {
       throw new PublicError(409, 'INTENTO_EXPIRADO', 'El intento venció. Actualiza el resumen y vuelve a intentarlo.');
@@ -270,6 +287,7 @@ async function reserveCharge(preId, attemptId, code) {
     tx.update(attemptRef, {
       estado: 'procesando',
       processingAt: now,
+      culqi3DSSecondPass: waitingFor3DS,
       numeroIntentosCargo: FieldValue.increment(1),
       updatedAt: FieldValue.serverTimestamp()
     });
@@ -277,7 +295,7 @@ async function reserveCharge(preId, attemptId, code) {
       estadoPago: 'procesando_pago_online',
       updatedAt: FieldValue.serverTimestamp()
     });
-    return { alreadyApproved: false, pre, attempt, selection, preRef, attemptRef };
+    return { alreadyApproved: false, pre, attempt, selection, preRef, attemptRef, waitingFor3DS };
   });
 }
 
@@ -299,13 +317,14 @@ function chargeSummary(payload) {
   };
 }
 
-function antifraudDetails(pre) {
+function antifraudDetails(pre, deviceFingerprintId) {
   const names = splitName(pre.nombre);
   const phone = peruPhone(pre.celular);
   const details = {
     first_name: names.firstName,
     last_name: names.lastName,
-    country_code: 'PE'
+    country_code: 'PE',
+    device_finger_print_id: deviceFingerprintId
   };
   if (phone) details.phone_number = phone;
   return details;
@@ -322,6 +341,17 @@ exports.culqiCreateCharge = onRequest(
       const attemptId = requireText(body.intentoPagoId, 'intentoPagoId', ATTEMPT_ID_RE, 80);
       const code = requireText(body.codigoSolicitud, 'codigoSolicitud', CODE_RE, 30);
       const tokenId = requireText(body.tokenId, 'tokenId', TOKEN_RE, 120);
+      const deviceFingerprintId = normalizeDeviceFingerprint(body.deviceFingerprintId);
+      if (!deviceFingerprintId) {
+        throw new PublicError(400, 'DEVICE_3DS_INVALIDO', 'No se pudo validar el dispositivo para el pago seguro.');
+      }
+      const authentication3DS = body.authentication3DS == null
+        ? null
+        : normalizeAuthentication3DS(body.authentication3DS);
+      if (body.authentication3DS != null && !authentication3DS) {
+        throw new PublicError(400, 'PARAMETROS_3DS_INVALIDOS', 'Los parámetros de autenticación 3DS son inválidos.');
+      }
+      const contextHash = paymentContextHash(tokenId, deviceFingerprintId);
       const secret = clean(CULQI_SECRET_KEY.value());
       const environment = keyEnvironment(secret);
 
@@ -332,7 +362,7 @@ exports.culqiCreateCharge = onRequest(
         throw new PublicError(400, 'ENTORNO_INCOMPATIBLE', 'El token y la llave de Culqi pertenecen a entornos diferentes.');
       }
 
-      reserved = await reserveCharge(preId, attemptId, code);
+      reserved = await reserveCharge(preId, attemptId, code, { authentication3DS, contextHash });
       if (reserved.alreadyApproved) {
         return send(res, 200, {
           payment: {
@@ -362,8 +392,9 @@ exports.culqiCreateCharge = onRequest(
           plan_id: clean(reserved.pre.planId),
           dni: clean(reserved.pre.dni)
         },
-        antifraud_details: antifraudDetails(reserved.pre)
+        antifraud_details: antifraudDetails(reserved.pre, deviceFingerprintId)
       };
+      if (authentication3DS) payload.authentication_3DS = authentication3DS;
 
       const response = await fetch('https://api.culqi.com/v2/charges', {
         method: 'POST',
@@ -378,12 +409,15 @@ exports.culqiCreateCharge = onRequest(
       try { data = await response.json(); } catch (_) { data = {}; }
 
       if (!response.ok || !clean(data.id)) {
-        const requires3DS = clean(data.action_code) === 'REVIEW';
+        const requested3DS = clean(data.action_code) === 'REVIEW';
+        const requires3DS = requested3DS && !authentication3DS;
+        const repeated3DS = requested3DS && Boolean(authentication3DS);
         const message = safeMessage(data, requires3DS
           ? 'La tarjeta requiere autenticación 3DS.'
-          : 'Culqi rechazó el cargo.');
-        const batch = db.batch();
-        batch.update(reserved.attemptRef, {
+          : repeated3DS
+            ? 'La autenticación 3DS no pudo completar el cargo.'
+            : 'Culqi rechazó el cargo.');
+        const attemptPatch = {
           estado: requires3DS ? 'requiere_3ds' : 'rechazado',
           culqiHttpStatus: response.status,
           culqiActionCode: clean(data.action_code),
@@ -392,11 +426,22 @@ exports.culqiCreateCharge = onRequest(
           culqiMensaje: message,
           tokenNoAlmacenado: true,
           updatedAt: FieldValue.serverTimestamp()
-        });
+        };
+        if (requires3DS) {
+          attemptPatch.culqi3DSContextHash = contextHash;
+          attemptPatch.culqi3DSRequestedAt = FieldValue.serverTimestamp();
+        }
+        if (authentication3DS) {
+          attemptPatch.culqi3DSCompletedAt = FieldValue.serverTimestamp();
+          attemptPatch.culqi3DSProtocolVersion = authentication3DS.protocolVersion;
+        }
+        const batch = db.batch();
+        batch.update(reserved.attemptRef, attemptPatch);
         batch.update(reserved.preRef, {
           estadoPago: requires3DS ? 'requiere_3ds' : 'pago_rechazado',
           pagoValidado: false,
           matriculaAprobada: false,
+          autenticacion3DS: Boolean(authentication3DS),
           pagoObservacion: message,
           updatedAt: FieldValue.serverTimestamp()
         });
@@ -405,7 +450,7 @@ exports.culqiCreateCharge = onRequest(
           requires3DS ? 409 : 402,
           requires3DS ? '3DS_REQUERIDO' : 'PAGO_RECHAZADO',
           message,
-          requires3DS ? { actionCode: 'REVIEW' } : null
+          requires3DS ? { actionCode: 'REVIEW', retryable: true } : null
         );
       }
 
@@ -416,6 +461,9 @@ exports.culqiCreateCharge = onRequest(
         entorno: environment,
         culqiChargeId: summary.id,
         culqiResumen: summary,
+        culqi3DSAplicado: Boolean(authentication3DS),
+        culqi3DSProtocolVersion: authentication3DS ? authentication3DS.protocolVersion : '',
+        culqi3DSContextHash: FieldValue.delete(),
         tokenNoAlmacenado: true,
         approvedAt: FieldValue.serverTimestamp(),
         updatedAt: FieldValue.serverTimestamp()
@@ -423,7 +471,10 @@ exports.culqiCreateCharge = onRequest(
       batch.update(reserved.preRef, {
         estadoPago: 'pago_validado',
         pagoValidado: true,
-        pagoObservacion: 'Pago aprobado automáticamente por Culqi.',
+        pagoObservacion: authentication3DS
+          ? 'Pago aprobado por Culqi después de autenticación 3DS.'
+          : 'Pago aprobado automáticamente por Culqi.',
+        autenticacion3DS: Boolean(authentication3DS),
         precioValidadoServidor: true,
         estadoPrecio: 'validado_y_cobrado',
         matriculaAprobada: true,
@@ -463,7 +514,8 @@ exports.culqiCreateCharge = onRequest(
           cargoId: summary.id,
           montoCentimos: summary.amount || amount,
           moneda: 'PEN',
-          duplicado: summary.duplicated
+          duplicado: summary.duplicated,
+          autenticacion3DS: Boolean(authentication3DS)
         }
       });
     } catch (error) {
