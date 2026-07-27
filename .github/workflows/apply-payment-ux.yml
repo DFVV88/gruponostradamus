@@ -1,0 +1,45 @@
+name: Aplicar experiencia de pago Culqi
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-payment-ux.yml'
+      - 'tools/apply_payment_ux.py'
+      - 'assets/js/preinscripcion-pago-ux.js'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Aplicar mejora
+        run: python tools/apply_payment_ux.py
+
+      - name: Validar JavaScript
+        run: node --check assets/js/preinscripcion-pago-ux.js
+
+      - name: Retirar archivos temporales
+        run: |
+          rm -f tools/apply_payment_ux.py
+          rm -f .github/workflows/apply-payment-ux.yml
+
+      - name: Guardar cambios
+        run: |
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "No hay cambios pendientes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add preinscripcion.html assets/js/preinscripcion-pago-ux.js tools/apply_payment_ux.py .github/workflows/apply-payment-ux.yml
+          git commit -m "Mejora visibilidad y guía del pago Culqi"
+          git push origin main
