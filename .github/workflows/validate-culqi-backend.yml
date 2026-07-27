@@ -14,6 +14,7 @@ on:
       - "pago-pendiente.html"
       - "pago-rechazado.html"
       - "assets/js/preinscripcion-culqi-preparacion.js"
+      - "assets/js/preinscripcion-pago-ux.js"
       - "assets/js/pago-culqi-resultado.js"
       - "assets/js/culqi-public-config.js"
       - ".github/workflows/validate-culqi-backend.yml"
@@ -49,6 +50,7 @@ jobs:
       - name: Verificar JavaScript del checkout
         run: |
           node --check assets/js/preinscripcion-culqi-preparacion.js
+          node --check assets/js/preinscripcion-pago-ux.js
           node --check assets/js/pago-culqi-resultado.js
           node --check assets/js/culqi-public-config.js
 
