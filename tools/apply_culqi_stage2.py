@@ -38,11 +38,19 @@ def main() -> None:
         changed.append(admin.name)
 
     admin_text = admin.read_text(encoding="utf-8")
-    if 'admin-plan-display.js?v=2026-05' in admin_text:
-        admin.write_text(
-            admin_text.replace('admin-plan-display.js?v=2026-05','admin-plan-display.js?v=2026-06',1),
-            encoding="utf-8",
-        )
+    original_admin = admin_text
+    for old_version in (
+        'admin-plan-display.js?v=2026-05',
+        'admin-plan-display.js?v=2026-06',
+    ):
+        if old_version in admin_text:
+            admin_text = admin_text.replace(
+                old_version,
+                'admin-plan-display.js?v=2026-07',
+                1,
+            )
+    if admin_text != original_admin:
+        admin.write_text(admin_text, encoding="utf-8")
         changed.append(admin.name)
 
     pre = ROOT / "preinscripcion.html"
