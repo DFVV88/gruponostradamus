@@ -6,6 +6,7 @@ const logger = require('firebase-functions/logger');
 const { getApps, getApp, initializeApp } = require('firebase-admin/app');
 const { getFirestore, FieldValue } = require('firebase-admin/firestore');
 const {
+  requestPayload,
   webhookEventType,
   webhookEventId,
   webhookChargeId,
@@ -54,18 +55,40 @@ function send(res, status, payload) {
 function requestBody(req) {
   const rawLength = Buffer.isBuffer(req.rawBody)
     ? req.rawBody.length
-    : Buffer.byteLength(JSON.stringify(req.body || {}), 'utf8');
+    : Buffer.byteLength(
+      typeof req.body === 'string' ? req.body : JSON.stringify(req.body || {}),
+      'utf8'
+    );
+
   if (rawLength > MAX_BODY_BYTES) {
     const error = new Error('WEBHOOK_DEMASIADO_GRANDE');
     error.status = 413;
     throw error;
   }
-  if (!req.body || typeof req.body !== 'object' || Array.isArray(req.body)) {
+
+  const payload = requestPayload(req.rawBody, req.body);
+  if (!payload || Object.keys(payload).length === 0) {
     const error = new Error('WEBHOOK_JSON_INVALIDO');
     error.status = 400;
     throw error;
   }
-  return req.body;
+
+  return payload;
+}
+
+function safeRequestDiagnostics(req, payload) {
+  return {
+    contentType: clean(req.get && req.get('content-type')).slice(0, 120),
+    rawBodyBytes: Buffer.isBuffer(req.rawBody) ? req.rawBody.length : 0,
+    parsedBodyType: Buffer.isBuffer(req.body)
+      ? 'buffer'
+      : Array.isArray(req.body)
+        ? 'array'
+        : typeof req.body,
+    payloadKeys: payload && typeof payload === 'object'
+      ? Object.keys(payload).slice(0, 20)
+      : []
+  };
 }
 
 async function retrieveCharge(chargeId, secret) {
@@ -308,11 +331,13 @@ exports.culqiWebhook = onRequest(OPTIONS, async (req, res) => {
     return send(res, 405, { received: false, error: 'METODO_NO_PERMITIDO' });
   }
 
+  let payload = {};
   try {
-    const payload = requestBody(req);
+    payload = requestBody(req);
     const eventType = webhookEventType(payload);
     const chargeId = webhookChargeId(payload);
     if (!eventType || !chargeId) {
+      logger.warn('Webhook Culqi con estructura no reconocida', safeRequestDiagnostics(req, payload));
       return send(res, 400, { received: false, error: 'EVENTO_CULQI_INVALIDO' });
     }
 
@@ -322,8 +347,7 @@ exports.culqiWebhook = onRequest(OPTIONS, async (req, res) => {
       return send(res, 401, { received: false, error: 'ENTORNO_CULQI_INVALIDO' });
     }
 
-    // Culqi no documenta actualmente una firma criptográfica del webhook.
-    // Por ello, el payload nunca se usa como fuente de verdad: el cargo se
+    // El payload del webhook nunca se usa como fuente de verdad: el cargo se
     // consulta nuevamente en la API oficial con la llave privada del comercio.
     const verifiedCharge = await retrieveCharge(chargeId, secret);
     const result = await reconcileWebhook(payload, verifiedCharge, environment);
@@ -337,8 +361,9 @@ exports.culqiWebhook = onRequest(OPTIONS, async (req, res) => {
   } catch (error) {
     const status = Number(error && error.status) || 500;
     const code = clean(error && error.message) || 'ERROR_INTERNO_WEBHOOK';
-    if (status >= 500) logger.error('Error procesando webhook Culqi', error);
-    else logger.warn('Webhook Culqi rechazado', { status, code });
+    const diagnostics = safeRequestDiagnostics(req, payload);
+    if (status >= 500) logger.error('Error procesando webhook Culqi', { code, ...diagnostics });
+    else logger.warn('Webhook Culqi rechazado', { status, code, ...diagnostics });
     return send(res, status, { received: false, error: code });
   }
 });
