@@ -55,14 +55,43 @@ function firstValid(values, pattern) {
   return '';
 }
 
+function nestedPayload(value) {
+  return normalizePayload(value);
+}
+
+function webhookContainers(payload) {
+  const root = normalizePayload(payload);
+  const data = nestedPayload(root.data);
+  const dataObject = nestedPayload(data.object);
+  const dataCharge = nestedPayload(data.charge);
+  const nestedData = nestedPayload(data.data);
+  const object = nestedPayload(root.object);
+  const charge = nestedPayload(root.charge);
+
+  return {
+    root,
+    data,
+    dataObject,
+    dataCharge,
+    nestedData,
+    object,
+    charge
+  };
+}
+
 function explicitWebhookEventType(payload) {
-  payload = normalizePayload(payload);
+  const { root, data } = webhookContainers(payload);
   const values = [
-    payload.type,
-    payload.event_type,
-    payload.eventType,
-    payload.event,
-    payload.name
+    root.type,
+    root.event_type,
+    root.eventType,
+    root.event,
+    root.name,
+    data.type,
+    data.event_type,
+    data.eventType,
+    data.event,
+    data.name
   ];
   for (const value of values) {
     const normalized = clean(value).toLowerCase();
@@ -109,27 +138,34 @@ function directChargeEventType(payload) {
 }
 
 function webhookEventType(payload) {
-  return explicitWebhookEventType(payload) || directChargeEventType(payload);
+  const containers = webhookContainers(payload);
+  return explicitWebhookEventType(containers.root)
+    || directChargeEventType(containers.root)
+    || directChargeEventType(containers.data)
+    || directChargeEventType(containers.dataObject)
+    || directChargeEventType(containers.dataCharge)
+    || directChargeEventType(containers.nestedData);
 }
 
 function webhookEventId(payload) {
-  payload = normalizePayload(payload);
+  const { root, data, dataObject, dataCharge, nestedData } = webhookContainers(payload);
   return firstValid([
-    payload.event_id,
-    payload.eventId,
-    payload.id,
-    payload.data && payload.data.event_id,
-    payload.data && payload.data.eventId
+    root.event_id,
+    root.eventId,
+    root.id,
+    data.event_id,
+    data.eventId,
+    dataObject.event_id,
+    dataObject.eventId,
+    dataCharge.event_id,
+    dataCharge.eventId,
+    nestedData.event_id,
+    nestedData.eventId
   ], EVENT_ID_RE);
 }
 
 function webhookChargeId(payload) {
-  payload = normalizePayload(payload);
-  const data = payload.data && typeof payload.data === 'object' ? payload.data : {};
-  const dataObject = data.object && typeof data.object === 'object' ? data.object : {};
-  const dataCharge = data.charge && typeof data.charge === 'object' ? data.charge : {};
-  const object = payload.object && typeof payload.object === 'object' ? payload.object : {};
-  const charge = payload.charge && typeof payload.charge === 'object' ? payload.charge : {};
+  const { root, data, dataObject, dataCharge, nestedData, object, charge } = webhookContainers(payload);
 
   return firstValid([
     data.id,
@@ -139,11 +175,20 @@ function webhookChargeId(payload) {
     dataObject.charge_id,
     dataObject.chargeId,
     dataCharge.id,
+    dataCharge.charge_id,
+    dataCharge.chargeId,
+    nestedData.id,
+    nestedData.charge_id,
+    nestedData.chargeId,
     object.id,
+    object.charge_id,
+    object.chargeId,
     charge.id,
-    payload.charge_id,
-    payload.chargeId,
-    payload.id
+    charge.charge_id,
+    charge.chargeId,
+    root.charge_id,
+    root.chargeId,
+    root.id
   ], CHARGE_ID_RE);
 }
 
