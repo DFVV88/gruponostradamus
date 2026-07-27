@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Inserta el cargador del footer universal en todas las páginas HTML.
+"""Inserta o actualiza el cargador del footer universal en páginas HTML.
 
-- Recorre archivos HTML del repositorio.
+- Recorre archivos HTML públicos del repositorio.
 - Excluye expresamente iq100.html.
-- Evita duplicados.
+- Mantiene una sola etiqueta del footer por página.
+- Actualiza automáticamente la versión de caché.
 - No modifica archivos HTML usados como recursos dentro de assets/.
 """
 from __future__ import annotations
@@ -13,7 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_NAME = "nostra-footer-universal.js"
 SCRIPT_TAG = (
-    '  <script defer src="assets/js/nostra-footer-universal.js?v=2026-90" '
+    '  <script defer src="assets/js/nostra-footer-universal.js?v=2026-91" '
     'data-nostra-universal-footer="1"></script>'
 )
 SKIP_DIRS = {".git", ".github", "assets", "node_modules", "vendor", "tools"}
@@ -26,23 +27,31 @@ def is_public_html(path: Path) -> bool:
     return not any(part in SKIP_DIRS for part in relative.parts[:-1])
 
 
+def remove_footer_lines(text: str) -> str:
+    """Retira etiquetas anteriores del cargador universal, incluso duplicadas."""
+    lines = [line for line in text.splitlines() if SCRIPT_NAME not in line]
+    ending = "\n" if text.endswith("\n") else ""
+    return "\n".join(lines) + ending
+
+
 def remove_tag_from_iq100(path: Path) -> bool:
     """Garantiza que la página excluida no cargue el footer universal."""
     text = path.read_text(encoding="utf-8")
     if SCRIPT_NAME not in text:
         return False
 
-    lines = [line for line in text.splitlines() if SCRIPT_NAME not in line]
-    ending = "\n" if text.endswith("\n") else ""
-    path.write_text("\n".join(lines) + ending, encoding="utf-8")
+    path.write_text(remove_footer_lines(text), encoding="utf-8")
     return True
 
 
 def inject(path: Path) -> bool:
-    text = path.read_text(encoding="utf-8")
-    if SCRIPT_NAME in text:
+    original = path.read_text(encoding="utf-8")
+    existing_lines = [line.strip() for line in original.splitlines() if SCRIPT_NAME in line]
+
+    if len(existing_lines) == 1 and existing_lines[0] == SCRIPT_TAG.strip():
         return False
 
+    text = remove_footer_lines(original)
     lower = text.lower()
     closing_index = lower.rfind("</body>")
     if closing_index < 0:
@@ -54,7 +63,7 @@ def inject(path: Path) -> bool:
     separator = "" if prefix.endswith("\n") else "\n"
     updated = prefix + separator + SCRIPT_TAG + "\n" + suffix
     path.write_text(updated, encoding="utf-8")
-    return True
+    return updated != original
 
 
 def main() -> None:
@@ -71,7 +80,7 @@ def main() -> None:
             changed.append(str(path.relative_to(ROOT)))
 
     if changed:
-        print("Footer universal incorporado en:")
+        print("Footer universal incorporado o actualizado en:")
         for item in changed:
             print(f"- {item}")
     else:
