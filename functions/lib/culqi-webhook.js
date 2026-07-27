@@ -13,7 +13,7 @@ function clean(value) {
 function normalizePayload(payload) {
   if (Buffer.isBuffer(payload)) {
     try {
-      const parsed = JSON.parse(payload.toString('utf8'));
+      const parsed = JSON.parse(payload.toString('utf8').replace(/^\uFEFF/, ''));
       return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
     } catch (_) {
       return {};
@@ -21,13 +21,30 @@ function normalizePayload(payload) {
   }
   if (typeof payload === 'string') {
     try {
-      const parsed = JSON.parse(payload);
+      const parsed = JSON.parse(payload.replace(/^\uFEFF/, ''));
       return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
     } catch (_) {
       return {};
     }
   }
-  return payload && typeof payload === 'object' && !Array.isArray(payload) ? payload : {};
+  return payload && typeof payload === 'object' && !Array.isArray(payload) && !Buffer.isBuffer(payload)
+    ? payload
+    : {};
+}
+
+function hasPayloadFields(payload) {
+  return payload && typeof payload === 'object' && !Array.isArray(payload)
+    && !Buffer.isBuffer(payload) && Object.keys(payload).length > 0;
+}
+
+function requestPayload(rawBody, body) {
+  const rawPayload = normalizePayload(rawBody);
+  if (hasPayloadFields(rawPayload)) return rawPayload;
+
+  const parsedBody = normalizePayload(body);
+  if (hasPayloadFields(parsedBody)) return parsedBody;
+
+  return {};
 }
 
 function firstValid(values, pattern) {
@@ -202,6 +219,7 @@ function verifiedChargeSummary(charge) {
 module.exports = {
   CHARGE_ID_RE,
   normalizePayload,
+  requestPayload,
   webhookEventType,
   webhookEventId,
   webhookChargeId,
