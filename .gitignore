@@ -4,13 +4,19 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+.secret.local
+functions/.secret.local
 
 node_modules/
+functions/node_modules/
 vendor/
 
+.firebase/
 dist/
 build/
 
+firebase-debug.log
+firebase-debug.*.log
 *.log
 
 .vscode/
