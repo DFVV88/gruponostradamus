@@ -37,6 +37,14 @@ def main() -> None:
     if update(admin, admin_old, admin_new):
         changed.append(admin.name)
 
+    admin_text = admin.read_text(encoding="utf-8")
+    if 'admin-plan-display.js?v=2026-05' in admin_text:
+        admin.write_text(
+            admin_text.replace('admin-plan-display.js?v=2026-05','admin-plan-display.js?v=2026-06',1),
+            encoding="utf-8",
+        )
+        changed.append(admin.name)
+
     pre = ROOT / "preinscripcion.html"
     pre_old = '  <script src="assets/js/preinscripcion-firebase.js?v=2026-03" defer></script>'
     pre_new = (
@@ -44,6 +52,7 @@ def main() -> None:
         '  <script src="assets/js/preinscripcion-firebase.js?v=2026-05" defer></script>'
     )
     current_pre = pre.read_text(encoding="utf-8")
+    original_pre = current_pre
     if 'preinscripcion-culqi-preparacion.js?v=2026-01' in current_pre:
         current_pre = current_pre.replace(
             'preinscripcion-culqi-preparacion.js?v=2026-01',
@@ -56,7 +65,7 @@ def main() -> None:
             'preinscripcion-firebase.js?v=2026-05',
             1,
         )
-    if current_pre != pre.read_text(encoding="utf-8"):
+    if current_pre != original_pre:
         pre.write_text(current_pre, encoding="utf-8")
         changed.append(pre.name)
     elif update(pre, pre_old, pre_new):
