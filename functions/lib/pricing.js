@@ -6,6 +6,8 @@ const INITIAL_TYPES = new Set([
   'primera_cuota',
   'pago_total'
 ]);
+const CULQI_MIN_CENTS = 100;
+const CULQI_MAX_CENTS = 999900;
 
 function clean(value) {
   return String(value == null ? '' : value).replace(/\s+/g, ' ').trim();
@@ -79,7 +81,12 @@ function calculateOfficialPlan(plan, now = new Date()) {
     totalCents = enrollmentCents + appliedPriceCents;
   }
 
-  if (regularCents <= 0 || appliedPriceCents <= 0 || totalCents <= 0) {
+  if (
+    regularCents <= 0 ||
+    appliedPriceCents <= 0 ||
+    totalCents < CULQI_MIN_CENTS ||
+    totalCents > CULQI_MAX_CENTS
+  ) {
     throw new Error('MONTO_INVALIDO');
   }
 
