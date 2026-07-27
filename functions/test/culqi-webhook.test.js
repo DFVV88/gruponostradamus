@@ -24,11 +24,59 @@ const payload = {
   }
 };
 
+const directCulqiV2Payload = {
+  object: 'charge',
+  id: 'chr_test_bh7cLg3qLnRx2hQO',
+  creationDate: 1785167768537,
+  amount: 35000,
+  currentAmount: 35000,
+  currencyCode: 'PEN',
+  capture: true,
+  duplicated: false,
+  source: {
+    lastFour: '1111',
+    iin: { cardBrand: 'Visa' }
+  },
+  outcome: {
+    type: 'venta_exitosa',
+    code: 'AUT0000',
+    merchantMessage: 'La operación de venta ha sido autorizada exitosamente',
+    userMessage: 'Su compra ha sido exitosa'
+  },
+  metadata: {
+    preinscripcion_id: 'sZulfiFiJiGdrcILTv0Y',
+    intento_pago_id: '4BOWckxuaP6xXiGIsC7r',
+    codigo_solicitud: 'PRE-2026-SZULFIFI'
+  }
+};
+
 test('extrae tipo, evento y cargo de un webhook anidado', () => {
   assert.equal(webhookEventType(payload), 'charge.creation.succeeded');
   assert.equal(webhookEventId(payload), 'evt_test_ABC123');
   assert.equal(webhookChargeId(payload), 'chr_test_7VUwCneoG1XtLeS7');
   assert.equal(chargeEnvironment(webhookChargeId(payload)), 'test');
+});
+
+test('acepta el objeto charge directo que entrega Culqi Webhooks 2.0', () => {
+  assert.equal(webhookEventType(directCulqiV2Payload), 'charge.creation.succeeded');
+  assert.equal(webhookEventId(directCulqiV2Payload), '');
+  assert.equal(webhookChargeId(directCulqiV2Payload), 'chr_test_bh7cLg3qLnRx2hQO');
+  assert.equal(classifyChargeEvent(webhookEventType(directCulqiV2Payload)), 'success');
+});
+
+test('infiere un charge directo fallido por el resultado de Culqi', () => {
+  const failed = {
+    object: 'charge',
+    id: 'chr_test_FAILED123456',
+    capture: false,
+    outcome: {
+      type: 'venta_rechazada',
+      code: 'CULQI_CARD_DECLINED',
+      merchantMessage: 'La tarjeta fue rechazada'
+    }
+  };
+  assert.equal(webhookEventType(failed), 'charge.creation.failed');
+  assert.equal(classifyChargeEvent(webhookEventType(failed)), 'failed');
 });
 
 test('acepta las variantes comunes del identificador de cargo', () => {
@@ -55,6 +103,10 @@ test('genera una clave idempotente estable por entrega', () => {
   assert.match(first, /^[a-f0-9]{64}$/);
   assert.equal(first, second);
   assert.notEqual(first, webhookDocumentId({ ...payload, id: 'evt_test_OTRO123' }));
+
+  const directFirst = webhookDocumentId(directCulqiV2Payload);
+  const directSecond = webhookDocumentId(JSON.parse(JSON.stringify(directCulqiV2Payload)));
+  assert.equal(directFirst, directSecond);
 });
 
 test('extrae metadata propia sin depender del payload del webhook', () => {
@@ -70,7 +122,7 @@ test('extrae metadata propia sin depender del payload del webhook', () => {
   assert.equal(metadataValue(metadata, 'codigo_solicitud'), 'PRE-2026-ABCDEFGH');
 });
 
-test('resume un cargo verificado sin conservar datos sensibles', () => {
+test('resume un cargo snake_case verificado sin conservar datos sensibles', () => {
   const summary = verifiedChargeSummary({
     id: 'chr_test_7VUwCneoG1XtLeS7',
     object: 'charge',
@@ -110,4 +162,23 @@ test('resume un cargo verificado sin conservar datos sensibles', () => {
     lastFour: '1111'
   });
   assert.equal(Object.prototype.hasOwnProperty.call(summary, 'card_number'), false);
+});
+
+test('resume el cargo camelCase real de Culqi 2.0', () => {
+  assert.deepEqual(verifiedChargeSummary(directCulqiV2Payload), {
+    id: 'chr_test_bh7cLg3qLnRx2hQO',
+    object: 'charge',
+    amount: 35000,
+    currentAmount: 35000,
+    currency: 'PEN',
+    captured: true,
+    duplicated: false,
+    creationDate: 1785167768537,
+    outcomeType: 'venta_exitosa',
+    outcomeCode: 'AUT0000',
+    merchantMessage: 'La operación de venta ha sido autorizada exitosamente',
+    userMessage: 'Su compra ha sido exitosa',
+    cardBrand: 'Visa',
+    lastFour: '1111'
+  });
 });
