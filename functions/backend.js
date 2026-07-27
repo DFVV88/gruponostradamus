@@ -168,7 +168,7 @@ exports.culqiPreparePayment = onRequest(OPTIONS, async (req, res) => {
       tx.set(newAttemptRef, {
         preinscripcionId: preId,
         codigoSolicitud: code,
-        programaId,
+        programaId: programId,
         programaNombre: clean(selection.program.nombre || pre.ciclo),
         planId: clean(selection.plan.id),
         planNombre: clean(selection.plan.nombre || pre.planNombre),
