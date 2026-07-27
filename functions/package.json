@@ -8,7 +8,7 @@
     "node": "20"
   },
   "scripts": {
-    "check": "node --check backend.js && node --check lib/common.js && node --check lib/pricing.js && node --test test/*.test.js",
+    "check": "node --check backend.js && node --check lib/common.js && node --check lib/pricing.js && node --check lib/culqi3ds.js && node --test test/*.test.js",
     "serve": "firebase emulators:start --only functions",
     "deploy": "firebase deploy --only functions"
   },
