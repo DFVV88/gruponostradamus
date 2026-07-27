@@ -1,0 +1,40 @@
+name: Implementar Culqi 3DS una vez
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/implement-culqi-3ds-once.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  implementar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Aplicar integración Culqi 3DS
+        run: python tools/implement_culqi_3ds_once.py
+
+      - name: Verificar frontend y backend
+        run: |
+          node --check assets/js/preinscripcion-culqi-preparacion.js
+          cd functions
+          npm run check
+
+      - name: Retirar archivos temporales
+        run: |
+          rm tools/implement_culqi_3ds_once.py
+          rm .github/workflows/implement-culqi-3ds-once.yml
+
+      - name: Guardar implementación
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/js/preinscripcion-culqi-preparacion.js preinscripcion.html functions/backend.js functions/lib/culqi3ds.js functions/test/culqi3ds.test.js functions/package.json tools/implement_culqi_3ds_once.py .github/workflows/implement-culqi-3ds-once.yml
+          git commit -m "Implementa autenticación Culqi 3DS en modo prueba"
+          git push origin HEAD:main
