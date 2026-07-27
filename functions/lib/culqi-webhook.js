@@ -4,6 +4,7 @@ const crypto = require('node:crypto');
 
 const CHARGE_ID_RE = /^chr_(test|live)_[A-Za-z0-9]+$/;
 const EVENT_ID_RE = /^evt_(test|live)_[A-Za-z0-9]+$/;
+const EVENT_TYPE_RE = /^[a-z][a-z0-9_-]*(?:\.[a-z0-9_-]+)+$/i;
 
 function clean(value) {
   return String(value == null ? '' : value).trim();
@@ -17,15 +18,61 @@ function firstValid(values, pattern) {
   return '';
 }
 
-function webhookEventType(payload) {
+function explicitWebhookEventType(payload) {
   if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return '';
-  return clean(
-    payload.type
-    || payload.event_type
-    || payload.eventType
-    || payload.event
-    || payload.name
-  ).toLowerCase();
+  const values = [
+    payload.type,
+    payload.event_type,
+    payload.eventType,
+    payload.event,
+    payload.name
+  ];
+  for (const value of values) {
+    const normalized = clean(value).toLowerCase();
+    if (EVENT_TYPE_RE.test(normalized)) return normalized;
+  }
+  return '';
+}
+
+function directChargeEventType(payload) {
+  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return '';
+  if (clean(payload.object).toLowerCase() !== 'charge') return '';
+
+  const chargeId = firstValid([payload.id, payload.chargeId, payload.charge_id], CHARGE_ID_RE);
+  if (!chargeId) return '';
+
+  const outcome = payload.outcome && typeof payload.outcome === 'object' && !Array.isArray(payload.outcome)
+    ? payload.outcome
+    : {};
+  const outcomeType = clean(outcome.type || outcome.outcomeType).toLowerCase();
+  const outcomeCode = clean(outcome.code || outcome.outcomeCode).toUpperCase();
+  const captured = payload.capture === true || payload.captured === true;
+
+  const successTypes = new Set([
+    'venta_exitosa',
+    'successful_sale',
+    'success',
+    'succeeded',
+    'approved',
+    'aprobado'
+  ]);
+  if (outcomeCode === 'AUT0000' || successTypes.has(outcomeType) || captured) {
+    return 'charge.creation.succeeded';
+  }
+
+  const failureText = `${outcomeType} ${outcomeCode} ${clean(outcome.merchantMessage || outcome.merchant_message)} ${clean(outcome.userMessage || outcome.user_message)}`.toLowerCase();
+  if (
+    outcomeCode
+    || /rechaz|fall|fail|error|deneg|declin|cancel|fraud|invalid|insuficien/.test(failureText)
+  ) {
+    return 'charge.creation.failed';
+  }
+
+  return '';
+}
+
+function webhookEventType(payload) {
+  return explicitWebhookEventType(payload) || directChargeEventType(payload);
 }
 
 function webhookEventId(payload) {
@@ -53,6 +100,7 @@ function webhookChargeId(payload) {
     data.chargeId,
     dataObject.id,
     dataObject.charge_id,
+    dataObject.chargeId,
     dataCharge.id,
     object.id,
     charge.id,
@@ -111,22 +159,23 @@ function metadataValue(metadata, ...keys) {
 
 function verifiedChargeSummary(charge) {
   const source = charge && charge.source && typeof charge.source === 'object' ? charge.source : {};
+  const iin = source.iin && typeof source.iin === 'object' ? source.iin : {};
   const outcome = charge && charge.outcome && typeof charge.outcome === 'object' ? charge.outcome : {};
   return {
     id: clean(charge && charge.id),
     object: clean(charge && charge.object),
     amount: Number(charge && charge.amount) || 0,
-    currentAmount: Number(charge && charge.current_amount) || 0,
-    currency: clean(charge && (charge.currency_code || charge.currency)),
-    captured: Boolean(charge && charge.captured === true),
+    currentAmount: Number(charge && (charge.currentAmount ?? charge.current_amount)) || 0,
+    currency: clean(charge && (charge.currencyCode || charge.currency_code || charge.currency)),
+    captured: Boolean(charge && (charge.capture === true || charge.captured === true)),
     duplicated: Boolean(charge && charge.duplicated === true),
-    creationDate: Number(charge && charge.creation_date) || 0,
-    outcomeType: clean(outcome.type),
-    outcomeCode: clean(outcome.code),
-    merchantMessage: clean(outcome.merchant_message).slice(0, 280),
-    userMessage: clean(outcome.user_message).slice(0, 280),
-    cardBrand: clean(source.iin && source.iin.card_brand),
-    lastFour: clean(source.last_four)
+    creationDate: Number(charge && (charge.creationDate ?? charge.creation_date)) || 0,
+    outcomeType: clean(outcome.type || outcome.outcomeType),
+    outcomeCode: clean(outcome.code || outcome.outcomeCode),
+    merchantMessage: clean(outcome.merchantMessage || outcome.merchant_message).slice(0, 280),
+    userMessage: clean(outcome.userMessage || outcome.user_message).slice(0, 280),
+    cardBrand: clean(iin.cardBrand || iin.card_brand),
+    lastFour: clean(source.lastFour || source.last_four)
   };
 }
 
