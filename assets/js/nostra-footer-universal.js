@@ -11,7 +11,7 @@
   if (window.__NOSTRA_UNIVERSAL_FOOTER__) return;
   window.__NOSTRA_UNIVERSAL_FOOTER__ = true;
 
-  var VERSION = '2026-90';
+  var VERSION = '2026-91';
   var FOOTER_ID = 'nostra-global-footer';
   var STYLE_ID = 'nostra-global-footer-style';
   var WHATSAPP = 'https://wa.me/51993750351?text=Hola%20Nostradamus,%20quiero%20informes%20sobre%20los%20ciclos%20UNI.';
@@ -35,7 +35,7 @@
     var style = document.createElement('style');
     style.id = STYLE_ID;
     style.textContent = '\
-      #nostra-global-footer{position:relative;z-index:30;overflow:hidden;width:100%;margin:0;background:radial-gradient(circle at 8% 10%,rgba(0,194,209,.17),transparent 31%),radial-gradient(circle at 92% 82%,rgba(0,139,150,.12),transparent 29%),linear-gradient(135deg,#03111e 0%,#02070d 54%,#061426 100%);border-top:1px solid rgba(0,194,209,.34);box-shadow:0 -16px 42px rgba(6,20,38,.18);color:#fff;font-family:Jost,Arial,sans-serif;text-align:left}\
+      #nostra-global-footer{position:relative;z-index:30;isolation:isolate;overflow:hidden;width:100%;max-width:none;margin:0;padding:0!important;background:radial-gradient(circle at 8% 10%,rgba(0,194,209,.17),transparent 31%),radial-gradient(circle at 92% 82%,rgba(0,139,150,.12),transparent 29%),linear-gradient(135deg,#03111e 0%,#02070d 54%,#061426 100%);border:0;border-top:1px solid rgba(0,194,209,.34);border-radius:0;box-shadow:0 -16px 42px rgba(6,20,38,.18);color:#fff;font-family:Jost,Arial,sans-serif;font-size:16px;line-height:1.4;text-align:left}\
       #nostra-global-footer *{box-sizing:border-box}\
       #nostra-global-footer a{text-decoration:none}\
       #nostra-global-footer .ngf-wrap{width:min(1760px,calc(100% - 82px));margin:0 auto}\
@@ -76,7 +76,7 @@
       #nostra-global-footer .ngf-legal{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px 21px}\
       #nostra-global-footer .ngf-legal a{color:#a9eaf0;font-size:13px;font-weight:900;white-space:nowrap}\
       #nostra-global-footer .ngf-legal a:hover{color:#fff}\
-      .ngf-scroll-top{position:fixed;right:18px;bottom:83px;z-index:9990;display:grid;place-items:center;width:58px;height:58px;border-radius:50%;border:5px solid #0794a2;background:#fff;color:#078c95;box-shadow:0 10px 28px rgba(2,7,13,.28);cursor:pointer}\
+      .ngf-scroll-top{position:fixed;right:18px;bottom:83px;z-index:9990;display:grid;place-items:center;width:58px;height:58px;padding:0;border-radius:50%;border:5px solid #0794a2;background:#fff;color:#078c95;box-shadow:0 10px 28px rgba(2,7,13,.28);cursor:pointer}\
       .ngf-scroll-top svg{width:27px;height:27px;fill:currentColor}\
       .ngf-floating-wa{position:fixed;right:18px;bottom:18px;z-index:9985;display:flex;align-items:center;gap:11px;padding:12px 20px;border-radius:999px;background:linear-gradient(135deg,#078c95,#02070d);border:1px solid rgba(0,220,232,.35);box-shadow:0 16px 38px rgba(2,7,13,.32);color:#fff!important;font-family:Jost,Arial,sans-serif;text-decoration:none!important}\
       .ngf-floating-wa .ngf-wa-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.16);font-size:21px}\
@@ -85,7 +85,7 @@
       @media(max-width:1299px){#nostra-global-footer .ngf-wrap,#nostra-global-footer .ngf-bottom-inner{width:min(100% - 44px,1400px)}#nostra-global-footer .ngf-main{grid-template-columns:minmax(270px,.9fr) minmax(0,1.5fr)}#nostra-global-footer .ngf-contact{grid-column:1/-1;display:grid;grid-template-columns:1fr 1.15fr auto;gap:24px;align-items:center}#nostra-global-footer .ngf-contact .ngf-title,#nostra-global-footer .ngf-contact .ngf-contact-intro{grid-column:1}#nostra-global-footer .ngf-contact-list{grid-column:2;grid-row:1/3;margin:0}#nostra-global-footer .ngf-actions{grid-column:3;grid-row:1/3;grid-template-columns:1fr;min-width:210px}}\
       @media(max-width:900px){#nostra-global-footer .ngf-main{grid-template-columns:1fr}#nostra-global-footer .ngf-navigation{grid-template-columns:1fr 1.35fr}#nostra-global-footer .ngf-contact{grid-column:auto;display:flex}#nostra-global-footer .ngf-bottom-inner{align-items:flex-start;flex-direction:column}#nostra-global-footer .ngf-legal{justify-content:flex-start}.ngf-floating-wa{max-width:calc(100vw - 36px)}}\
       @media(max-width:620px){#nostra-global-footer .ngf-wrap,#nostra-global-footer .ngf-bottom-inner{width:min(100% - 28px,1400px)}#nostra-global-footer .ngf-main{padding:30px 0 22px;gap:16px}#nostra-global-footer .ngf-card{padding:21px;border-radius:22px}#nostra-global-footer .ngf-navigation{grid-template-columns:1fr;gap:27px}#nostra-global-footer .ngf-programs{grid-template-columns:1fr}#nostra-global-footer .ngf-title{font-size:23px}#nostra-global-footer .ngf-actions{grid-template-columns:1fr}#nostra-global-footer .ngf-bottom-inner{padding-bottom:100px}#nostra-global-footer .ngf-copy{white-space:normal}.ngf-scroll-top{right:13px;bottom:85px;width:52px;height:52px}.ngf-floating-wa{right:13px;bottom:14px;padding:10px 14px}.ngf-floating-wa small{display:none}.ngf-floating-wa strong{font-size:14px}}\
-      @media print{#nostra-global-footer,.ngf-scroll-top,.ngf-floating-wa,.nostra-floating-whatsapp,.scroll-top{display:none!important}}';
+      @media print{#nostra-global-footer,.ngf-scroll-top,.ngf-floating-wa,.nostra-floating-whatsapp,.float-wa,.scroll-top{display:none!important}}';
     document.head.appendChild(style);
   }
 
@@ -181,9 +181,18 @@
     });
   }
 
+  function removeLegacyFloatingControls() {
+    document.querySelectorAll('.nostra-floating-whatsapp,.float-wa,.scroll-top').forEach(function (node) {
+      if (node && !node.classList.contains('ngf-floating-wa') && !node.classList.contains('ngf-scroll-top')) {
+        node.remove();
+      }
+    });
+  }
+
   function ensureFooter() {
     addStyles();
     removeLegacyFooters();
+    removeLegacyFloatingControls();
 
     var existing = document.getElementById(FOOTER_ID);
     if (!existing) {
@@ -192,7 +201,7 @@
       document.body.appendChild(holder.firstElementChild);
     }
 
-    if (!document.querySelector('.scroll-top') && !document.querySelector('.ngf-scroll-top')) {
+    if (!document.querySelector('.ngf-scroll-top')) {
       var top = document.createElement('button');
       top.type = 'button';
       top.className = 'ngf-scroll-top';
@@ -204,7 +213,7 @@
       document.body.appendChild(top);
     }
 
-    if (!document.querySelector('.nostra-floating-whatsapp') && !document.querySelector('.ngf-floating-wa')) {
+    if (!document.querySelector('.ngf-floating-wa')) {
       var wa = document.createElement('a');
       wa.className = 'ngf-floating-wa';
       wa.href = WHATSAPP;
@@ -227,7 +236,10 @@
       mutations.forEach(function (mutation) {
         Array.prototype.forEach.call(mutation.addedNodes || [], function (node) {
           if (!node || node.nodeType !== 1) return;
-          if (node.matches && (node.matches('footer,.footer-wrapper') || node.querySelector('footer,.footer-wrapper'))) {
+          if (node.matches && (
+            node.matches('footer,.footer-wrapper,.nostra-floating-whatsapp,.float-wa,.scroll-top') ||
+            node.querySelector('footer,.footer-wrapper,.nostra-floating-whatsapp,.float-wa,.scroll-top')
+          )) {
             needsRepair = true;
           }
         });
