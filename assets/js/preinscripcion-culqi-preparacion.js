@@ -160,6 +160,8 @@
   }
   function ensureUi(form){
     addStyles();
+    var legacySummary = document.getElementById('selected-plan-summary');
+    if(legacySummary) legacySummary.remove();
     var plan = form.elements.plan;
     var planField = plan && plan.closest('.field');
     if(planField && !document.getElementById('nostra-purchase-summary')){
@@ -455,9 +457,12 @@
       refreshSummary(form);
     };
     attach();
-    var observer = new MutationObserver(function(){ window.setTimeout(attach,0); });
-    observer.observe(form,{childList:true,subtree:true});
-    window.setTimeout(function(){ observer.disconnect(); },15000);
+    var attempts = 0;
+    var timer = window.setInterval(function(){
+      attempts += 1;
+      attach();
+      if(form.elements.plan || attempts >= 20) window.clearInterval(timer);
+    },100);
   }
 
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded',start,{once:true});
