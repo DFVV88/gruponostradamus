@@ -3,6 +3,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const {
+  normalizePayload,
   webhookEventType,
   webhookEventId,
   webhookChargeId,
@@ -62,6 +63,14 @@ test('acepta el objeto charge directo que entrega Culqi Webhooks 2.0', () => {
   assert.equal(webhookEventId(directCulqiV2Payload), '');
   assert.equal(webhookChargeId(directCulqiV2Payload), 'chr_test_bh7cLg3qLnRx2hQO');
   assert.equal(classifyChargeEvent(webhookEventType(directCulqiV2Payload)), 'success');
+});
+
+test('acepta el body binario que Cloud Functions recibe de Culqi', () => {
+  const body = Buffer.from(JSON.stringify(directCulqiV2Payload), 'utf8');
+  assert.deepEqual(normalizePayload(body), directCulqiV2Payload);
+  assert.equal(webhookEventType(body), 'charge.creation.succeeded');
+  assert.equal(webhookChargeId(body), 'chr_test_bh7cLg3qLnRx2hQO');
+  assert.equal(webhookDocumentId(body), webhookDocumentId(directCulqiV2Payload));
 });
 
 test('infiere un charge directo fallido por el resultado de Culqi', () => {
