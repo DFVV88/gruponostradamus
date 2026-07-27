@@ -8,6 +8,7 @@ on:
     paths:
       - "assets/js/admin-tarifario-culqi.js"
       - "assets/js/preinscripcion-culqi-preparacion.js"
+      - "assets/js/preinscripcion-firebase.js"
       - "tools/apply_culqi_stage2.py"
       - ".github/workflows/apply-culqi-stage2.yml"
 
@@ -40,12 +41,12 @@ jobs:
       - name: Publicar integración
         shell: bash
         run: |
-          if git diff --quiet -- admin-preinscripciones.html preinscripcion.html assets/js/preinscripcion-culqi-preparacion.js; then
+          if git diff --quiet -- admin-preinscripciones.html preinscripcion.html assets/js/preinscripcion-culqi-preparacion.js assets/js/preinscripcion-firebase.js; then
             echo "La etapa 2 ya está integrada y corregida."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add admin-preinscripciones.html preinscripcion.html assets/js/preinscripcion-culqi-preparacion.js
-          git commit -m "Integrate and stabilize Culqi stage 2 [skip ci]"
+          git add admin-preinscripciones.html preinscripcion.html assets/js/preinscripcion-culqi-preparacion.js assets/js/preinscripcion-firebase.js
+          git commit -m "Align Culqi stage 2 with official tariff catalog [skip ci]"
           git push origin HEAD:main
