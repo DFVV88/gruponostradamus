@@ -54,6 +54,15 @@ function estadoBadge(value){
   if(value === 'pago_en_revision' || value === 'contactado') return badge(value,'orange');
   return badge(value || 'nuevo','');
 }
+function paymentAction(record){
+  const validated = record.pagoValidado === true || record.estadoPago === 'pago_validado';
+  if(validated){
+    return record.culqiChargeId
+      ? badge('Pago confirmado por Culqi','green')
+      : badge('Pago validado','green');
+  }
+  return `<button class="mini" data-pay="${esc(record.id)}">Validar pago</button>`;
+}
 function getAccountStatus(account){
   if(account.blocked === true || account.status === 'blocked') return 'blocked';
   if(account.status === 'active') return 'active';
@@ -245,13 +254,14 @@ function renderTable(){
       <td>${esc(r.metodoPagoLabel)}<br>${paymentBadge(r.estadoPago)}</td>
       <td>${estadoBadge(r.estado)}</td>
       <td>${esc(r.asesorAsignado) || '-'}</td>
-      <td><button class="mini" data-open="${r.id}">Ver ficha</button><button class="mini" data-pay="${r.id}">Validar pago</button></td>
+      <td><button class="mini" data-open="${r.id}">Ver ficha</button>${paymentAction(r)}</td>
     </tr>`).join('');
 }
 function detail(label, value){ return `<div class="detail"><b>${esc(label)}</b><span>${esc(value) || '-'}</span></div>`; }
 
 function openModal(id, mode='ficha'){
   const r = records.find(x => x.id === id); if(!r) return;
+  if(mode === 'pago' && (r.pagoValidado === true || r.estadoPago === 'pago_validado')) mode = 'ficha';
   currentId = id; currentMode = mode;
   els.modalTitle.textContent = mode === 'pago' ? 'Validar pago' : (r.nombre || 'Ficha');
   els.modalSubtitle.textContent = (mode === 'pago' ? 'Revisión de voucher / pago · ' : 'Código: ') + id;
