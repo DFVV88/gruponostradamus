@@ -1,7 +1,7 @@
 /* ==================================================
    Grupo Nostradamus - Experiencia de pago Culqi
    - Muestra una pantalla visible mientras se procesa el pago.
-   - Evita cierres o recargas accidentales durante la confirmación.
+   - Bloquea dobles intentos sin mostrar avisos confusos del navegador.
    - Explica el ocultamiento seguro de los datos de tarjeta.
    - Ofrece una guía en español durante el desafío 3DS del banco.
 ================================================== */
@@ -30,7 +30,7 @@
     style.id = 'nostra-payment-ux-style';
     style.textContent = '\
       body.nostra-payment-busy{overflow:hidden!important}\
-      .npu-overlay{position:fixed;inset:0;z-index:2147483000;display:none;align-items:center;justify-content:center;padding:22px;background:rgba(2,7,13,.91);backdrop-filter:blur(8px)}\
+      .npu-overlay{position:fixed;inset:0;z-index:2147483000;display:none;align-items:center;justify-content:center;padding:22px;background:rgba(2,7,13,.91);backdrop-filter:blur(8px);cursor:wait}\
       .npu-overlay.is-visible{display:flex}.npu-card{width:min(520px,100%);border:1px solid rgba(98,229,235,.28);border-radius:30px;padding:34px 28px;text-align:center;background:linear-gradient(160deg,#ffffff,#f0fbfc);box-shadow:0 32px 90px rgba(0,0,0,.45)}\
       .npu-logo{width:94px;max-height:58px;object-fit:contain;margin:0 auto 14px}.npu-spinner{width:62px;height:62px;margin:0 auto 21px;border:7px solid #d8f1f3;border-top-color:#078c95;border-right-color:#ff941e;border-radius:50%;animation:npu-spin .85s linear infinite}\
       .npu-eyebrow{display:block;margin-bottom:8px;color:#078c95;font:900 12px Jost,Arial,sans-serif;letter-spacing:.8px;text-transform:uppercase}.npu-title{margin:0;color:#061426;font:900 clamp(28px,6vw,40px)/1.05 "Baloo 2",Jost,Arial,sans-serif}.npu-detail{margin:14px auto 0;max-width:420px;color:#4b5d70;font:750 16px/1.55 Jost,Arial,sans-serif}\
@@ -54,7 +54,11 @@
       overlay.setAttribute('aria-modal','true');
       overlay.setAttribute('aria-live','assertive');
       overlay.setAttribute('aria-hidden','true');
-      overlay.innerHTML = '<div class="npu-card"><img class="npu-logo" src="assets/img/logo.png" alt="Grupo Nostradamus"><div class="npu-spinner" aria-hidden="true"></div><span class="npu-eyebrow">Pago seguro con Culqi</span><h2 class="npu-title" id="nostra-payment-title">Procesando tu pago</h2><p class="npu-detail" id="nostra-payment-detail">Estamos confirmando la operación de forma segura.</p><div class="npu-warning">No cierres esta ventana, no actualices la página y no pulses atrás. Evita intentar pagar nuevamente.</div><span class="npu-time" id="nostra-payment-time">Conectando de forma segura…</span></div>';
+      overlay.innerHTML = '<div class="npu-card"><img class="npu-logo" src="assets/img/logo.png" alt="Grupo Nostradamus"><div class="npu-spinner" aria-hidden="true"></div><span class="npu-eyebrow">Pago seguro con Culqi</span><h2 class="npu-title" id="nostra-payment-title">Procesando tu pago</h2><p class="npu-detail" id="nostra-payment-detail">Estamos confirmando la operación de forma segura.</p><div class="npu-warning">Mantén esta ventana abierta. No actualices la página, no pulses atrás y no intentes pagar nuevamente.</div><span class="npu-time" id="nostra-payment-time">Conectando de forma segura…</span></div>';
+      overlay.addEventListener('click',function(event){
+        event.preventDefault();
+        event.stopPropagation();
+      },true);
       document.body.appendChild(overlay);
     }
     if(!document.getElementById('nostra-card-security-tip')){
@@ -167,6 +171,12 @@
     if(guide) guide.classList.remove('is-visible');
   }
 
+  function finishPaymentUi(){
+    hideBusy();
+    hide3DSGuide();
+    hideCardTip();
+  }
+
   function syncFromMessage(){
     var box = document.getElementById('preinscripcion-message');
     if(!box) return;
@@ -175,8 +185,7 @@
     var isOk = box.classList.contains('ok');
 
     if(isError || text.indexOf('no se pudo') !== -1 || text.indexOf('pago rechazado') !== -1){
-      hideBusy();
-      hide3DSGuide();
+      finishPaymentUi();
       return;
     }
 
@@ -206,16 +215,12 @@
     }
 
     if(isOk && text.indexOf('preinscripcion registrada') !== -1){
-      hideBusy();
-      hide3DSGuide();
+      finishPaymentUi();
       showCardTip();
       return;
     }
 
-    if(isOk){
-      hideBusy();
-      hide3DSGuide();
-    }
+    if(isOk) finishPaymentUi();
   }
 
   function observeMessage(){
@@ -255,10 +260,27 @@
     },true);
   }
 
-  window.addEventListener('beforeunload',function(event){
-    if(!state.busy) return;
-    event.preventDefault();
-    event.returnValue = '';
+  /*
+   * No se usa beforeunload con preventDefault. De ese modo, la redirección
+   * automática a pago aprobado, rechazado o pendiente nunca muestra la pregunta
+   * "¿Quieres salir del sitio web?". La prevención de dobles pagos se mantiene
+   * mediante la capa visual que bloquea la interacción mientras Culqi responde.
+   */
+  window.NostraPaymentUX = {
+    showBusy:showBusy,
+    hideBusy:hideBusy,
+    show3DSGuide:show3DSGuide,
+    finish:finishPaymentUi,
+    isBusy:function(){ return state.busy; }
+  };
+
+  window.addEventListener('pagehide',function(){
+    state.busy = false;
+    stopTimer();
+  });
+
+  window.addEventListener('pageshow',function(event){
+    if(event.persisted) finishPaymentUi();
   });
 
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded',start,{once:true});
