@@ -21,11 +21,10 @@
     {id:'nostra-elite-uni',name:'Nostra Élite UNI'},
     {id:'nostra-prime-uni',name:'Nostra Prime UNI'},
     {id:'nostra-talentum-uni',name:'Nostra Talentum UNI'},
-    {id:'ciclo-ien',name:'Ciclo IEN'},
+    {id:'ciclo-ien',name:'IEN UNI'},
+    {id:'proyecto-escolar',name:'Proyecto Escolar'},
     {id:'paralelo-cepre-uni',name:'Paralelo CEPRE UNI'},
-    {id:'ciclo-verano-uni',name:'Ciclo Verano UNI'},
-    {id:'nostra-modulos',name:'NostraMÓDULOS'},
-    {id:'proyecto-escolar',name:'Proyecto Escolar'}
+    {id:'ciclo-verano-uni',name:'Ciclo Verano UNI'}
   ];
 
   var WHATSAPP_ASESOR = '51993750351';
