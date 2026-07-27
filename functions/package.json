@@ -1,14 +1,14 @@
 {
   "name": "nostra-culqi-functions",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "Backend seguro de Grupo Nostradamus para validar tarifarios y procesar pagos con Culqi.",
-  "main": "backend.js",
+  "description": "Backend seguro de Grupo Nostradamus para validar tarifarios, procesar pagos y conciliar eventos de Culqi.",
+  "main": "index.js",
   "engines": {
     "node": "20"
   },
   "scripts": {
-    "check": "node --check backend.js && node --check lib/common.js && node --check lib/pricing.js && node --check lib/culqi3ds.js && node --test test/*.test.js",
+    "check": "node --check index.js && node --check backend.js && node --check webhook.js && node --check lib/common.js && node --check lib/pricing.js && node --check lib/culqi3ds.js && node --check lib/culqi-webhook.js && node --test test/*.test.js",
     "serve": "firebase emulators:start --only functions",
     "deploy": "firebase deploy --only functions"
   },
