@@ -24,7 +24,7 @@
   var PUBLIC_CONFIG_URL = 'assets/js/culqi-public-config.js?v=2026-01';
   var CULQI_CHECKOUT_URL = 'https://js.culqi.com/checkout-js';
   var WHATSAPP_ASESOR = '51993750351';
-  var LEGAL_VERSION = '2026-07-27';
+  var LEGAL_VERSION = '2026-07-25';
   var INITIAL_TYPES = {
     matricula_y_primera_cuota:true,
     solo_matricula:true,
