@@ -1,0 +1,100 @@
+
+      && request.resource.data.apoderado.celular is string
+      && request.resource.data.apoderado.celular.size() <= 20
+
+      && (
+        (
+          request.resource.data.consumidor.menorEdad == true
+
+          && request.resource.data.apoderado.nombres.size() >= 5
+          && request.resource.data.apoderado.numeroDocumento.size() >= 6
+          && request.resource.data.apoderado.correo.size() >= 5
+          && request.resource.data.apoderado.celular.size() >= 9
+        )
+        ||
+        (
+          request.resource.data.consumidor.menorEdad == false
+
+          && request.resource.data.apoderado.nombres == ''
+          && request.resource.data.apoderado.numeroDocumento == ''
+          && request.resource.data.apoderado.correo == ''
+          && request.resource.data.apoderado.celular == ''
+        )
+      )
+
+      && request.resource.data.servicio is map
+      && request.resource.data.servicio.keys().hasOnly([
+        'tipo',
+        'nombre',
+        'fecha',
+        'monto',
+        'comprobante'
+      ])
+
+      && request.resource.data.servicio.tipo
+        == 'servicio educativo'
+
+      && request.resource.data.servicio.nombre is string
+      && request.resource.data.servicio.nombre.size() >= 3
+      && request.resource.data.servicio.nombre.size() <= 160
+
+      && request.resource.data.servicio.fecha is string
+      && request.resource.data.servicio.fecha.size() <= 10
+
+      && request.resource.data.servicio.monto is number
+      && request.resource.data.servicio.monto >= 0
+      && request.resource.data.servicio.monto <= 100000
+
+      && request.resource.data.servicio.comprobante is string
+      && request.resource.data.servicio.comprobante.size() <= 100
+
+      && request.resource.data.detalle is string
+      && request.resource.data.detalle.size() >= 20
+      && request.resource.data.detalle.size() <= 4000
+
+      && request.resource.data.pedido is string
+      && request.resource.data.pedido.size() >= 10
+      && request.resource.data.pedido.size() <= 2000
+
+      && request.resource.data.declaracionAceptada == true
+
+      && request.resource.data.estado == 'recibido'
+      && request.resource.data.estadoAtencion == 'pendiente'
+
+      && request.resource.data.respuestaAdministrativa is string
+      && request.resource.data.respuestaAdministrativa == ''
+
+      && request.resource.data.responsable is string
+      && request.resource.data.responsable == ''
+
+      && request.resource.data.notificacionPendiente == true
+      && request.resource.data.plazoMaximoDiasHabiles == 15
+
+      && request.resource.data.origen
+        == 'libro_reclamaciones_web'
+
+      && request.resource.data.versionFormato
+        == '2026-01'
+
+      && request.resource.data.pageUrl is string
+      && request.resource.data.pageUrl.size() <= 1000
+
+      && request.resource.data.userAgent is string
+      && request.resource.data.userAgent.size() <= 1000
+
+      && request.resource.data.createdAt == request.time
+      && request.resource.data.updatedAt == request.time;
+
+      /*
+       * Solo el administrador puede leer y actualizar
+       * los registros del Libro de Reclamaciones.
+       */
+      allow read, update: if isAdmin();
+
+      /*
+       * Los reclamos no se eliminan desde la web.
+       */
+      allow delete: if false;
+    }
+
+    /*
