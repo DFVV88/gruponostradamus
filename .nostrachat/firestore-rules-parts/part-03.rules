@@ -1,0 +1,100 @@
+        && d.tarifarioSnapshot.planNombre == d.planNombre
+        && d.tarifarioSnapshot.modalidad == d.modalidad
+        && d.tarifarioSnapshot.turno == d.turno
+        && d.tarifarioSnapshot.tipoCobro == d.tipoCobroReferencia
+        && d.tarifarioSnapshot.cobroInicial == d.cobroInicial
+        && d.tarifarioSnapshot.conceptoInicial == d.conceptoPagoInicial
+        && d.tarifarioSnapshot.precioAplicado == d.precioReferencia
+        && d.tarifarioSnapshot.matricula == d.matriculaReferencia
+        && d.tarifarioSnapshot.totalInicial == d.totalInicial
+        && d.tarifarioSnapshot.totalInicialCentimos
+          == d.montoPagoInicialCentimos
+        && d.tarifarioSnapshot.moneda == d.moneda
+        && d.tarifarioSnapshot.detallePagosPosteriores
+          == d.detallePagosPosteriores;
+    }
+
+    function validPreTechnicalData(d) {
+      return d.userAgent is string
+        && d.userAgent.size() <= 1000
+        && d.pageUrl is string
+        && d.pageUrl.size() <= 1000
+        && d.createdAt == request.time
+        && d.updatedAt == request.time;
+    }
+
+    /*
+     * PREINSCRIPCIONES
+     */
+    match /preinscripciones/{id} {
+
+      allow create: if hasAllowedPreinscripcionFields(
+          request.resource.data
+        )
+        && validPreApplicant(request.resource.data)
+        && validPreProgram(request.resource.data)
+        && validPreAmounts(request.resource.data)
+        && validPreInitialState(request.resource.data)
+        && validPreLegal(request.resource.data)
+        && validPreSnapshot(request.resource.data)
+        && validPreTechnicalData(request.resource.data);
+
+      allow read, update, delete: if isAdmin();
+    }
+
+    /*
+     * USUARIOS / NOSTRACUENTAS
+     */
+    match /users/{uid} {
+
+      allow read: if isAdmin()
+        || (
+          request.auth != null
+          && request.auth.uid == uid
+        );
+
+      allow create: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly([
+          'uid',
+          'username',
+          'usernameLower',
+          'authEmail',
+          'institutionalEmail',
+          'microsoftVerified',
+          'name',
+          'role',
+          'roleLabel',
+          'detail',
+          'status',
+          'blocked',
+          'createdAt'
+        ])
+
+        && request.resource.data.uid == uid
+
+        && request.resource.data.username is string
+        && request.resource.data.username.size() >= 5
+        && request.resource.data.username.size() <= 20
+
+        && request.resource.data.usernameLower
+          == request.resource.data.username
+
+        && request.resource.data.authEmail is string
+        && request.resource.data.authEmail.size() >= 10
+        && request.resource.data.authEmail.size() <= 100
+
+        && request.resource.data.institutionalEmail is string
+        && request.resource.data.institutionalEmail.matches(
+          '^[^@]+@gruponostradamus\\.edu\\.pe$'
+        )
+
+        && request.resource.data.microsoftVerified == true
+
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 5
+        && request.resource.data.name.size() <= 80
+
+        && request.resource.data.role
+          in ['student', 'teacher']
+
