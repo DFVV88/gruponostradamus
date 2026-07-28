@@ -1,0 +1,100 @@
+        'precioReferencia',
+        'matriculaReferencia',
+        'tipoCobroReferencia',
+        'cobroInicial',
+        'conceptoPagoInicial',
+        'totalInicial',
+        'montoPagoInicial',
+        'montoPagoInicialCentimos',
+        'moneda',
+        'detallePagosPosteriores',
+
+        'apoderado',
+        'celularApoderado',
+        'comentario',
+        'confirmacion',
+
+        'metodoPagoPreferido',
+        'metodoPagoLabel',
+        'estadoPago',
+        'pagoValidado',
+        'pagoObservacion',
+        'precioValidadoServidor',
+        'estadoPrecio',
+        'intentoPagoCreado',
+        'asesorAsignado',
+
+        'estado',
+        'origen',
+        'tipo',
+        'lineaAcademica',
+        'correoInstitucionalAsignado',
+        'matriculaAprobada',
+
+        'codigoSolicitud',
+        'aceptacionLegal',
+        'aceptaTerminos',
+        'aceptaCambiosDevoluciones',
+        'aceptaPrivacidad',
+        'aceptacionLegalVersion',
+        'tarifarioSnapshot',
+
+        'userAgent',
+        'pageUrl',
+        'createdAt',
+        'updatedAt'
+      ]);
+    }
+
+    function isOfficialProgramId(programId) {
+      return programId in [
+        'nostra-360-uni',
+        'nostra-power-uni',
+        'nostra-elite-uni',
+        'nostra-prime-uni',
+        'nostra-talentum-uni',
+        'ciclo-ien',
+        'proyecto-escolar',
+        'paralelo-cepre-uni',
+        'ciclo-verano-uni'
+      ];
+    }
+
+    function validPreApplicant(d) {
+      return d.nombre is string
+        && d.nombre.size() >= 5
+        && d.nombre.size() <= 100
+        && d.dni is string
+        && d.dni.size() >= 8
+        && d.dni.size() <= 12
+        && d.celular is string
+        && d.celular.size() >= 9
+        && d.celular.size() <= 20
+        && d.correo is string
+        && d.correo.size() >= 6
+        && d.correo.size() <= 100
+        && d.colegio is string
+        && d.colegio.size() <= 150
+        && d.situacion is string
+        && d.situacion.size() <= 80
+        && d.apoderado is string
+        && d.apoderado.size() <= 100
+        && d.celularApoderado is string
+        && d.celularApoderado.size() <= 20
+        && d.comentario is string
+        && d.comentario.size() <= 1000
+        && d.confirmacion is string
+        && d.confirmacion.size() >= 5
+        && d.confirmacion.size() <= 300;
+    }
+
+    function validPreProgram(d) {
+      return isOfficialProgramId(d.programaId)
+        && d.ciclo is string
+        && d.ciclo.size() >= 3
+        && d.ciclo.size() <= 100
+        && d.planId is string
+        && d.planId.size() >= 1
+        && d.planId.size() <= 80
+        && d.planNombre is string
+        && d.planNombre.size() >= 1
