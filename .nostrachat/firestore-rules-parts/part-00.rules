@@ -1,0 +1,100 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email == 'fernandodaniel8888@gmail.com';
+    }
+
+    function isOfficialRoom(roomId) {
+      return roomId in [
+        'alumnos-general',
+        'alumnos-matematica',
+        'alumnos-fisica',
+        'alumnos-quimica',
+        'alumnos-aptitud-academica',
+        'alumnos-humanidades',
+        'externos-general',
+        'externos-informes',
+        'externos-orientacion-uni'
+      ];
+    }
+
+    function isAlumnoRoom(roomId) {
+      return roomId in [
+        'alumnos-general',
+        'alumnos-matematica',
+        'alumnos-fisica',
+        'alumnos-quimica',
+        'alumnos-aptitud-academica',
+        'alumnos-humanidades'
+      ];
+    }
+
+    function isExternoRoom(roomId) {
+      return roomId in [
+        'externos-general',
+        'externos-informes',
+        'externos-orientacion-uni'
+      ];
+    }
+
+    function hasUserProfile() {
+      return request.auth != null
+        && exists(
+          /databases/$(database)/documents/users/$(request.auth.uid)
+        );
+    }
+
+    function isActiveUser() {
+      return hasUserProfile()
+        && get(
+          /databases/$(database)/documents/users/$(request.auth.uid)
+        ).data.status == 'active'
+        && get(
+          /databases/$(database)/documents/users/$(request.auth.uid)
+        ).data.blocked == false;
+    }
+
+    function canReadRoom(roomId) {
+      return isOfficialRoom(roomId)
+        && (
+          isExternoRoom(roomId)
+          || isAdmin()
+          || isActiveUser()
+        );
+    }
+
+    function canCreateInRoom(roomId) {
+      return isOfficialRoom(roomId)
+        && (
+          isExternoRoom(roomId)
+          || isAdmin()
+          || isActiveUser()
+        );
+    }
+
+    /*
+     * FUNCIONES DE VALIDACIÓN PARA PREINSCRIPCIONES
+     *
+     * Se dividen en funciones pequeñas para evitar el error:
+     * "Expression is too complex to evaluate safely".
+     */
+    function hasAllowedPreinscripcionFields(d) {
+      return d.keys().hasOnly([
+        'nombre',
+        'dni',
+        'celular',
+        'correo',
+        'colegio',
+        'situacion',
+
+        'programaId',
+        'ciclo',
+        'planId',
+        'planNombre',
+        'modalidad',
+        'turno',
+
