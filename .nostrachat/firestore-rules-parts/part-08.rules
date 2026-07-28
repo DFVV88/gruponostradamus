@@ -1,0 +1,7 @@
+     * TODO LO DEMÁS QUEDA BLOQUEADO
+     */
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
