@@ -8,6 +8,7 @@ on:
     paths:
       - "assets/js/nostrachat-v1.js"
       - "assets/js/nostrachat-blaze-optimized.js"
+      - "assets/js/nostrachat-damus-storage-bridge.js"
       - "assets/js/nostrachat-firebase-config.js"
       - "assets/js/nostrachat-admin.js"
       - "assets/js/nostrachat-admin-users.js"
