@@ -1,0 +1,100 @@
+        && d.planNombre.size() <= 100
+        && d.modalidad in [
+          'Presencial',
+          'Virtual',
+          'Mixta'
+        ]
+        && d.turno is string
+        && d.turno.size() >= 1
+        && d.turno.size() <= 80;
+    }
+
+    function validPreAmounts(d) {
+      return d.precioReferencia is number
+        && d.precioReferencia > 0
+        && d.precioReferencia <= 100000
+        && d.matriculaReferencia is number
+        && d.matriculaReferencia >= 0
+        && d.matriculaReferencia <= 100000
+        && d.tipoCobroReferencia in [
+          'mensual',
+          'unico'
+        ]
+        && d.cobroInicial in [
+          'matricula_y_primera_cuota',
+          'solo_matricula',
+          'primera_cuota',
+          'pago_total'
+        ]
+        && d.conceptoPagoInicial is string
+        && d.conceptoPagoInicial.size() >= 3
+        && d.conceptoPagoInicial.size() <= 100
+        && d.totalInicial is number
+        && d.totalInicial > 0
+        && d.totalInicial <= 100000
+        && d.montoPagoInicial is number
+        && d.montoPagoInicial == d.totalInicial
+        && d.montoPagoInicialCentimos is int
+        && d.montoPagoInicialCentimos > 0
+        && d.montoPagoInicialCentimos <= 10000000
+        && d.moneda == 'PEN'
+        && d.detallePagosPosteriores is string
+        && d.detallePagosPosteriores.size() >= 3
+        && d.detallePagosPosteriores.size() <= 500;
+    }
+
+    function validPrePaymentMethod(d) {
+      return (
+          d.metodoPagoPreferido == 'voucher_whatsapp'
+          && d.metodoPagoLabel == 'Voucher por WhatsApp'
+          && d.estadoPago == 'pendiente_envio_voucher'
+        )
+        || (
+          d.metodoPagoPreferido == 'pago_online'
+          && d.metodoPagoLabel == 'Pago en línea'
+          && d.estadoPago == 'pendiente_pago_online'
+        );
+    }
+
+    function validPreInitialState(d) {
+      return validPrePaymentMethod(d)
+        && d.pagoValidado == false
+        && d.pagoObservacion is string
+        && d.pagoObservacion == ''
+        && d.precioValidadoServidor == false
+        && d.estadoPrecio == 'pendiente_validacion_servidor'
+        && d.intentoPagoCreado == false
+        && d.asesorAsignado is string
+        && d.asesorAsignado == ''
+        && d.estado == 'nuevo'
+        && d.origen == 'web_preinscripcion'
+        && d.tipo == 'preinscripcion_inicial'
+        && d.lineaAcademica == 'Nostra UNI Premium'
+        && d.correoInstitucionalAsignado == false
+        && d.matriculaAprobada == false;
+    }
+
+    function validPreLegal(d) {
+      return d.codigoSolicitud is string
+        && d.codigoSolicitud.matches(
+          '^PRE-[0-9]{4}-[A-Z0-9]{8}$'
+        )
+        && d.aceptacionLegal is map
+        && d.aceptacionLegal.terminos == true
+        && d.aceptacionLegal.cambiosDevoluciones == true
+        && d.aceptacionLegal.privacidad == true
+        && d.aceptacionLegal.version == '2026-07-25'
+        && d.aceptacionLegal.fechaCliente is string
+        && d.aceptacionLegal.fechaCliente.size() >= 20
+        && d.aceptacionLegal.fechaCliente.size() <= 40
+        && d.aceptaTerminos == true
+        && d.aceptaCambiosDevoluciones == true
+        && d.aceptaPrivacidad == true
+        && d.aceptacionLegalVersion == '2026-07-25';
+    }
+
+    function validPreSnapshot(d) {
+      return d.tarifarioSnapshot is map
+        && d.tarifarioSnapshot.programaId == d.programaId
+        && d.tarifarioSnapshot.programaNombre == d.ciclo
+        && d.tarifarioSnapshot.planId == d.planId
