@@ -1,0 +1,21 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /nostrachat/{roomId}/{month}/{owner}/{fileName} {
+      allow read: if request.auth != null;
+
+      allow create: if request.auth != null
+                    && request.auth.uid == owner
+                    && request.resource.size < 150 * 1024
+                    && request.resource.contentType.matches('image/(jpeg|png|webp)');
+
+      allow update: if false;
+      allow delete: if request.auth != null && request.auth.uid == owner;
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
