@@ -12,21 +12,19 @@ window.NOSTRACHAT_FIREBASE_CONFIG = {
 };
 window.NOSTRA_MICROSOFT_TENANT_ID = "23b6326f-b776-4ffd-8b1d-cd9d10e38d84";
 window.NOSTRA_DAMUS_VISION_ENDPOINT = "https://script.google.com/macros/s/AKfycbxlmtgspmeFMOqyWnHpbcHIOvpU6Ihr9c_NxtV9e4E89aa9SdwV4H6G9rBVuItVRQPhpw/exec";
+window.NOSTRACHAT_BLAZE_OPTIMIZED = true;
 (function(){
   var ADSENSE_CLIENT='ca-pub-9810053992087127';
   function loadScript(src){if(document.querySelector('script[src="'+src+'"]')) return; var script=document.createElement('script'); script.src=src; script.defer=true; document.head.appendChild(script);}
   function loadAdSense(){if(document.querySelector('script[src*="pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]')) return; var script=document.createElement('script'); script.async=true; script.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client='+ADSENSE_CLIENT; script.crossOrigin='anonymous'; document.head.appendChild(script);}
   var path=(window.location.pathname||'').toLowerCase();
-  var version='v=2026-64-cuenta-router';
+  var version='v=2026-92-blaze-optimized';
   if(path.indexOf('nostrachat.html')!==-1||path.endsWith('/nostrachat')){
     loadAdSense();
     loadScript('assets/js/nostrachat-mobile-polish.js?'+version);
     loadScript('assets/js/nostrachat-auth-users-v2.js?'+version);
-    loadScript('assets/js/nostrachat-images-firestore.js?'+version);
-    loadScript('assets/js/nostrachat-images-help.js?'+version);
-    loadScript('assets/js/nostrachat-damus-vision.js?'+version);
+    loadScript('assets/js/nostrachat-blaze-optimized.js?'+version);
     loadScript('assets/js/nostrachat-damus-beta-label.js?'+version);
-    loadScript('assets/js/nostrachat-online-users.js?'+version);
     loadScript('assets/js/nostra-cuenta-router.js?'+version);
   }
   if(path.indexOf('nostrachat-admin.html')!==-1||path.endsWith('/nostrachat-admin')){
