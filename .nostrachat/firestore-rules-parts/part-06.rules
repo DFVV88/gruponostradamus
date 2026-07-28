@@ -1,0 +1,100 @@
+    /*
+     * LIBRO DE RECLAMACIONES
+     */
+    match /libro_reclamaciones/{reclamoId} {
+
+      /*
+       * El formulario público puede crear una hoja.
+       * No se permite lectura pública de reclamos.
+       */
+      allow create: if request.resource.data.keys().hasOnly([
+        'codigo',
+        'tipo',
+        'consumidor',
+        'apoderado',
+        'servicio',
+        'detalle',
+        'pedido',
+        'declaracionAceptada',
+        'estado',
+        'estadoAtencion',
+        'respuestaAdministrativa',
+        'responsable',
+        'notificacionPendiente',
+        'plazoMaximoDiasHabiles',
+        'origen',
+        'versionFormato',
+        'pageUrl',
+        'userAgent',
+        'createdAt',
+        'updatedAt'
+      ])
+
+      && request.resource.data.codigo is string
+      && request.resource.data.codigo.matches(
+        '^LR-[0-9]{4}-[A-Z0-9]{8}$'
+      )
+
+      && request.resource.data.tipo
+        in ['reclamo', 'queja']
+
+      && request.resource.data.consumidor is map
+      && request.resource.data.consumidor.keys().hasOnly([
+        'nombres',
+        'tipoDocumento',
+        'numeroDocumento',
+        'correo',
+        'celular',
+        'direccion',
+        'distrito',
+        'ubicacion',
+        'menorEdad'
+      ])
+
+      && request.resource.data.consumidor.nombres is string
+      && request.resource.data.consumidor.nombres.size() >= 5
+      && request.resource.data.consumidor.nombres.size() <= 120
+
+      && request.resource.data.consumidor.tipoDocumento
+        in ['DNI', 'CE', 'Pasaporte', 'Otro']
+
+      && request.resource.data.consumidor.numeroDocumento is string
+      && request.resource.data.consumidor.numeroDocumento.size() >= 6
+      && request.resource.data.consumidor.numeroDocumento.size() <= 20
+
+      && request.resource.data.consumidor.correo is string
+      && request.resource.data.consumidor.correo.size() >= 5
+      && request.resource.data.consumidor.correo.size() <= 120
+
+      && request.resource.data.consumidor.celular is string
+      && request.resource.data.consumidor.celular.size() >= 9
+      && request.resource.data.consumidor.celular.size() <= 20
+
+      && request.resource.data.consumidor.direccion is string
+      && request.resource.data.consumidor.direccion.size() >= 5
+      && request.resource.data.consumidor.direccion.size() <= 180
+
+      && request.resource.data.consumidor.distrito is string
+      && request.resource.data.consumidor.distrito.size() <= 80
+
+      && request.resource.data.consumidor.ubicacion is string
+      && request.resource.data.consumidor.ubicacion.size() <= 120
+
+      && request.resource.data.consumidor.menorEdad is bool
+
+      && request.resource.data.apoderado is map
+      && request.resource.data.apoderado.keys().hasOnly([
+        'nombres',
+        'numeroDocumento',
+        'correo',
+        'celular'
+      ])
+
+      && request.resource.data.apoderado.nombres is string
+      && request.resource.data.apoderado.nombres.size() <= 120
+
+      && request.resource.data.apoderado.numeroDocumento is string
+      && request.resource.data.apoderado.numeroDocumento.size() <= 20
+
+      && request.resource.data.apoderado.correo is string
+      && request.resource.data.apoderado.correo.size() <= 120
