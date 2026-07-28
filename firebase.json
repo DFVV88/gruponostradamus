@@ -9,5 +9,11 @@
       "firebase-debug.*.log",
       ".secret.local"
     ]
+  },
+  "firestore": {
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
   }
 }
