@@ -8,7 +8,7 @@
     "node": "20"
   },
   "scripts": {
-    "check": "node --check index.js && node --check backend.js && node --check webhook.js && node --check lib/common.js && node --check lib/pricing.js && node --check lib/culqi3ds.js && node --check lib/culqi-webhook.js && node --test test/*.test.js",
+    "check": "node --check index.js && node --check backend.js && node --check webhook.js && node --check lib/common.js && node --check lib/pricing.js && node --check lib/culqi3ds.js && node --check lib/culqi-webhook.js && node --check scripts/nostrachat-retention-backfill.js && node --test test/*.test.js",
     "serve": "firebase emulators:start --only functions",
     "deploy": "firebase deploy --only functions"
   },
