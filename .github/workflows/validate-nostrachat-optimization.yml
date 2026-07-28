@@ -8,6 +8,7 @@ on:
     paths:
       - "assets/js/nostrachat-v1.js"
       - "assets/js/nostrachat-blaze-optimized.js"
+      - "assets/js/nostrachat-damus-storage-bridge.js"
       - "assets/js/nostrachat-firebase-config.js"
       - "assets/js/nostrachat-admin.js"
       - "assets/js/nostrachat-admin-users.js"
@@ -46,6 +47,7 @@ jobs:
         run: |
           node --check assets/js/nostrachat-v1.js
           node --check assets/js/nostrachat-blaze-optimized.js
+          node --check assets/js/nostrachat-damus-storage-bridge.js
           node --check assets/js/nostrachat-firebase-config.js
           node --check assets/js/nostrachat-admin.js
           node --check assets/js/nostrachat-admin-users.js
@@ -77,6 +79,7 @@ jobs:
 
           - sintaxis del núcleo NostraCHAT;
           - sintaxis del módulo optimizado Blaze;
+          - sintaxis del puente DAMUS para Firebase Storage;
           - sintaxis del panel administrativo;
           - sintaxis del limpiador de historial;
           - JSON de Firebase, TTL y ciclo de vida;
