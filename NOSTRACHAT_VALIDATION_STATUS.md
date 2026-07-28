@@ -2,7 +2,7 @@
 
 Estado: APROBADO
 
-Commit validado: df1ac7f0039756b4cb128851e4e6308521ad3c11
+Commit validado: 0efd849f47dae6e822b1bb6154efe2dabaebdf6d
 
 Validaciones ejecutadas:
 
