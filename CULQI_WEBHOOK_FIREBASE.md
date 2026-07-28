@@ -2,6 +2,14 @@
 
 Esta etapa agrega la función HTTP `culqiWebhook` para conciliar cargos de Culqi con las preinscripciones guardadas en Firestore.
 
+## Estado actual
+
+- Webhook de cargo aprobado probado desde CulqiPanel.
+- Respuesta confirmada: `200 OK`.
+- Formato real de Culqi Webhooks 2.0 soportado.
+- Entregas repetidas procesadas de manera idempotente.
+- Flujo de cargo rechazado implementado y cubierto por pruebas automáticas.
+
 ## Qué resuelve
 
 - Confirma pagos aunque el alumno cierre la página después del cargo.
@@ -9,15 +17,25 @@ Esta etapa agrega la función HTTP `culqiWebhook` para conciliar cargos de Culqi
 - Nunca reduce un pago ya aprobado a rechazado por un evento posterior.
 - Comprueba preinscripción, intento, código, monto, moneda y entorno.
 - Guarda un registro mínimo de auditoría en `culqi_webhook_eventos`.
-- No almacena número completo de tarjeta, CVV, token ni payload completo.
+- No almacena número completo de tarjeta, CVV, token, IP, huella ni payload completo.
+
+## Formatos aceptados
+
+El endpoint acepta:
+
+- cargo directo de Culqi;
+- evento envuelto con `id`, `type`, `creation_date` y `data`;
+- `data` como objeto JSON;
+- `data` como texto JSON serializado;
+- nombres camelCase y snake_case usados por distintas respuestas de Culqi.
 
 ## Verificación de seguridad
 
-La documentación pública de Culqi explica cómo registrar webhooks y seleccionar eventos, pero no documenta actualmente una firma criptográfica para validar cada entrega.
+El endpoint no confía en el contenido recibido. Extrae únicamente el identificador del cargo y vuelve a consultar:
 
-Por ese motivo, el endpoint no confía en el contenido recibido. Extrae únicamente el identificador del cargo y vuelve a consultar:
-
-`GET https://api.culqi.com/v2/charges/{id}`
+```text
+GET https://api.culqi.com/v2/charges/{id}
+```
 
 La consulta se autentica con `CULQI_SECRET_KEY` desde Firebase Secret Manager. Solo después de recibir el cargo oficial desde la API de Culqi se validan:
 
@@ -46,9 +64,9 @@ firebase use nostrachat-grupo-nostradamus
 firebase deploy --only functions:culqiWebhook
 ```
 
-No es necesario volver a ingresar la llave privada de Culqi. La función utiliza el secreto `CULQI_SECRET_KEY` que ya está configurado.
+No es necesario volver a ingresar la llave privada de Culqi mientras se mantenga el mismo entorno. La función utiliza el secreto `CULQI_SECRET_KEY` configurado en Firebase Secret Manager.
 
-URL esperada:
+URL:
 
 ```text
 https://us-central1-nostrachat-grupo-nostradamus.cloudfunctions.net/culqiWebhook
@@ -56,16 +74,14 @@ https://us-central1-nostrachat-grupo-nostradamus.cloudfunctions.net/culqiWebhook
 
 ## Configuración en CulqiPanel de pruebas
 
-1. Entrar al panel de pruebas.
-2. Abrir `Eventos` y luego `Webhooks`.
-3. Crear un webhook para eventos de `Cargos`.
-4. Pegar la URL de `culqiWebhook`.
-5. Seleccionar, cuando estén disponibles, los eventos de cargo exitoso y cargo fallido, por ejemplo:
-   - `charge.creation.succeeded`
-   - `charge.failed`
-6. Guardar.
+Registrar dos webhooks para el producto `CulqiOnline`, recurso `charge` y acción `creation`:
 
-Los nombres visibles pueden variar ligeramente en CulqiPanel. Debe elegirse la categoría Cargos y no Órdenes mientras solo se procesen tarjetas y Yape mediante cargos únicos.
+```text
+charge.creation.succeeded
+charge.creation.failed
+```
+
+Ambos usan la misma URL de Firebase.
 
 ## Respuestas del endpoint
 
@@ -75,7 +91,7 @@ Los nombres visibles pueden variar ligeramente en CulqiPanel. Debe elegirse la c
 - `405`: método diferente de POST.
 - `413`: cuerpo demasiado grande.
 - `422`: el cargo no contiene la metadata creada por NOSTRA.
-- `503`: la API de Culqi no estuvo disponible; permite que la entrega sea reintentada.
+- `503`: la API de Culqi no estuvo disponible; permite que Culqi reintente la entrega.
 
 ## Colección de auditoría
 
@@ -87,13 +103,53 @@ culqi_webhook_eventos/{sha256}
 
 La clave determinística evita procesar dos veces la misma entrega. La colección queda cerrada al navegador por las reglas generales de Firestore; Cloud Functions usa Admin SDK.
 
-## Prueba recomendada
+## Prueba de cargo aprobado completada
 
-1. Registrar el webhook en el panel de pruebas.
-2. Crear una nueva preinscripción con pago en línea.
-3. Completar un pago de prueba normal o 3DS.
-4. Confirmar en el panel administrativo:
-   - `Pago validado`;
-   - `listo_para_matricula`;
-   - `confirmadoPorWebhook: true` después de recibir el evento.
-5. Revisar que exista un documento en `culqi_webhook_eventos` con `verifiedByCulqiApi: true`.
+Se verificó:
+
+```text
+charge.creation.succeeded
+200 OK
+```
+
+Resultado administrativo esperado:
+
+```text
+estadoPago: pago_validado
+pagoValidado: true
+matriculaAprobada: true
+estado: listo_para_matricula
+confirmadoPorWebhook: true
+```
+
+## Prueba de cargo rechazado
+
+Crear una preinscripción nueva y usar una tarjeta de integración destinada a producir rechazo. El resultado esperado es:
+
+```text
+charge.creation.failed
+200 OK
+```
+
+Estado administrativo esperado:
+
+```text
+estadoPago: pago_rechazado
+pagoValidado: false
+matriculaAprobada: false
+confirmadoPorWebhook: true
+```
+
+Si el pago ya estaba aprobado, el webhook no lo degrada y registra:
+
+```text
+resultado: fallo_ignorado_pago_ya_aprobado
+```
+
+## Paso a producción
+
+La secuencia completa de activación, prueba real y reversión está documentada en:
+
+```text
+CULQI_PAGO_RECHAZADO_Y_PRODUCCION.md
+```
