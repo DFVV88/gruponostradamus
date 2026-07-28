@@ -1,0 +1,49 @@
+name: Ensamblar reglas Firestore
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".nostrachat/firestore-rules-parts/**"
+      - "scripts/build-firestore-rules.sh"
+      - ".github/workflows/assemble-firestore-rules.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: assemble-firestore-rules
+  cancel-in-progress: true
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Ensamblar archivo
+        run: bash scripts/build-firestore-rules.sh
+
+      - name: Verificar estructura básica
+        run: |
+          grep -q "rules_version = '2'" firestore.rules
+          grep -q "match /rooms/{roomId}/messages/{messageId}" firestore.rules
+          grep -q "'imageUrl'" firestore.rules
+          grep -q "'expiresAt'" firestore.rules
+
+      - name: Guardar archivo ensamblado
+        run: |
+          if git diff --quiet -- firestore.rules && git ls-files --error-unmatch firestore.rules >/dev/null 2>&1; then
+            echo "firestore.rules ya está actualizado."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add firestore.rules
+          git commit -m "Genera firestore.rules para optimización NostraCHAT [skip ci]"
+          git push
