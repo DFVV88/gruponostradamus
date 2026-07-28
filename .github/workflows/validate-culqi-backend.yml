@@ -1,4 +1,4 @@
-name: Validar integración Culqi
+name: Validar integración Culqi y NostraCHAT
 
 on:
   workflow_dispatch:
@@ -8,6 +8,9 @@ on:
     paths:
       - "functions/**"
       - "firebase.json"
+      - "firestore.indexes.json"
+      - "storage.rules"
+      - "nostrachat-storage-lifecycle.json"
       - ".firebaserc"
       - "preinscripcion.html"
       - "pago-exitoso.html"
@@ -17,13 +20,19 @@ on:
       - "assets/js/preinscripcion-pago-ux.js"
       - "assets/js/pago-culqi-resultado.js"
       - "assets/js/culqi-public-config.js"
+      - "assets/js/nostrachat-v1.js"
+      - "assets/js/nostrachat-blaze-optimized.js"
+      - "assets/js/nostrachat-firebase-config.js"
+      - "assets/js/nostrachat-admin.js"
+      - "assets/js/nostrachat-admin-users.js"
+      - "assets/js/nostrachat-admin-images.js"
       - ".github/workflows/validate-culqi-backend.yml"
 
 permissions:
   contents: read
 
 concurrency:
-  group: validate-culqi-${{ github.ref }}
+  group: validate-nostra-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -43,16 +52,28 @@ jobs:
         working-directory: functions
         run: npm install --no-audit --no-fund
 
-      - name: Verificar backend y pruebas de precios
+      - name: Verificar backend y pruebas
         working-directory: functions
         run: npm run check
 
-      - name: Verificar JavaScript del checkout
+      - name: Verificar JavaScript público
         run: |
           node --check assets/js/preinscripcion-culqi-preparacion.js
           node --check assets/js/preinscripcion-pago-ux.js
           node --check assets/js/pago-culqi-resultado.js
           node --check assets/js/culqi-public-config.js
+          node --check assets/js/nostrachat-v1.js
+          node --check assets/js/nostrachat-blaze-optimized.js
+          node --check assets/js/nostrachat-firebase-config.js
+          node --check assets/js/nostrachat-admin.js
+          node --check assets/js/nostrachat-admin-users.js
+          node --check assets/js/nostrachat-admin-images.js
+
+      - name: Validar archivos JSON
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('firebase.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('firestore.indexes.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('nostrachat-storage-lifecycle.json','utf8'))"
 
       - name: Impedir llaves privadas en archivos públicos
         run: |
