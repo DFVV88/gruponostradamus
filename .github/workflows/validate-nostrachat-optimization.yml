@@ -1,0 +1,93 @@
+name: Validar optimización NostraCHAT
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "assets/js/nostrachat-v1.js"
+      - "assets/js/nostrachat-blaze-optimized.js"
+      - "assets/js/nostrachat-firebase-config.js"
+      - "assets/js/nostrachat-admin.js"
+      - "assets/js/nostrachat-admin-users.js"
+      - "assets/js/nostrachat-admin-images.js"
+      - "functions/scripts/nostrachat-retention-backfill.js"
+      - "functions/package.json"
+      - "firebase.json"
+      - "firestore.rules"
+      - "firestore.indexes.json"
+      - "storage.rules"
+      - "nostrachat-storage-lifecycle.json"
+      - ".github/workflows/validate-nostrachat-optimization.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: validate-nostrachat-optimization
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Verificar JavaScript de NostraCHAT
+        run: |
+          node --check assets/js/nostrachat-v1.js
+          node --check assets/js/nostrachat-blaze-optimized.js
+          node --check assets/js/nostrachat-firebase-config.js
+          node --check assets/js/nostrachat-admin.js
+          node --check assets/js/nostrachat-admin-users.js
+          node --check assets/js/nostrachat-admin-images.js
+          node --check functions/scripts/nostrachat-retention-backfill.js
+
+      - name: Validar JSON
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('firebase.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('firestore.indexes.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('nostrachat-storage-lifecycle.json','utf8'))"
+
+      - name: Instalar y probar backend
+        working-directory: functions
+        run: |
+          npm install --no-audit --no-fund
+          npm run check
+
+      - name: Registrar validación exitosa
+        run: |
+          cat > NOSTRACHAT_VALIDATION_STATUS.md <<EOF
+          # Validación NostraCHAT
+
+          Estado: APROBADO
+
+          Commit validado: $GITHUB_SHA
+
+          Validaciones ejecutadas:
+
+          - sintaxis del núcleo NostraCHAT;
+          - sintaxis del módulo optimizado Blaze;
+          - sintaxis del panel administrativo;
+          - sintaxis del limpiador de historial;
+          - JSON de Firebase, TTL y ciclo de vida;
+          - pruebas completas del backend Culqi.
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add NOSTRACHAT_VALIDATION_STATUS.md
+          if git diff --cached --quiet; then
+            echo "El estado ya estaba actualizado."
+            exit 0
+          fi
+          git commit -m "Registra validación exitosa de NostraCHAT [skip ci]"
+          git push
