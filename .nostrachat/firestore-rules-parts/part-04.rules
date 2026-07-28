@@ -1,0 +1,100 @@
+        && request.resource.data.roleLabel
+          in ['Alumno', 'Docente']
+
+        && request.resource.data.detail is string
+        && request.resource.data.detail.size() >= 3
+        && request.resource.data.detail.size() <= 80
+
+        && request.resource.data.status == 'pending'
+        && request.resource.data.blocked == false
+        && request.resource.data.createdAt == request.time;
+
+      allow update, delete: if isAdmin();
+    }
+
+    /*
+     * NOMBRES DE USUARIO
+     */
+    match /usernames/{username} {
+
+      allow read: if true;
+
+      allow create: if request.auth != null
+        && !exists(
+          /databases/$(database)/documents/usernames/$(username)
+        )
+        && request.resource.data.keys().hasOnly([
+          'uid',
+          'institutionalEmail',
+          'createdAt'
+        ])
+
+        && request.resource.data.uid == request.auth.uid
+
+        && request.resource.data.institutionalEmail is string
+        && request.resource.data.institutionalEmail.matches(
+          '^[^@]+@gruponostradamus\\.edu\\.pe$'
+        )
+
+        && request.resource.data.createdAt == request.time;
+
+      allow update, delete: if isAdmin();
+    }
+
+    /*
+     * MENSAJES DE NOSTRACHAT
+     */
+    match /rooms/{roomId}/messages/{messageId} {
+
+      allow read: if canReadRoom(roomId);
+
+      allow create: if canCreateInRoom(roomId)
+        && request.resource.data.keys().hasOnly([
+          'text',
+          'name',
+          'extra',
+          'zone',
+          'roomId',
+          'roomLabel',
+          'sessionId',
+          'type',
+          'moderationStatus',
+          'createdAt',
+
+          'hasImage',
+          'imageData',
+          'imageMime',
+          'imageWidth',
+          'imageHeight',
+          'imageSizeBytes',
+          'imageOriginalName',
+          'imageUrl',
+          'imagePath',
+
+          'damusVision',
+          'sourceMessageId',
+          'requestedBy',
+
+          'pinned',
+          'expiresAt'
+        ])
+
+        && request.resource.data.text is string
+        && request.resource.data.text.size() > 0
+        && request.resource.data.text.size() <= 6000
+
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 3
+        && request.resource.data.name.size() <= 60
+
+        && request.resource.data.extra is string
+        && request.resource.data.extra.size() >= 3
+        && request.resource.data.extra.size() <= 150
+
+        && request.resource.data.roomId == roomId
+
+        && request.resource.data.roomLabel is string
+        && request.resource.data.roomLabel.size() >= 3
+        && request.resource.data.roomLabel.size() <= 40
+
+        && (
