@@ -1,0 +1,47 @@
+name: Actualizar caché NostraCHAT
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "assets/js/nostrachat-v1.js"
+      - "assets/js/nostrachat-blaze-optimized.js"
+      - "assets/js/nostrachat-firebase-config.js"
+      - "assets/js/nostrachat-admin.js"
+      - "assets/js/nostrachat-admin-users.js"
+      - "assets/js/nostrachat-admin-images.js"
+      - "scripts/update-nostrachat-cache-busters.sh"
+      - ".github/workflows/update-nostrachat-cache.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-nostrachat-cache
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Actualizar versiones
+        run: bash scripts/update-nostrachat-cache-busters.sh
+
+      - name: Guardar cambios
+        run: |
+          if git diff --quiet -- nostrachat.html nostrachat-admin.html; then
+            echo "Las versiones de caché ya están actualizadas."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add nostrachat.html nostrachat-admin.html
+          git commit -m "Actualiza caché de NostraCHAT optimizado [skip ci]"
+          git push
