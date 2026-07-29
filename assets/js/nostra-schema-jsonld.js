@@ -30,7 +30,7 @@
     email: 'informes@gruponostradamus.edu.pe',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Av. Gerardo Unger 193',
+      streetAddress: 'Av. Gerardo Unger 239',
       addressLocality: 'San Martín de Porres',
       addressRegion: 'Lima',
       addressCountry: 'PE'
@@ -162,7 +162,7 @@
       telephone: '+51 993 750 351',
       address: {
         '@type': 'PostalAddress',
-        streetAddress: 'Av. Gerardo Unger 193',
+        streetAddress: 'Av. Gerardo Unger 239',
         addressLocality: 'San Martín de Porres',
         addressRegion: 'Lima',
         addressCountry: 'PE'
