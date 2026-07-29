@@ -389,7 +389,7 @@
               '<p class="nfh-contact-intro">Conoce el programa adecuado y asegura tu vacante para iniciar tu preparación.</p>' +
             '</div>' +
             '<div class="nfh-contact-list">' +
-              '<div class="nfh-contact-item"><span class="nfh-contact-icon"><i class="fas fa-location-dot"></i></span><a href="https://maps.app.goo.gl/XUF3vLuP6svEMZzj7" target="_blank" rel="noopener noreferrer">Gerardo Unger 239, Lima 15102</a></div>' +
+              '<div class="nfh-contact-item"><span class="nfh-contact-icon"><i class="fas fa-location-dot"></i></span><a href="https://www.google.com/maps/search/?api=1&query=Av.%20Gerardo%20Unger%20239%2C%20San%20Mart%C3%ADn%20de%20Porres%2C%20Lima" target="_blank" rel="noopener noreferrer">Gerardo Unger 239, Lima 15102</a></div>' +
               '<div class="nfh-contact-item"><span class="nfh-contact-icon"><i class="fas fa-envelope"></i></span><a href="mailto:informes@gruponostradamus.edu.pe">informes@gruponostradamus.edu.pe</a></div>' +
               '<div class="nfh-contact-item"><span class="nfh-contact-icon"><i class="fas fa-phone"></i></span><a href="https://wa.me/51993750351?text=Hola%20Nostradamus,%20quiero%20informes%20sobre%20los%20ciclos%20UNI." target="_blank" rel="noopener noreferrer">+51 993 750 351</a></div>' +
             '</div>' +

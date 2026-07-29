@@ -139,7 +139,7 @@
                 '<p class="ngf-contact-intro">Conoce el programa adecuado y asegura tu vacante para iniciar tu preparación.</p>' +
               '</div>' +
               '<div class="ngf-contact-list">' +
-                '<div class="ngf-contact-item"><span class="ngf-contact-icon">' + svgIcon('pin') + '</span><a href="https://maps.app.goo.gl/XUF3vLuP6svEMZzj7" target="_blank" rel="noopener noreferrer">Gerardo Unger 239, Lima 15102</a></div>' +
+                '<div class="ngf-contact-item"><span class="ngf-contact-icon">' + svgIcon('pin') + '</span><a href="https://www.google.com/maps/search/?api=1&query=Av.%20Gerardo%20Unger%20239%2C%20San%20Mart%C3%ADn%20de%20Porres%2C%20Lima" target="_blank" rel="noopener noreferrer">Gerardo Unger 239, Lima 15102</a></div>' +
                 '<div class="ngf-contact-item"><span class="ngf-contact-icon">' + svgIcon('mail') + '</span><a href="mailto:informes@gruponostradamus.edu.pe">informes@gruponostradamus.edu.pe</a></div>' +
                 '<div class="ngf-contact-item"><span class="ngf-contact-icon">' + svgIcon('phone') + '</span><a href="' + WHATSAPP + '" target="_blank" rel="noopener noreferrer">+51 993 750 351</a></div>' +
               '</div>' +

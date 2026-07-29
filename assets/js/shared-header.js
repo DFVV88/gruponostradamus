@@ -363,7 +363,7 @@
             <div class="nostra-info-left">
               <a class="nostra-info-link" href="https://wa.me/51993750351?text=Hola%20Nostradamus,%20quiero%20informes%20sobre%20los%20ciclos%20de%20preparaci%C3%B3n." target="_blank" rel="noopener"><i class="far fa-phone"></i>993 750 351</a>
               <span class="nostra-info-sep"></span>
-              <a class="nostra-info-link" href="https://maps.app.goo.gl/XUF3vLuP6svEMZzj7" target="_blank" rel="noopener"><i class="far fa-location-dot"></i>Av. Gerardo Unger 239, SMP.</a>
+              <a class="nostra-info-link" href="https://www.google.com/maps/search/?api=1&query=Av.%20Gerardo%20Unger%20239%2C%20San%20Mart%C3%ADn%20de%20Porres%2C%20Lima" target="_blank" rel="noopener"><i class="far fa-location-dot"></i>Av. Gerardo Unger 239, SMP.</a>
               <span class="nostra-info-sep"></span>
               <a class="nostra-info-link" href="index.html#contacto"><i class="far fa-envelope"></i>informes@gruponostradamus.edu.pe</a>
             </div>
