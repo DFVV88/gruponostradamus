@@ -1,0 +1,51 @@
+name: Actualizar dirección institucional
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "tools/update_nostradamus_address.py"
+      - ".github/workflows/update-nostradamus-address.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-nostradamus-address-main
+  cancel-in-progress: false
+
+jobs:
+  update-address:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Actualizar dirección en toda la web
+        run: python tools/update_nostradamus_address.py
+
+      - name: Publicar cambios
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "Toda la web ya utiliza Av. Gerardo Unger 239."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Actualiza dirección institucional a Gerardo Unger 239 [skip ci]"
+          git push origin HEAD:main
