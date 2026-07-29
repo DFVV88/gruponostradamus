@@ -11,7 +11,7 @@
   if (window.__NOSTRA_UNIVERSAL_FOOTER__) return;
   window.__NOSTRA_UNIVERSAL_FOOTER__ = true;
 
-  var VERSION = '2026-91';
+  var VERSION = '2026-92-address-239';
   var FOOTER_ID = 'nostra-global-footer';
   var STYLE_ID = 'nostra-global-footer-style';
   var WHATSAPP = 'https://wa.me/51993750351?text=Hola%20Nostradamus,%20quiero%20informes%20sobre%20los%20ciclos%20UNI.';
@@ -139,7 +139,7 @@
                 '<p class="ngf-contact-intro">Conoce el programa adecuado y asegura tu vacante para iniciar tu preparación.</p>' +
               '</div>' +
               '<div class="ngf-contact-list">' +
-                '<div class="ngf-contact-item"><span class="ngf-contact-icon">' + svgIcon('pin') + '</span><a href="https://www.google.com/maps/search/?api=1&query=Av.%20Gerardo%20Unger%20239%2C%20San%20Mart%C3%ADn%20de%20Porres%2C%20Lima" target="_blank" rel="noopener noreferrer">Gerardo Unger 239, Lima 15102</a></div>' +
+                '<div class="ngf-contact-item"><span class="ngf-contact-icon">' + svgIcon('pin') + '</span><a href="https://www.google.com/maps/search/?api=1&query=Av.%20Gerardo%20Unger%20239%2C%20San%20Mart%C3%ADn%20de%20Porres%2C%20Lima" target="_blank" rel="noopener noreferrer">Av. Gerardo Unger 239, Lima 15102</a></div>' +
                 '<div class="ngf-contact-item"><span class="ngf-contact-icon">' + svgIcon('mail') + '</span><a href="mailto:informes@gruponostradamus.edu.pe">informes@gruponostradamus.edu.pe</a></div>' +
                 '<div class="ngf-contact-item"><span class="ngf-contact-icon">' + svgIcon('phone') + '</span><a href="' + WHATSAPP + '" target="_blank" rel="noopener noreferrer">+51 993 750 351</a></div>' +
               '</div>' +
