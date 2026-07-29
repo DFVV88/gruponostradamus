@@ -1,0 +1,81 @@
+name: Actualizar dirección a Gerardo Unger 239
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  update-address:
+    if: contains(github.event.head_commit.message, '[address-239]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reemplazar dirección anterior en toda la web
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('.')
+          excluded = {Path('.github/workflows/update-address-239.yml')}
+          allowed = {'.html', '.htm', '.js', '.json', '.md', '.txt', '.xml', '.css', '.yml', '.yaml', '.php'}
+
+          patterns = [
+              (re.compile(r'Av\.\s*Gerardo\s+Unger\s+193', re.I), 'Av. Gerardo Unger 239'),
+              (re.compile(r'Gerardo\s+Unger\s+193', re.I), 'Gerardo Unger 239'),
+              (re.compile(r'Gerardo%20Unger%20193', re.I), 'Gerardo%20Unger%20239'),
+              (re.compile(r'Gerardo\+Unger\+193', re.I), 'Gerardo+Unger+239'),
+              (re.compile(r'Unger%20193', re.I), 'Unger%20239'),
+              (re.compile(r'Unger\+193', re.I), 'Unger+239'),
+          ]
+
+          changed = []
+          for path in root.rglob('*'):
+              if not path.is_file() or '.git' in path.parts or path in excluded or path.suffix.lower() not in allowed:
+                  continue
+              try:
+                  original = path.read_text(encoding='utf-8')
+              except UnicodeDecodeError:
+                  continue
+              updated = original
+              for pattern, replacement in patterns:
+                  updated = pattern.sub(replacement, updated)
+              if updated != original:
+                  path.write_text(updated, encoding='utf-8')
+                  changed.append(str(path))
+
+          print(f'Archivos actualizados: {len(changed)}')
+          for path in changed:
+              print(path)
+          PY
+
+      - name: Verificar que no quede la dirección anterior
+        shell: bash
+        run: |
+          if git grep -nEi 'Gerardo[[:space:]]+Unger[[:space:]]+193|Gerardo%20Unger%20193|Gerardo\+Unger\+193' -- ':!/.github/workflows/update-address-239.yml'; then
+            echo 'Todavía quedan referencias a la dirección anterior.'
+            exit 1
+          fi
+          git diff --check
+
+      - name: Retirar flujo temporal y guardar cambios
+        shell: bash
+        run: |
+          rm -f .github/workflows/update-address-239.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No había cambios pendientes.'
+            exit 0
+          fi
+          git commit -m 'Actualiza dirección del Grupo Nostradamus a Av. Gerardo Unger 239'
+          git push origin HEAD:main
