@@ -253,10 +253,9 @@
   }
 
   function openRequest(teacher) {
+    elements.requestForm.reset();
     elements.requestTeacher.value = teacher ? teacher.name : '';
-    if (teacher) {
-      elements.requestSubject.value = teacher.subject;
-    }
+    elements.requestSubject.value = teacher ? teacher.subject : '';
     openModal(elements.requestModal);
   }
 
@@ -392,7 +391,6 @@
       }
 
       if (event.target.closest('[data-open-request]')) {
-        elements.requestTeacher.value = '';
         openRequest(null);
         return;
       }
