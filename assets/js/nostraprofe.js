@@ -2,98 +2,9 @@
   'use strict';
 
   const WHATSAPP_NUMBER = '51993750351';
-
-  const teachers = [
-    {
-      id: 'luis-nizama',
-      name: 'Prof. Luis Nizama',
-      subject: 'Aritmética',
-      specialties: ['Aritmética', 'Preparación UNI', 'Reforzamiento'],
-      levels: ['Escolar', 'Preuniversitario', 'UNI'],
-      modalities: ['Presencial', 'Virtual'],
-      image: '../assets/img/docentes/aritmetica-nizama-327x250.jpg',
-      description: 'Docente del Grupo Nostradamus con experiencia en formación matemática y resolución de problemas.'
-    },
-    {
-      id: 'eddy-huamani',
-      name: 'Prof. Eddy Huamani',
-      subject: 'Aritmética',
-      specialties: ['Aritmética', 'Razonamiento numérico', 'Preparación UNI'],
-      levels: ['Escolar', 'Preuniversitario', 'UNI'],
-      modalities: ['Presencial', 'Virtual'],
-      image: '../assets/img/docentes/aritmetica-huamani-327x250.jpg',
-      description: 'Especialista en contenidos aritméticos y entrenamiento orientado al rendimiento preuniversitario.'
-    },
-    {
-      id: 'luis-manrique',
-      name: 'Prof. Luis Manrique',
-      subject: 'Álgebra',
-      specialties: ['Álgebra', 'Ecuaciones', 'Funciones'],
-      levels: ['Escolar', 'Preuniversitario', 'UNI'],
-      modalities: ['Presencial', 'Virtual'],
-      image: '../assets/img/docentes/algebra-manrique-327x250.jpg',
-      description: 'Docente del Grupo Nostradamus enfocado en comprensión conceptual, técnica y práctica intensiva.'
-    },
-    {
-      id: 'ruben-quispe',
-      name: 'Prof. Rubén Quispe',
-      subject: 'Álgebra',
-      specialties: ['Álgebra', 'Polinomios', 'Preparación UNI'],
-      levels: ['Preuniversitario', 'UNI'],
-      modalities: ['Presencial', 'Virtual'],
-      image: '../assets/img/docentes/algebra-quispe-327x250.jpg',
-      description: 'Especialista en álgebra preuniversitaria y desarrollo de estrategias para problemas de admisión.'
-    },
-    {
-      id: 'cesar-trucios',
-      name: 'Prof. César Trucios',
-      subject: 'Geometría',
-      specialties: ['Geometría', 'Planimetría', 'Preparación UNI'],
-      levels: ['Escolar', 'Preuniversitario', 'UNI'],
-      modalities: ['Presencial', 'Virtual'],
-      image: '../assets/img/docentes/geometria-trucios-327x250.jpg',
-      description: 'Docente del Grupo Nostradamus especializado en visualización geométrica y resolución estructurada.'
-    },
-    {
-      id: 'ruben-huillca',
-      name: 'Prof. Rubén Huillca',
-      subject: 'Trigonometría',
-      specialties: ['Trigonometría', 'Geometría analítica', 'Preparación UNI'],
-      levels: ['Preuniversitario', 'UNI'],
-      modalities: ['Presencial', 'Virtual'],
-      image: '../assets/img/docentes/trigonometria-huillca-327x250.jpg',
-      description: 'Especialista en trigonometría y entrenamiento de alto nivel para exámenes de admisión.'
-    },
-    {
-      id: 'daniel-villavicencio',
-      name: 'Prof. Daniel Villavicencio',
-      subject: 'Física',
-      specialties: ['Física', 'Matemática', 'Preparación UNI'],
-      levels: ['Escolar', 'Preuniversitario', 'UNI'],
-      modalities: ['Presencial', 'Virtual'],
-      image: '../assets/img/docentes/fisica-daniel-327x250.jpg',
-      description: 'Docente de Física del Grupo Nostradamus orientado a la comprensión, el método y la aplicación.'
-    },
-    {
-      id: 'miguel-zavala',
-      name: 'Prof. Miguel Zavala',
-      subject: 'Química',
-      specialties: ['Química', 'Química general', 'Preparación UNI'],
-      levels: ['Escolar', 'Preuniversitario', 'UNI'],
-      modalities: ['Presencial', 'Virtual'],
-      image: '../assets/img/docentes/quimica-zavala-327x250.jpg',
-      description: 'Especialista en química escolar y preuniversitaria con enfoque en teoría, práctica y examen UNI.'
-    }
-  ];
+  const teachers = [];
 
   const elements = {
-    grid: document.getElementById('teacherGrid'),
-    count: document.getElementById('resultsCount'),
-    empty: document.getElementById('emptyState'),
-    filterSubject: document.getElementById('filterSubject'),
-    filterLevel: document.getElementById('filterLevel'),
-    sort: document.getElementById('sortTeachers'),
-    clear: document.getElementById('clearFilters'),
     heroSearch: document.getElementById('heroSearch'),
     heroSubject: document.getElementById('heroSubject'),
     heroLevel: document.getElementById('heroLevel'),
@@ -104,122 +15,70 @@
     applyForm: document.getElementById('applyForm'),
     requestTeacher: document.getElementById('requestTeacher'),
     requestSubject: document.getElementById('requestSubject'),
+    teacherGrid: document.getElementById('teacherGrid'),
+    resultsCount: document.getElementById('resultsCount'),
     toast: document.getElementById('toast'),
     menuToggle: document.getElementById('menuToggle'),
     mainNav: document.getElementById('mainNav')
   };
 
-  function normalize(value) {
-    return String(value || '')
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase()
-      .trim();
-  }
+  function showEmptyDirectory() {
+    const section = document.getElementById('profesores');
+    if (!section) return;
 
-  function escapeHTML(value) {
-    return String(value || '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
-  }
-
-  function getSelectedModalities() {
-    return Array.from(document.querySelectorAll('input[name="modalityFilter"]:checked')).map(function (input) {
-      return input.value;
-    });
-  }
-
-  function teacherMatches(teacher, query, level, modalities) {
-    const searchable = normalize([
-      teacher.name,
-      teacher.subject,
-      teacher.specialties.join(' '),
-      teacher.levels.join(' ')
-    ].join(' '));
-
-    const queryMatches = !query || searchable.includes(normalize(query));
-    const levelMatches = level === 'todos' || teacher.levels.includes(level);
-    const modalityMatches = modalities.length === 0 || modalities.every(function (modality) {
-      return teacher.modalities.includes(modality);
-    });
-
-    return queryMatches && levelMatches && modalityMatches;
-  }
-
-  function sortTeachers(list, mode) {
-    const sorted = list.slice();
-    if (mode === 'name') {
-      sorted.sort(function (a, b) { return a.name.localeCompare(b.name, 'es'); });
-    }
-    if (mode === 'subject') {
-      sorted.sort(function (a, b) {
-        return a.subject.localeCompare(b.subject, 'es') || a.name.localeCompare(b.name, 'es');
-      });
-    }
-    return sorted;
-  }
-
-  function teacherCard(teacher) {
-    const tags = teacher.specialties.slice(0, 3).map(function (tag) {
-      return '<span>' + escapeHTML(tag) + '</span>';
-    }).join('');
-
-    return [
-      '<article class="np-teacher-card">',
-        '<div class="np-teacher-card__photo">',
-          '<img src="' + escapeHTML(teacher.image) + '" alt="' + escapeHTML(teacher.name + ', profesor de ' + teacher.subject) + '" loading="lazy">',
-          '<span class="np-teacher-card__badge"><i class="fa-solid fa-circle-check"></i> Perfil institucional</span>',
+    section.classList.add('np-marketplace--empty');
+    section.innerHTML = [
+      '<div class="np-container">',
+        '<div class="np-section-heading np-section-heading--center">',
+          '<span class="np-kicker">Directorio NostraProfe</span>',
+          '<h2 id="teachersTitle">Aún no hay profesores disponibles para contratar</h2>',
+          '<p>Los primeros perfiles se publicarán únicamente después de superar la validación documental, la evaluación académica y la clase demostrativa supervisada por el Comité Académico NostraProfe.</p>',
         '</div>',
-        '<div class="np-teacher-card__body">',
-          '<span class="np-teacher-card__subject">' + escapeHTML(teacher.subject) + '</span>',
-          '<h3>' + escapeHTML(teacher.name) + '</h3>',
-          '<p class="np-teacher-card__description">' + escapeHTML(teacher.description) + '</p>',
-          '<div class="np-teacher-card__tags">' + tags + '</div>',
-          '<div class="np-teacher-card__meta">',
-            '<span><i class="fa-solid fa-graduation-cap"></i> ' + escapeHTML(teacher.levels.join(' · ')) + '</span>',
-            '<span><i class="fa-solid fa-video"></i> ' + escapeHTML(teacher.modalities.join(' y ')) + '</span>',
-            '<span><i class="fa-solid fa-shield-check"></i> Evaluación académica interna</span>',
+        '<div class="np-directory-status" role="status" aria-live="polite">',
+          '<div class="np-directory-status__icon"><i class="fa-solid fa-user-shield"></i></div>',
+          '<span class="np-directory-status__badge"><i class="fa-solid fa-spinner"></i> Evaluación de postulantes en curso</span>',
+          '<h3>Estamos seleccionando a los primeros docentes NostraProfe</h3>',
+          '<p>No mostraremos perfiles provisionales ni integrantes del Comité Académico como profesores disponibles. Cada docente deberá demostrar su experiencia, dominio del curso y capacidad real para enseñar antes de ingresar al directorio.</p>',
+          '<div class="np-directory-status__steps" aria-label="Proceso previo a la publicación">',
+            '<div><strong>01</strong><span>Verificación de identidad y experiencia</span></div>',
+            '<div><strong>02</strong><span>Evaluación académica por especialidad</span></div>',
+            '<div><strong>03</strong><span>Clase demostrativa y aprobación</span></div>',
           '</div>',
-          '<div class="np-teacher-card__action">',
-            '<small>Tarifa y disponibilidad<br>a coordinar</small>',
-            '<button type="button" data-teacher-id="' + escapeHTML(teacher.id) + '">Solicitar clase</button>',
+          '<div class="np-directory-status__actions">',
+            '<button class="np-btn" type="button" data-open-request>Solicitar un profesor</button>',
+            '<button class="np-outline-btn" type="button" data-open-apply>Postular como docente</button>',
           '</div>',
+          '<small><i class="fa-solid fa-shield-check"></i> El Comité Académico es exclusivamente evaluador y no forma parte del directorio de profesores disponibles.</small>',
         '</div>',
-      '</article>'
+      '</div>'
     ].join('');
-  }
 
-  function renderTeachers() {
-    const query = elements.filterSubject.value;
-    const level = elements.filterLevel.value;
-    const modalities = getSelectedModalities();
-    const mode = elements.sort.value;
-
-    const filtered = teachers.filter(function (teacher) {
-      return teacherMatches(teacher, query, level, modalities);
-    });
-
-    const sorted = sortTeachers(filtered, mode);
-    elements.grid.innerHTML = sorted.map(teacherCard).join('');
-    elements.count.textContent = String(sorted.length);
-    elements.empty.hidden = sorted.length !== 0;
-    elements.grid.hidden = sorted.length === 0;
-  }
-
-  function applyPreset(subject, options) {
-    const settings = options || {};
-    elements.filterSubject.value = subject || '';
-    elements.filterLevel.value = settings.level || 'todos';
-
-    document.querySelectorAll('input[name="modalityFilter"]').forEach(function (input) {
-      input.checked = Boolean(settings.modality && input.value === settings.modality);
-    });
-
-    renderTeachers();
-    document.getElementById('profesores').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (!document.getElementById('np-empty-directory-styles')) {
+      const style = document.createElement('style');
+      style.id = 'np-empty-directory-styles';
+      style.textContent = [
+        '.np-marketplace--empty{background:radial-gradient(circle at 15% 20%,rgba(15,175,194,.10),transparent 34%),radial-gradient(circle at 85% 80%,rgba(244,183,42,.10),transparent 30%),#f7fbfc}',
+        '.np-directory-status{width:min(900px,100%);margin:42px auto 0;padding:clamp(30px,5vw,58px);border:1px solid rgba(7,88,97,.14);border-radius:28px;background:rgba(255,255,255,.96);box-shadow:0 24px 70px rgba(3,31,38,.10);text-align:center;position:relative;overflow:hidden}',
+        '.np-directory-status:before{content:"";position:absolute;inset:0 0 auto;height:5px;background:linear-gradient(90deg,#075861,#0fafc2,#f4b72a)}',
+        '.np-directory-status__icon{width:86px;height:86px;margin:0 auto 18px;display:grid;place-items:center;border-radius:24px;color:#fff;background:linear-gradient(145deg,#075861,#0fafc2);box-shadow:0 16px 34px rgba(15,175,194,.24);font-size:34px}',
+        '.np-directory-status__badge{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;color:#075861;background:rgba(15,175,194,.11);font-size:13px;font-weight:800;letter-spacing:.02em;text-transform:uppercase}',
+        '.np-directory-status__badge i{animation:np-directory-spin 2.4s linear infinite}',
+        '.np-directory-status h3{max-width:670px;margin:20px auto 12px;color:#031f26;font-size:clamp(27px,4vw,42px);line-height:1.12}',
+        '.np-directory-status>p{max-width:740px;margin:0 auto;color:#52666b;font-size:17px;line-height:1.75}',
+        '.np-directory-status__steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:34px 0;text-align:left}',
+        '.np-directory-status__steps div{min-height:112px;padding:20px;border:1px solid rgba(7,88,97,.11);border-radius:18px;background:#f8fcfd}',
+        '.np-directory-status__steps strong{display:block;margin-bottom:8px;color:#0fafc2;font-size:24px;font-weight:900}',
+        '.np-directory-status__steps span{color:#28474e;font-size:14px;font-weight:750;line-height:1.45}',
+        '.np-directory-status__actions{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:6px}',
+        '.np-directory-status__actions .np-outline-btn{background:#fff;cursor:pointer}',
+        '.np-directory-status>small{display:block;max-width:690px;margin:24px auto 0;color:#6a7e83;font-size:13px;line-height:1.55}',
+        '.np-directory-status>small i{margin-right:5px;color:#0fafc2}',
+        '@keyframes np-directory-spin{to{transform:rotate(360deg)}}',
+        '@media(max-width:760px){.np-directory-status{margin-top:28px;border-radius:22px}.np-directory-status__steps{grid-template-columns:1fr}.np-directory-status__steps div{min-height:0}.np-directory-status__actions{flex-direction:column}.np-directory-status__actions .np-btn,.np-directory-status__actions .np-outline-btn{width:100%}}',
+        '@media(prefers-reduced-motion:reduce){.np-directory-status__badge i{animation:none}}'
+      ].join('');
+      document.head.appendChild(style);
+    }
   }
 
   function showToast(message) {
@@ -252,10 +111,36 @@
     document.body.classList.remove('np-modal-open');
   }
 
-  function openRequest(teacher) {
+  function setSelectValue(select, preferredValues) {
+    if (!select) return;
+    const available = Array.from(select.options).map(function (option) { return option.value; });
+    const selected = preferredValues.find(function (value) { return available.includes(value); });
+    if (selected) select.value = selected;
+  }
+
+  function openRequest(prefill) {
+    const data = prefill || {};
+    if (!elements.requestForm) return;
+
     elements.requestForm.reset();
-    elements.requestTeacher.value = teacher ? teacher.name : '';
-    elements.requestSubject.value = teacher ? teacher.subject : '';
+    if (elements.requestTeacher) elements.requestTeacher.value = '';
+    if (elements.requestSubject) elements.requestSubject.value = data.subject || '';
+
+    const levelSelect = elements.requestForm.querySelector('[name="level"]');
+    const modalitySelect = elements.requestForm.querySelector('[name="modality"]');
+
+    if (data.level === 'UNI') {
+      setSelectValue(levelSelect, ['Preparación UNI']);
+    } else if (data.level === 'Escolar') {
+      setSelectValue(levelSelect, ['Secundaria', 'Primaria']);
+    } else if (data.level === 'Preuniversitario') {
+      setSelectValue(levelSelect, ['Preuniversitario']);
+    }
+
+    if (data.modality) {
+      setSelectValue(modalitySelect, [data.modality, 'Indistinto']);
+    }
+
     openModal(elements.requestModal);
   }
 
@@ -281,7 +166,6 @@
     const url = encodeWhatsAppMessage([
       'Hola NostraProfe, deseo solicitar un profesor.',
       '',
-      'Profesor de interés: ' + (data.teacher || 'Búsqueda personalizada'),
       'Nombre: ' + data.name,
       'Celular: ' + data.phone,
       'Curso: ' + data.subject,
@@ -290,14 +174,13 @@
       'Distrito o ciudad: ' + (data.location || 'No indicado'),
       'Objetivo o dificultad: ' + data.goal,
       '',
-      'Acepto ser contactado por el equipo NostraProfe.'
+      'Entiendo que el directorio aún se encuentra en proceso de evaluación y autorizo al equipo NostraProfe a contactarme cuando exista un perfil aprobado compatible.'
     ]);
 
-    trackEvent('nostraprofe_solicitud', {
+    trackEvent('nostraprofe_solicitud_sin_perfil', {
       event_category: 'lead',
       subject: data.subject,
-      modality: data.modality,
-      teacher: data.teacher || 'personalizada'
+      modality: data.modality
     });
 
     window.open(url, '_blank', 'noopener,noreferrer');
@@ -321,7 +204,7 @@
       'Distrito o ciudad: ' + data.location,
       'Resumen profesional: ' + data.summary,
       '',
-      'Acepto participar en el proceso de evaluación NostraProfe.'
+      'Acepto participar en el proceso de evaluación NostraProfe antes de que mi perfil pueda ser publicado.'
     ]);
 
     trackEvent('nostraprofe_postulacion', {
@@ -336,62 +219,55 @@
   }
 
   function closeMobileMenu() {
+    if (!elements.menuToggle || !elements.mainNav) return;
     elements.menuToggle.classList.remove('is-active');
     elements.mainNav.classList.remove('is-open');
     elements.menuToggle.setAttribute('aria-expanded', 'false');
   }
 
+  function bindModalBackdrop(modal) {
+    if (!modal) return;
+    modal.addEventListener('click', function (event) {
+      const rect = modal.getBoundingClientRect();
+      const isBackdrop = event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom;
+      if (isBackdrop) closeModal(modal);
+    });
+    modal.addEventListener('close', function () {
+      document.body.classList.remove('np-modal-open');
+    });
+  }
+
   function bindEvents() {
-    [elements.filterSubject, elements.filterLevel, elements.sort].forEach(function (element) {
-      element.addEventListener(element.tagName === 'INPUT' ? 'input' : 'change', renderTeachers);
-    });
+    if (elements.heroSearch) {
+      elements.heroSearch.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const subject = elements.heroSubject ? elements.heroSubject.value.trim() : '';
+        const level = elements.heroLevel ? elements.heroLevel.value : '';
+        const modalityValue = elements.heroModality ? elements.heroModality.value : '';
+        const modality = modalityValue === 'todas' ? '' : modalityValue;
 
-    document.querySelectorAll('input[name="modalityFilter"]').forEach(function (input) {
-      input.addEventListener('change', renderTeachers);
-    });
+        trackEvent('nostraprofe_busqueda_sin_perfiles', {
+          event_category: 'engagement',
+          subject: subject || 'no_indicado',
+          level: level || 'no_indicado',
+          modality: modality || 'indistinto'
+        });
 
-    elements.clear.addEventListener('click', function () {
-      elements.filterSubject.value = '';
-      elements.filterLevel.value = 'todos';
-      elements.sort.value = 'recommended';
-      document.querySelectorAll('input[name="modalityFilter"]').forEach(function (input) {
-        input.checked = false;
+        openRequest({ subject: subject, level: level, modality: modality });
       });
-      renderTeachers();
-    });
-
-    elements.heroSearch.addEventListener('submit', function (event) {
-      event.preventDefault();
-      const subject = elements.heroSubject.value;
-      const level = elements.heroLevel.value;
-      const modality = elements.heroModality.value === 'todas' ? '' : elements.heroModality.value;
-      applyPreset(subject, { level: level, modality: modality });
-      trackEvent('nostraprofe_busqueda', {
-        event_category: 'engagement',
-        subject: subject || 'todos',
-        level: level,
-        modality: modality || 'todas'
-      });
-    });
+    }
 
     document.addEventListener('click', function (event) {
       const subjectButton = event.target.closest('[data-subject]');
       if (subjectButton) {
         const subject = subjectButton.getAttribute('data-subject') || '';
-        elements.heroSubject.value = subject;
-        applyPreset(subject);
-        return;
-      }
-
-      const teacherButton = event.target.closest('[data-teacher-id]');
-      if (teacherButton) {
-        const teacher = teachers.find(function (item) { return item.id === teacherButton.getAttribute('data-teacher-id'); });
-        openRequest(teacher || null);
+        if (elements.heroSubject) elements.heroSubject.value = subject;
+        openRequest({ subject: subject });
         return;
       }
 
       if (event.target.closest('[data-open-request]')) {
-        openRequest(null);
+        openRequest({});
         return;
       }
 
@@ -400,41 +276,38 @@
         return;
       }
 
-      if (event.target.closest('[data-close-modal]')) {
-        closeModal(event.target.closest('dialog'));
+      const closeButton = event.target.closest('[data-close-modal]');
+      if (closeButton) {
+        closeModal(closeButton.closest('dialog'));
       }
     });
 
-    [elements.requestModal, elements.applyModal].forEach(function (modal) {
-      modal.addEventListener('click', function (event) {
-        const rect = modal.getBoundingClientRect();
-        const isBackdrop = event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom;
-        if (isBackdrop) closeModal(modal);
+    bindModalBackdrop(elements.requestModal);
+    bindModalBackdrop(elements.applyModal);
+
+    if (elements.requestForm) elements.requestForm.addEventListener('submit', handleRequestSubmit);
+    if (elements.applyForm) elements.applyForm.addEventListener('submit', handleApplySubmit);
+
+    if (elements.menuToggle && elements.mainNav) {
+      elements.menuToggle.addEventListener('click', function () {
+        const isOpen = elements.mainNav.classList.toggle('is-open');
+        elements.menuToggle.classList.toggle('is-active', isOpen);
+        elements.menuToggle.setAttribute('aria-expanded', String(isOpen));
       });
-      modal.addEventListener('close', function () {
-        document.body.classList.remove('np-modal-open');
+
+      elements.mainNav.addEventListener('click', function (event) {
+        if (event.target.closest('a, button')) closeMobileMenu();
       });
-    });
 
-    elements.requestForm.addEventListener('submit', handleRequestSubmit);
-    elements.applyForm.addEventListener('submit', handleApplySubmit);
-
-    elements.menuToggle.addEventListener('click', function () {
-      const isOpen = elements.mainNav.classList.toggle('is-open');
-      elements.menuToggle.classList.toggle('is-active', isOpen);
-      elements.menuToggle.setAttribute('aria-expanded', String(isOpen));
-    });
-
-    elements.mainNav.addEventListener('click', function (event) {
-      if (event.target.closest('a, button')) closeMobileMenu();
-    });
-
-    window.addEventListener('resize', function () {
-      if (window.innerWidth > 920) closeMobileMenu();
-    });
+      window.addEventListener('resize', function () {
+        if (window.innerWidth > 920) closeMobileMenu();
+      });
+    }
   }
 
-  document.getElementById('currentYear').textContent = String(new Date().getFullYear());
-  renderTeachers();
+  const year = document.getElementById('currentYear');
+  if (year) year.textContent = String(new Date().getFullYear());
+
+  showEmptyDirectory();
   bindEvents();
 })();
