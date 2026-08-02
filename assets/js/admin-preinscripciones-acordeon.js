@@ -183,7 +183,8 @@
   function setup(){
     const view = document.getElementById(VIEW_ID);
     if(!view) return false;
-    const generalPanel = Array.from(view.children).find(node => node.classList?.contains('panel') && node.id !== 'admin-payments-enrollments');
+    const wrappedGeneral = view.querySelector('[data-nap-accordion="general"] .panel');
+    const generalPanel = wrappedGeneral || Array.from(view.children).find(node => node.classList?.contains('panel') && node.id !== 'admin-payments-enrollments');
     const academicPanel = document.getElementById('admin-payments-enrollments');
     if(!generalPanel || !academicPanel) return false;
 
