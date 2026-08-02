@@ -698,6 +698,247 @@ service cloud.firestore {
 
       && request.resource.data.apoderado.correo is string
       && request.resource.data.apoderado.correo.size() <= 120
+    /*
+     * PAGOS DE ALUMNOS INTEGRADOS CON FINANZAS
+     * El movimiento se crea en el mismo lote que valida la preinscripción.
+     */
+    match /finanzas_movimientos/{movimientoId} {
+
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasAll([
+          'tipo',
+          'fechaOperacion',
+          'categoria',
+          'concepto',
+          'monto',
+          'metodoPago',
+          'cuenta',
+          'numeroOperacion',
+          'observacion',
+          'estado',
+          'origen',
+          'creadoPor',
+          'pagoId',
+          'preinscripcionId',
+          'registroAlumnoId',
+          'matriculaId',
+          'grupoId',
+          'alumnoNombre',
+          'alumnoDni',
+          'conceptoPago',
+          'createdAt',
+          'updatedAt'
+        ])
+        && request.resource.data.keys().hasOnly([
+          'tipo',
+          'fechaOperacion',
+          'categoria',
+          'concepto',
+          'monto',
+          'metodoPago',
+          'cuenta',
+          'numeroOperacion',
+          'observacion',
+          'estado',
+          'origen',
+          'creadoPor',
+          'pagoId',
+          'preinscripcionId',
+          'registroAlumnoId',
+          'matriculaId',
+          'grupoId',
+          'alumnoNombre',
+          'alumnoDni',
+          'conceptoPago',
+          'createdAt',
+          'updatedAt'
+        ])
+        && request.resource.data.tipo == 'ingreso'
+        && request.resource.data.fechaOperacion is string
+        && request.resource.data.fechaOperacion.size() == 10
+        && request.resource.data.categoria
+          in ['matricula', 'pension', 'otros_ingresos']
+        && request.resource.data.concepto is string
+        && request.resource.data.concepto.size() >= 3
+        && request.resource.data.concepto.size() <= 160
+        && request.resource.data.monto is number
+        && request.resource.data.monto > 0
+        && request.resource.data.monto <= 1000000
+        && request.resource.data.metodoPago in [
+          'efectivo',
+          'yape',
+          'plin',
+          'transferencia',
+          'culqi',
+          'otro'
+        ]
+        && request.resource.data.cuenta in [
+          'caja_efectivo',
+          'yape',
+          'plin',
+          'bcp',
+          'culqi',
+          'otra'
+        ]
+        && request.resource.data.numeroOperacion is string
+        && request.resource.data.numeroOperacion.size() >= 3
+        && request.resource.data.numeroOperacion.size() <= 100
+        && request.resource.data.observacion is string
+        && request.resource.data.observacion.size() <= 1000
+        && request.resource.data.estado == 'activo'
+        && request.resource.data.origen == 'pago_alumno_admin'
+        && request.resource.data.creadoPor
+          == request.auth.token.email
+        && request.resource.data.pagoId == movimientoId
+        && request.resource.data.preinscripcionId is string
+        && request.resource.data.preinscripcionId.size() >= 5
+        && request.resource.data.preinscripcionId.size() <= 160
+        && request.resource.data.registroAlumnoId
+          == request.resource.data.preinscripcionId
+        && request.resource.data.matriculaId
+          == request.resource.data.preinscripcionId
+        && request.resource.data.grupoId is string
+        && request.resource.data.grupoId.size() >= 3
+        && request.resource.data.grupoId.size() <= 200
+        && request.resource.data.alumnoNombre is string
+        && request.resource.data.alumnoNombre.size() >= 5
+        && request.resource.data.alumnoNombre.size() <= 160
+        && request.resource.data.alumnoDni is string
+        && request.resource.data.alumnoDni.size() >= 6
+        && request.resource.data.alumnoDni.size() <= 20
+        && request.resource.data.conceptoPago is string
+        && request.resource.data.conceptoPago.size() >= 3
+        && request.resource.data.conceptoPago.size() <= 150
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time
+        && getAfter(
+          /databases/$(database)/documents/preinscripciones/$(request.resource.data.preinscripcionId)
+        ).data.pagoValidado == true
+        && getAfter(
+          /databases/$(database)/documents/preinscripciones/$(request.resource.data.preinscripcionId)
+        ).data.estadoPago == 'pago_validado'
+        && getAfter(
+          /databases/$(database)/documents/preinscripciones/$(request.resource.data.preinscripcionId)
+        ).data.ingresoFinancieroId == movimientoId
+        && getAfter(
+          /databases/$(database)/documents/preinscripciones/$(request.resource.data.preinscripcionId)
+        ).data.registroAlumnoId
+          == request.resource.data.registroAlumnoId
+        && getAfter(
+          /databases/$(database)/documents/preinscripciones/$(request.resource.data.preinscripcionId)
+        ).data.grupoId == request.resource.data.grupoId;
+    }
+
+    /*
+     * Auditoría de movimientos originados por pagos de alumnos.
+     */
+    match /finanzas_auditoria/{auditoriaId} {
+
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly([
+          'movimientoId',
+          'accion',
+          'motivo',
+          'estadoAnterior',
+          'estadoNuevo',
+          'ejecutadoPor',
+          'fechaOperacion',
+          'tipo',
+          'categoria',
+          'concepto',
+          'monto',
+          'cuenta',
+          'numeroOperacion',
+          'origen',
+          'createdAt'
+        ])
+        && request.resource.data.movimientoId == auditoriaId
+        && request.resource.data.accion == 'anulacion'
+        && request.resource.data.motivo is string
+        && request.resource.data.motivo.size() >= 5
+        && request.resource.data.motivo.size() <= 500
+        && request.resource.data.estadoAnterior == 'activo'
+        && request.resource.data.estadoNuevo == 'anulado'
+        && request.resource.data.ejecutadoPor
+          == request.auth.token.email
+        && request.resource.data.fechaOperacion is string
+        && request.resource.data.fechaOperacion.size() == 10
+        && request.resource.data.tipo == 'ingreso'
+        && request.resource.data.categoria is string
+        && request.resource.data.concepto is string
+        && request.resource.data.monto is number
+        && request.resource.data.monto > 0
+        && request.resource.data.cuenta in [
+          'caja_efectivo',
+          'yape',
+          'plin',
+          'bcp',
+          'culqi',
+          'otra'
+        ]
+        && request.resource.data.numeroOperacion is string
+        && request.resource.data.origen == 'pago_alumno_admin'
+        && request.resource.data.createdAt == request.time
+        && get(
+          /databases/$(database)/documents/finanzas_movimientos/$(auditoriaId)
+        ).data.estado == 'activo'
+        && get(
+          /databases/$(database)/documents/finanzas_movimientos/$(auditoriaId)
+        ).data.origen == 'pago_alumno_admin'
+        && getAfter(
+          /databases/$(database)/documents/finanzas_movimientos/$(auditoriaId)
+        ).data.estado == 'anulado'
+        && request.resource.data.fechaOperacion == get(
+          /databases/$(database)/documents/finanzas_movimientos/$(auditoriaId)
+        ).data.fechaOperacion
+        && request.resource.data.tipo == get(
+          /databases/$(database)/documents/finanzas_movimientos/$(auditoriaId)
+        ).data.tipo
+        && request.resource.data.categoria == get(
+          /databases/$(database)/documents/finanzas_movimientos/$(auditoriaId)
+        ).data.categoria
+        && request.resource.data.concepto == get(
+          /databases/$(database)/documents/finanzas_movimientos/$(auditoriaId)
+        ).data.concepto
+        && request.resource.data.monto == get(
+          /databases/$(database)/documents/finanzas_movimientos/$(auditoriaId)
+        ).data.monto
+        && request.resource.data.cuenta == get(
+          /databases/$(database)/documents/finanzas_movimientos/$(auditoriaId)
+        ).data.cuenta
+        && request.resource.data.numeroOperacion == get(
+          /databases/$(database)/documents/finanzas_movimientos/$(auditoriaId)
+        ).data.numeroOperacion;
+    }
+
+    /*
+     * GRUPOS, REGISTROS DE ALUMNOS Y MATRÍCULAS
+     * Solo el administrador puede administrarlos y nunca se eliminan.
+     */
+    match /grupos_academicos/{grupoId} {
+      allow read: if isAdmin();
+      allow create, update: if isAdmin()
+        && request.resource.data.grupoId == grupoId;
+      allow delete: if false;
+    }
+
+    match /registros_alumnos/{registroId} {
+      allow read: if isAdmin();
+      allow create, update: if isAdmin()
+        && request.resource.data.registroAlumnoId == registroId
+        && request.resource.data.preinscripcionId == registroId;
+      allow delete: if false;
+    }
+
+    match /matriculas/{matriculaId} {
+      allow read: if isAdmin();
+      allow create, update: if isAdmin()
+        && request.resource.data.matriculaId == matriculaId
+        && request.resource.data.preinscripcionId == matriculaId
+        && request.resource.data.registroAlumnoId == matriculaId;
+      allow delete: if false;
+    }
+
 
       && request.resource.data.apoderado.celular is string
       && request.resource.data.apoderado.celular.size() <= 20
