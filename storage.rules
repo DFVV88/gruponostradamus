@@ -2,6 +2,11 @@ rules_version = '2';
 
 service firebase.storage {
   match /b/{bucket}/o {
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email == 'fernandodaniel8888@gmail.com';
+    }
+
     match /nostrachat/{roomId}/{month}/{owner}/{fileName} {
       allow read: if request.auth != null;
 
@@ -12,6 +17,26 @@ service firebase.storage {
 
       allow update: if false;
       allow delete: if request.auth != null && request.auth.uid == owner;
+    }
+
+    match /comprobantes-pago/{preinscripcionId}/{allPaths=**} {
+      allow read: if isAdmin();
+
+      allow create: if isAdmin()
+                    && request.resource.size > 0
+                    && request.resource.size <= 8 * 1024 * 1024
+                    && request.resource.contentType.matches('(image/(jpeg|png)|application/pdf)')
+                    && request.resource.metadata.preinscripcionId == preinscripcionId
+                    && request.resource.metadata.subidoPor == request.auth.token.email;
+
+      allow update: if false;
+
+      /*
+       * Solo se permite borrar al administrador para limpiar un archivo
+       * que no llegó a vincularse por un fallo durante la operación.
+       * La interfaz no ofrece eliminación de vouchers confirmados.
+       */
+      allow delete: if isAdmin();
     }
 
     match /{allPaths=**} {
