@@ -9,7 +9,8 @@
     resumen:{title:'Resumen',description:'Vista general de la gestión académica y comercial.'},
     ciclos:{title:'Ciclos y planes',description:'Administra precios, matrículas, horarios, beneficios y promociones.'},
     preinscripciones:{title:'Preinscripciones',description:'Revisa solicitudes, valida pagos y aprueba matrículas.'},
-    cuentas:{title:'NostraCUENTAS',description:'Administra accesos institucionales de alumnos y docentes.'}
+    cuentas:{title:'NostraCUENTAS',description:'Administra accesos institucionales de alumnos y docentes.'},
+    finanzas:{title:'Finanzas',description:'Control de ingresos, egresos, saldos y reportes financieros.'}
   };
 
   var shellReady = false;
@@ -52,6 +53,8 @@
         '<div class="admin-pro-nav-label">Gestión</div>' +
         navButton('preinscripciones','◎','Preinscripciones') +
         navButton('cuentas','◇','NostraCUENTAS') +
+        '<div class="admin-pro-nav-label">Finanzas</div>' +
+        navButton('finanzas','S/','Finanzas') +
       '</nav>' +
       '<div class="admin-pro-sidebar-foot"><b>Grupo Nostradamus</b><br>Gestión académica y comercial centralizada.' +
         '<button type="button" class="btn btn-red" data-admin-pro-logout style="width:100%;margin-top:10px;padding:8px 10px;font-size:11px">Cerrar sesión</button>' +
@@ -129,10 +132,17 @@
     accounts.innerHTML = sectionHead('NostraCUENTAS','Gestiona las cuentas institucionales sin mezclar esta información con el tarifario.','Microsoft 365') +
       '<div class="admin-pro-empty" id="admin-accounts-placeholder">Cargando NostraCUENTAS...</div>';
 
+    var finances = create('section','admin-pro-view');
+    finances.id = 'admin-view-finanzas';
+    finances.dataset.adminViewPanel = 'finanzas';
+    finances.innerHTML = sectionHead('Finanzas','Gestiona ingresos, egresos, saldos y reportes desde este mismo panel.','Etapa 1 · Estructura visual') +
+      '<div class="admin-pro-empty" id="admin-finance-placeholder"><strong style="display:block;color:#061426;font-family:\'Baloo 2\';font-size:24px;margin-bottom:7px">Módulo financiero integrado</strong><span>La sección ya forma parte de NostraADMIN. En la siguiente etapa se habilitarán el registro de ingresos y egresos y su conexión segura con Firebase.</span></div>';
+
     views.appendChild(overview);
     views.appendChild(cycles);
     views.appendChild(pre);
     views.appendChild(accounts);
+    views.appendChild(finances);
     main.appendChild(buildTopbar());
     main.appendChild(views);
     shell.appendChild(sidebar);
