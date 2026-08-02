@@ -98,3 +98,100 @@
     }
 
     /*
+     * COMPROBANTES DE PAGOS DE ALUMNOS
+     * El archivo vive en Storage y este documento lo vincula
+     * con el movimiento financiero, el alumno y la cuota.
+     */
+    match /comprobantes_pago/{comprobanteId} {
+      allow read: if isAdmin();
+
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly([
+          'comprobanteId',
+          'preinscripcionId',
+          'movimientoFinancieroId',
+          'cuotaId',
+          'abonoId',
+          'tipoPago',
+          'storagePath',
+          'downloadUrl',
+          'nombreOriginal',
+          'contentType',
+          'sizeBytes',
+          'estado',
+          'origen',
+          'subidoPor',
+          'createdAt'
+        ])
+        && request.resource.data.comprobanteId == comprobanteId
+        && request.resource.data.preinscripcionId is string
+        && request.resource.data.preinscripcionId.size() >= 5
+        && request.resource.data.preinscripcionId.size() <= 160
+        && request.resource.data.movimientoFinancieroId == comprobanteId
+        && request.resource.data.cuotaId is string
+        && request.resource.data.cuotaId.size() <= 160
+        && request.resource.data.abonoId is string
+        && request.resource.data.abonoId.size() <= 160
+        && request.resource.data.tipoPago in [
+          'pago_inicial',
+          'abono_cuota'
+        ]
+        && request.resource.data.storagePath is string
+        && request.resource.data.storagePath.size() >= 20
+        && request.resource.data.storagePath.size() <= 1000
+        && request.resource.data.storagePath.matches(
+          '^comprobantes-pago/.*'
+        )
+        && request.resource.data.downloadUrl is string
+        && request.resource.data.downloadUrl.size() >= 20
+        && request.resource.data.downloadUrl.size() <= 3000
+        && request.resource.data.nombreOriginal is string
+        && request.resource.data.nombreOriginal.size() >= 1
+        && request.resource.data.nombreOriginal.size() <= 180
+        && request.resource.data.contentType in [
+          'image/jpeg',
+          'image/png',
+          'application/pdf'
+        ]
+        && request.resource.data.sizeBytes is int
+        && request.resource.data.sizeBytes > 0
+        && request.resource.data.sizeBytes <= 8388608
+        && request.resource.data.estado == 'activo'
+        && request.resource.data.origen == 'voucher_admin'
+        && request.resource.data.subidoPor
+          == request.auth.token.email
+        && request.resource.data.createdAt == request.time
+        && exists(
+          /databases/$(database)/documents/finanzas_movimientos/$(comprobanteId)
+        )
+        && get(
+          /databases/$(database)/documents/finanzas_movimientos/$(comprobanteId)
+        ).data.preinscripcionId
+          == request.resource.data.preinscripcionId
+        && (
+          (
+            request.resource.data.tipoPago == 'pago_inicial'
+            && request.resource.data.cuotaId == ''
+            && request.resource.data.abonoId == ''
+          )
+          ||
+          (
+            request.resource.data.tipoPago == 'abono_cuota'
+            && request.resource.data.cuotaId.size() >= 5
+            && request.resource.data.abonoId.size() >= 5
+            && exists(
+              /databases/$(database)/documents/alumno_abonos/$(request.resource.data.abonoId)
+            )
+            && get(
+              /databases/$(database)/documents/alumno_abonos/$(request.resource.data.abonoId)
+            ).data.cuotaId == request.resource.data.cuotaId
+            && get(
+              /databases/$(database)/documents/alumno_abonos/$(request.resource.data.abonoId)
+            ).data.movimientoFinancieroId == comprobanteId
+          )
+        );
+
+      allow update, delete: if false;
+    }
+
+    /*
