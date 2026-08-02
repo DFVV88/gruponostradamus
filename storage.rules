@@ -25,7 +25,7 @@ service firebase.storage {
       allow create: if isAdmin()
                     && request.resource.size > 0
                     && request.resource.size <= 8 * 1024 * 1024
-                    && request.resource.contentType.matches('(image/(jpeg|png)|application/pdf)')
+                    && request.resource.contentType.matches('(image/(jpeg|png|webp)|application/pdf)')
                     && request.resource.metadata.preinscripcionId == preinscripcionId
                     && request.resource.metadata.subidoPor == request.auth.token.email;
 
