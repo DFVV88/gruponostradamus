@@ -61,9 +61,127 @@
         && request.resource.data.updatedAt == request.time;
 
       /*
-       * En esta etapa no se editan ni eliminan movimientos.
-       * Las anulaciones se incorporarán con auditoría.
+       * Única modificación permitida: pasar de activo a anulado.
+       * El movimiento original permanece y debe generarse simultáneamente
+       * su documento de auditoría con el mismo identificador.
        */
+      allow update: if isAdmin()
+        && resource.data.estado == 'activo'
+        && request.resource.data.estado == 'anulado'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'estado',
+          'motivoAnulacion',
+          'anuladoPor',
+          'anuladoEn',
+          'updatedAt'
+        ])
+        && request.resource.data.motivoAnulacion is string
+        && request.resource.data.motivoAnulacion.size() >= 5
+        && request.resource.data.motivoAnulacion.size() <= 500
+        && request.resource.data.anuladoPor
+          == request.auth.token.email
+        && request.resource.data.anuladoEn == request.time
+        && request.resource.data.updatedAt == request.time
+        && getAfter(
+          /databases/$(database)/documents/finanzas_auditoria/$(movimientoId)
+        ).data.movimientoId == movimientoId
+        && getAfter(
+          /databases/$(database)/documents/finanzas_auditoria/$(movimientoId)
+        ).data.accion == 'anulacion';
+
+      allow delete: if false;
+    }
+
+    /*
+     * AUDITORÍA FINANCIERA
+     * Un documento por movimiento anulado. No puede editarse ni borrarse.
+     */
+    match /finanzas_auditoria/{auditoriaId} {
+
+      allow read: if isAdmin();
+
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly([
+          'movimientoId',
+          'accion',
+          'motivo',
+          'estadoAnterior',
+          'estadoNuevo',
+          'ejecutadoPor',
+          'fechaOperacion',
+          'tipo',
+          'categoria',
+          'concepto',
+          'monto',
+          'cuenta',
+          'numeroOperacion',
+          'origen',
+          'createdAt'
+        ])
+        && request.resource.data.movimientoId == auditoriaId
+        && request.resource.data.accion == 'anulacion'
+        && request.resource.data.motivo is string
+        && request.resource.data.motivo.size() >= 5
+        && request.resource.data.motivo.size() <= 500
+        && request.resource.data.estadoAnterior == 'activo'
+        && request.resource.data.estadoNuevo == 'anulado'
+        && request.resource.data.ejecutadoPor
+          == request.auth.token.email
+        && request.resource.data.fechaOperacion is string
+        && request.resource.data.fechaOperacion.size() == 10
+        && request.resource.data.tipo in ['ingreso', 'egreso']
+        && request.resource.data.categoria is string
+        && request.resource.data.categoria.size() >= 3
+        && request.resource.data.categoria.size() <= 60
+        && request.resource.data.concepto is string
+        && request.resource.data.concepto.size() >= 3
+        && request.resource.data.concepto.size() <= 160
+        && request.resource.data.monto is number
+        && request.resource.data.monto > 0
+        && request.resource.data.monto <= 1000000
+        && request.resource.data.cuenta in [
+          'caja_efectivo',
+          'yape',
+          'plin',
+          'bcp',
+          'culqi',
+          'otra'
+        ]
+        && request.resource.data.numeroOperacion is string
+        && request.resource.data.numeroOperacion.size() <= 100
+        && request.resource.data.origen == 'manual_admin'
+        && request.resource.data.createdAt == request.time
+        && get(
+          /databases/$(database)/documents/finanzas_movimientos/$(auditoriaId)
+        ).data.estado == 'activo'
+        && getAfter(
+          /databases/$(database)/documents/finanzas_movimientos/$(auditoriaId)
+        ).data.estado == 'anulado'
+        && request.resource.data.fechaOperacion == get(
+          /databases/$(database)/documents/finanzas_movimientos/$(auditoriaId)
+        ).data.fechaOperacion
+        && request.resource.data.tipo == get(
+          /databases/$(database)/documents/finanzas_movimientos/$(auditoriaId)
+        ).data.tipo
+        && request.resource.data.categoria == get(
+          /databases/$(database)/documents/finanzas_movimientos/$(auditoriaId)
+        ).data.categoria
+        && request.resource.data.concepto == get(
+          /databases/$(database)/documents/finanzas_movimientos/$(auditoriaId)
+        ).data.concepto
+        && request.resource.data.monto == get(
+          /databases/$(database)/documents/finanzas_movimientos/$(auditoriaId)
+        ).data.monto
+        && request.resource.data.cuenta == get(
+          /databases/$(database)/documents/finanzas_movimientos/$(auditoriaId)
+        ).data.cuenta
+        && request.resource.data.numeroOperacion == get(
+          /databases/$(database)/documents/finanzas_movimientos/$(auditoriaId)
+        ).data.numeroOperacion
+        && request.resource.data.origen == get(
+          /databases/$(database)/documents/finanzas_movimientos/$(auditoriaId)
+        ).data.origen;
+
       allow update, delete: if false;
     }
 
