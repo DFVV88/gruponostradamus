@@ -1,3 +1,73 @@
+     * FINANZAS ADMINISTRATIVAS
+     */
+    match /finanzas_movimientos/{movimientoId} {
+
+      allow read: if isAdmin();
+
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly([
+          'tipo',
+          'fechaOperacion',
+          'categoria',
+          'concepto',
+          'monto',
+          'metodoPago',
+          'cuenta',
+          'numeroOperacion',
+          'observacion',
+          'estado',
+          'origen',
+          'creadoPor',
+          'createdAt',
+          'updatedAt'
+        ])
+        && request.resource.data.tipo in ['ingreso', 'egreso']
+        && request.resource.data.fechaOperacion is string
+        && request.resource.data.fechaOperacion.size() == 10
+        && request.resource.data.categoria is string
+        && request.resource.data.categoria.size() >= 3
+        && request.resource.data.categoria.size() <= 60
+        && request.resource.data.concepto is string
+        && request.resource.data.concepto.size() >= 3
+        && request.resource.data.concepto.size() <= 160
+        && request.resource.data.monto is number
+        && request.resource.data.monto > 0
+        && request.resource.data.monto <= 1000000
+        && request.resource.data.metodoPago in [
+          'efectivo',
+          'yape',
+          'plin',
+          'transferencia',
+          'culqi',
+          'otro'
+        ]
+        && request.resource.data.cuenta in [
+          'caja_efectivo',
+          'yape',
+          'plin',
+          'bcp',
+          'culqi',
+          'otra'
+        ]
+        && request.resource.data.numeroOperacion is string
+        && request.resource.data.numeroOperacion.size() <= 100
+        && request.resource.data.observacion is string
+        && request.resource.data.observacion.size() <= 1000
+        && request.resource.data.estado == 'activo'
+        && request.resource.data.origen == 'manual_admin'
+        && request.resource.data.creadoPor
+          == request.auth.token.email
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time;
+
+      /*
+       * En esta etapa no se editan ni eliminan movimientos.
+       * Las anulaciones se incorporarán con auditoría.
+       */
+      allow update, delete: if false;
+    }
+
+    /*
      * TODO LO DEMÁS QUEDA BLOQUEADO
      */
     match /{document=**} {
