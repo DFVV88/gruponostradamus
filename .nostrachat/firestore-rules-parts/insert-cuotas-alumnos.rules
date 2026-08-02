@@ -1,0 +1,334 @@
+    /*
+     * CRONOGRAMAS MANUALES DE CUOTAS POR ALUMNO
+     */
+    match /alumno_cuotas/{cuotaId} {
+      allow read: if isAdmin();
+
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly([
+          'cuotaId',
+          'preinscripcionId',
+          'registroAlumnoId',
+          'matriculaId',
+          'alumnoNombre',
+          'alumnoDni',
+          'grupoId',
+          'concepto',
+          'numeroCuota',
+          'montoProgramadoCentimos',
+          'montoPagadoCentimos',
+          'saldoPendienteCentimos',
+          'fechaVencimiento',
+          'estado',
+          'origen',
+          'creadoPor',
+          'createdAt',
+          'updatedAt'
+        ])
+        && request.resource.data.cuotaId == cuotaId
+        && request.resource.data.preinscripcionId is string
+        && request.resource.data.preinscripcionId.size() >= 5
+        && request.resource.data.preinscripcionId.size() <= 160
+        && request.resource.data.registroAlumnoId
+          == request.resource.data.preinscripcionId
+        && request.resource.data.matriculaId
+          == request.resource.data.preinscripcionId
+        && request.resource.data.alumnoNombre is string
+        && request.resource.data.alumnoNombre.size() >= 5
+        && request.resource.data.alumnoNombre.size() <= 160
+        && request.resource.data.alumnoDni is string
+        && request.resource.data.alumnoDni.size() >= 6
+        && request.resource.data.alumnoDni.size() <= 20
+        && request.resource.data.grupoId is string
+        && request.resource.data.grupoId.size() >= 3
+        && request.resource.data.grupoId.size() <= 200
+        && request.resource.data.concepto is string
+        && request.resource.data.concepto.size() >= 3
+        && request.resource.data.concepto.size() <= 150
+        && request.resource.data.numeroCuota is int
+        && request.resource.data.numeroCuota >= 1
+        && request.resource.data.numeroCuota <= 100
+        && request.resource.data.montoProgramadoCentimos is int
+        && request.resource.data.montoProgramadoCentimos > 0
+        && request.resource.data.montoProgramadoCentimos <= 100000000
+        && request.resource.data.montoPagadoCentimos == 0
+        && request.resource.data.saldoPendienteCentimos
+          == request.resource.data.montoProgramadoCentimos
+        && request.resource.data.fechaVencimiento is string
+        && request.resource.data.fechaVencimiento.matches(
+          '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        )
+        && request.resource.data.estado == 'pendiente'
+        && request.resource.data.origen == 'cronograma_manual_admin'
+        && request.resource.data.creadoPor
+          == request.auth.token.email
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time
+        && (
+          get(
+            /databases/$(database)/documents/preinscripciones/$(request.resource.data.preinscripcionId)
+          ).data.get('matriculaAprobada', false) == true
+          || get(
+            /databases/$(database)/documents/preinscripciones/$(request.resource.data.preinscripcionId)
+          ).data.get('estado', '') == 'matriculado'
+        );
+
+      allow update: if isAdmin()
+        && resource.data.estado in ['pendiente', 'parcial']
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'montoPagadoCentimos',
+          'saldoPendienteCentimos',
+          'estado',
+          'ultimoAbonoId',
+          'ultimoPagoAt',
+          'updatedAt'
+        ])
+        && request.resource.data.montoProgramadoCentimos
+          == resource.data.montoProgramadoCentimos
+        && request.resource.data.montoPagadoCentimos is int
+        && request.resource.data.montoPagadoCentimos
+          > resource.data.montoPagadoCentimos
+        && request.resource.data.montoPagadoCentimos
+          <= resource.data.montoProgramadoCentimos
+        && request.resource.data.saldoPendienteCentimos
+          == request.resource.data.montoProgramadoCentimos
+            - request.resource.data.montoPagadoCentimos
+        && request.resource.data.estado
+          == (
+            request.resource.data.saldoPendienteCentimos == 0
+              ? 'pagada'
+              : 'parcial'
+          )
+        && request.resource.data.ultimoAbonoId is string
+        && request.resource.data.ultimoAbonoId.size() >= 5
+        && request.resource.data.ultimoAbonoId.size() <= 160
+        && request.resource.data.ultimoPagoAt == request.time
+        && request.resource.data.updatedAt == request.time
+        && getAfter(
+          /databases/$(database)/documents/alumno_abonos/$(request.resource.data.ultimoAbonoId)
+        ).data.cuotaId == cuotaId
+        && getAfter(
+          /databases/$(database)/documents/alumno_abonos/$(request.resource.data.ultimoAbonoId)
+        ).data.montoCentimos
+          == request.resource.data.montoPagadoCentimos
+            - resource.data.montoPagadoCentimos;
+
+      allow delete: if false;
+    }
+
+    /*
+     * ABONOS INMUTABLES DE CUOTAS
+     */
+    match /alumno_abonos/{abonoId} {
+      allow read: if isAdmin();
+
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly([
+          'abonoId',
+          'cuotaId',
+          'preinscripcionId',
+          'registroAlumnoId',
+          'matriculaId',
+          'alumnoNombre',
+          'alumnoDni',
+          'concepto',
+          'montoCentimos',
+          'fechaPago',
+          'cuenta',
+          'metodoPago',
+          'numeroOperacion',
+          'observacion',
+          'movimientoFinancieroId',
+          'estado',
+          'origen',
+          'registradoPor',
+          'createdAt',
+          'updatedAt'
+        ])
+        && request.resource.data.abonoId == abonoId
+        && request.resource.data.cuotaId is string
+        && request.resource.data.cuotaId.size() >= 5
+        && request.resource.data.cuotaId.size() <= 160
+        && request.resource.data.preinscripcionId is string
+        && request.resource.data.preinscripcionId.size() >= 5
+        && request.resource.data.preinscripcionId.size() <= 160
+        && request.resource.data.registroAlumnoId
+          == request.resource.data.preinscripcionId
+        && request.resource.data.matriculaId
+          == request.resource.data.preinscripcionId
+        && request.resource.data.alumnoNombre is string
+        && request.resource.data.alumnoNombre.size() >= 5
+        && request.resource.data.alumnoNombre.size() <= 160
+        && request.resource.data.alumnoDni is string
+        && request.resource.data.alumnoDni.size() >= 6
+        && request.resource.data.alumnoDni.size() <= 20
+        && request.resource.data.concepto is string
+        && request.resource.data.concepto.size() >= 3
+        && request.resource.data.concepto.size() <= 150
+        && request.resource.data.montoCentimos is int
+        && request.resource.data.montoCentimos > 0
+        && request.resource.data.montoCentimos <= 100000000
+        && request.resource.data.fechaPago is string
+        && request.resource.data.fechaPago.matches(
+          '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        )
+        && request.resource.data.cuenta in [
+          'caja_efectivo',
+          'yape',
+          'plin',
+          'bcp',
+          'culqi',
+          'otra'
+        ]
+        && request.resource.data.metodoPago in [
+          'efectivo',
+          'yape',
+          'plin',
+          'transferencia',
+          'culqi',
+          'otro'
+        ]
+        && request.resource.data.numeroOperacion is string
+        && request.resource.data.numeroOperacion.size() >= 3
+        && request.resource.data.numeroOperacion.size() <= 100
+        && request.resource.data.observacion is string
+        && request.resource.data.observacion.size() <= 1000
+        && request.resource.data.movimientoFinancieroId
+          == 'abono_' + abonoId
+        && request.resource.data.estado == 'activo'
+        && request.resource.data.origen == 'abono_cuota_admin'
+        && request.resource.data.registradoPor
+          == request.auth.token.email
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time
+        && get(
+          /databases/$(database)/documents/alumno_cuotas/$(request.resource.data.cuotaId)
+        ).data.preinscripcionId
+          == request.resource.data.preinscripcionId
+        && get(
+          /databases/$(database)/documents/alumno_cuotas/$(request.resource.data.cuotaId)
+        ).data.saldoPendienteCentimos
+          >= request.resource.data.montoCentimos
+        && getAfter(
+          /databases/$(database)/documents/alumno_cuotas/$(request.resource.data.cuotaId)
+        ).data.ultimoAbonoId == abonoId
+        && getAfter(
+          /databases/$(database)/documents/alumno_cuotas/$(request.resource.data.cuotaId)
+        ).data.montoPagadoCentimos
+          == get(
+            /databases/$(database)/documents/alumno_cuotas/$(request.resource.data.cuotaId)
+          ).data.montoPagadoCentimos
+            + request.resource.data.montoCentimos
+        && getAfter(
+          /databases/$(database)/documents/finanzas_movimientos/$(request.resource.data.movimientoFinancieroId)
+        ).data.abonoId == abonoId;
+
+      allow update, delete: if false;
+    }
+
+    /*
+     * INGRESOS FINANCIEROS ORIGINADOS POR ABONOS DE CUOTAS
+     */
+    match /finanzas_movimientos/{movimientoId} {
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly([
+          'tipo',
+          'fechaOperacion',
+          'categoria',
+          'concepto',
+          'monto',
+          'metodoPago',
+          'cuenta',
+          'numeroOperacion',
+          'observacion',
+          'estado',
+          'origen',
+          'creadoPor',
+          'pagoId',
+          'cuotaId',
+          'abonoId',
+          'preinscripcionId',
+          'registroAlumnoId',
+          'matriculaId',
+          'grupoId',
+          'alumnoNombre',
+          'alumnoDni',
+          'conceptoPago',
+          'createdAt',
+          'updatedAt'
+        ])
+        && request.resource.data.tipo == 'ingreso'
+        && request.resource.data.fechaOperacion is string
+        && request.resource.data.fechaOperacion.matches(
+          '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        )
+        && request.resource.data.categoria
+          in ['matricula', 'pension', 'otros_ingresos']
+        && request.resource.data.concepto is string
+        && request.resource.data.concepto.size() >= 3
+        && request.resource.data.concepto.size() <= 160
+        && request.resource.data.monto is number
+        && request.resource.data.monto > 0
+        && request.resource.data.monto <= 1000000
+        && request.resource.data.metodoPago in [
+          'efectivo',
+          'yape',
+          'plin',
+          'transferencia',
+          'culqi',
+          'otro'
+        ]
+        && request.resource.data.cuenta in [
+          'caja_efectivo',
+          'yape',
+          'plin',
+          'bcp',
+          'culqi',
+          'otra'
+        ]
+        && request.resource.data.numeroOperacion is string
+        && request.resource.data.numeroOperacion.size() >= 3
+        && request.resource.data.numeroOperacion.size() <= 100
+        && request.resource.data.observacion is string
+        && request.resource.data.observacion.size() <= 1000
+        && request.resource.data.estado == 'activo'
+        && request.resource.data.origen == 'abono_cuota_admin'
+        && request.resource.data.creadoPor
+          == request.auth.token.email
+        && request.resource.data.pagoId == movimientoId
+        && movimientoId == 'abono_' + request.resource.data.abonoId
+        && request.resource.data.cuotaId is string
+        && request.resource.data.cuotaId.size() >= 5
+        && request.resource.data.abonoId is string
+        && request.resource.data.abonoId.size() >= 5
+        && request.resource.data.preinscripcionId is string
+        && request.resource.data.preinscripcionId.size() >= 5
+        && request.resource.data.registroAlumnoId
+          == request.resource.data.preinscripcionId
+        && request.resource.data.matriculaId
+          == request.resource.data.preinscripcionId
+        && request.resource.data.grupoId is string
+        && request.resource.data.grupoId.size() >= 3
+        && request.resource.data.grupoId.size() <= 200
+        && request.resource.data.alumnoNombre is string
+        && request.resource.data.alumnoNombre.size() >= 5
+        && request.resource.data.alumnoNombre.size() <= 160
+        && request.resource.data.alumnoDni is string
+        && request.resource.data.alumnoDni.size() >= 6
+        && request.resource.data.alumnoDni.size() <= 20
+        && request.resource.data.conceptoPago is string
+        && request.resource.data.conceptoPago.size() >= 3
+        && request.resource.data.conceptoPago.size() <= 150
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time
+        && getAfter(
+          /databases/$(database)/documents/alumno_abonos/$(request.resource.data.abonoId)
+        ).data.movimientoFinancieroId == movimientoId
+        && getAfter(
+          /databases/$(database)/documents/alumno_abonos/$(request.resource.data.abonoId)
+        ).data.cuotaId == request.resource.data.cuotaId
+        && getAfter(
+          /databases/$(database)/documents/alumno_abonos/$(request.resource.data.abonoId)
+        ).data.montoCentimos
+          == request.resource.data.monto * 100;
+    }
