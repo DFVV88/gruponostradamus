@@ -12,8 +12,24 @@
 .nf-stat>strong{position:relative;display:block;margin-top:7px;font-family:'Baloo 2';font-size:29px;line-height:1;color:#061426}
 .nf-stat>small{display:block;margin-top:7px;color:#73818d;font-size:11px;font-weight:750}
 .nf-stat.income>strong{color:#14855a}.nf-stat.expense>strong{color:#c73931}.nf-stat.balance>strong{color:#078c95}
+.nf-account-section{padding:18px;border:1px solid rgba(7,140,149,.13);border-radius:22px;background:#fff;box-shadow:0 14px 38px rgba(6,20,38,.055)}
+.nf-account-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:13px}
+.nf-account-head>div strong{display:block;color:#061426;font-family:'Baloo 2';font-size:25px;line-height:1}
+.nf-account-head>div span{display:block;margin-top:5px;color:#647482;font-size:12px}
+.nf-account-head>small{padding:7px 10px;border-radius:999px;background:#eef8fa;color:#075b65;font-size:10px;font-weight:900}
+.nf-account-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.nf-account-card{display:block;width:100%;padding:14px;border:1px solid #dce9ed;border-radius:17px;background:linear-gradient(180deg,#fff,#f9fcfd);font:inherit;text-align:left;cursor:pointer;transition:.18s ease}
+.nf-account-card:hover{transform:translateY(-2px);border-color:rgba(7,140,149,.42);box-shadow:0 12px 24px rgba(6,20,38,.07)}
+.nf-account-top{display:flex;align-items:center;gap:9px}
+.nf-account-icon{width:34px;height:34px;display:grid;place-items:center;flex:0 0 auto;border-radius:11px;background:#eaf8f9;color:#075b65;font-weight:950}
+.nf-account-top>span:last-child strong{display:block;color:#061426;font-size:13px}
+.nf-account-top>span:last-child small{display:block;margin-top:2px;color:#82909a;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.35px}
+.nf-account-card>b{display:block;margin-top:12px;color:#061426;font-family:'Baloo 2';font-size:24px;line-height:1}
+.nf-account-card>b.positive{color:#14855a}.nf-account-card>b.negative{color:#c73931}
+.nf-account-flow{display:flex;justify-content:space-between;gap:8px;margin-top:9px;padding-top:9px;border-top:1px solid #edf3f5;color:#647482;font-size:9px;font-weight:850}
+.nf-account-note{margin-top:11px;padding:10px 12px;border-radius:13px;background:#fff8e8;color:#6a4700;font-size:10px;font-weight:800;line-height:1.45}
 .nf-panel{padding:18px;border:1px solid rgba(7,140,149,.13);border-radius:22px;background:#fff;box-shadow:0 14px 38px rgba(6,20,38,.055)}
-.nf-filters{display:grid;grid-template-columns:minmax(160px,.55fr) minmax(170px,.65fr) minmax(260px,1.4fr);gap:9px;margin-bottom:12px}
+.nf-filters{display:grid;grid-template-columns:minmax(135px,.48fr) minmax(155px,.55fr) minmax(165px,.62fr) minmax(250px,1.25fr);gap:9px;margin-bottom:12px}
 .nf-filters label,.nf-form-grid label{display:block}
 .nf-filters label span,.nf-form-grid label span{display:block;margin-bottom:5px;color:#061426;font-size:10px;font-weight:950;text-transform:uppercase;letter-spacing:.35px}
 .nf-filters input,.nf-filters select,.nf-form-grid input,.nf-form-grid select,.nf-form-grid textarea{width:100%;border:1px solid #dce9ed;border-radius:12px;padding:10px 11px;background:#fbfdfe;color:#172033;font:inherit;font-size:13px;outline:none}
@@ -21,12 +37,13 @@
 .nf-table-wrap table{min-width:920px}
 .nf-table-wrap th{font-size:10px}
 .nf-type{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:10px;font-weight:950}
-.nf-type.income{background:#eaf9f1;color:#14855a}.nf-type.expense{background:#fff0ef;color:#b42318}
+.nf-type.income{background:#eaf9f1;color:#14855a}.nf-type.expense{background:#fff0ef;color:#b42318}.nf-type.transfer{background:#eef2ff;color:#3346a5}
 .nf-amount{font-weight:950;white-space:nowrap}.nf-amount.income{color:#14855a}.nf-amount.expense{color:#c73931}
 .nf-muted{color:#8a969f}
 .nf-modal-back{position:fixed;inset:0;z-index:10050;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(2,7,13,.66)}
 .nf-modal-back.show{display:flex}
 .nf-modal{width:min(760px,96vw);max-height:92vh;overflow:auto;padding:23px;border-radius:24px;background:#fff;box-shadow:0 28px 80px rgba(2,7,13,.28)}
+.nf-transfer-modal{width:min(680px,96vw)}
 .nf-modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:15px}
 .nf-modal-head h2{margin:0;color:#061426;font-family:'Baloo 2';font-size:35px;line-height:1}
 .nf-modal-head p{margin:5px 0 0;color:#647482;font-size:13px}
@@ -37,5 +54,5 @@
 .nf-form-note{margin-top:13px;padding:11px 13px;border:1px solid rgba(255,148,30,.27);border-radius:14px;background:#fff8e8;color:#6a4700;font-size:11px;font-weight:800;line-height:1.45}
 .nf-form-actions{display:flex;justify-content:flex-end;margin-top:13px}
 .nf-form-actions .btn{min-width:180px}
-@media(max-width:1100px){.nf-stats{grid-template-columns:1fr 1fr}.nf-actions{align-items:flex-start}.nf-filters{grid-template-columns:1fr 1fr}.nf-filters .wide{grid-column:1/-1}}
-@media(max-width:720px){.nf-actions{display:block}.nf-action-buttons{display:grid;grid-template-columns:1fr;margin-top:14px}.nf-action-buttons .btn{width:100%;margin:0}.nf-stats,.nf-filters,.nf-form-grid{grid-template-columns:1fr}.nf-filters .wide,.nf-form-grid .wide{grid-column:auto}.nf-modal{padding:18px}.nf-modal-head h2{font-size:29px}.nf-modal-head .btn{width:auto;margin:0}.nf-form-actions .btn{width:100%}}
+@media(max-width:1100px){.nf-stats{grid-template-columns:1fr 1fr}.nf-actions{align-items:flex-start}.nf-account-grid{grid-template-columns:1fr 1fr}.nf-filters{grid-template-columns:1fr 1fr}.nf-filters .wide{grid-column:1/-1}}
+@media(max-width:720px){.nf-actions{display:block}.nf-action-buttons{display:grid;grid-template-columns:1fr;margin-top:14px}.nf-action-buttons .btn{width:100%;margin:0}.nf-stats,.nf-account-grid,.nf-filters,.nf-form-grid{grid-template-columns:1fr}.nf-account-head{display:block}.nf-account-head>small{display:inline-flex;margin-top:9px}.nf-account-flow{display:grid}.nf-filters .wide,.nf-form-grid .wide{grid-column:auto}.nf-modal{padding:18px}.nf-modal-head h2{font-size:29px}.nf-modal-head .btn{width:auto;margin:0}.nf-form-actions .btn{width:100%}}
