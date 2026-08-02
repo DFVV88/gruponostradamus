@@ -195,3 +195,7 @@ onAuthStateChanged(auth,user => {
 
 if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded',initialize);
 else initialize();
+
+import('./admin-finanzas-auditoria.js?v=2026-08-02-1').catch(error => {
+  console.error('No se pudo cargar la auditoría financiera.',error);
+});
