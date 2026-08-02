@@ -199,3 +199,7 @@ else initialize();
 import('./admin-finanzas-auditoria.js?v=2026-08-02-1').catch(error => {
   console.error('No se pudo cargar la auditoría financiera.',error);
 });
+
+import('./admin-finanzas-cierres.js?v=2026-08-02-1').catch(error => {
+  console.error('No se pudo cargar el cierre diario financiero.',error);
+});
