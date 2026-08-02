@@ -203,3 +203,7 @@ import('./admin-finanzas-auditoria.js?v=2026-08-02-1').catch(error => {
 import('./admin-finanzas-cierres.js?v=2026-08-02-1').catch(error => {
   console.error('No se pudo cargar el cierre diario financiero.',error);
 });
+
+import('./admin-vouchers.js?v=2026-08-02-1').catch(error => {
+  console.error('No se pudo cargar el módulo de vouchers.',error);
+});
