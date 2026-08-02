@@ -207,3 +207,7 @@ import('./admin-finanzas-cierres.js?v=2026-08-02-1').catch(error => {
 import('./admin-vouchers.js?v=2026-08-02-1').catch(error => {
   console.error('No se pudo cargar el módulo de vouchers.',error);
 });
+
+import('./admin-correcciones-pagos-cuotas.js?v=2026-08-02-2').catch(error => {
+  console.error('No se pudieron cargar las correcciones de pagos y cuotas.',error);
+});
