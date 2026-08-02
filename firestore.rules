@@ -1498,6 +1498,174 @@ service cloud.firestore {
     }
 
     /*
+     * CORRECCIONES DE CUOTAS Y VOUCHERS
+     * Estas reglas complementan las anteriores sin ampliar accesos públicos.
+     */
+
+    /*
+     * Permite crear la cuota cuando existe una matrícula oficial activa,
+     * aunque la ficha de preinscripción tenga campos replicados desactualizados.
+     */
+    match /alumno_cuotas/{cuotaId} {
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly([
+          'cuotaId',
+          'preinscripcionId',
+          'registroAlumnoId',
+          'matriculaId',
+          'alumnoNombre',
+          'alumnoDni',
+          'grupoId',
+          'concepto',
+          'numeroCuota',
+          'montoProgramadoCentimos',
+          'montoPagadoCentimos',
+          'saldoPendienteCentimos',
+          'fechaVencimiento',
+          'estado',
+          'origen',
+          'creadoPor',
+          'createdAt',
+          'updatedAt'
+        ])
+        && request.resource.data.cuotaId == cuotaId
+        && request.resource.data.preinscripcionId is string
+        && request.resource.data.preinscripcionId.size() >= 5
+        && request.resource.data.preinscripcionId.size() <= 160
+        && request.resource.data.registroAlumnoId
+          == request.resource.data.preinscripcionId
+        && request.resource.data.matriculaId
+          == request.resource.data.preinscripcionId
+        && request.resource.data.alumnoNombre is string
+        && request.resource.data.alumnoNombre.size() >= 5
+        && request.resource.data.alumnoNombre.size() <= 160
+        && request.resource.data.alumnoDni is string
+        && request.resource.data.alumnoDni.size() >= 6
+        && request.resource.data.alumnoDni.size() <= 20
+        && request.resource.data.grupoId is string
+        && request.resource.data.grupoId.size() >= 3
+        && request.resource.data.grupoId.size() <= 200
+        && request.resource.data.concepto is string
+        && request.resource.data.concepto.size() >= 3
+        && request.resource.data.concepto.size() <= 150
+        && request.resource.data.numeroCuota is int
+        && request.resource.data.numeroCuota >= 1
+        && request.resource.data.numeroCuota <= 100
+        && request.resource.data.montoProgramadoCentimos is int
+        && request.resource.data.montoProgramadoCentimos > 0
+        && request.resource.data.montoProgramadoCentimos <= 100000000
+        && request.resource.data.montoPagadoCentimos == 0
+        && request.resource.data.saldoPendienteCentimos
+          == request.resource.data.montoProgramadoCentimos
+        && request.resource.data.fechaVencimiento is string
+        && request.resource.data.fechaVencimiento.matches(
+          '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        )
+        && request.resource.data.estado == 'pendiente'
+        && request.resource.data.origen == 'cronograma_manual_admin'
+        && request.resource.data.creadoPor
+          == request.auth.token.email
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time
+        && exists(
+          /databases/$(database)/documents/matriculas/$(request.resource.data.preinscripcionId)
+        )
+        && get(
+          /databases/$(database)/documents/matriculas/$(request.resource.data.preinscripcionId)
+        ).data.preinscripcionId
+          == request.resource.data.preinscripcionId
+        && get(
+          /databases/$(database)/documents/matriculas/$(request.resource.data.preinscripcionId)
+        ).data.estado == 'activo';
+    }
+
+    /*
+     * Complemento para comprobantes WEBP generados o descargados desde WhatsApp.
+     */
+    match /comprobantes_pago/{comprobanteId} {
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly([
+          'comprobanteId',
+          'preinscripcionId',
+          'movimientoFinancieroId',
+          'cuotaId',
+          'abonoId',
+          'tipoPago',
+          'storagePath',
+          'downloadUrl',
+          'nombreOriginal',
+          'contentType',
+          'sizeBytes',
+          'estado',
+          'origen',
+          'subidoPor',
+          'createdAt'
+        ])
+        && request.resource.data.comprobanteId == comprobanteId
+        && request.resource.data.preinscripcionId is string
+        && request.resource.data.preinscripcionId.size() >= 5
+        && request.resource.data.preinscripcionId.size() <= 160
+        && request.resource.data.movimientoFinancieroId == comprobanteId
+        && request.resource.data.cuotaId is string
+        && request.resource.data.cuotaId.size() <= 160
+        && request.resource.data.abonoId is string
+        && request.resource.data.abonoId.size() <= 160
+        && request.resource.data.tipoPago in [
+          'pago_inicial',
+          'abono_cuota'
+        ]
+        && request.resource.data.storagePath is string
+        && request.resource.data.storagePath.size() >= 20
+        && request.resource.data.storagePath.size() <= 1000
+        && request.resource.data.storagePath.matches(
+          '^comprobantes-pago/.*'
+        )
+        && request.resource.data.downloadUrl is string
+        && request.resource.data.downloadUrl.size() >= 20
+        && request.resource.data.downloadUrl.size() <= 3000
+        && request.resource.data.nombreOriginal is string
+        && request.resource.data.nombreOriginal.size() >= 1
+        && request.resource.data.nombreOriginal.size() <= 180
+        && request.resource.data.contentType == 'image/webp'
+        && request.resource.data.sizeBytes is int
+        && request.resource.data.sizeBytes > 0
+        && request.resource.data.sizeBytes <= 8388608
+        && request.resource.data.estado == 'activo'
+        && request.resource.data.origen == 'voucher_admin'
+        && request.resource.data.subidoPor
+          == request.auth.token.email
+        && request.resource.data.createdAt == request.time
+        && exists(
+          /databases/$(database)/documents/finanzas_movimientos/$(comprobanteId)
+        )
+        && get(
+          /databases/$(database)/documents/finanzas_movimientos/$(comprobanteId)
+        ).data.preinscripcionId
+          == request.resource.data.preinscripcionId
+        && (
+          (
+            request.resource.data.tipoPago == 'pago_inicial'
+            && request.resource.data.cuotaId == ''
+            && request.resource.data.abonoId == ''
+          )
+          ||
+          (
+            request.resource.data.tipoPago == 'abono_cuota'
+            && request.resource.data.cuotaId.size() >= 5
+            && request.resource.data.abonoId.size() >= 5
+            && exists(
+              /databases/$(database)/documents/alumno_abonos/$(request.resource.data.abonoId)
+            )
+            && get(
+              /databases/$(database)/documents/alumno_abonos/$(request.resource.data.abonoId)
+            ).data.cuotaId == request.resource.data.cuotaId
+            && get(
+              /databases/$(database)/documents/alumno_abonos/$(request.resource.data.abonoId)
+            ).data.movimientoFinancieroId == comprobanteId
+          )
+        );
+    }
+    /*
      * CRONOGRAMAS MANUALES DE CUOTAS POR ALUMNO
      */
     match /alumno_cuotas/{cuotaId} {
