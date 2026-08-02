@@ -9,6 +9,7 @@
   const STORAGE_KEY = 'nostraPreinscripcionesAccordion';
   const TOP_KEYS = ['general','academico'];
   let initialized = false;
+  let initialStateApplied = false;
   let observer = null;
   let userChangedState = false;
 
@@ -154,11 +155,15 @@
     panel.dataset.napOrganized = '1';
   }
 
+  function setTextIfChanged(node,value){
+    if(node && node.textContent !== value) node.textContent = value;
+  }
+
   function updateCounts(){
     const general = document.querySelector('[data-nap-accordion="general"] .nap-count');
     const academic = document.querySelector('[data-nap-accordion="academico"] .nap-count');
-    if(general) general.textContent = String(countGeneral());
-    if(academic) academic.textContent = String(countAcademic());
+    setTextIfChanged(general,String(countGeneral()));
+    setTextIfChanged(academic,String(countAcademic()));
 
     const message = clean(document.getElementById('npm-message')?.textContent).toLowerCase();
     const hasRegularization = message.includes('regulariz') || message.includes('requiere');
@@ -193,10 +198,13 @@
       initialized = true;
     }
 
-    const saved = readState();
-    if(saved) setOnlyOpen(saved);
-    else if(isMobile()) setOnlyOpen('');
-    else setOnlyOpen('general');
+    if(!initialStateApplied){
+      const saved = readState();
+      if(saved) setOnlyOpen(saved);
+      else if(isMobile()) setOnlyOpen('');
+      else setOnlyOpen('general');
+      initialStateApplied = true;
+    }
     updateCounts();
     return true;
   }
