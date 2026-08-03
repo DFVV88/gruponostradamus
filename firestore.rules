@@ -1498,32 +1498,6 @@ service cloud.firestore {
     }
 
     /*
-     * CIERRES DIARIOS V4
-     * Regla definitiva y compacta. El detalle matemático se valida
-     * en la interfaz antes de guardar. Firestore limita la creación
-     * al administrador y mantiene el cierre totalmente inmutable.
-     */
-    match /finanzas_cierres/{cierreId} {
-      allow create: if isAdmin()
-        && request.resource.data.fechaCierre is string
-        && request.resource.data.fechaCierre == cierreId
-        && request.resource.data.estado == 'cerrado'
-        && request.resource.data.cerradoPor == request.auth.token.email
-        && request.resource.data.origen == 'cierre_diario_admin'
-        && request.resource.data.cuentas is map
-        && request.resource.data.cuentas.keys().hasAll([
-          'caja_efectivo',
-          'yape',
-          'plin',
-          'bcp',
-          'culqi',
-          'otra'
-        ])
-        && request.resource.data.observacion is string;
-
-      allow update, delete: if false;
-    }
-    /*
      * CORRECCIONES DE CUOTAS Y VOUCHERS
      * Estas reglas complementan las anteriores sin ampliar accesos públicos.
      */
