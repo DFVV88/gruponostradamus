@@ -210,6 +210,6 @@ import('./admin-correcciones-pagos-cuotas.js?v=2026-08-02-3').catch(error => {
   console.error('No se pudieron cargar las correcciones de pagos y cuotas.',error);
 });
 
-import('./admin-cierres-hotfix.js?v=2026-08-02-1').catch(error => {
+import('./admin-cierres-hotfix.js?v=2026-08-03-2').catch(error => {
   console.error('No se pudo cargar la validación V2 del cierre diario.',error);
 });
