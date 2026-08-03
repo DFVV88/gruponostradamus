@@ -19,6 +19,39 @@ shopt -s nullglob
 INSERT_PARTS=("$PARTS_DIR"/insert-*.rules)
 shopt -u nullglob
 
+python3 - "$BASE_FILE" <<'PY'
+from pathlib import Path
+import sys
+
+base_path = Path(sys.argv[1])
+base = base_path.read_text(encoding='utf-8')
+
+
+def remove_range(text: str, start: str, end: str, label: str) -> str:
+    start_pos = text.find(start)
+    end_pos = text.find(end, start_pos + len(start)) if start_pos >= 0 else -1
+    if start_pos < 0 or end_pos < 0:
+        raise SystemExit(f'No se pudo retirar el bloque heredado: {label}')
+    return text[:start_pos] + text[end_pos:]
+
+
+base = remove_range(
+    base,
+    "    function validFinanceClosureAccount(a) {",
+    "    match /finanzas_movimientos/{movimientoId} {",
+    "funciones antiguas de cierre financiero",
+)
+
+base = remove_range(
+    base,
+    "    /*\n     * CIERRES DIARIOS Y CONCILIACIÓN\n",
+    "    /*\n     * PAGOS DE ALUMNOS INTEGRADOS CON FINANZAS\n",
+    "regla antigua de finanzas_cierres",
+)
+
+base_path.write_text(base, encoding='utf-8')
+PY
+
 if (( ${#INSERT_PARTS[@]} > 0 )); then
   cat "${INSERT_PARTS[@]}" > "$INSERT_FILE"
   python3 - "$BASE_FILE" "$INSERT_FILE" "$OUTPUT_FILE" <<'PY'
