@@ -202,14 +202,7 @@ onAuthStateChanged(auth,user => {
   if(currentUser) initialize();
 });
 
-/*
- * Carga las correcciones visuales y de vouchers después de registrar
- * primero este interceptador, para que el hotfix tenga prioridad.
- */
+/* Las correcciones de pagos y vouchers continúan separadas del cierre diario. */
 import('./admin-correcciones-pagos-cuotas.js?v=2026-08-02-3').catch(error => {
   console.error('No se pudieron cargar las correcciones de pagos y cuotas.',error);
-});
-
-import('./admin-cierres-hotfix.js?v=2026-08-03-2').catch(error => {
-  console.error('No se pudo cargar la validación V2 del cierre diario.',error);
 });
