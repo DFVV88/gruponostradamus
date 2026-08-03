@@ -208,6 +208,6 @@ import('./admin-vouchers.js?v=2026-08-02-1').catch(error => {
   console.error('No se pudo cargar el módulo de vouchers.',error);
 });
 
-import('./admin-correcciones-pagos-cuotas.js?v=2026-08-02-2').catch(error => {
-  console.error('No se pudieron cargar las correcciones de pagos y cuotas.',error);
+import('./admin-cuotas-hotfix.js?v=2026-08-02-1').catch(error => {
+  console.error('No se pudo cargar el hotfix de cuotas.',error);
 });
