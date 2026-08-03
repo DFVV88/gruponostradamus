@@ -1,0 +1,31 @@
+    /*
+     * CIERRE DIARIO CANÓNICO
+     * Una sola regla para lectura y creación administrativa.
+     * El cierre queda protegido contra edición y eliminación.
+     */
+    match /finanzas_cierres/{cierreId} {
+      allow read: if isAdmin();
+
+      allow create: if isAdmin()
+        && request.resource.data.fechaCierre is string
+        && request.resource.data.fechaCierre == cierreId
+        && request.resource.data.estado == 'cerrado'
+        && request.resource.data.cerradoPor
+          == request.auth.token.email
+        && request.resource.data.origen == 'cierre_diario_admin'
+        && request.resource.data.version == '2026-08'
+        && request.resource.data.cuentas is map
+        && request.resource.data.cuentas.keys().hasAll([
+          'caja_efectivo',
+          'yape',
+          'plin',
+          'bcp',
+          'culqi',
+          'otra'
+        ])
+        && request.resource.data.observacion is string
+        && request.resource.data.closedAt == request.time
+        && request.resource.data.createdAt == request.time;
+
+      allow update, delete: if false;
+    }
