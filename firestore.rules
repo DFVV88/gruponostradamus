@@ -1498,6 +1498,193 @@ service cloud.firestore {
     }
 
     /*
+     * CIERRES DIARIOS V2
+     * Regla complementaria: mantiene un cierre inmutable por fecha,
+     * pero acepta valores numéricos enteros o flotantes equivalentes.
+     */
+    function isClosureNumberV2(value) {
+      return value is int || value is float;
+    }
+
+    function validClosureAccountV2(account) {
+      return account is map
+        && account.keys().hasAll([
+          'saldoInicialCentimos',
+          'entradasCentimos',
+          'salidasCentimos',
+          'saldoEsperadoCentimos',
+          'saldoRealCentimos',
+          'diferenciaCentimos'
+        ])
+        && account.keys().hasOnly([
+          'saldoInicialCentimos',
+          'entradasCentimos',
+          'salidasCentimos',
+          'saldoEsperadoCentimos',
+          'saldoRealCentimos',
+          'diferenciaCentimos'
+        ])
+        && isClosureNumberV2(account.saldoInicialCentimos)
+        && isClosureNumberV2(account.entradasCentimos)
+        && isClosureNumberV2(account.salidasCentimos)
+        && isClosureNumberV2(account.saldoEsperadoCentimos)
+        && isClosureNumberV2(account.saldoRealCentimos)
+        && isClosureNumberV2(account.diferenciaCentimos)
+        && account.saldoInicialCentimos >= -100000000000
+        && account.saldoInicialCentimos <= 100000000000
+        && account.entradasCentimos >= 0
+        && account.entradasCentimos <= 100000000000
+        && account.salidasCentimos >= 0
+        && account.salidasCentimos <= 100000000000
+        && account.saldoEsperadoCentimos >= -100000000000
+        && account.saldoEsperadoCentimos <= 100000000000
+        && account.saldoRealCentimos >= -100000000000
+        && account.saldoRealCentimos <= 100000000000
+        && account.diferenciaCentimos >= -100000000000
+        && account.diferenciaCentimos <= 100000000000
+        && account.saldoEsperadoCentimos
+          == account.saldoInicialCentimos
+            + account.entradasCentimos
+            - account.salidasCentimos
+        && account.diferenciaCentimos
+          == account.saldoRealCentimos
+            - account.saldoEsperadoCentimos;
+    }
+
+    function validClosureAccountsV2(accounts) {
+      return accounts is map
+        && accounts.keys().hasAll([
+          'caja_efectivo',
+          'yape',
+          'plin',
+          'bcp',
+          'culqi',
+          'otra'
+        ])
+        && accounts.keys().hasOnly([
+          'caja_efectivo',
+          'yape',
+          'plin',
+          'bcp',
+          'culqi',
+          'otra'
+        ])
+        && validClosureAccountV2(accounts.caja_efectivo)
+        && validClosureAccountV2(accounts.yape)
+        && validClosureAccountV2(accounts.plin)
+        && validClosureAccountV2(accounts.bcp)
+        && validClosureAccountV2(accounts.culqi)
+        && validClosureAccountV2(accounts.otra);
+    }
+
+    match /finanzas_cierres/{cierreId} {
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasAll([
+          'fechaCierre',
+          'estado',
+          'cuentas',
+          'totalIngresosDiaCentimos',
+          'totalEgresosDiaCentimos',
+          'operacionesDia',
+          'saldoEsperadoTotalCentimos',
+          'saldoRealTotalCentimos',
+          'diferenciaTotalCentimos',
+          'tieneDiferencia',
+          'observacion',
+          'cerradoPor',
+          'origen',
+          'version',
+          'closedAt',
+          'createdAt'
+        ])
+        && request.resource.data.keys().hasOnly([
+          'fechaCierre',
+          'estado',
+          'cuentas',
+          'totalIngresosDiaCentimos',
+          'totalEgresosDiaCentimos',
+          'operacionesDia',
+          'saldoEsperadoTotalCentimos',
+          'saldoRealTotalCentimos',
+          'diferenciaTotalCentimos',
+          'tieneDiferencia',
+          'observacion',
+          'cerradoPor',
+          'origen',
+          'version',
+          'closedAt',
+          'createdAt'
+        ])
+        && request.resource.data.fechaCierre is string
+        && request.resource.data.fechaCierre.matches(
+          '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        )
+        && request.resource.data.fechaCierre == cierreId
+        && request.resource.data.estado == 'cerrado'
+        && validClosureAccountsV2(request.resource.data.cuentas)
+        && isClosureNumberV2(
+          request.resource.data.totalIngresosDiaCentimos
+        )
+        && request.resource.data.totalIngresosDiaCentimos >= 0
+        && request.resource.data.totalIngresosDiaCentimos
+          <= 100000000000
+        && isClosureNumberV2(
+          request.resource.data.totalEgresosDiaCentimos
+        )
+        && request.resource.data.totalEgresosDiaCentimos >= 0
+        && request.resource.data.totalEgresosDiaCentimos
+          <= 100000000000
+        && isClosureNumberV2(request.resource.data.operacionesDia)
+        && request.resource.data.operacionesDia >= 0
+        && request.resource.data.operacionesDia <= 100000
+        && isClosureNumberV2(
+          request.resource.data.saldoEsperadoTotalCentimos
+        )
+        && isClosureNumberV2(
+          request.resource.data.saldoRealTotalCentimos
+        )
+        && isClosureNumberV2(
+          request.resource.data.diferenciaTotalCentimos
+        )
+        && request.resource.data.saldoEsperadoTotalCentimos
+          == request.resource.data.cuentas.caja_efectivo.saldoEsperadoCentimos
+            + request.resource.data.cuentas.yape.saldoEsperadoCentimos
+            + request.resource.data.cuentas.plin.saldoEsperadoCentimos
+            + request.resource.data.cuentas.bcp.saldoEsperadoCentimos
+            + request.resource.data.cuentas.culqi.saldoEsperadoCentimos
+            + request.resource.data.cuentas.otra.saldoEsperadoCentimos
+        && request.resource.data.saldoRealTotalCentimos
+          == request.resource.data.cuentas.caja_efectivo.saldoRealCentimos
+            + request.resource.data.cuentas.yape.saldoRealCentimos
+            + request.resource.data.cuentas.plin.saldoRealCentimos
+            + request.resource.data.cuentas.bcp.saldoRealCentimos
+            + request.resource.data.cuentas.culqi.saldoRealCentimos
+            + request.resource.data.cuentas.otra.saldoRealCentimos
+        && request.resource.data.diferenciaTotalCentimos
+          == request.resource.data.saldoRealTotalCentimos
+            - request.resource.data.saldoEsperadoTotalCentimos
+        && request.resource.data.tieneDiferencia is bool
+        && request.resource.data.tieneDiferencia
+          == (request.resource.data.diferenciaTotalCentimos != 0)
+        && request.resource.data.observacion is string
+        && request.resource.data.observacion.size() <= 1000
+        && (
+          request.resource.data.diferenciaTotalCentimos == 0
+          || request.resource.data.observacion.size() >= 5
+        )
+        && request.resource.data.cerradoPor
+          == request.auth.token.email
+        && request.resource.data.origen == 'cierre_diario_admin'
+        && request.resource.data.version in [
+          '2026-08',
+          '2026-08-v2'
+        ]
+        && request.resource.data.closedAt == request.time
+        && request.resource.data.createdAt == request.time;
+
+      allow update, delete: if false;
+    }
+    /*
      * CORRECCIONES DE CUOTAS Y VOUCHERS
      * Estas reglas complementan las anteriores sin ampliar accesos públicos.
      */
