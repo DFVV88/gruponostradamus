@@ -243,7 +243,7 @@ function buildPayload(date,observation,snapshot){
     saldoRealTotalCentimos:realTotal,
     diferenciaTotalCentimos:differenceTotal,
     tieneDiferencia:differenceTotal !== 0,
-    observacion,
+    observacion:observation,
     cerradoPor:clean(currentUser.email || ADMIN_EMAIL),
     origen:'cierre_diario_admin',
     version:'2026-08-v2',
