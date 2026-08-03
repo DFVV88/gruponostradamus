@@ -229,7 +229,7 @@ async function preparePayload(){
     observacion:observation,
     cerradoPor:clean(currentUser.email || ADMIN_EMAIL),
     origen:'cierre_diario_admin',
-    version:'2026-08-v5',
+    version:'2026-08',
     closedAt:serverTimestamp(),
     createdAt:serverTimestamp()
   };
