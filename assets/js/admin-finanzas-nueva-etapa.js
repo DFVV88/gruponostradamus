@@ -200,10 +200,6 @@ import('./admin-finanzas-auditoria.js?v=2026-08-02-1').catch(error => {
   console.error('No se pudo cargar la auditoría financiera.',error);
 });
 
-import('./admin-finanzas-cierres.js?v=2026-08-02-1').catch(error => {
-  console.error('No se pudo cargar el cierre diario financiero.',error);
-});
-
 import('./admin-vouchers.js?v=2026-08-02-1').catch(error => {
   console.error('No se pudo cargar el módulo de vouchers.',error);
 });
@@ -212,7 +208,7 @@ import('./admin-cuotas-hotfix.js?v=2026-08-03-2').catch(error => {
   console.error('No se pudo cargar el hotfix de cuotas.',error);
 });
 
-/* Carga directa para evitar copias antiguas en la cadena dinámica. */
-import('./admin-cierres-hotfix.js?v=2026-08-03-2').catch(error => {
-  console.error('No se pudo cargar la corrección vigente del cierre diario.',error);
+/* Controlador único del cierre: ruta nueva para romper cualquier caché anterior. */
+import('./admin-cierres-hotfix.js?v=2026-08-03-4').catch(error => {
+  console.error('No se pudo cargar el controlador único del cierre diario.',error);
 });
