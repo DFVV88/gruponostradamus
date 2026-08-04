@@ -901,6 +901,7 @@ service cloud.firestore {
       allow read: if isAdmin();
 
       allow create: if isAdmin()
+        && isFinanceOperationalDateOpen(request.resource.data.fechaOperacion)
         && request.resource.data.keys().hasOnly([
           'tipo',
           'fechaOperacion',
@@ -1086,6 +1087,7 @@ service cloud.firestore {
      */
     match /finanzas_movimientos/{movimientoId} {
       allow create: if isAdmin()
+        && isFinanceOperationalDateOpen(request.resource.data.fechaOperacion)
         && request.resource.data.keys().hasAll([
           'tipo',
           'fechaOperacion',
@@ -1750,6 +1752,7 @@ service cloud.firestore {
      */
     match /finanzas_movimientos/{movimientoId} {
       allow create: if isAdmin()
+        && isFinanceOperationalDateOpen(request.resource.data.fechaOperacion)
         && request.resource.data.keys().hasOnly([
           'tipo',
           'fechaOperacion',
