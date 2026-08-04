@@ -48,6 +48,8 @@ let currentUser = null;
 let latestClosure = null;
 let loading = false;
 let observer = null;
+let initialized = false;
+let bannerSignature = '';
 
 const clean = value => String(value == null ? '' : value).replace(/\s+/g,' ').trim();
 const moneyCents = value => new Intl.NumberFormat('es-PE',{
@@ -146,20 +148,31 @@ function renderBanner(){
     const actions = panel.querySelector('.nf-actions');
     actions?.insertAdjacentElement('afterend',banner);
   }
-  if(!latestClosure){
-    banner.innerHTML = `
-      <div class="fc-head"><div><strong>Continuidad financiera preparada</strong><p>Aún no se encontró un cierre diario. Los movimientos permanecen abiertos desde el 1 de agosto de 2026.</p></div><span class="fc-status">Sin cierre previo</span></div>`;
-    return true;
+
+  let signature = 'sin-cierre';
+  let html = `
+    <div class="fc-head"><div><strong>Continuidad financiera preparada</strong><p>Aún no se encontró un cierre diario. Los movimientos permanecen abiertos desde el 1 de agosto de 2026.</p></div><span class="fc-status">Sin cierre previo</span></div>`;
+
+  if(latestClosure){
+    const next = nextDate(latestClosure.fechaCierre);
+    signature = [
+      latestClosure.fechaCierre,
+      ...ACCOUNTS.map(([id]) => accountValue(id))
+    ].join('|');
+    html = `
+      <div class="fc-head">
+        <div><strong>Último cierre protegido: ${dateLabel(latestClosure.fechaCierre)}</strong><p>El saldo final de este cierre será la referencia de apertura desde el ${dateLabel(next)}. Las fechas operativas anteriores permanecen bloqueadas.</p></div>
+        <span class="fc-status">Cierre confirmado</span>
+      </div>
+      <div class="fc-accounts">
+        ${ACCOUNTS.map(([id,label]) => `<div class="fc-account"><span>${label}</span><b>${moneyCents(accountValue(id))}</b></div>`).join('')}
+      </div>`;
   }
-  const next = nextDate(latestClosure.fechaCierre);
-  banner.innerHTML = `
-    <div class="fc-head">
-      <div><strong>Último cierre protegido: ${dateLabel(latestClosure.fechaCierre)}</strong><p>El saldo final de este cierre será la referencia de apertura desde el ${dateLabel(next)}. Las fechas operativas anteriores permanecen bloqueadas.</p></div>
-      <span class="fc-status">Cierre confirmado</span>
-    </div>
-    <div class="fc-accounts">
-      ${ACCOUNTS.map(([id,label]) => `<div class="fc-account"><span>${label}</span><b>${moneyCents(accountValue(id))}</b></div>`).join('')}
-    </div>`;
+
+  if(signature !== bannerSignature || !banner.innerHTML){
+    banner.innerHTML = html;
+    bannerSignature = signature;
+  }
   return true;
 }
 
@@ -225,9 +238,16 @@ function bindGuards(){
 }
 
 function initialize(){
+  if(initialized){
+    loadLatestClosure();
+    return;
+  }
+  initialized = true;
   bindGuards();
   renderBanner();
-  observer = new MutationObserver(() => renderBanner());
+  observer = new MutationObserver(() => {
+    if(!document.getElementById('finance-continuity-banner')) renderBanner();
+  });
   observer.observe(document.body,{childList:true,subtree:true});
   loadLatestClosure();
 }
