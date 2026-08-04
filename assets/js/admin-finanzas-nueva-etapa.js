@@ -3,6 +3,7 @@
    Los saldos operativos parten de cero el 01/08/2026.
    Los registros anteriores permanecen como historial opcional.
 ================================================== */
+import './admin-finanzas-continuidad.js?v=2026-08-03-1';
 import './admin-cierres-controller-v6.js?v=2026-08-03-1';
 import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
