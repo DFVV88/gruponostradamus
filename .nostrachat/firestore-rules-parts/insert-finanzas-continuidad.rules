@@ -1,0 +1,94 @@
+    /*
+     * CONTINUIDAD FINANCIERA
+     * El último cierre operativo bloquea cualquier movimiento nuevo en
+     * fechas ya cerradas. Enero-julio de 2026 permanece como historial.
+     */
+    function isFinanceOperationalDateOpen(date) {
+      return date is string
+        && (
+          date < '2026-08-01'
+          || !exists(
+            /databases/$(database)/documents/finanzas_control/cierre_actual
+          )
+          || date > get(
+            /databases/$(database)/documents/finanzas_control/cierre_actual
+          ).data.ultimaFechaCerrada
+        );
+    }
+
+    match /finanzas_control/{controlId} {
+      allow read: if isAdmin();
+
+      allow create: if isAdmin()
+        && controlId == 'cierre_actual'
+        && request.resource.data.keys().hasOnly([
+          'ultimaFechaCerrada',
+          'cierreId',
+          'cuentas',
+          'saldoRealTotalCentimos',
+          'cerradoPor',
+          'origen',
+          'version',
+          'updatedAt'
+        ])
+        && request.resource.data.ultimaFechaCerrada is string
+        && request.resource.data.ultimaFechaCerrada.matches(
+          '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        )
+        && request.resource.data.ultimaFechaCerrada >= '2026-08-01'
+        && request.resource.data.cierreId
+          == request.resource.data.ultimaFechaCerrada
+        && request.resource.data.cuentas is map
+        && request.resource.data.cuentas.keys().hasAll([
+          'caja_efectivo',
+          'yape',
+          'plin',
+          'bcp',
+          'culqi',
+          'otra'
+        ])
+        && request.resource.data.saldoRealTotalCentimos is number
+        && request.resource.data.cerradoPor
+          == request.auth.token.email
+        && request.resource.data.origen == 'cierre_diario_admin'
+        && request.resource.data.version == '2026-08-continuidad-1'
+        && request.resource.data.updatedAt == request.time;
+
+      allow update: if isAdmin()
+        && controlId == 'cierre_actual'
+        && request.resource.data.keys().hasOnly([
+          'ultimaFechaCerrada',
+          'cierreId',
+          'cuentas',
+          'saldoRealTotalCentimos',
+          'cerradoPor',
+          'origen',
+          'version',
+          'updatedAt'
+        ])
+        && request.resource.data.ultimaFechaCerrada is string
+        && request.resource.data.ultimaFechaCerrada.matches(
+          '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        )
+        && request.resource.data.ultimaFechaCerrada
+          >= resource.data.ultimaFechaCerrada
+        && request.resource.data.cierreId
+          == request.resource.data.ultimaFechaCerrada
+        && request.resource.data.cuentas is map
+        && request.resource.data.cuentas.keys().hasAll([
+          'caja_efectivo',
+          'yape',
+          'plin',
+          'bcp',
+          'culqi',
+          'otra'
+        ])
+        && request.resource.data.saldoRealTotalCentimos is number
+        && request.resource.data.cerradoPor
+          == request.auth.token.email
+        && request.resource.data.origen == 'cierre_diario_admin'
+        && request.resource.data.version == '2026-08-continuidad-1'
+        && request.resource.data.updatedAt == request.time;
+
+      allow delete: if false;
+    }
