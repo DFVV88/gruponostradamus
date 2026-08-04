@@ -72,6 +72,45 @@ else
   cp "$BASE_FILE" "$OUTPUT_FILE"
 fi
 
+python3 - "$OUTPUT_FILE" <<'PY'
+from pathlib import Path
+import sys
+
+output_path = Path(sys.argv[1])
+lines = output_path.read_text(encoding='utf-8').splitlines()
+result = []
+depth = 0
+inside_finance_movements = False
+finance_match_depth = -1
+insertions = 0
+guard = "        && isFinanceOperationalDateOpen(request.resource.data.fechaOperacion)"
+
+for line in lines:
+    stripped = line.strip()
+    if stripped == "match /finanzas_movimientos/{movimientoId} {":
+        inside_finance_movements = True
+        finance_match_depth = depth
+
+    result.append(line)
+
+    if inside_finance_movements and stripped == "allow create: if isAdmin()":
+        result.append(guard)
+        insertions += 1
+
+    depth += line.count('{') - line.count('}')
+    if inside_finance_movements and depth <= finance_match_depth:
+        inside_finance_movements = False
+        finance_match_depth = -1
+
+if insertions < 3:
+    raise SystemExit(
+        f'Se esperaban al menos 3 reglas de creación financiera protegidas; se encontraron {insertions}'
+    )
+
+output_path.write_text('\n'.join(result) + '\n', encoding='utf-8')
+print(f'Bloqueo de fecha aplicado a {insertions} reglas de creación financiera')
+PY
+
 echo "Reglas ensambladas en $OUTPUT_FILE"
 echo "Complementos: ${#INSERT_PARTS[@]}"
 echo "Líneas: $(wc -l < "$OUTPUT_FILE")"
