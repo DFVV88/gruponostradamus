@@ -43,8 +43,8 @@ let loading = false;
 let ready = false;
 
 const clean = value => String(value == null ? '' : value).replace(/\s+/g,' ').trim();
-const esc = value => clean(value).replace(/[&<>'\"]/g,char => ({
-  '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','\"':'&quot;'
+const esc = value => clean(value).replace(/[&<>'"]/g,char => ({
+  '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'
 }[char]));
 const number = value => {
   const parsed = Number(value);
@@ -355,7 +355,7 @@ function filteredStudents(){
   });
 }
 
-function renderGroupCards(data){
+function renderGroupCards(){
   const container = document.getElementById('receivables-groups');
   if(!container) return;
   const selected = clean(document.getElementById('receivables-group')?.value);
@@ -416,7 +416,7 @@ function render(){
       || a.name.localeCompare(b.name,'es');
   });
   renderSummary(data);
-  renderGroupCards(data);
+  renderGroupCards();
 
   const rows = document.getElementById('receivables-rows');
   if(!rows) return;
