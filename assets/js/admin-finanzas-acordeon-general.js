@@ -52,13 +52,14 @@ function injectStyles(){
     .finance-general-chevron{display:grid;place-items:center;width:24px;height:24px;border-radius:999px;background:#eef8fa;color:#075b65;font-size:20px;font-weight:950;transition:transform .18s ease}
     .finance-general-accordion[open] .finance-general-chevron{transform:rotate(90deg)}
     .finance-general-body{padding:0 14px 14px}
-    .finance-general-body>.nf-account-section,.finance-general-body>.rc-section,.finance-general-body>.npay-section,.finance-general-body>.nf-close-section,.finance-general-body>.nf-panel,.finance-general-body>.nf-audit-section{margin:0!important;border:0!important;box-shadow:none!important;background:transparent!important;padding:0!important}
+    .finance-general-body>.nf-account-section,.finance-general-body>.rc-section,.finance-general-body>.npay-section,.finance-general-body>.nrep-section,.finance-general-body>.nf-close-section,.finance-general-body>.nf-panel,.finance-general-body>.nf-audit-section{margin:0!important;border:0!important;box-shadow:none!important;background:transparent!important;padding:0!important}
     #finance-accordion-accounts .nf-account-head{display:none}
     #finance-accordion-close .nf-close-head{display:none}
     #finance-accordion-history .finance-general-body{padding-top:2px}
     #finance-accordion-history .nf-history-banner{margin:0}
     #finance-accordion-receivables .rc-section{margin:0!important}
     #finance-accordion-payables .npay-section{margin:0!important}
+    #finance-accordion-reports .nrep-section{margin:0!important}
     @media(max-width:760px){
       .finance-general-controls{display:block}.finance-general-control-buttons{display:grid;grid-template-columns:1fr 1fr;margin-top:9px}.finance-general-control-buttons .btn{width:100%}
       .finance-general-accordion>summary{grid-template-columns:1fr 25px;gap:7px 10px}.finance-general-summary-actions{grid-column:1/2;justify-content:flex-start}.finance-general-chevron{grid-column:2;grid-row:1/3}.finance-general-copy small{font-size:9px}
@@ -149,6 +150,13 @@ function buildAvailable(){
     open:false
   });
 
+  wrapNode(directChild(panel,'#finance-reports-section'),{
+    id:'finance-accordion-reports',
+    title:'Reportes financieros',
+    subtitle:'Resumen mensual, resultado y posición gerencial',
+    open:false
+  });
+
   wrapNode(directChild(panel,'#finance-close-section'),{
     id:'finance-accordion-close',
     title:'Cierre diario y conciliación',
@@ -180,6 +188,7 @@ function buildAvailable(){
     'finance-accordion-accounts',
     'finance-accordion-receivables',
     'finance-accordion-payables',
+    'finance-accordion-reports',
     'finance-accordion-close',
     'finance-accordion-movements',
     'finance-accordion-audit'
@@ -209,6 +218,11 @@ function updateSummaries(){
   const payableOverdue = clean(document.getElementById('finance-payable-overdue')?.textContent) || money(0);
   const payableCount = clean(document.getElementById('finance-payable-count')?.textContent) || '0';
   setText('#finance-accordion-payables .finance-general-copy small',`${payablePending} por pagar · ${payableOverdue} vencido · ${payableCount} obligaciones abiertas`);
+
+  const reportMonth = clean(document.getElementById('finance-report-title')?.textContent) || 'Mes actual';
+  const reportIncome = clean(document.getElementById('finance-report-income')?.textContent) || money(0);
+  const reportResult = clean(document.getElementById('finance-report-result')?.textContent) || money(0);
+  setText('#finance-accordion-reports .finance-general-copy small',`${reportMonth} · ingresos ${reportIncome} · resultado ${reportResult}`);
 
   const movementRows = visibleTableRows('#finance-rows tr');
   const period = clean(document.getElementById('finance-period-label')?.textContent) || 'Periodo actual';
