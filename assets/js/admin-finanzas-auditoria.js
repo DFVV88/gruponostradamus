@@ -76,6 +76,7 @@ const money = value => new Intl.NumberFormat('es-PE',{style:'currency',currency:
 const accountLabel = value => ACCOUNTS[value] || value || '-';
 const categoryLabel = value => CATEGORIES[value] || value || '-';
 const isTransfer = item => item?.categoria === TRANSFER_CATEGORY;
+const isPayableMovement = item => item?.origen === 'pago_obligacion_admin';
 
 function dateLabel(value){
   if(!value) return '-';
@@ -128,6 +129,7 @@ function injectStyles(){
     .nf-audit-action{border:1px solid #ffd1cc;border-radius:999px;padding:7px 10px;background:#fff5f4;color:#a92d25;font:inherit;font-size:10px;font-weight:950;cursor:pointer;white-space:nowrap}
     .nf-audit-action:hover{background:#ffe9e6}.nf-audit-action:disabled{opacity:.45;cursor:not-allowed}
     .nf-audit-none{color:#87939d;font-size:10px;font-weight:800}
+    .nf-audit-managed{display:inline-flex;max-width:145px;padding:6px 8px;border-radius:10px;background:#eef8fa;color:#075b65;font-size:9px;font-weight:850;line-height:1.25}
     .nf-audit-modal-note{margin-top:12px;padding:11px 13px;border:1px solid rgba(217,45,32,.18);border-radius:14px;background:#fff4f2;color:#8c2923;font-size:11px;font-weight:800;line-height:1.45}
     .nf-audit-target{margin:12px 0;padding:12px;border:1px solid #dce9ed;border-radius:14px;background:#f8fcfd;color:#172033;font-size:12px;line-height:1.45}
     .nf-audit-target strong{color:#061426}
@@ -201,7 +203,7 @@ function bindEvents(){
     if(event.target.closest('#finance-refresh')) setTimeout(loadMovements,700);
   });
   document.addEventListener('submit',event => {
-    if(event.target.matches('#finance-form,#finance-transfer-form')) setTimeout(loadMovements,1300);
+    if(event.target.matches('#finance-form,#finance-transfer-form,#finance-payable-payment-form')) setTimeout(loadMovements,1300);
   },true);
 }
 
@@ -277,18 +279,24 @@ function render(){
     const active = (item.estado || 'activo') === 'activo';
     const income = item.tipo === 'ingreso';
     const transfer = isTransfer(item);
+    const payable = isPayableMovement(item);
     const amountClass = active ? (income ? 'income' : 'expense') : 'void';
     const registeredBy = clean(item.creadoPor) || '-';
     const auditedBy = clean(item.anuladoPor);
     const actionText = transfer ? 'Anular transferencia' : 'Anular';
+    const action = !active
+      ? '<span class="nf-audit-none">Sin acciones</span>'
+      : payable
+        ? '<span class="nf-audit-managed">Gestionar desde Cuentas por pagar</span>'
+        : `<button type="button" class="nf-audit-action" data-finance-void="${esc(item.id)}">${esc(actionText)}</button>`;
     return `<tr>
       <td><b>${esc(dateLabel(item.fechaOperacion))}</b><span class="nf-audit-operation">${esc(item.numeroOperacion || 'Sin número de operación')}</span></td>
       <td><span class="nf-audit-status ${active ? 'active' : 'void'}">${active ? 'Activo' : 'Anulado'}</span></td>
       <td><b>${esc(categoryLabel(item.categoria))}</b><br><small>${esc(item.concepto)}</small>${item.observacion ? `<br><small class="nf-muted">${esc(item.observacion)}</small>` : ''}${!active && item.motivoAnulacion ? `<span class="nf-audit-reason">Motivo: ${esc(item.motivoAnulacion)}</span>` : ''}</td>
-      <td>${esc(accountLabel(item.cuenta))}<br><small>${esc(transfer ? 'Transferencia interna' : (item.origen || 'Registro manual'))}</small></td>
+      <td>${esc(accountLabel(item.cuenta))}<br><small>${esc(transfer ? 'Transferencia interna' : payable ? 'Pago de obligación' : (item.origen || 'Registro manual'))}</small></td>
       <td class="nf-audit-amount ${amountClass}">${income ? '+' : '-'} ${esc(money(item.monto))}</td>
       <td><small>Registrado: ${esc(timestampLabel(item.createdAt))}</small><span class="nf-audit-user">${esc(registeredBy)}</span>${!active ? `<br><small>Anulado: ${esc(timestampLabel(item.anuladoEn))}</small><span class="nf-audit-user">${esc(auditedBy || '-')}</span>` : ''}</td>
-      <td>${active ? `<button type="button" class="nf-audit-action" data-finance-void="${esc(item.id)}">${esc(actionText)}</button>` : '<span class="nf-audit-none">Sin acciones</span>'}</td>
+      <td>${action}</td>
     </tr>`;
   }).join('');
 }
@@ -309,7 +317,7 @@ function transferTargets(item){
 function openVoidModal(id){
   if(!currentUser || busy) return;
   const item = movements.find(candidate => candidate.id === id);
-  if(!item || (item.estado || 'activo') !== 'activo') return;
+  if(!item || (item.estado || 'activo') !== 'activo' || isPayableMovement(item)) return;
   selectedMovement = item;
   const targets = transferTargets(item);
   const target = document.getElementById('finance-void-target');
@@ -340,7 +348,7 @@ function closeVoidModal(){
 
 async function voidMovement(event){
   event.preventDefault();
-  if(busy || !currentUser || !selectedMovement) return;
+  if(busy || !currentUser || !selectedMovement || isPayableMovement(selectedMovement)) return;
   const reason = clean(document.getElementById('finance-void-reason')?.value);
   if(reason.length < 5 || reason.length > 500){
     return setMessage('finance-void-message','err','El motivo debe tener entre 5 y 500 caracteres.');
