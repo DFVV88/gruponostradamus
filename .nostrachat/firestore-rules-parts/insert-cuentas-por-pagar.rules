@@ -1,0 +1,380 @@
+
+    /*
+     * CUENTAS POR PAGAR
+     * Obligaciones administrativas con pagos parciales y saldo controlado.
+     */
+    match /finanzas_obligaciones/{obligacionId} {
+      allow read: if isAdmin();
+
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly([
+          'obligacionId',
+          'beneficiario',
+          'tipoBeneficiario',
+          'categoria',
+          'concepto',
+          'numeroDocumento',
+          'montoProgramadoCentimos',
+          'montoPagadoCentimos',
+          'saldoPendienteCentimos',
+          'fechaVencimiento',
+          'estado',
+          'observacion',
+          'origen',
+          'creadoPor',
+          'createdAt',
+          'updatedAt'
+        ])
+        && request.resource.data.obligacionId == obligacionId
+        && request.resource.data.beneficiario is string
+        && request.resource.data.beneficiario.size() >= 2
+        && request.resource.data.beneficiario.size() <= 140
+        && request.resource.data.tipoBeneficiario in [
+          'docente',
+          'personal',
+          'arrendador',
+          'proveedor',
+          'acreedor',
+          'otro'
+        ]
+        && request.resource.data.categoria in [
+          'docentes',
+          'personal_administrativo',
+          'alquiler',
+          'servicios',
+          'publicidad',
+          'materiales',
+          'mantenimiento',
+          'deudas',
+          'otros_egresos'
+        ]
+        && request.resource.data.concepto is string
+        && request.resource.data.concepto.size() >= 3
+        && request.resource.data.concepto.size() <= 160
+        && request.resource.data.numeroDocumento is string
+        && request.resource.data.numeroDocumento.size() <= 80
+        && request.resource.data.montoProgramadoCentimos is int
+        && request.resource.data.montoProgramadoCentimos > 0
+        && request.resource.data.montoProgramadoCentimos <= 100000000
+        && request.resource.data.montoPagadoCentimos == 0
+        && request.resource.data.saldoPendienteCentimos
+          == request.resource.data.montoProgramadoCentimos
+        && request.resource.data.fechaVencimiento is string
+        && request.resource.data.fechaVencimiento.matches(
+          '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        )
+        && request.resource.data.fechaVencimiento >= '2026-08-01'
+        && request.resource.data.estado == 'pendiente'
+        && request.resource.data.observacion is string
+        && request.resource.data.observacion.size() <= 1000
+        && request.resource.data.origen == 'cuenta_por_pagar_admin'
+        && request.resource.data.creadoPor == request.auth.token.email
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time;
+
+      allow update: if isAdmin()
+        && resource.data.estado in ['pendiente', 'parcial']
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'montoPagadoCentimos',
+          'saldoPendienteCentimos',
+          'estado',
+          'ultimoPagoId',
+          'ultimoPagoAt',
+          'updatedAt'
+        ])
+        && request.resource.data.montoProgramadoCentimos
+          == resource.data.montoProgramadoCentimos
+        && request.resource.data.montoPagadoCentimos is int
+        && request.resource.data.montoPagadoCentimos
+          > resource.data.montoPagadoCentimos
+        && request.resource.data.montoPagadoCentimos
+          <= resource.data.montoProgramadoCentimos
+        && request.resource.data.saldoPendienteCentimos
+          == request.resource.data.montoProgramadoCentimos
+            - request.resource.data.montoPagadoCentimos
+        && request.resource.data.estado
+          == (
+            request.resource.data.saldoPendienteCentimos == 0
+              ? 'pagada'
+              : 'parcial'
+          )
+        && request.resource.data.ultimoPagoId is string
+        && request.resource.data.ultimoPagoId.size() >= 5
+        && request.resource.data.ultimoPagoId.size() <= 160
+        && request.resource.data.ultimoPagoAt == request.time
+        && request.resource.data.updatedAt == request.time
+        && getAfter(
+          /databases/$(database)/documents/finanzas_pagos_obligaciones/$(request.resource.data.ultimoPagoId)
+        ).data.obligacionId == obligacionId
+        && getAfter(
+          /databases/$(database)/documents/finanzas_pagos_obligaciones/$(request.resource.data.ultimoPagoId)
+        ).data.montoCentimos
+          == request.resource.data.montoPagadoCentimos
+            - resource.data.montoPagadoCentimos;
+
+      allow delete: if false;
+    }
+
+    /*
+     * PAGOS INMUTABLES DE OBLIGACIONES
+     */
+    match /finanzas_pagos_obligaciones/{pagoObligacionId} {
+      allow read: if isAdmin();
+
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly([
+          'pagoObligacionId',
+          'obligacionId',
+          'beneficiario',
+          'tipoBeneficiario',
+          'categoria',
+          'concepto',
+          'montoCentimos',
+          'fechaPago',
+          'metodoPago',
+          'cuenta',
+          'numeroOperacion',
+          'comprobanteReferencia',
+          'observacion',
+          'movimientoFinancieroId',
+          'estado',
+          'origen',
+          'registradoPor',
+          'createdAt',
+          'updatedAt'
+        ])
+        && request.resource.data.pagoObligacionId == pagoObligacionId
+        && request.resource.data.obligacionId is string
+        && request.resource.data.obligacionId.size() >= 5
+        && request.resource.data.obligacionId.size() <= 160
+        && request.resource.data.beneficiario is string
+        && request.resource.data.beneficiario.size() >= 2
+        && request.resource.data.beneficiario.size() <= 140
+        && request.resource.data.tipoBeneficiario in [
+          'docente',
+          'personal',
+          'arrendador',
+          'proveedor',
+          'acreedor',
+          'otro'
+        ]
+        && request.resource.data.categoria in [
+          'docentes',
+          'personal_administrativo',
+          'alquiler',
+          'servicios',
+          'publicidad',
+          'materiales',
+          'mantenimiento',
+          'deudas',
+          'otros_egresos'
+        ]
+        && request.resource.data.concepto is string
+        && request.resource.data.concepto.size() >= 3
+        && request.resource.data.concepto.size() <= 160
+        && request.resource.data.montoCentimos is int
+        && request.resource.data.montoCentimos > 0
+        && request.resource.data.montoCentimos <= 100000000
+        && request.resource.data.fechaPago is string
+        && request.resource.data.fechaPago.matches(
+          '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        )
+        && request.resource.data.fechaPago >= '2026-08-01'
+        && request.resource.data.metodoPago in [
+          'efectivo',
+          'yape',
+          'plin',
+          'transferencia',
+          'culqi',
+          'otro'
+        ]
+        && request.resource.data.cuenta in [
+          'caja_efectivo',
+          'yape',
+          'plin',
+          'bcp',
+          'culqi',
+          'otra'
+        ]
+        && request.resource.data.numeroOperacion is string
+        && request.resource.data.numeroOperacion.size() <= 100
+        && request.resource.data.comprobanteReferencia is string
+        && request.resource.data.comprobanteReferencia.size() <= 120
+        && request.resource.data.observacion is string
+        && request.resource.data.observacion.size() <= 1000
+        && request.resource.data.movimientoFinancieroId
+          == 'pago_obligacion_' + pagoObligacionId
+        && request.resource.data.estado == 'activo'
+        && request.resource.data.origen == 'pago_obligacion_admin'
+        && request.resource.data.registradoPor == request.auth.token.email
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time
+        && get(
+          /databases/$(database)/documents/finanzas_obligaciones/$(request.resource.data.obligacionId)
+        ).data.saldoPendienteCentimos >= request.resource.data.montoCentimos
+        && get(
+          /databases/$(database)/documents/finanzas_obligaciones/$(request.resource.data.obligacionId)
+        ).data.beneficiario == request.resource.data.beneficiario
+        && get(
+          /databases/$(database)/documents/finanzas_obligaciones/$(request.resource.data.obligacionId)
+        ).data.tipoBeneficiario == request.resource.data.tipoBeneficiario
+        && get(
+          /databases/$(database)/documents/finanzas_obligaciones/$(request.resource.data.obligacionId)
+        ).data.categoria == request.resource.data.categoria
+        && get(
+          /databases/$(database)/documents/finanzas_obligaciones/$(request.resource.data.obligacionId)
+        ).data.concepto == request.resource.data.concepto
+        && getAfter(
+          /databases/$(database)/documents/finanzas_obligaciones/$(request.resource.data.obligacionId)
+        ).data.ultimoPagoId == pagoObligacionId
+        && getAfter(
+          /databases/$(database)/documents/finanzas_obligaciones/$(request.resource.data.obligacionId)
+        ).data.montoPagadoCentimos
+          == get(
+            /databases/$(database)/documents/finanzas_obligaciones/$(request.resource.data.obligacionId)
+          ).data.montoPagadoCentimos
+            + request.resource.data.montoCentimos
+        && getAfter(
+          /databases/$(database)/documents/finanzas_movimientos/$(request.resource.data.movimientoFinancieroId)
+        ).data.pagoObligacionId == pagoObligacionId;
+
+      allow update, delete: if false;
+    }
+
+    /*
+     * EGRESOS FINANCIEROS ORIGINADOS POR CUENTAS POR PAGAR
+     */
+    match /finanzas_movimientos/{movimientoId} {
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly([
+          'tipo',
+          'fechaOperacion',
+          'categoria',
+          'concepto',
+          'monto',
+          'metodoPago',
+          'cuenta',
+          'numeroOperacion',
+          'observacion',
+          'estado',
+          'origen',
+          'creadoPor',
+          'pagoId',
+          'obligacionId',
+          'pagoObligacionId',
+          'beneficiario',
+          'tipoBeneficiario',
+          'conceptoObligacion',
+          'comprobanteReferencia',
+          'createdAt',
+          'updatedAt'
+        ])
+        && request.resource.data.tipo == 'egreso'
+        && request.resource.data.fechaOperacion is string
+        && request.resource.data.fechaOperacion.matches(
+          '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        )
+        && request.resource.data.categoria in [
+          'docentes',
+          'personal_administrativo',
+          'alquiler',
+          'servicios',
+          'publicidad',
+          'materiales',
+          'mantenimiento',
+          'deudas',
+          'otros_egresos'
+        ]
+        && request.resource.data.concepto is string
+        && request.resource.data.concepto.size() >= 3
+        && request.resource.data.concepto.size() <= 160
+        && request.resource.data.monto is number
+        && request.resource.data.monto > 0
+        && request.resource.data.monto <= 1000000
+        && request.resource.data.metodoPago in [
+          'efectivo',
+          'yape',
+          'plin',
+          'transferencia',
+          'culqi',
+          'otro'
+        ]
+        && request.resource.data.cuenta in [
+          'caja_efectivo',
+          'yape',
+          'plin',
+          'bcp',
+          'culqi',
+          'otra'
+        ]
+        && request.resource.data.numeroOperacion is string
+        && request.resource.data.numeroOperacion.size() <= 100
+        && request.resource.data.observacion is string
+        && request.resource.data.observacion.size() <= 1000
+        && request.resource.data.estado == 'activo'
+        && request.resource.data.origen == 'pago_obligacion_admin'
+        && request.resource.data.creadoPor == request.auth.token.email
+        && request.resource.data.pagoId == movimientoId
+        && request.resource.data.obligacionId is string
+        && request.resource.data.obligacionId.size() >= 5
+        && request.resource.data.obligacionId.size() <= 160
+        && request.resource.data.pagoObligacionId is string
+        && request.resource.data.pagoObligacionId.size() >= 5
+        && request.resource.data.pagoObligacionId.size() <= 160
+        && movimientoId
+          == 'pago_obligacion_' + request.resource.data.pagoObligacionId
+        && request.resource.data.beneficiario is string
+        && request.resource.data.beneficiario.size() >= 2
+        && request.resource.data.beneficiario.size() <= 140
+        && request.resource.data.tipoBeneficiario in [
+          'docente',
+          'personal',
+          'arrendador',
+          'proveedor',
+          'acreedor',
+          'otro'
+        ]
+        && request.resource.data.conceptoObligacion is string
+        && request.resource.data.conceptoObligacion.size() >= 3
+        && request.resource.data.conceptoObligacion.size() <= 160
+        && request.resource.data.comprobanteReferencia is string
+        && request.resource.data.comprobanteReferencia.size() <= 120
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time
+        && getAfter(
+          /databases/$(database)/documents/finanzas_pagos_obligaciones/$(request.resource.data.pagoObligacionId)
+        ).data.movimientoFinancieroId == movimientoId
+        && getAfter(
+          /databases/$(database)/documents/finanzas_pagos_obligaciones/$(request.resource.data.pagoObligacionId)
+        ).data.obligacionId == request.resource.data.obligacionId
+        && getAfter(
+          /databases/$(database)/documents/finanzas_pagos_obligaciones/$(request.resource.data.pagoObligacionId)
+        ).data.fechaPago == request.resource.data.fechaOperacion
+        && getAfter(
+          /databases/$(database)/documents/finanzas_pagos_obligaciones/$(request.resource.data.pagoObligacionId)
+        ).data.montoCentimos == request.resource.data.monto * 100
+        && getAfter(
+          /databases/$(database)/documents/finanzas_pagos_obligaciones/$(request.resource.data.pagoObligacionId)
+        ).data.cuenta == request.resource.data.cuenta
+        && getAfter(
+          /databases/$(database)/documents/finanzas_pagos_obligaciones/$(request.resource.data.pagoObligacionId)
+        ).data.metodoPago == request.resource.data.metodoPago
+        && getAfter(
+          /databases/$(database)/documents/finanzas_pagos_obligaciones/$(request.resource.data.pagoObligacionId)
+        ).data.numeroOperacion == request.resource.data.numeroOperacion
+        && getAfter(
+          /databases/$(database)/documents/finanzas_pagos_obligaciones/$(request.resource.data.pagoObligacionId)
+        ).data.comprobanteReferencia == request.resource.data.comprobanteReferencia
+        && get(
+          /databases/$(database)/documents/finanzas_obligaciones/$(request.resource.data.obligacionId)
+        ).data.beneficiario == request.resource.data.beneficiario
+        && get(
+          /databases/$(database)/documents/finanzas_obligaciones/$(request.resource.data.obligacionId)
+        ).data.tipoBeneficiario == request.resource.data.tipoBeneficiario
+        && get(
+          /databases/$(database)/documents/finanzas_obligaciones/$(request.resource.data.obligacionId)
+        ).data.categoria == request.resource.data.categoria
+        && get(
+          /databases/$(database)/documents/finanzas_obligaciones/$(request.resource.data.obligacionId)
+        ).data.concepto == request.resource.data.conceptoObligacion;
+    }
