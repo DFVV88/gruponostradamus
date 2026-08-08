@@ -1,0 +1,241 @@
+
+    /*
+     * CONTROL FINANCIERO DE DOCENTES
+     * Perfiles de pago y periodos trabajados enlazados a Cuentas por pagar.
+     */
+    match /finanzas_docentes/{docenteId} {
+      allow read: if isAdmin();
+
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly([
+          'docenteId',
+          'userUid',
+          'nombre',
+          'correoInstitucional',
+          'cursoPrincipal',
+          'numeroDocumento',
+          'esquemaPago',
+          'tarifaCentimos',
+          'estado',
+          'observacion',
+          'origen',
+          'creadoPor',
+          'actualizadoPor',
+          'createdAt',
+          'updatedAt'
+        ])
+        && request.resource.data.docenteId == docenteId
+        && request.resource.data.userUid is string
+        && request.resource.data.userUid.size() <= 160
+        && request.resource.data.nombre is string
+        && request.resource.data.nombre.size() >= 2
+        && request.resource.data.nombre.size() <= 140
+        && request.resource.data.correoInstitucional is string
+        && request.resource.data.correoInstitucional.size() <= 160
+        && request.resource.data.cursoPrincipal is string
+        && request.resource.data.cursoPrincipal.size() <= 100
+        && request.resource.data.numeroDocumento is string
+        && request.resource.data.numeroDocumento.size() <= 20
+        && request.resource.data.esquemaPago in ['hora', 'sesion', 'fijo']
+        && request.resource.data.tarifaCentimos is int
+        && request.resource.data.tarifaCentimos > 0
+        && request.resource.data.tarifaCentimos <= 100000000
+        && request.resource.data.estado == 'activo'
+        && request.resource.data.observacion is string
+        && request.resource.data.observacion.size() <= 1000
+        && request.resource.data.origen == 'docente_finanzas_admin'
+        && request.resource.data.creadoPor == request.auth.token.email
+        && request.resource.data.actualizadoPor == request.auth.token.email
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time;
+
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'nombre',
+          'correoInstitucional',
+          'cursoPrincipal',
+          'numeroDocumento',
+          'esquemaPago',
+          'tarifaCentimos',
+          'estado',
+          'observacion',
+          'actualizadoPor',
+          'updatedAt'
+        ])
+        && request.resource.data.docenteId == docenteId
+        && request.resource.data.userUid == resource.data.userUid
+        && request.resource.data.nombre is string
+        && request.resource.data.nombre.size() >= 2
+        && request.resource.data.nombre.size() <= 140
+        && request.resource.data.correoInstitucional is string
+        && request.resource.data.correoInstitucional.size() <= 160
+        && request.resource.data.cursoPrincipal is string
+        && request.resource.data.cursoPrincipal.size() <= 100
+        && request.resource.data.numeroDocumento is string
+        && request.resource.data.numeroDocumento.size() <= 20
+        && request.resource.data.esquemaPago in ['hora', 'sesion', 'fijo']
+        && request.resource.data.tarifaCentimos is int
+        && request.resource.data.tarifaCentimos > 0
+        && request.resource.data.tarifaCentimos <= 100000000
+        && request.resource.data.estado in ['activo', 'inactivo']
+        && request.resource.data.observacion is string
+        && request.resource.data.observacion.size() <= 1000
+        && request.resource.data.origen == resource.data.origen
+        && request.resource.data.creadoPor == resource.data.creadoPor
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.actualizadoPor == request.auth.token.email
+        && request.resource.data.updatedAt == request.time;
+
+      allow delete: if false;
+    }
+
+    match /finanzas_docentes_periodos/{periodoId} {
+      allow read: if isAdmin();
+
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly([
+          'periodoId',
+          'docenteId',
+          'docenteNombre',
+          'numeroDocumento',
+          'periodo',
+          'curso',
+          'salonCiclo',
+          'esquemaPago',
+          'unidades',
+          'tarifaCentimos',
+          'montoGeneradoCentimos',
+          'fechaVencimiento',
+          'observacion',
+          'estado',
+          'obligacionId',
+          'origen',
+          'creadoPor',
+          'createdAt',
+          'updatedAt'
+        ])
+        && request.resource.data.periodoId == periodoId
+        && request.resource.data.docenteId is string
+        && request.resource.data.docenteId.size() >= 5
+        && request.resource.data.docenteId.size() <= 160
+        && exists(
+          /databases/$(database)/documents/finanzas_docentes/$(request.resource.data.docenteId)
+        )
+        && get(
+          /databases/$(database)/documents/finanzas_docentes/$(request.resource.data.docenteId)
+        ).data.estado == 'activo'
+        && request.resource.data.docenteNombre
+          == get(
+            /databases/$(database)/documents/finanzas_docentes/$(request.resource.data.docenteId)
+          ).data.nombre
+        && request.resource.data.numeroDocumento
+          == get(
+            /databases/$(database)/documents/finanzas_docentes/$(request.resource.data.docenteId)
+          ).data.numeroDocumento
+        && request.resource.data.docenteNombre is string
+        && request.resource.data.docenteNombre.size() >= 2
+        && request.resource.data.docenteNombre.size() <= 140
+        && request.resource.data.numeroDocumento is string
+        && request.resource.data.numeroDocumento.size() <= 20
+        && request.resource.data.periodo is string
+        && request.resource.data.periodo.matches('^[0-9]{4}-[0-9]{2}$')
+        && request.resource.data.curso is string
+        && request.resource.data.curso.size() >= 2
+        && request.resource.data.curso.size() <= 80
+        && request.resource.data.salonCiclo is string
+        && request.resource.data.salonCiclo.size() >= 2
+        && request.resource.data.salonCiclo.size() <= 80
+        && request.resource.data.esquemaPago in ['hora', 'sesion', 'fijo']
+        && request.resource.data.unidades is number
+        && request.resource.data.unidades > 0
+        && request.resource.data.unidades <= 1000
+        && request.resource.data.tarifaCentimos is int
+        && request.resource.data.tarifaCentimos > 0
+        && request.resource.data.tarifaCentimos <= 100000000
+        && request.resource.data.montoGeneradoCentimos is int
+        && request.resource.data.montoGeneradoCentimos > 0
+        && request.resource.data.montoGeneradoCentimos <= 100000000
+        && request.resource.data.fechaVencimiento is string
+        && request.resource.data.fechaVencimiento.matches(
+          '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        )
+        && request.resource.data.observacion is string
+        && request.resource.data.observacion.size() <= 1000
+        && request.resource.data.estado == 'por_enviar'
+        && request.resource.data.obligacionId == ''
+        && request.resource.data.origen == 'periodo_docente_admin'
+        && request.resource.data.creadoPor == request.auth.token.email
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time;
+
+      allow update: if isAdmin()
+        && (
+          (
+            resource.data.estado == 'por_enviar'
+            && resource.data.obligacionId == ''
+            && request.resource.data.estado == 'enviado'
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+              'estado',
+              'obligacionId',
+              'enviadoCuentasPorPagarAt',
+              'updatedAt'
+            ])
+            && request.resource.data.obligacionId is string
+            && request.resource.data.obligacionId.size() >= 5
+            && request.resource.data.obligacionId.size() <= 160
+            && request.resource.data.enviadoCuentasPorPagarAt == request.time
+            && request.resource.data.updatedAt == request.time
+            && getAfter(
+              /databases/$(database)/documents/finanzas_obligaciones/$(request.resource.data.obligacionId)
+            ).data.beneficiario == resource.data.docenteNombre
+            && getAfter(
+              /databases/$(database)/documents/finanzas_obligaciones/$(request.resource.data.obligacionId)
+            ).data.tipoBeneficiario == 'docente'
+            && getAfter(
+              /databases/$(database)/documents/finanzas_obligaciones/$(request.resource.data.obligacionId)
+            ).data.categoria == 'docentes'
+            && getAfter(
+              /databases/$(database)/documents/finanzas_obligaciones/$(request.resource.data.obligacionId)
+            ).data.numeroDocumento == resource.data.numeroDocumento
+            && getAfter(
+              /databases/$(database)/documents/finanzas_obligaciones/$(request.resource.data.obligacionId)
+            ).data.montoProgramadoCentimos == resource.data.montoGeneradoCentimos
+            && getAfter(
+              /databases/$(database)/documents/finanzas_obligaciones/$(request.resource.data.obligacionId)
+            ).data.montoPagadoCentimos == 0
+            && getAfter(
+              /databases/$(database)/documents/finanzas_obligaciones/$(request.resource.data.obligacionId)
+            ).data.saldoPendienteCentimos == resource.data.montoGeneradoCentimos
+            && getAfter(
+              /databases/$(database)/documents/finanzas_obligaciones/$(request.resource.data.obligacionId)
+            ).data.fechaVencimiento == resource.data.fechaVencimiento
+            && getAfter(
+              /databases/$(database)/documents/finanzas_obligaciones/$(request.resource.data.obligacionId)
+            ).data.estado == 'pendiente'
+            && getAfter(
+              /databases/$(database)/documents/finanzas_obligaciones/$(request.resource.data.obligacionId)
+            ).data.origen == 'cuenta_por_pagar_admin'
+          )
+          ||
+          (
+            resource.data.estado == 'por_enviar'
+            && resource.data.obligacionId == ''
+            && request.resource.data.estado == 'anulado'
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+              'estado',
+              'motivoAnulacion',
+              'anuladoPor',
+              'anuladoEn',
+              'updatedAt'
+            ])
+            && request.resource.data.motivoAnulacion is string
+            && request.resource.data.motivoAnulacion.size() >= 5
+            && request.resource.data.motivoAnulacion.size() <= 500
+            && request.resource.data.anuladoPor == request.auth.token.email
+            && request.resource.data.anuladoEn == request.time
+            && request.resource.data.updatedAt == request.time
+          )
+        );
+
+      allow delete: if false;
+    }
