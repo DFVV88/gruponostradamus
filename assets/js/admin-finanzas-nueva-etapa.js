@@ -6,7 +6,8 @@
 import './admin-finanzas-continuidad.js?v=2026-08-03-2';
 import './admin-cuentas-por-cobrar.js?v=2026-08-03-1';
 import './admin-cuentas-por-cobrar-acordeon.js?v=2026-08-03-1';
-import './admin-finanzas-acordeon-general.js?v=2026-08-03-1';
+import './admin-cuentas-por-pagar.js?v=2026-08-08-1';
+import './admin-finanzas-acordeon-general.js?v=2026-08-08-1';
 import './admin-cierres-controller-v6.js?v=2026-08-03-1';
 import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
@@ -161,7 +162,7 @@ function bindRefreshes(){
   });
 
   document.addEventListener('submit',event => {
-    if(event.target.matches('#finance-form,#finance-transfer-form')){
+    if(event.target.matches('#finance-form,#finance-transfer-form,#finance-payable-payment-form')){
       setTimeout(loadStageBalances,1200);
     }
   },true);
@@ -201,7 +202,7 @@ onAuthStateChanged(auth,user => {
 if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded',initialize);
 else initialize();
 
-import('./admin-finanzas-auditoria.js?v=2026-08-02-1').catch(error => {
+import('./admin-finanzas-auditoria.js?v=2026-08-08-1').catch(error => {
   console.error('No se pudo cargar la auditoría financiera.',error);
 });
 
