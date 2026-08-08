@@ -7,6 +7,7 @@ import './admin-finanzas-continuidad.js?v=2026-08-03-2';
 import './admin-cuentas-por-cobrar.js?v=2026-08-03-1';
 import './admin-cuentas-por-cobrar-acordeon.js?v=2026-08-03-1';
 import './admin-cuentas-por-pagar.js?v=2026-08-08-1';
+import './admin-cuentas-por-pagar-layout.js?v=2026-08-08-1';
 import './admin-finanzas-acordeon-general.js?v=2026-08-08-1';
 import './admin-cierres-controller-v6.js?v=2026-08-03-1';
 import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
