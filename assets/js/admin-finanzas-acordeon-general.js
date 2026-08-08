@@ -52,12 +52,13 @@ function injectStyles(){
     .finance-general-chevron{display:grid;place-items:center;width:24px;height:24px;border-radius:999px;background:#eef8fa;color:#075b65;font-size:20px;font-weight:950;transition:transform .18s ease}
     .finance-general-accordion[open] .finance-general-chevron{transform:rotate(90deg)}
     .finance-general-body{padding:0 14px 14px}
-    .finance-general-body>.nf-account-section,.finance-general-body>.rc-section,.finance-general-body>.npay-section,.finance-general-body>.nrep-section,.finance-general-body>.nf-close-section,.finance-general-body>.nf-panel,.finance-general-body>.nf-audit-section{margin:0!important;border:0!important;box-shadow:none!important;background:transparent!important;padding:0!important}
+    .finance-general-body>.nf-account-section,.finance-general-body>.rc-section,.finance-general-body>.nteach-section,.finance-general-body>.npay-section,.finance-general-body>.nrep-section,.finance-general-body>.nf-close-section,.finance-general-body>.nf-panel,.finance-general-body>.nf-audit-section{margin:0!important;border:0!important;box-shadow:none!important;background:transparent!important;padding:0!important}
     #finance-accordion-accounts .nf-account-head{display:none}
     #finance-accordion-close .nf-close-head{display:none}
     #finance-accordion-history .finance-general-body{padding-top:2px}
     #finance-accordion-history .nf-history-banner{margin:0}
     #finance-accordion-receivables .rc-section{margin:0!important}
+    #finance-accordion-teachers .nteach-section{margin:0!important}
     #finance-accordion-payables .npay-section{margin:0!important}
     #finance-accordion-reports .nrep-section{margin:0!important}
     @media(max-width:760px){
@@ -143,6 +144,13 @@ function buildAvailable(){
     open:false
   });
 
+  wrapNode(directChild(panel,'#finance-teachers-section'),{
+    id:'finance-accordion-teachers',
+    title:'Control y pagos a docentes',
+    subtitle:'Tarifas, periodos trabajados y obligaciones docentes',
+    open:false
+  });
+
   wrapNode(directChild(panel,'#finance-payables-section'),{
     id:'finance-accordion-payables',
     title:'Cuentas por pagar',
@@ -187,6 +195,7 @@ function buildAvailable(){
     'finance-accordion-history',
     'finance-accordion-accounts',
     'finance-accordion-receivables',
+    'finance-accordion-teachers',
     'finance-accordion-payables',
     'finance-accordion-reports',
     'finance-accordion-close',
@@ -213,6 +222,11 @@ function updateSummaries(){
   const overdue = clean(document.getElementById('receivables-overdue')?.textContent) || money(0);
   const debtors = clean(document.getElementById('receivables-students')?.textContent) || '0';
   setText('#finance-accordion-receivables .finance-general-copy small',`${programmed} programado · ${overdue} vencido · ${debtors} alumnos con deuda`);
+
+  const teacherActive = clean(document.getElementById('finance-teacher-active')?.textContent) || '0';
+  const teacherGenerated = clean(document.getElementById('finance-teacher-generated')?.textContent) || money(0);
+  const teacherPending = clean(document.getElementById('finance-teacher-pending')?.textContent) || money(0);
+  setText('#finance-accordion-teachers .finance-general-copy small',`${teacherActive} docentes activos · ${teacherGenerated} generado · ${teacherPending} pendiente`);
 
   const payablePending = clean(document.getElementById('finance-payable-pending')?.textContent) || money(0);
   const payableOverdue = clean(document.getElementById('finance-payable-overdue')?.textContent) || money(0);
