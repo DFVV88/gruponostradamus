@@ -1,0 +1,138 @@
+name: Fix NostraWEEKEND schedule sync and index menu
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-weekend-sync-index.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-weekend-ui:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Patch NostraWEEKEND UI
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          pricing_path = Path('assets/js/nostra-cycle-pricing.js')
+          pricing = pricing_path.read_text(encoding='utf-8')
+
+          if 'function syncWeekendSchedules(plans)' not in pricing:
+              marker = '  function renderRemote(data){\n'
+              if pricing.count(marker) != 1:
+                  raise SystemExit('No se encontró de forma única renderRemote().')
+              helper = r'''  function weekendPlanKey(plan){
+            var value = clean(plan && plan.nombre).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+            if(value.indexOf('sabatino') !== -1 || value.indexOf('sabado') !== -1) return 'sabatino';
+            if(value.indexOf('dominical') !== -1 || value.indexOf('domingo') !== -1) return 'dominical';
+            return '';
+          }
+          function syncWeekendSchedules(plans){
+            if(program.id !== 'nostra-weekend-uni') return;
+            var byKey = {};
+            (plans || []).forEach(function(plan){
+              var key = weekendPlanKey(plan);
+              if(key && !byKey[key]) byKey[key] = plan;
+            });
+            ['sabatino','dominical'].forEach(function(key){
+              var plan = byKey[key];
+              if(!plan) return;
+              var lines = lineList(plan.horarioLineas,scheduleFallback(plan.nombre),6);
+              var scheduleText = lines.join(' · ');
+
+              var preview = Array.from(document.querySelectorAll('.nw-plan-preview article')).find(function(article){
+                var label = clean(article.querySelector('strong') && article.querySelector('strong').textContent).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+                return label.indexOf(key) !== -1;
+              });
+              var previewText = preview && preview.querySelector('span');
+              if(previewText) previewText.textContent = scheduleText;
+
+              var descriptionCard = Array.from(document.querySelectorAll('#Coursedescription .price-card')).find(function(card){
+                var label = clean(card.querySelector('.price-card_title') && card.querySelector('.price-card_title').textContent).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+                return label.indexOf(key) !== -1;
+              });
+              var descriptionSchedule = descriptionCard && descriptionCard.querySelector('.price-card_price');
+              if(descriptionSchedule){
+                descriptionSchedule.textContent = scheduleText;
+                descriptionSchedule.setAttribute('data-nostra-weekend-schedule','1');
+              }
+            });
+          }
+
+          '''
+              pricing = pricing.replace(marker, helper + marker, 1)
+
+          old_plans = "    var plans = Array.isArray(data.planes) ? data.planes.map(normalizePlan).filter(function(plan){ return plan.activo !== false && plan.precio > 0; }) : [];"
+          new_plans = "    var allPlans = Array.isArray(data.planes) ? data.planes.map(normalizePlan) : [];\n    var plans = allPlans.filter(function(plan){ return plan.activo !== false && plan.precio > 0; });"
+          if old_plans in pricing:
+              pricing = pricing.replace(old_plans, new_plans, 1)
+          elif new_plans not in pricing:
+              raise SystemExit('No se encontró la normalización de planes esperada.')
+
+          sync_anchor = "    if(!plans.length) return false;"
+          sync_call = "    syncWeekendSchedules(allPlans.filter(function(plan){ return plan.activo !== false; }));\n"
+          if sync_call not in pricing:
+              if pricing.count(sync_anchor) != 1:
+                  raise SystemExit('No se encontró de forma única el control de planes activos.')
+              pricing = pricing.replace(sync_anchor, sync_call + sync_anchor, 1)
+
+          pricing_path.write_text(pricing, encoding='utf-8')
+
+          index_path = Path('index.html')
+          index = index_path.read_text(encoding='utf-8')
+          weekend_link = 'href="ciclo-weekend-uni.html"'
+          existing = index.count(weekend_link)
+          if existing == 0:
+              pattern = re.compile(r'(?P<indent>[ \t]*)<li><a href="ciclo-verano-uni\.html">Ciclo Verano UNI</a></li>')
+              matches = list(pattern.finditer(index))
+              if len(matches) != 2:
+                  raise SystemExit(f'Se esperaban 2 enlaces de Verano en los menús del index y se encontraron {len(matches)}.')
+              index = pattern.sub(lambda m: m.group(0) + '\n' + m.group('indent') + '<li><a href="ciclo-weekend-uni.html">NostraWEEKEND</a></li>', index)
+          elif existing != 2:
+              raise SystemExit(f'El index ya contiene una cantidad inesperada de enlaces NostraWEEKEND: {existing}.')
+          index_path.write_text(index, encoding='utf-8')
+
+          loader_path = Path('assets/js/nostra-sitewide-loader.js')
+          loader = loader_path.read_text(encoding='utf-8')
+          old_version = "  var VERSION = '2026-08-11-weekend';"
+          new_version = "  var VERSION = '2026-08-11-weekend-sync';"
+          if old_version in loader:
+              loader = loader.replace(old_version, new_version, 1)
+          elif new_version not in loader:
+              raise SystemExit('No se encontró la versión esperada del cargador global.')
+          loader_path.write_text(loader, encoding='utf-8')
+
+          if pricing.count('function syncWeekendSchedules(plans)') != 1:
+              raise SystemExit('syncWeekendSchedules no quedó definida exactamente una vez.')
+          if pricing.count('syncWeekendSchedules(allPlans.filter') != 1:
+              raise SystemExit('La sincronización de horarios no quedó conectada a renderRemote().')
+          if index.count('href="ciclo-weekend-uni.html"') != 2:
+              raise SystemExit('NostraWEEKEND debe aparecer exactamente en los dos menús del index.')
+          PY
+
+          node --check assets/js/nostra-cycle-pricing.js
+          node --check assets/js/nostra-sitewide-loader.js
+          git diff --check
+          git diff -- assets/js/nostra-cycle-pricing.js assets/js/nostra-sitewide-loader.js index.html
+
+      - name: Commit UI fix and remove temporary workflow
+        shell: bash
+        run: |
+          rm .github/workflows/fix-weekend-sync-index.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/js/nostra-cycle-pricing.js assets/js/nostra-sitewide-loader.js index.html .github/workflows/fix-weekend-sync-index.yml
+          git diff --cached --check
+          git commit -m "Sincroniza horarios NostraWEEKEND y menú del index"
+          git push origin HEAD:main
