@@ -27,8 +27,6 @@ jobs:
           path = Path('firestore.rules')
           text = path.read_text(encoding='utf-8')
 
-          # 1) NostraWEEKEND debe estar permitido tanto en isOfficialProgramId()
-          #    como en /programas_publicos/{programId}.
           list_pattern = "        'ciclo-verano-uni'\n      ];"
           list_replacement = "        'ciclo-verano-uni',\n        'nostra-weekend-uni'\n      ];"
           count = text.count(list_pattern)
@@ -36,40 +34,42 @@ jobs:
               raise SystemExit(f'Esperaba 2 listas oficiales sin NostraWEEKEND y encontré {count}. Abortando.')
           text = text.replace(list_pattern, list_replacement)
 
-          # 2) Validar que lineaAcademica corresponda realmente al tipo de programa.
           marker = "    function validPreInitialState(d) {\n"
           if text.count(marker) != 1:
               raise SystemExit('No se encontró de forma única validPreInitialState(). Abortando.')
 
-          helper = """    function validAcademicLine(d) {
-      return (
-          d.programaId in [
-            'ciclo-ien',
-            'proyecto-escolar'
+          helper_lines = [
+              "    function validAcademicLine(d) {",
+              "      return (",
+              "          d.programaId in [",
+              "            'ciclo-ien',",
+              "            'proyecto-escolar'",
+              "          ]",
+              "          && d.lineaAcademica == 'Preparación Escolar'",
+              "        )",
+              "        || (",
+              "          d.programaId in [",
+              "            'paralelo-cepre-uni',",
+              "            'ciclo-verano-uni',",
+              "            'nostra-weekend-uni'",
+              "          ]",
+              "          && d.lineaAcademica == 'Programas Complementarios UNI'",
+              "        )",
+              "        || (",
+              "          d.programaId in [",
+              "            'nostra-360-uni',",
+              "            'nostra-power-uni',",
+              "            'nostra-elite-uni',",
+              "            'nostra-prime-uni',",
+              "            'nostra-talentum-uni'",
+              "          ]",
+              "          && d.lineaAcademica == 'Nostra UNI Premium'",
+              "        );",
+              "    }",
+              "",
+              ""
           ]
-          && d.lineaAcademica == 'Preparación Escolar'
-        )
-        || (
-          d.programaId in [
-            'paralelo-cepre-uni',
-            'ciclo-verano-uni',
-            'nostra-weekend-uni'
-          ]
-          && d.lineaAcademica == 'Programas Complementarios UNI'
-        )
-        || (
-          d.programaId in [
-            'nostra-360-uni',
-            'nostra-power-uni',
-            'nostra-elite-uni',
-            'nostra-prime-uni',
-            'nostra-talentum-uni'
-          ]
-          && d.lineaAcademica == 'Nostra UNI Premium'
-        );
-    }
-
-"""
+          helper = "\n".join(helper_lines)
           text = text.replace(marker, helper + marker, 1)
 
           old_line = "        && d.lineaAcademica == 'Nostra UNI Premium'\n"
@@ -78,7 +78,6 @@ jobs:
               raise SystemExit('La validación antigua de lineaAcademica no aparece exactamente una vez. Abortando.')
           text = text.replace(old_line, new_line, 1)
 
-          # Invariantes mínimas del parche.
           if text.count("'nostra-weekend-uni'") < 3:
               raise SystemExit('NostraWEEKEND no quedó presente en todas las reglas requeridas.')
           if "&& validAcademicLine(d)" not in text:
