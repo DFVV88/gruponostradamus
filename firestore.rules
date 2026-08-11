@@ -1320,6 +1320,143 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+
+    /*
+     * ALUMNOS MANUALES Y VINCULACIÓN DEL FORMULARIO WEB
+     * La ficha administrativa permanece única y Finanzas queda protegida.
+     */
+    match /preinscripciones/{id} {
+      allow create: if isAdmin()
+        && id.matches('^manual_[0-9a-f]{24}$')
+        && request.resource.data.keys().hasOnly([
+          'nombre','dni','celular','correo','colegio','situacion',
+          'programaId','ciclo','planId','planNombre','planAsignado','turno','grupoId','pensionAcordada',
+          'apoderado','celularApoderado','comentario','confirmacion',
+          'metodoPagoPreferido','metodoPagoLabel','estadoPago','pagoValidado','pagoObservacion','asesorAsignado',
+          'estado','origen','origenRegistro','tipo','lineaAcademica','correoInstitucionalAsignado','matriculaAprobada',
+          'formularioWebCompletado','ajustePagoMotivo','registradoManualmentePor','createdAt','updatedAt'
+        ])
+        && request.resource.data.nombre is string
+        && request.resource.data.nombre.size() >= 5
+        && request.resource.data.nombre.size() <= 100
+        && request.resource.data.dni is string
+        && request.resource.data.dni.matches('^[0-9]{8,12}$')
+        && request.resource.data.celular is string
+        && request.resource.data.celular.size() >= 9
+        && request.resource.data.celular.size() <= 20
+        && request.resource.data.correo is string
+        && request.resource.data.correo.size() <= 100
+        && request.resource.data.colegio is string
+        && request.resource.data.colegio.size() <= 150
+        && request.resource.data.situacion is string
+        && request.resource.data.situacion.size() <= 80
+        && request.resource.data.programaId in [
+          'nostra-360-uni','nostra-power-uni','nostra-elite-uni','nostra-prime-uni',
+          'nostra-talentum-uni','ciclo-ien','proyecto-escolar','paralelo-cepre-uni','ciclo-verano-uni'
+        ]
+        && request.resource.data.ciclo is string
+        && request.resource.data.ciclo.size() >= 3
+        && request.resource.data.ciclo.size() <= 100
+        && request.resource.data.planId == 'registro-manual'
+        && request.resource.data.planNombre is string
+        && request.resource.data.planNombre.size() <= 100
+        && request.resource.data.planAsignado is string
+        && request.resource.data.planAsignado == request.resource.data.planNombre
+        && request.resource.data.turno is string
+        && request.resource.data.turno.size() <= 40
+        && request.resource.data.grupoId is string
+        && request.resource.data.grupoId.size() <= 100
+        && request.resource.data.pensionAcordada is number
+        && request.resource.data.pensionAcordada >= 0
+        && request.resource.data.pensionAcordada <= 1000000
+        && request.resource.data.apoderado is string
+        && request.resource.data.apoderado.size() <= 100
+        && request.resource.data.celularApoderado is string
+        && request.resource.data.celularApoderado.size() <= 20
+        && request.resource.data.comentario is string
+        && request.resource.data.comentario.size() <= 1000
+        && request.resource.data.confirmacion is string
+        && request.resource.data.confirmacion.size() >= 10
+        && request.resource.data.confirmacion.size() <= 300
+        && request.resource.data.metodoPagoPreferido == 'registro_manual'
+        && request.resource.data.metodoPagoLabel == 'Registro manual administrativo'
+        && request.resource.data.estadoPago == 'sin_pago_registrado'
+        && request.resource.data.pagoValidado == false
+        && request.resource.data.pagoObservacion is string
+        && request.resource.data.pagoObservacion.size() <= 300
+        && request.resource.data.asesorAsignado is string
+        && request.resource.data.asesorAsignado.size() <= 100
+        && request.resource.data.estado == 'matriculado'
+        && request.resource.data.origen == 'registro_manual_admin'
+        && request.resource.data.origenRegistro == 'registro_manual_admin'
+        && request.resource.data.tipo == 'alumno_manual_admin'
+        && request.resource.data.lineaAcademica == 'Nostra UNI Premium'
+        && request.resource.data.correoInstitucionalAsignado == false
+        && request.resource.data.matriculaAprobada == true
+        && request.resource.data.formularioWebCompletado == false
+        && request.resource.data.ajustePagoMotivo is string
+        && request.resource.data.ajustePagoMotivo.size() <= 1000
+        && request.resource.data.registradoManualmentePor == request.auth.token.email
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time;
+
+      allow update: if resource.data.origen == 'registro_manual_admin'
+        && resource.data.formularioWebCompletado == false
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'nombre','correo','colegio','situacion','apoderado','celularApoderado','comentario','confirmacion',
+          'formularioWebCompletado','formularioWebUpdatedAt','origenFormularioWeb',
+          'userAgentFormularioWeb','pageUrlFormularioWeb','updatedAt'
+        ])
+        && request.resource.data.dni == resource.data.dni
+        && request.resource.data.celular == resource.data.celular
+        && request.resource.data.nombre is string
+        && request.resource.data.nombre.size() >= 5
+        && request.resource.data.nombre.size() <= 100
+        && request.resource.data.correo is string
+        && request.resource.data.correo.size() >= 6
+        && request.resource.data.correo.size() <= 100
+        && request.resource.data.colegio is string
+        && request.resource.data.colegio.size() <= 150
+        && request.resource.data.situacion is string
+        && request.resource.data.situacion.size() <= 80
+        && request.resource.data.apoderado is string
+        && request.resource.data.apoderado.size() <= 100
+        && request.resource.data.celularApoderado is string
+        && request.resource.data.celularApoderado.size() <= 20
+        && request.resource.data.comentario is string
+        && request.resource.data.comentario.size() <= 1000
+        && request.resource.data.confirmacion is string
+        && request.resource.data.confirmacion.size() >= 5
+        && request.resource.data.confirmacion.size() <= 300
+        && request.resource.data.formularioWebCompletado == true
+        && request.resource.data.formularioWebUpdatedAt == request.time
+        && request.resource.data.origenFormularioWeb == 'web_preinscripcion_complementaria'
+        && request.resource.data.userAgentFormularioWeb is string
+        && request.resource.data.userAgentFormularioWeb.size() <= 1000
+        && request.resource.data.pageUrlFormularioWeb is string
+        && request.resource.data.pageUrlFormularioWeb.size() <= 1000
+        && request.resource.data.updatedAt == request.time;
+    }
+
+    match /alumnos_registro_dni/{dniHash} {
+      allow get: if true;
+      allow list: if false;
+
+      allow create: if isAdmin()
+        && dniHash.matches('^[0-9a-f]{64}$')
+        && request.resource.data.keys().hasOnly([
+          'dniHash','registroId','tipo','activo','creadoPor','createdAt','updatedAt'
+        ])
+        && request.resource.data.dniHash == dniHash
+        && request.resource.data.registroId.matches('^manual_[0-9a-f]{24}$')
+        && request.resource.data.tipo == 'registro_manual_admin'
+        && request.resource.data.activo == true
+        && request.resource.data.creadoPor == request.auth.token.email
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time;
+
+      allow update, delete: if isAdmin();
+    }
     /*
      * CIERRE DIARIO CANÓNICO
      * Una sola regla para lectura y creación administrativa.
