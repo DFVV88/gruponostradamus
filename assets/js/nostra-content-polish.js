@@ -139,6 +139,12 @@
       title: 'Proyecto Escolar',
       lead: 'Programa para fortalecer bases académicas, hábitos de estudio y seguridad en Matemáticas, Ciencias y Aptitud Académica desde etapa escolar.',
       bullets: ['Base escolar fuerte', 'Hábitos de estudio', 'Acompañamiento', 'Preparación progresiva']
+    },
+    'ciclo-weekend-uni.html': {
+      badge: 'Programa complementario UNI',
+      title: 'NostraWEEKEND',
+      lead: 'Preparación concentrada para quienes quieren seguir avanzando hacia la UNI durante el fin de semana. Elige Sabatino o Dominical y mantén una práctica académica constante sin perder el ritmo.',
+      bullets: ['Sabatino o Dominical', 'Práctica tipo UNI', 'Seguimiento académico', 'Evaluación constante']
     }
   };
 

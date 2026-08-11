@@ -12,7 +12,8 @@
     'ciclo-ien.html': { id:'ciclo-ien', name: 'Ciclo IEN', tag: 'Preparación académica enfocada, práctica y progresiva.', icon: '📘', badge: 'Programa especializado' },
     'ciclo-proyecto-escolar.html': { id:'proyecto-escolar', name: 'Proyecto Escolar', tag: 'Refuerzo, nivelación y acompañamiento académico escolar.', icon: '🎒', badge: 'Programa escolar' },
     'ciclo-paralelo-cepre-uni.html': { id:'paralelo-cepre-uni', name: 'Paralelo CEPRE UNI', tag: 'Acompañamiento estratégico para estudiantes de CEPRE UNI.', icon: '🏛️', badge: 'Programa paralelo UNI' },
-    'ciclo-verano-uni.html': { id:'ciclo-verano-uni', name: 'Ciclo Verano UNI', tag: 'Avanza en vacaciones con base, práctica y método.', icon: '☀️', badge: 'Programa de verano' }
+    'ciclo-verano-uni.html': { id:'ciclo-verano-uni', name: 'Ciclo Verano UNI', tag: 'Avanza en vacaciones con base, práctica y método.', icon: '☀️', badge: 'Programa de verano' },
+    'ciclo-weekend-uni.html': { id:'nostra-weekend-uni', name: 'NostraWEEKEND', tag: 'Tu preparación UNI también avanza el fin de semana.', icon: '📅', badge: 'Programa complementario UNI' }
   };
 
   var data = cycles[file];

@@ -122,6 +122,7 @@
       '.nostra-pricing-note{width:min(1180px,92%);margin:18px auto 0;padding:12px 16px;border-radius:16px;background:#eef8fa;border:1px solid rgba(7,140,149,.18);color:#075b65;text-align:center;font-weight:800}',
       '.nostra-pricing-unavailable{width:100%;padding:26px;border-radius:22px;background:#fff8e8;border:1px solid rgba(255,148,30,.3);color:#6a4700;text-align:center;font-weight:850}',
       '[data-nostra-product-pricing="1"] .price-card .th-btn{white-space:normal!important;text-align:center}',
+      '.price-card_price[data-nostra-weekend-schedule="1"]{font-size:clamp(21px,2vw,28px)!important;line-height:1.18!important;font-weight:850!important;letter-spacing:-.25px!important;white-space:normal!important}',
       '[data-nostra-product-pricing="1"]{scroll-margin-top:110px}'
     ].join('');
     document.head.appendChild(style);

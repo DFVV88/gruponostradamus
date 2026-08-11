@@ -73,6 +73,14 @@
       descripcion: 'Ciclo intensivo de verano para iniciar o reforzar la preparación UNI durante las vacaciones. Permite avanzar rápidamente en cursos principales, desarrollar disciplina académica y llegar mejor preparado al siguiente ciclo.',
       enfoque: 'Avance rápido, refuerzo de cursos clave y disciplina de estudio.', nivel: 'Básico · Intermedio', duracion: 'Intensivo de verano',
       ideal: 'Ideal para estudiantes que quieren ganar ventaja académica durante las vacaciones.', url: 'ciclo-verano-uni.html'
+    },
+    'ciclo-weekend-uni.html': {
+      titulo: 'NostraWEEKEND', corto: 'NostraWEEKEND', icon: '📅', badge: 'Programa complementario UNI',
+      perfil: 'Tu preparación UNI también avanza el fin de semana.',
+      descripcion: 'NostraWEEKEND es un programa complementario de preparación para la UNI pensado para estudiantes que necesitan concentrar su entrenamiento académico durante el fin de semana. Permite elegir una opción Sabatino o Dominical, reforzar conocimientos, practicar con enfoque tipo UNI y sostener un avance constante.',
+      enfoque: 'Entrenamiento concentrado en sábado o domingo, práctica tipo UNI y seguimiento académico.',
+      nivel: 'Intermedio · Avanzado', duracion: 'Preparación de fin de semana', modalidad: 'Sabatino y Dominical',
+      ideal: 'Ideal para estudiantes que necesitan compatibilizar sus actividades semanales con una preparación UNI constante.', url: 'ciclo-weekend-uni.html'
     }
   };
 
@@ -80,7 +88,7 @@
   if (!actual) return;
 
   var lista = [
-    'ciclo-anual-uni.html','ciclo-semianual-uni.html','ciclo-semestral-uni.html','ciclo-elite-uni.html','ciclo-ien.html','ciclo-proyecto-escolar.html','ciclo-repaso-uni.html','ciclo-paralelo-cepre-uni.html','ciclo-verano-uni.html'
+    'ciclo-anual-uni.html','ciclo-semianual-uni.html','ciclo-semestral-uni.html','ciclo-elite-uni.html','ciclo-ien.html','ciclo-proyecto-escolar.html','ciclo-repaso-uni.html','ciclo-paralelo-cepre-uni.html','ciclo-verano-uni.html','ciclo-weekend-uni.html'
   ];
 
   var PRE = 'https://gruponostradamus.edu.pe/preinscripcion.html';
@@ -150,7 +158,7 @@
     var title = top.querySelector('.course-title');
     var hero = document.createElement('div');
     hero.className = 'nostra-cycle-hero';
-    hero.innerHTML = '<div class="nostra-cycle-hero__eyebrow">🚀 Perfil del ciclo</div><h3 class="nostra-cycle-hero__title">' + actual.perfil + '</h3><p class="nostra-cycle-hero__text">' + actual.enfoque + '</p><div class="nostra-cycle-tags"><span>' + actual.nivel + '</span><span>' + actual.duracion + '</span><span>Modalidad presencial y virtual</span></div>';
+    hero.innerHTML = '<div class="nostra-cycle-hero__eyebrow">🚀 Perfil del ciclo</div><h3 class="nostra-cycle-hero__title">' + actual.perfil + '</h3><p class="nostra-cycle-hero__text">' + actual.enfoque + '</p><div class="nostra-cycle-tags"><span>' + actual.nivel + '</span><span>' + actual.duracion + '</span><span>' + (actual.modalidad || 'Modalidad presencial y virtual') + '</span></div>';
     if (title && title.parentNode) title.parentNode.insertBefore(hero, title.nextSibling);
     else top.appendChild(hero);
   }

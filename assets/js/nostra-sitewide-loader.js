@@ -17,7 +17,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-08-11-weekend-sync';
+  var VERSION = '2026-08-11-weekend-panels';
   var ADSENSE_CLIENT = 'ca-pub-9810053992087127';
 
   function assetAlreadyLoaded(urlPart) {
