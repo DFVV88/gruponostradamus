@@ -22,7 +22,7 @@
   var API_BASE = 'https://us-central1-nostrachat-grupo-nostradamus.cloudfunctions.net/';
   var PREPARE_URL = API_BASE + 'culqiPreparePayment';
   var CHARGE_URL = API_BASE + 'culqiCreateCharge';
-  var PUBLIC_CONFIG_URL = 'assets/js/culqi-public-config.js?v=2026-01';
+  var PUBLIC_CONFIG_URL = 'assets/js/culqi-public-config.js?v=2026-08-11-live';
   var CULQI_CHECKOUT_URL = 'https://js.culqi.com/checkout-js';
   var CULQI_3DS_URL = 'https://3ds.culqi.com';
   var WHATSAPP_ASESOR = '51993750351';
@@ -404,8 +404,8 @@
     return loadScript(PUBLIC_CONFIG_URL,function(){ return typeof window.NOSTRA_CULQI_PUBLIC_KEY === 'string'; })
       .then(function(){
         var key = clean(window.NOSTRA_CULQI_PUBLIC_KEY);
-        if(!/^pk_test_[A-Za-z0-9]+$/.test(key)){
-          throw new Error('El pago en línea todavía no tiene configurada la llave pública de prueba de Culqi.');
+        if(!/^pk_(?:test|live)_[A-Za-z0-9]+$/.test(key)){
+          throw new Error('El pago en línea no tiene configurada una llave pública válida de Culqi.');
         }
         return Promise.all([
           loadScript(CULQI_CHECKOUT_URL,function(){ return typeof window.CulqiCheckout === 'function'; }),
@@ -672,7 +672,7 @@
           data:{correo:context.data.correo}
         }));
       }catch(_){ }
-      message('ok','✅ Preinscripción registrada.<br><small>Código: ' + esc(context.codigoSolicitud) + '</small><br><b>Monto validado por el servidor: ' + money((Number(context.prepared.montoCentimos) || 0) / 100) + '</b><br>' + continueButton(context,publicKey,'Pagar con tarjeta de prueba'));
+      message('ok','✅ Preinscripción registrada.<br><small>Código: ' + esc(context.codigoSolicitud) + '</small><br><b>Monto validado por el servidor: ' + money((Number(context.prepared.montoCentimos) || 0) / 100) + '</b><br>' + continueButton(context,publicKey,'Pagar con tarjeta'));
       openCheckout(context,publicKey);
     });
   }
