@@ -156,7 +156,8 @@ service cloud.firestore {
         'ciclo-ien',
         'proyecto-escolar',
         'paralelo-cepre-uni',
-        'ciclo-verano-uni'
+        'ciclo-verano-uni',
+        'nostra-weekend-uni'
       ];
     }
 
@@ -256,6 +257,34 @@ service cloud.firestore {
         );
     }
 
+    function validAcademicLine(d) {
+      return (
+          d.programaId in [
+            'ciclo-ien',
+            'proyecto-escolar'
+          ]
+          && d.lineaAcademica == 'Preparación Escolar'
+        )
+        || (
+          d.programaId in [
+            'paralelo-cepre-uni',
+            'ciclo-verano-uni',
+            'nostra-weekend-uni'
+          ]
+          && d.lineaAcademica == 'Programas Complementarios UNI'
+        )
+        || (
+          d.programaId in [
+            'nostra-360-uni',
+            'nostra-power-uni',
+            'nostra-elite-uni',
+            'nostra-prime-uni',
+            'nostra-talentum-uni'
+          ]
+          && d.lineaAcademica == 'Nostra UNI Premium'
+        );
+    }
+
     function validPreInitialState(d) {
       return validPrePaymentMethod(d)
         && d.pagoValidado == false
@@ -269,7 +298,7 @@ service cloud.firestore {
         && d.estado == 'nuevo'
         && d.origen == 'web_preinscripcion'
         && d.tipo == 'preinscripcion_inicial'
-        && d.lineaAcademica == 'Nostra UNI Premium'
+        && validAcademicLine(d)
         && d.correoInstitucionalAsignado == false
         && d.matriculaAprobada == false;
     }
@@ -592,7 +621,8 @@ service cloud.firestore {
           'ciclo-ien',
           'proyecto-escolar',
           'paralelo-cepre-uni',
-          'ciclo-verano-uni'
+          'ciclo-verano-uni',
+          'nostra-weekend-uni'
         ];
 
       allow delete: if false;
