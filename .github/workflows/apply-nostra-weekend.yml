@@ -36,21 +36,52 @@ jobs:
       - name: Integrar NostraWEEKEND
         run: python tools/apply_nostra_weekend.py
 
-      - name: Validar cambios
+      - name: Validar integración y sintaxis
         shell: bash
         run: |
+          set -euo pipefail
           test -f ciclo-weekend-uni.html
           grep -q "nostra-weekend-uni" assets/js/admin-tarifario.js
           grep -q "nostra-weekend-uni" assets/js/preinscripcion-firebase.js
           grep -q "nostra-weekend-uni" assets/js/preinscripcion-culqi-preparacion.js
           grep -q "NostraWEEKEND" assets/js/nostra-ciclos-catalog-dynamic.js
           grep -q "ciclo-weekend-uni.html" sitemap.xml
+          grep -q "Sabatino" ciclo-weekend-uni.html
+          grep -q "Dominical" ciclo-weekend-uni.html
+
+          files=(
+            assets/js/admin-tarifario.js
+            assets/js/admin-tarifario-culqi.js
+            assets/js/preinscripcion-firebase.js
+            assets/js/preinscripcion-culqi-preparacion.js
+            assets/js/admin-alumnos-manuales.js
+            assets/js/nostra-cycle-pricing.js
+            assets/js/nostra-ciclos-catalog-dynamic.js
+            assets/js/nostra-ciclos-links.js
+            assets/js/nostra-cycle-menu-labels.js
+            assets/js/shared-header.js
+            assets/js/nostra-footer-universal.js
+            assets/js/nostra-cycle-description-meta.js
+            assets/js/nostra-seo-meta.js
+            assets/js/nostra-social-seo.js
+            assets/js/nostra-schema-jsonld.js
+            assets/js/nostra-sitewide-loader.js
+            assets/js/main.js
+          )
+          for file in "${files[@]}"; do
+            if grep -q '^import ' "$file"; then
+              cp "$file" /tmp/nostra-check.mjs
+              node --check /tmp/nostra-check.mjs
+            else
+              node --check "$file"
+            fi
+          done
 
       - name: Publicar integración
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "NostraWEEKEND ya estaba integrado."
+            echo "NostraWEEKEND ya estaba integrado y pasó todas las validaciones."
             exit 0
           fi
           git config user.name "github-actions[bot]"
