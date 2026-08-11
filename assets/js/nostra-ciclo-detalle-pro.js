@@ -79,7 +79,7 @@
       perfil: 'Tu preparación UNI también avanza el fin de semana.',
       descripcion: 'NostraWEEKEND es un programa complementario de preparación para la UNI pensado para estudiantes que necesitan concentrar su entrenamiento académico durante el fin de semana. Permite elegir una opción Sabatino o Dominical, reforzar conocimientos, practicar con enfoque tipo UNI y sostener un avance constante.',
       enfoque: 'Entrenamiento concentrado en sábado o domingo, práctica tipo UNI y seguimiento académico.',
-      nivel: 'Intermedio · Avanzado', duracion: 'Preparación de fin de semana', modalidad: 'Sabatino y Dominical',
+      nivel: 'Básico', duracion: 'Preparación de fin de semana', modalidad: 'Sabatino y Dominical',
       ideal: 'Ideal para estudiantes que necesitan compatibilizar sus actividades semanales con una preparación UNI constante.', url: 'ciclo-weekend-uni.html'
     }
   };
