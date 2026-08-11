@@ -39,6 +39,12 @@ jobs:
               raise SystemExit('No se encontró exactamente una lista programas_publicos pendiente. Abortando.')
           text = text.replace(public_pattern, public_replacement, 1)
 
+          old_line = "        && d.lineaAcademica == 'Nostra UNI Premium'\n"
+          new_line = "        && validAcademicLine(d)\n"
+          if text.count(old_line) != 1:
+              raise SystemExit('La validación antigua de lineaAcademica no aparece exactamente una vez. Abortando.')
+          text = text.replace(old_line, new_line, 1)
+
           marker = "    function validPreInitialState(d) {\n"
           if text.count(marker) != 1:
               raise SystemExit('No se encontró de forma única validPreInitialState(). Abortando.')
@@ -76,12 +82,6 @@ jobs:
           ]
           helper = "\n".join(helper_lines)
           text = text.replace(marker, helper + marker, 1)
-
-          old_line = "        && d.lineaAcademica == 'Nostra UNI Premium'\n"
-          new_line = "        && validAcademicLine(d)\n"
-          if text.count(old_line) != 1:
-              raise SystemExit('La validación antigua de lineaAcademica no aparece exactamente una vez. Abortando.')
-          text = text.replace(old_line, new_line, 1)
 
           if text.count("'nostra-weekend-uni'") != 3:
               raise SystemExit('NostraWEEKEND debe quedar exactamente en 3 puntos de las reglas.')
