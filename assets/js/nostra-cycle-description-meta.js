@@ -15,7 +15,8 @@
     'ciclo-ien.html':'ciclo-ien',
     'ciclo-proyecto-escolar.html':'proyecto-escolar',
     'ciclo-paralelo-cepre-uni.html':'paralelo-cepre-uni',
-    'ciclo-verano-uni.html':'ciclo-verano-uni'
+    'ciclo-verano-uni.html':'ciclo-verano-uni',
+    'ciclo-weekend-uni.html':'nostra-weekend-uni'
   };
   var programId = PROGRAMS[file];
   if(!programId) return;

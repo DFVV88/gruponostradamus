@@ -18,7 +18,8 @@
     'ciclo-ien.html': 'IEN UNI',
     'ciclo-proyecto-escolar.html': 'Proyecto Escolar',
     'ciclo-paralelo-cepre-uni.html': 'Paralelo CEPRE UNI',
-    'ciclo-verano-uni.html': 'Ciclo Verano UNI'
+    'ciclo-verano-uni.html': 'Ciclo Verano UNI',
+    'ciclo-weekend-uni.html': 'NostraWEEKEND'
   };
 
   function fileFromHref(anchor) {

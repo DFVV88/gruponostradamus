@@ -17,7 +17,10 @@
     'proyecto escolar': 'ciclo-proyecto-escolar.html',
     'paralelo cepre uni': 'ciclo-paralelo-cepre-uni.html',
     'verano uni': 'ciclo-verano-uni.html',
-    'ciclo verano uni': 'ciclo-verano-uni.html'
+    'ciclo verano uni': 'ciclo-verano-uni.html',
+    'nostraweekend': 'ciclo-weekend-uni.html',
+    'nostra weekend': 'ciclo-weekend-uni.html',
+    'weekend uni': 'ciclo-weekend-uni.html'
   };
 
   function normalize(text) {

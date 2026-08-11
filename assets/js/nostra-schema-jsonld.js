@@ -102,7 +102,8 @@
     'ciclo-proyecto-escolar.html': 'Proyecto Escolar',
     'ciclo-repaso-uni.html': 'Ciclo Repaso UNI',
     'ciclo-paralelo-cepre-uni.html': 'Ciclo Paralelo CEPRE UNI',
-    'ciclo-verano-uni.html': 'Ciclo Verano UNI'
+    'ciclo-verano-uni.html': 'Ciclo Verano UNI',
+    'ciclo-weekend-uni.html': 'NostraWEEKEND'
   };
 
   var articles = {

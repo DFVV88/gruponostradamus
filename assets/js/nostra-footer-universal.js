@@ -130,6 +130,7 @@
                   '<li><a href="ciclo-proyecto-escolar.html">Proyecto Escolar</a></li>' +
                   '<li><a href="ciclo-paralelo-cepre-uni.html">Paralelo CEPRE UNI</a></li>' +
                   '<li><a href="ciclo-verano-uni.html">Ciclo Verano UNI</a></li>' +
+                  '<li><a href="ciclo-weekend-uni.html">NostraWEEKEND</a></li>' +
                 '</ul>' +
               '</div>' +
             '</section>' +

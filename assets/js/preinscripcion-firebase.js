@@ -24,7 +24,8 @@
     {id:'ciclo-ien',name:'IEN UNI'},
     {id:'proyecto-escolar',name:'Proyecto Escolar'},
     {id:'paralelo-cepre-uni',name:'Paralelo CEPRE UNI'},
-    {id:'ciclo-verano-uni',name:'Ciclo Verano UNI'}
+    {id:'ciclo-verano-uni',name:'Ciclo Verano UNI'},
+    {id:'nostra-weekend-uni',name:'NostraWEEKEND'}
   ];
 
   var WHATSAPP_ASESOR = '51993750351';
@@ -55,9 +56,16 @@
   function normalized(value){
     return clean(value).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
   }
+  function academicLine(programId){
+    if(programId === 'ciclo-ien' || programId === 'proyecto-escolar') return 'Preparación Escolar';
+    if(programId === 'paralelo-cepre-uni' || programId === 'ciclo-verano-uni' || programId === 'nostra-weekend-uni') return 'Programas Complementarios UNI';
+    return 'Nostra UNI Premium';
+  }
   function turnoFromPlan(planName){
     var name = normalized(planName);
     if(!name) return '';
+    if(name.indexOf('sabatino') !== -1 || name.indexOf('sabado') !== -1) return 'Sabatino';
+    if(name.indexOf('dominical') !== -1 || name.indexOf('domingo') !== -1) return 'Dominical';
     if(name.indexOf('manana') !== -1) return 'Mañana';
     if(name.indexOf('tarde') !== -1) return 'Tarde';
     if(name.indexOf('noche') !== -1) return 'Noche';
@@ -278,7 +286,7 @@
       estado:'nuevo',
       origen:'web_preinscripcion',
       tipo:'preinscripcion_inicial',
-      lineaAcademica:'Nostra UNI Premium',
+      lineaAcademica:academicLine(program ? program.id : value('ciclo')),
       correoInstitucionalAsignado:false,
       matriculaAprobada:false,
       userAgent:navigator.userAgent || '',

@@ -16,7 +16,8 @@
     'ciclo-ien.html':{id:'ciclo-ien',name:'IEN UNI'},
     'ciclo-proyecto-escolar.html':{id:'proyecto-escolar',name:'Proyecto Escolar'},
     'ciclo-paralelo-cepre-uni.html':{id:'paralelo-cepre-uni',name:'Paralelo CEPRE UNI'},
-    'ciclo-verano-uni.html':{id:'ciclo-verano-uni',name:'Ciclo Verano UNI'}
+    'ciclo-verano-uni.html':{id:'ciclo-verano-uni',name:'Ciclo Verano UNI'},
+    'ciclo-weekend-uni.html':{id:'nostra-weekend-uni',name:'NostraWEEKEND'}
   };
   var program = PROGRAMS[file];
   if(!program) return;
@@ -59,6 +60,8 @@
   }
   function scheduleFallback(name){
     var normalized = clean(name).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    if(normalized.indexOf('sabatino') !== -1 || normalized.indexOf('sabado') !== -1) return ['Sábados','Horario por confirmar'];
+    if(normalized.indexOf('dominical') !== -1 || normalized.indexOf('domingo') !== -1) return ['Domingos','Horario por confirmar'];
     if(normalized.indexOf('full') !== -1 || normalized.indexOf('unico') !== -1) return FULL_SCHEDULE.slice();
     if(normalized.indexOf('tarde') !== -1) return AFTERNOON_SCHEDULE.slice();
     if(normalized.indexOf('manana') !== -1) return MORNING_SCHEDULE.slice();

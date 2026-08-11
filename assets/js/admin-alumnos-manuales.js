@@ -37,7 +37,8 @@ const PROGRAMS = [
   ['ciclo-ien','IEN UNI'],
   ['proyecto-escolar','Proyecto Escolar'],
   ['paralelo-cepre-uni','Paralelo CEPRE UNI'],
-  ['ciclo-verano-uni','Ciclo Verano UNI']
+  ['ciclo-verano-uni','Ciclo Verano UNI'],
+  ['nostra-weekend-uni','NostraWEEKEND']
 ];
 
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
@@ -155,7 +156,7 @@ function ensureUi(){
             <label><span>Celular del alumno *</span><input id="manual-student-phone" inputmode="tel" minlength="9" maxlength="20" required></label>
             <label><span>Correo personal</span><input id="manual-student-email" type="email" maxlength="100" placeholder="Puede completarlo después"></label>
             <label><span>Programa *</span><select id="manual-student-program" required>${PROGRAMS.map(item => `<option value="${esc(item[0])}">${esc(item[1])}</option>`).join('')}</select></label>
-            <label><span>Turno</span><select id="manual-student-turn"><option value="Por confirmar">Por confirmar</option><option>Mañana</option><option>Tarde</option><option>Noche</option><option>FULL</option></select></label>
+            <label><span>Turno</span><select id="manual-student-turn"><option value="Por confirmar">Por confirmar</option><option>Mañana</option><option>Tarde</option><option>Noche</option><option>FULL</option><option>Sabatino</option><option>Dominical</option></select></label>
             <label><span>Plan asignado</span><input id="manual-student-plan" maxlength="100" placeholder="Ej. Presencial FULL"></label>
             <label><span>Salón / grupo</span><input id="manual-student-group" maxlength="100" placeholder="Ej. POWER-A"></label>
             <label><span>Pensión mensual acordada (S/)</span><input id="manual-student-price" type="number" min="0" max="1000000" step="0.01" placeholder="0.00"></label>
@@ -197,6 +198,12 @@ function closeModal(){
 
 function programName(id){
   return PROGRAMS.find(item => item[0] === id)?.[1] || id;
+}
+
+function academicLine(programId){
+  if(programId === 'ciclo-ien' || programId === 'proyecto-escolar') return 'Preparación Escolar';
+  if(programId === 'paralelo-cepre-uni' || programId === 'ciclo-verano-uni' || programId === 'nostra-weekend-uni') return 'Programas Complementarios UNI';
+  return 'Nostra UNI Premium';
 }
 
 async function existingByDni(dni){
@@ -279,7 +286,7 @@ async function saveStudent(event){
       origen:'registro_manual_admin',
       origenRegistro:'registro_manual_admin',
       tipo:'alumno_manual_admin',
-      lineaAcademica:'Nostra UNI Premium',
+      lineaAcademica:academicLine(programaId),
       correoInstitucionalAsignado:false,
       matriculaAprobada:true,
       formularioWebCompletado:false,

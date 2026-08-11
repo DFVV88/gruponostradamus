@@ -62,6 +62,8 @@ function inferModalidad(name){
 }
 function inferTurno(name){
   const value = normalized(name);
+  if(value.includes('sabatino') || value.includes('sabado')) return 'Sabatino';
+  if(value.includes('dominical') || value.includes('domingo')) return 'Dominical';
   if(value.includes('manana')) return 'Mañana';
   if(value.includes('tarde')) return 'Tarde';
   if(value.includes('noche')) return 'Noche';

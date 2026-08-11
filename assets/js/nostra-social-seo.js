@@ -22,7 +22,7 @@
     '': DEFAULT,
     'ciclos.html': {
       title: 'Ciclos Académicos UNI | Grupo Nostradamus',
-      description: 'Conoce nuestros ciclos de preparación UNI: anual, semianual, semestral, élite, repaso, verano, IEN y paralelo CEPRE UNI.',
+      description: 'Conoce nuestros programas de preparación UNI: NostraRUTA, IEN, Proyecto Escolar, Paralelo CEPRE UNI, Verano y NostraWEEKEND.',
       image: BASE + '/assets/img/ciclos/ciclo-anual.jpg'
     },
     'ciclo-anual-uni.html': {
@@ -54,6 +54,11 @@
       title: 'Ciclo Verano UNI | Grupo Nostradamus',
       description: 'Avanza durante vacaciones con preparación intensiva, refuerzo de bases y práctica académica.',
       image: BASE + '/assets/img/ciclos/ciclo-verano.jpg'
+    },
+    'ciclo-weekend-uni.html': {
+      title: 'NostraWEEKEND | Grupo Nostradamus',
+      description: 'Preparación complementaria UNI con opciones Sabatino y Dominical para estudiar durante el fin de semana.',
+      image: BASE + '/assets/img/logo.png'
     },
     'ciclo-repaso-uni.html': {
       title: 'Ciclo Repaso UNI | Grupo Nostradamus',

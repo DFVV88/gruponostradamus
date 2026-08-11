@@ -26,12 +26,18 @@ const PROGRAMS = [
   {id:'ciclo-ien',nombre:'IEN UNI',ruta:'ciclo-ien.html',orden:6,descripcion:'Preparación académica progresiva para el Ingreso Escolar Nacional de la UNI.'},
   {id:'proyecto-escolar',nombre:'Proyecto Escolar',ruta:'ciclo-proyecto-escolar.html',orden:7,descripcion:'Refuerzo, nivelación y formación escolar con acompañamiento continuo.'},
   {id:'paralelo-cepre-uni',nombre:'Paralelo CEPRE UNI',ruta:'ciclo-paralelo-cepre-uni.html',orden:8,descripcion:'Acompañamiento estratégico para estudiantes de CEPRE UNI.'},
-  {id:'ciclo-verano-uni',nombre:'Ciclo Verano UNI',ruta:'ciclo-verano-uni.html',orden:9,descripcion:'Programa intensivo de vacaciones para avanzar y fortalecer bases.'}
+  {id:'ciclo-verano-uni',nombre:'Ciclo Verano UNI',ruta:'ciclo-verano-uni.html',orden:9,descripcion:'Programa intensivo de vacaciones para avanzar y fortalecer bases.'},
+  {id:'nostra-weekend-uni',nombre:'NostraWEEKEND',ruta:'ciclo-weekend-uni.html',orden:10,descripcion:'Programa complementario UNI concentrado en el fin de semana, con opciones Sabatino y Dominical.'}
 ];
 
 const MORNING_SCHEDULE = ['Lunes a Sábado','8:00 a.m. a 1:00 p.m.'];
 const FULL_SCHEDULE = ['Lunes a Viernes','8:00 a.m. a 6:00 p.m.','Sábados','8:00 a.m. a 1:00 p.m.'];
 const AFTERNOON_SCHEDULE = ['Lunes a Sábado','2:00 p.m. a 7:00 p.m.'];
+
+const WEEKEND_DEFAULT_PLANS = [
+  {id:'sabatino',nombre:'Sabatino',activo:false,destacado:true,tipoCobro:'mensual',precio:0,matricula:0,horarioLineas:['Sábados','Horario por confirmar'],beneficios:['Docentes especialistas UNI','Clases grabadas','Prácticas tipo UNI','Simulacros UNI','Seguimiento académico'],promocionActiva:false,precioPromocional:0,promocionHasta:''},
+  {id:'dominical',nombre:'Dominical',activo:false,destacado:false,tipoCobro:'mensual',precio:0,matricula:0,horarioLineas:['Domingos','Horario por confirmar'],beneficios:['Docentes especialistas UNI','Clases grabadas','Prácticas tipo UNI','Simulacros UNI','Seguimiento académico'],promocionActiva:false,precioPromocional:0,promocionHasta:''}
+];
 
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -64,6 +70,8 @@ function lineList(value,fallback,max){
 }
 function scheduleFallback(name){
   const normalized = clean(name).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  if(normalized.includes('sabatino') || normalized.includes('sabado')) return ['Sábados','Horario por confirmar'];
+  if(normalized.includes('dominical') || normalized.includes('domingo')) return ['Domingos','Horario por confirmar'];
   if(normalized.includes('full') || normalized.includes('unico')) return [...FULL_SCHEDULE];
   if(normalized.includes('tarde')) return [...AFTERNOON_SCHEDULE];
   if(normalized.includes('manana')) return [...MORNING_SCHEDULE];
@@ -186,6 +194,7 @@ async function mergeCatalog(remoteDocs){
   return Promise.all(PROGRAMS.map(async program => {
     const remote = remoteMap.get(program.id) || {};
     let planes = Array.isArray(remote.planes) ? remote.planes.map(normalizePlan) : legacyPlan(remote);
+    if(!planes.length && program.id === 'nostra-weekend-uni') planes = WEEKEND_DEFAULT_PLANS.map(normalizePlan);
     if(!planes.length) planes = await scrapePlans(program);
     return {
       ...program,...remote,id:program.id,nombre:program.nombre,ruta:program.ruta,orden:program.orden,

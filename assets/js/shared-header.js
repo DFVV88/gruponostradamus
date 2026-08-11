@@ -21,7 +21,8 @@
     ['Proyecto Escolar', 'ciclo-proyecto-escolar.html'],
     ['Repaso UNI', 'ciclo-repaso-uni.html'],
     ['Paralelo CEPRE UNI', 'ciclo-paralelo-cepre-uni.html'],
-    ['Ciclo Verano UNI', 'ciclo-verano-uni.html']
+    ['Ciclo Verano UNI', 'ciclo-verano-uni.html'],
+    ['NostraWEEKEND', 'ciclo-weekend-uni.html']
   ];
 
   var cicloPages = ciclos.map(function (item) { return item[1]; });

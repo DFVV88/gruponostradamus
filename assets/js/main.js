@@ -1372,7 +1372,7 @@
 (function () {
   if (document.querySelector('script[src*="nostra-sitewide-loader.js"]')) return;
   var script = document.createElement('script');
-  script.src = 'assets/js/nostra-sitewide-loader.js?v=1';
+  script.src = 'assets/js/nostra-sitewide-loader.js?v=2026-08-11-weekend';
   script.defer = true;
   document.body.appendChild(script);
 })();

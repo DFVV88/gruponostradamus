@@ -68,6 +68,8 @@
   }
   function inferTurno(name){
     var value = normalized(name);
+    if(value.indexOf('sabatino') !== -1 || value.indexOf('sabado') !== -1) return 'Sabatino';
+    if(value.indexOf('dominical') !== -1 || value.indexOf('domingo') !== -1) return 'Dominical';
     if(value.indexOf('manana') !== -1) return 'Mañana';
     if(value.indexOf('tarde') !== -1) return 'Tarde';
     if(value.indexOf('noche') !== -1) return 'Noche';
@@ -144,6 +146,11 @@
   }
   function getPlanId(form){ return formValue(form,'plan'); }
   function selectedPaymentMethod(form){ return formValue(form,'metodoPagoPreferido'); }
+  function academicLine(programId){
+    if(programId === 'ciclo-ien' || programId === 'proyecto-escolar') return 'Preparación Escolar';
+    if(programId === 'paralelo-cepre-uni' || programId === 'ciclo-verano-uni' || programId === 'nostra-weekend-uni') return 'Programas Complementarios UNI';
+    return 'Nostra UNI Premium';
+  }
 
   function addStyles(){
     if(document.getElementById('nostra-preinscripcion-culqi-style')) return;
@@ -337,7 +344,7 @@
       estado:'nuevo',
       origen:'web_preinscripcion',
       tipo:'preinscripcion_inicial',
-      lineaAcademica:'Nostra UNI Premium',
+      lineaAcademica:academicLine(official.program.id),
       correoInstitucionalAsignado:false,
       codigoSolicitud:operationCode(refId),
       aceptacionLegal:{terminos:true,cambiosDevoluciones:true,privacidad:true,version:LEGAL_VERSION,fechaCliente:now},
