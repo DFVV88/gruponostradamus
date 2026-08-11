@@ -27,12 +27,17 @@ jobs:
           path = Path('firestore.rules')
           text = path.read_text(encoding='utf-8')
 
-          list_pattern = "        'ciclo-verano-uni'\n      ];"
-          list_replacement = "        'ciclo-verano-uni',\n        'nostra-weekend-uni'\n      ];"
-          count = text.count(list_pattern)
-          if count != 2:
-              raise SystemExit(f'Esperaba 2 listas oficiales sin NostraWEEKEND y encontré {count}. Abortando.')
-          text = text.replace(list_pattern, list_replacement)
+          official_pattern = "        'ciclo-verano-uni'\n      ];"
+          official_replacement = "        'ciclo-verano-uni',\n        'nostra-weekend-uni'\n      ];"
+          if text.count(official_pattern) != 1:
+              raise SystemExit('No se encontró exactamente una lista isOfficialProgramId pendiente. Abortando.')
+          text = text.replace(official_pattern, official_replacement, 1)
+
+          public_pattern = "          'ciclo-verano-uni'\n        ];"
+          public_replacement = "          'ciclo-verano-uni',\n          'nostra-weekend-uni'\n        ];"
+          if text.count(public_pattern) != 1:
+              raise SystemExit('No se encontró exactamente una lista programas_publicos pendiente. Abortando.')
+          text = text.replace(public_pattern, public_replacement, 1)
 
           marker = "    function validPreInitialState(d) {\n"
           if text.count(marker) != 1:
@@ -78,10 +83,12 @@ jobs:
               raise SystemExit('La validación antigua de lineaAcademica no aparece exactamente una vez. Abortando.')
           text = text.replace(old_line, new_line, 1)
 
-          if text.count("'nostra-weekend-uni'") < 3:
-              raise SystemExit('NostraWEEKEND no quedó presente en todas las reglas requeridas.')
-          if "&& validAcademicLine(d)" not in text:
-              raise SystemExit('validPreInitialState no usa validAcademicLine().')
+          if text.count("'nostra-weekend-uni'") != 3:
+              raise SystemExit('NostraWEEKEND debe quedar exactamente en 3 puntos de las reglas.')
+          if text.count('function validAcademicLine(d)') != 1:
+              raise SystemExit('validAcademicLine() no quedó definida exactamente una vez.')
+          if text.count('&& validAcademicLine(d)') != 1:
+              raise SystemExit('validPreInitialState no usa validAcademicLine() exactamente una vez.')
           if "d.lineaAcademica == 'Programas Complementarios UNI'" not in text:
               raise SystemExit('Falta la categoría Programas Complementarios UNI.')
           if "d.lineaAcademica == 'Preparación Escolar'" not in text:
