@@ -237,6 +237,44 @@
         '<a href="' + esc(preUrl(plan)) + '" class="th-btn style10">Preinscribirme en este plan <i class="fa-regular fa-arrow-right ms-2"></i></a></div>' +
       '</div></div>';
   }
+  function weekendPlanKey(plan){
+  var value = clean(plan && plan.nombre).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  if(value.indexOf('sabatino') !== -1 || value.indexOf('sabado') !== -1) return 'sabatino';
+  if(value.indexOf('dominical') !== -1 || value.indexOf('domingo') !== -1) return 'dominical';
+  return '';
+}
+function syncWeekendSchedules(plans){
+  if(program.id !== 'nostra-weekend-uni') return;
+  var byKey = {};
+  (plans || []).forEach(function(plan){
+    var key = weekendPlanKey(plan);
+    if(key && !byKey[key]) byKey[key] = plan;
+  });
+  ['sabatino','dominical'].forEach(function(key){
+    var plan = byKey[key];
+    if(!plan) return;
+    var lines = lineList(plan.horarioLineas,scheduleFallback(plan.nombre),6);
+    var scheduleText = lines.join(' · ');
+
+    var preview = Array.from(document.querySelectorAll('.nw-plan-preview article')).find(function(article){
+      var label = clean(article.querySelector('strong') && article.querySelector('strong').textContent).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+      return label.indexOf(key) !== -1;
+    });
+    var previewText = preview && preview.querySelector('span');
+    if(previewText) previewText.textContent = scheduleText;
+
+    var descriptionCard = Array.from(document.querySelectorAll('#Coursedescription .price-card')).find(function(card){
+      var label = clean(card.querySelector('.price-card_title') && card.querySelector('.price-card_title').textContent).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+      return label.indexOf(key) !== -1;
+    });
+    var descriptionSchedule = descriptionCard && descriptionCard.querySelector('.price-card_price');
+    if(descriptionSchedule){
+      descriptionSchedule.textContent = scheduleText;
+      descriptionSchedule.setAttribute('data-nostra-weekend-schedule','1');
+    }
+  });
+}
+
   function renderRemote(data){
     var section = locatePricingSection();
     if(!section) return false;
@@ -248,13 +286,15 @@
     if(heading) heading.textContent = 'Nuestros planes para tu futuro';
     var row = section.querySelector('.row.gy-4.justify-content-center') || section.querySelector('.row');
     if(!row) return false;
-    var plans = Array.isArray(data.planes) ? data.planes.map(normalizePlan).filter(function(plan){ return plan.activo !== false && plan.precio > 0; }) : [];
+    var allPlans = Array.isArray(data.planes) ? data.planes.map(normalizePlan) : [];
+    var plans = allPlans.filter(function(plan){ return plan.activo !== false && plan.precio > 0; });
     if(data.publicado === false){
       row.innerHTML = '<div class="col-12"><div class="nostra-pricing-unavailable">El tarifario de este programa se encuentra en actualización. Solicita información por WhatsApp.</div></div>';
       removeDescriptionSchedule();
       updateSidebar();
       return true;
     }
+    syncWeekendSchedules(allPlans.filter(function(plan){ return plan.activo !== false; }));
     if(!plans.length) return false;
     row.innerHTML = plans.map(function(plan,index){ return cardHtml(plan,index,plans.length); }).join('');
     var oldNote = section.querySelector('.nostra-pricing-note');
