@@ -1,89 +1,66 @@
 # Culqi — activación de producción
 
-Fecha de preparación: 2026-08-11
+Fecha de activación: 2026-08-11
 
 ## Estado verificado
 
 - Comercio Culqi de NOSTRA S.A.C.: aprobado.
 - Checkout con tarjeta en pruebas: operativo.
 - Flujo 3DS: operativo.
-- Webhook `charge.creation.succeeded`: validado con `200 OK`.
 - Conciliación automática e idempotente en Firestore: implementada.
-- Llave privada: protegida mediante Firebase Secret Manager (`CULQI_SECRET_KEY`).
-- Frontend actual en `main`: todavía utiliza `pk_test_...`.
-- No existe ninguna `pk_live_...` almacenada en el repositorio, lo cual es correcto hasta realizar el corte controlado.
+- Llave privada de producción: actualizada en Firebase Secret Manager (`CULQI_SECRET_KEY`).
+- Funciones `culqiCreateCharge` y `culqiWebhook`: redeplegadas con la nueva versión del secreto.
+- Webhook de producción `charge.creation.succeeded`: configurado en CulqiPanel.
+- Webhook de producción `charge.creation.failed`: configurado en CulqiPanel.
+- Llave pública de producción: configurada en `assets/js/culqi-public-config.js` dentro de esta rama.
+- Ninguna llave privada `sk_live_...` está almacenada en GitHub.
 
 ## Corte a producción
 
-El corte debe hacerse como una sola operación coordinada. No mezclar entornos.
-
 ### 1. Llave pública
 
-La llave pública de producción debe tener formato:
+La llave pública activa de producción tiene formato `pk_live_...` y se mantiene únicamente en el archivo público del checkout:
 
 ```text
-pk_live_...
+assets/js/culqi-public-config.js
 ```
 
-En esta rama se agregó:
+También se agregó una herramienta de mantenimiento seguro:
 
 ```text
 tools/set_culqi_live_public_key.py
 ```
 
-Uso seguro:
-
-```bash
-CULQI_PUBLIC_KEY='pk_live_...' python tools/set_culqi_live_public_key.py
-```
-
-El script:
-
-- acepta exclusivamente `pk_live_...`;
-- rechaza cualquier `sk_...`;
-- modifica únicamente `assets/js/culqi-public-config.js`;
-- no imprime la llave completa en consola.
+El script acepta exclusivamente `pk_live_...`, rechaza cualquier `sk_...` y limita la modificación al archivo de configuración pública.
 
 ### 2. Llave privada
 
-La llave privada de producción debe tener formato:
-
-```text
-sk_live_...
-```
-
-Nunca debe guardarse en GitHub, HTML, JavaScript ni Firestore.
-
-Debe actualizarse directamente en Firebase Secret Manager:
+La llave privada de producción se administra exclusivamente mediante Firebase Secret Manager:
 
 ```bash
 firebase functions:secrets:set CULQI_SECRET_KEY --project nostrachat-grupo-nostradamus
 ```
 
-Luego desplegar:
+Nunca debe guardarse en GitHub, HTML, JavaScript ni Firestore.
 
-```bash
-firebase deploy --only functions:culqiCreateCharge,functions:culqiWebhook --project nostrachat-grupo-nostradamus
-```
+### 3. Webhooks de producción
 
-### 3. Webhook de producción
-
-Registrar en CulqiPanel de producción:
+URL registrada:
 
 ```text
 https://us-central1-nostrachat-grupo-nostradamus.cloudfunctions.net/culqiWebhook
 ```
 
-Eventos:
+Eventos activos:
 
 ```text
 charge.creation.succeeded
 charge.creation.failed
 ```
 
-### 4. Prueba real controlada
+### 4. Prueba real controlada pendiente
 
-Antes de abrir el cobro al público:
+Antes de promover el cobro de forma masiva:
 
 1. realizar una preinscripción real controlada;
 2. ejecutar un pago real de importe previamente autorizado;
@@ -95,8 +72,8 @@ Antes de abrir el cobro al público:
 
 ## Regla crítica
 
-La llave pública y la llave privada deben pertenecer al mismo entorno. No se debe mezclar `pk_test_...` con `sk_live_...` ni `pk_live_...` con `sk_test_...`.
+La llave pública y la llave privada deben pertenecer siempre al mismo entorno. No mezclar `pk_test_...` con `sk_live_...` ni `pk_live_...` con `sk_test_...`.
 
-## Situación de esta rama
+## Situación actual
 
-Esta rama prepara el cambio de GitHub sin modificar todavía el checkout público. El paso final requiere introducir la `pk_live_...` real y actualizar `CULQI_SECRET_KEY` directamente en Firebase.
+El backend y los webhooks ya están en producción. Esta rama contiene la llave pública de producción y está preparada para fusionarse a `main`. Una vez publicada, el siguiente paso obligatorio es una compra real controlada antes de dar por concluida la activación.
