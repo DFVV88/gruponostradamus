@@ -1,0 +1,76 @@
+name: Fix NostraWEEKEND basic level
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-weekend-basic-level.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-weekend-level:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Patch Weekend level only
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('assets/js/nostra-ciclo-detalle-pro.js')
+          text = path.read_text(encoding='utf-8')
+
+          old = """    'ciclo-weekend-uni.html': {
+      titulo: 'NostraWEEKEND', corto: 'NostraWEEKEND', icon: '📅', badge: 'Programa complementario UNI',
+      perfil: 'Tu preparación UNI también avanza el fin de semana.',
+      descripcion: 'NostraWEEKEND es un programa complementario de preparación para la UNI pensado para estudiantes que necesitan concentrar su entrenamiento académico durante el fin de semana. Permite elegir una opción Sabatino o Dominical, reforzar conocimientos, practicar con enfoque tipo UNI y sostener un avance constante.',
+      enfoque: 'Entrenamiento concentrado en sábado o domingo, práctica tipo UNI y seguimiento académico.',
+      nivel: 'Intermedio · Avanzado', duracion: 'Preparación de fin de semana', modalidad: 'Sabatino y Dominical',
+      ideal: 'Ideal para estudiantes que necesitan compatibilizar sus actividades semanales con una preparación UNI constante.', url: 'ciclo-weekend-uni.html'
+    }"""
+
+          new = old.replace("nivel: 'Intermedio · Avanzado'", "nivel: 'Básico'")
+
+          if old not in text:
+              if new in text:
+                  print('NostraWEEKEND ya está configurado como Básico.')
+              else:
+                  raise SystemExit('No se encontró el bloque exacto de NostraWEEKEND; se aborta sin modificar otros ciclos.')
+          else:
+              if text.count(old) != 1:
+                  raise SystemExit('El bloque de NostraWEEKEND no es único; se aborta.')
+              text = text.replace(old, new, 1)
+              path.write_text(text, encoding='utf-8')
+
+          # Validaciones: Weekend debe ser Básico y su bloque no debe conservar Intermedio/Avanzado.
+          updated = path.read_text(encoding='utf-8')
+          start = updated.index("'ciclo-weekend-uni.html': {")
+          end = updated.index("\n    }", start) + 6
+          block = updated[start:end]
+          if "nivel: 'Básico'" not in block:
+              raise SystemExit('La validación final no encontró nivel Básico en NostraWEEKEND.')
+          if "nivel: 'Intermedio · Avanzado'" in block:
+              raise SystemExit('La validación final encontró todavía el nivel anterior en NostraWEEKEND.')
+          PY
+
+          node --check assets/js/nostra-ciclo-detalle-pro.js
+          git diff --check
+          git diff -- assets/js/nostra-ciclo-detalle-pro.js
+
+      - name: Commit correction and remove temporary workflow
+        shell: bash
+        run: |
+          rm .github/workflows/fix-weekend-basic-level.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/js/nostra-ciclo-detalle-pro.js .github/workflows/fix-weekend-basic-level.yml
+          git diff --cached --check
+          git commit -m "Corrige NostraWEEKEND a nivel Básico"
+          git push origin HEAD:main
