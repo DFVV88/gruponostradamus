@@ -1,0 +1,68 @@
+name: Fix NostraWEEKEND duplicate panel
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-weekend-duplicate-panel.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-weekend-panel:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Remove duplicate Weekend sales panel
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('assets/js/nostra-content-polish.js')
+          text = path.read_text(encoding='utf-8')
+          old = "    var copy = CYCLE_COPY[file];\n    if (!copy || document.querySelector('.nostra-cycle-sales-box')) return;"
+          new = "    var copy = CYCLE_COPY[file];\n    if (file === 'ciclo-weekend-uni.html') return;\n    if (!copy || document.querySelector('.nostra-cycle-sales-box')) return;"
+          if new not in text:
+              if text.count(old) != 1:
+                  raise SystemExit('No se encontró de forma única el punto de inserción en nostra-content-polish.js')
+              text = text.replace(old, new, 1)
+              path.write_text(text, encoding='utf-8')
+
+          loader = Path('assets/js/nostra-sitewide-loader.js')
+          ltext = loader.read_text(encoding='utf-8')
+          old_version = "  var VERSION = '2026-08-11-weekend-panels';"
+          new_version = "  var VERSION = '2026-08-11-weekend-single-panel';"
+          if new_version not in ltext:
+              if ltext.count(old_version) != 1:
+                  raise SystemExit('No se encontró la versión esperada del cargador global')
+              ltext = ltext.replace(old_version, new_version, 1)
+              loader.write_text(ltext, encoding='utf-8')
+
+          # Validación específica: Weekend debe saltar antes de crear nostra-cycle-sales-box.
+          updated = path.read_text(encoding='utf-8')
+          expected = "if (file === 'ciclo-weekend-uni.html') return;"
+          if updated.count(expected) != 1:
+              raise SystemExit('La exclusión específica de NostraWEEKEND no quedó aplicada exactamente una vez')
+          PY
+
+          node --check assets/js/nostra-content-polish.js
+          node --check assets/js/nostra-sitewide-loader.js
+          git diff --check
+          git diff -- assets/js/nostra-content-polish.js assets/js/nostra-sitewide-loader.js
+
+      - name: Commit correction and remove temporary workflow
+        shell: bash
+        run: |
+          rm .github/workflows/fix-weekend-duplicate-panel.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/js/nostra-content-polish.js assets/js/nostra-sitewide-loader.js .github/workflows/fix-weekend-duplicate-panel.yml
+          git diff --cached --check
+          git commit -m "Elimina panel comercial duplicado de NostraWEEKEND"
+          git push origin HEAD:main
