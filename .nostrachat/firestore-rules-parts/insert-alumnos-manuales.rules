@@ -20,8 +20,13 @@
         && request.resource.data.dni is string
         && request.resource.data.dni.matches('^[0-9]{8,12}$')
         && request.resource.data.celular is string
-        && request.resource.data.celular.size() >= 9
-        && request.resource.data.celular.size() <= 20
+        && (
+          request.resource.data.celular.size() == 0
+          || (
+            request.resource.data.celular.size() >= 9
+            && request.resource.data.celular.size() <= 20
+          )
+        )
         && request.resource.data.correo is string
         && request.resource.data.correo.size() <= 100
         && request.resource.data.colegio is string
@@ -50,7 +55,13 @@
         && request.resource.data.apoderado is string
         && request.resource.data.apoderado.size() <= 100
         && request.resource.data.celularApoderado is string
-        && request.resource.data.celularApoderado.size() <= 20
+        && (
+          request.resource.data.celularApoderado.size() == 0
+          || (
+            request.resource.data.celularApoderado.size() >= 9
+            && request.resource.data.celularApoderado.size() <= 20
+          )
+        )
         && request.resource.data.comentario is string
         && request.resource.data.comentario.size() <= 1000
         && request.resource.data.confirmacion is string
@@ -81,12 +92,20 @@
       allow update: if resource.data.origen == 'registro_manual_admin'
         && resource.data.formularioWebCompletado == false
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
-          'nombre','correo','colegio','situacion','apoderado','celularApoderado','comentario','confirmacion',
+          'nombre','celular','correo','colegio','situacion','apoderado','celularApoderado','comentario','confirmacion',
           'formularioWebCompletado','formularioWebUpdatedAt','origenFormularioWeb',
           'userAgentFormularioWeb','pageUrlFormularioWeb','updatedAt'
         ])
         && request.resource.data.dni == resource.data.dni
-        && request.resource.data.celular == resource.data.celular
+        && request.resource.data.celular is string
+        && (
+          (
+            resource.data.celular == ''
+            && request.resource.data.celular.size() >= 9
+            && request.resource.data.celular.size() <= 20
+          )
+          || request.resource.data.celular == resource.data.celular
+        )
         && request.resource.data.nombre is string
         && request.resource.data.nombre.size() >= 5
         && request.resource.data.nombre.size() <= 100
