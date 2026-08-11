@@ -339,6 +339,7 @@
   function enhanceCyclePage() {
     var file = currentFileName();
     var copy = CYCLE_COPY[file];
+    if (file === 'ciclo-weekend-uni.html') return;
     if (!copy || document.querySelector('.nostra-cycle-sales-box')) return;
 
     injectCycleStyles();
