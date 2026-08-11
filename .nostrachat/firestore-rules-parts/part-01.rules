@@ -56,7 +56,8 @@
         'ciclo-ien',
         'proyecto-escolar',
         'paralelo-cepre-uni',
-        'ciclo-verano-uni'
+        'ciclo-verano-uni',
+        'nostra-weekend-uni'
       ];
     }
 
