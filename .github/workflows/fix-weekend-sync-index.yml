@@ -96,10 +96,10 @@ jobs:
           if existing == 0:
               pattern = re.compile(r'(?P<indent>[ \t]*)<li><a href="ciclo-verano-uni\.html">Ciclo Verano UNI</a></li>')
               matches = list(pattern.finditer(index))
-              if len(matches) != 2:
-                  raise SystemExit(f'Se esperaban 2 enlaces de Verano en los menús del index y se encontraron {len(matches)}.')
+              if len(matches) != 3:
+                  raise SystemExit(f'Se esperaban 3 enlaces de Verano en las listas del index y se encontraron {len(matches)}.')
               index = pattern.sub(lambda m: m.group(0) + '\n' + m.group('indent') + '<li><a href="ciclo-weekend-uni.html">NostraWEEKEND</a></li>', index)
-          elif existing != 2:
+          elif existing != 3:
               raise SystemExit(f'El index ya contiene una cantidad inesperada de enlaces NostraWEEKEND: {existing}.')
           index_path.write_text(index, encoding='utf-8')
 
@@ -117,8 +117,8 @@ jobs:
               raise SystemExit('syncWeekendSchedules no quedó definida exactamente una vez.')
           if pricing.count('syncWeekendSchedules(allPlans.filter') != 1:
               raise SystemExit('La sincronización de horarios no quedó conectada a renderRemote().')
-          if index.count('href="ciclo-weekend-uni.html"') != 2:
-              raise SystemExit('NostraWEEKEND debe aparecer exactamente en los dos menús del index.')
+          if index.count('href="ciclo-weekend-uni.html"') != 3:
+              raise SystemExit('NostraWEEKEND debe aparecer exactamente en las tres listas del index.')
           PY
 
           node --check assets/js/nostra-cycle-pricing.js
