@@ -1,0 +1,81 @@
+name: Integrar NostraWEEKEND
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "tools/apply_nostra_weekend.py"
+      - ".github/workflows/apply-nostra-weekend.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apply-nostra-weekend-main
+  cancel-in-progress: false
+
+jobs:
+  integrate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Integrar NostraWEEKEND
+        run: python tools/apply_nostra_weekend.py
+
+      - name: Validar cambios
+        shell: bash
+        run: |
+          test -f ciclo-weekend-uni.html
+          grep -q "nostra-weekend-uni" assets/js/admin-tarifario.js
+          grep -q "nostra-weekend-uni" assets/js/preinscripcion-firebase.js
+          grep -q "nostra-weekend-uni" assets/js/preinscripcion-culqi-preparacion.js
+          grep -q "NostraWEEKEND" assets/js/nostra-ciclos-catalog-dynamic.js
+          grep -q "ciclo-weekend-uni.html" sitemap.xml
+
+      - name: Publicar integración
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "NostraWEEKEND ya estaba integrado."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- \
+            ciclo-weekend-uni.html \
+            sitemap.xml \
+            preinscripcion.html \
+            admin-preinscripciones.html \
+            assets/js/admin-tarifario.js \
+            assets/js/admin-tarifario-culqi.js \
+            assets/js/preinscripcion-firebase.js \
+            assets/js/preinscripcion-culqi-preparacion.js \
+            assets/js/admin-alumnos-manuales.js \
+            assets/js/nostra-cycle-pricing.js \
+            assets/js/nostra-ciclos-catalog-dynamic.js \
+            assets/js/nostra-ciclos-links.js \
+            assets/js/nostra-cycle-menu-labels.js \
+            assets/js/shared-header.js \
+            assets/js/nostra-footer-universal.js \
+            assets/js/nostra-cycle-description-meta.js \
+            assets/js/nostra-seo-meta.js \
+            assets/js/nostra-social-seo.js \
+            assets/js/nostra-schema-jsonld.js \
+            assets/js/nostra-sitewide-loader.js \
+            assets/js/main.js
+          git commit -m "Integra NostraWEEKEND en todo el sistema [skip ci]"
+          git push origin HEAD:main
