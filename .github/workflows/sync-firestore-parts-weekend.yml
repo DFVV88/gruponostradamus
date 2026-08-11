@@ -1,0 +1,109 @@
+name: Sync Firestore source parts for NostraWEEKEND
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sync-firestore-parts-weekend.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  sync-source-parts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Patch source parts
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p1 = Path('.nostrachat/firestore-rules-parts/part-01.rules')
+          t1 = p1.read_text(encoding='utf-8')
+          old1 = "        'ciclo-verano-uni'\n      ];"
+          new1 = "        'ciclo-verano-uni',\n        'nostra-weekend-uni'\n      ];"
+          if t1.count(old1) != 1:
+              raise SystemExit('part-01: lista oficial inesperada.')
+          p1.write_text(t1.replace(old1, new1, 1), encoding='utf-8')
+
+          p2 = Path('.nostrachat/firestore-rules-parts/part-02.rules')
+          t2 = p2.read_text(encoding='utf-8')
+          old_line = "        && d.lineaAcademica == 'Nostra UNI Premium'\n"
+          if t2.count(old_line) != 1:
+              raise SystemExit('part-02: validación antigua inesperada.')
+          t2 = t2.replace(old_line, "        && validAcademicLine(d)\n", 1)
+          marker = "    function validPreInitialState(d) {\n"
+          if t2.count(marker) != 1:
+              raise SystemExit('part-02: validPreInitialState inesperado.')
+          helper_lines = [
+              "    function validAcademicLine(d) {",
+              "      return (",
+              "          d.programaId in [",
+              "            'ciclo-ien',",
+              "            'proyecto-escolar'",
+              "          ]",
+              "          && d.lineaAcademica == 'Preparación Escolar'",
+              "        )",
+              "        || (",
+              "          d.programaId in [",
+              "            'paralelo-cepre-uni',",
+              "            'ciclo-verano-uni',",
+              "            'nostra-weekend-uni'",
+              "          ]",
+              "          && d.lineaAcademica == 'Programas Complementarios UNI'",
+              "        )",
+              "        || (",
+              "          d.programaId in [",
+              "            'nostra-360-uni',",
+              "            'nostra-power-uni',",
+              "            'nostra-elite-uni',",
+              "            'nostra-prime-uni',",
+              "            'nostra-talentum-uni'",
+              "          ]",
+              "          && d.lineaAcademica == 'Nostra UNI Premium'",
+              "        );",
+              "    }",
+              "",
+              ""
+          ]
+          t2 = t2.replace(marker, "\n".join(helper_lines) + marker, 1)
+          p2.write_text(t2, encoding='utf-8')
+
+          p5 = Path('.nostrachat/firestore-rules-parts/part-05.rules')
+          t5 = p5.read_text(encoding='utf-8')
+          old5 = "          'ciclo-verano-uni'\n        ];"
+          new5 = "          'ciclo-verano-uni',\n          'nostra-weekend-uni'\n        ];"
+          if t5.count(old5) != 1:
+              raise SystemExit('part-05: lista programas_publicos inesperada.')
+          p5.write_text(t5.replace(old5, new5, 1), encoding='utf-8')
+          PY
+
+          bash scripts/build-firestore-rules.sh
+          git diff --check
+
+          if ! git diff --quiet -- firestore.rules; then
+            echo 'ERROR: las fuentes regeneran un firestore.rules distinto del ya validado.' >&2
+            git diff -- firestore.rules
+            exit 1
+          fi
+
+          grep -q "'nostra-weekend-uni'" .nostrachat/firestore-rules-parts/part-01.rules
+          grep -q "function validAcademicLine(d)" .nostrachat/firestore-rules-parts/part-02.rules
+          grep -q "'nostra-weekend-uni'" .nostrachat/firestore-rules-parts/part-05.rules
+
+      - name: Commit source parts and remove temporary workflow
+        shell: bash
+        run: |
+          rm .github/workflows/sync-firestore-parts-weekend.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .nostrachat/firestore-rules-parts/part-01.rules .nostrachat/firestore-rules-parts/part-02.rules .nostrachat/firestore-rules-parts/part-05.rules .github/workflows/sync-firestore-parts-weekend.yml
+          git diff --cached --check
+          git commit -m "Sincroniza fuentes Firestore para NostraWEEKEND"
+          git push origin HEAD:main
