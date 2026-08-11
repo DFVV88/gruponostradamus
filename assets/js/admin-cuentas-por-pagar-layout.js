@@ -4,13 +4,10 @@ function placePayablesAsFinanceModule(){
   const finance = document.getElementById('nostra-finance-panel');
   const section = document.getElementById('finance-payables-section');
   if(!finance || !section) return false;
-  if(section.parentElement === finance) return true;
 
   const containingAccordion = section.closest('.finance-general-accordion');
-  if(containingAccordion && containingAccordion.parentElement === finance){
-    containingAccordion.insertAdjacentElement('afterend',section);
-    return true;
-  }
+  if(containingAccordion && containingAccordion.parentElement === finance) return true;
+  if(section.parentElement === finance) return true;
 
   const receivablesAccordion = document.getElementById('finance-accordion-receivables');
   if(receivablesAccordion && receivablesAccordion.parentElement === finance){
