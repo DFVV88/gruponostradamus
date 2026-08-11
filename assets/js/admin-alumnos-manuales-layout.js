@@ -1,3 +1,5 @@
+import './admin-alumnos-manuales-editor.js?v=2026-08-11-1';
+
 /* ==================================================
    Grupo Nostradamus - Ubicación y contactos de alumnos manuales
    Mantiene el alta manual dentro de Preinscripciones, permite teléfonos opcionales
