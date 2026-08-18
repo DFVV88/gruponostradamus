@@ -98,7 +98,7 @@ function populateConfig(){
   const cfg = state.config || {};
   $('cfg-sede').value = cfg.sede || 'Sede principal';
   $('cfg-activo').value = cfg.activo === false ? 'false' : 'true';
-  $('cfg-public-url').value = cfg.publicBaseUrl || 'https://asistencia.gruponostradamus.edu.pe/asistencia.html';
+  $('cfg-public-url').value = 'https://gruponostradamus.edu.pe/asistencia';
   $('cfg-hora').value = cfg.horaGeneral || '08:00';
   $('cfg-tolerancia').value = cfg.toleranciaGeneral ?? 10;
   $('cfg-rotacion').value = cfg.qrRotacionSegundos ?? 60;

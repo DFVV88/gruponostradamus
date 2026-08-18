@@ -53,7 +53,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="topline"></div>
   <header class="topbar"><div class="wrap topbar-in">
     <a class="brand" href="admin-preinscripciones.html"><img src="assets/img/logo.png" alt="Grupo Nostradamus"><div><strong>NostraASISTENCIA</strong><span>NOSTRAADMIN</span></div></a>
-    <div class="actions"><a class="btn btn-light" href="admin-preinscripciones.html">← NostraADMIN</a><a class="btn btn-light" href="asistencia.html" target="_blank" rel="noopener">Ver pantalla pública</a><button class="btn btn-red hidden" id="logout-btn">Cerrar sesión</button></div>
+    <div class="actions"><a class="btn btn-light" href="admin-preinscripciones.html">← NostraADMIN</a><a class="btn btn-light" href="/asistencia" target="_blank" rel="noopener">Ver pantalla pública</a><button class="btn btn-red hidden" id="logout-btn">Cerrar sesión</button></div>
   </div></header>
 
   <section class="auth" id="auth-card"><h1>Control de asistencia</h1><p>Ingresa con la cuenta administrativa autorizada. Desde aquí se configura el QR, horarios, tolerancias, tardanzas, registros y vinculaciones.</p><button class="btn btn-primary" id="login-btn">Ingresar con Google</button><div class="msg" id="auth-msg"></div></section>
@@ -84,7 +84,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="fields">
             <label class="field"><span>Sede</span><input id="cfg-sede" maxlength="100"></label>
             <label class="field"><span>Estado del registro</span><select id="cfg-activo"><option value="true">Activo</option><option value="false">Pausado</option></select></label>
-            <label class="field wide"><span>URL pública / subdominio</span><input id="cfg-public-url" type="url" placeholder="https://asistencia.gruponostradamus.edu.pe/"></label>
+            <label class="field wide"><span>URL pública oficial</span><input id="cfg-public-url" type="url" value="https://gruponostradamus.edu.pe/asistencia" readonly></label>
             <label class="field"><span>Hora general</span><input id="cfg-hora" type="time"></label>
             <label class="field"><span>Tolerancia general (min)</span><input id="cfg-tolerancia" type="number" min="0" max="120"></label>
             <label class="field"><span>Renovar QR cada (seg)</span><input id="cfg-rotacion" type="number" min="30" max="300"></label>
