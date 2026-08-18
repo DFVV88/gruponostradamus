@@ -93,8 +93,19 @@ function setAdminVisible(visible){
   $('logout-btn').classList.toggle('hidden',!visible);
 }
 
+function ensureModeOptions(){
+  const select = $('cfg-modo');
+  if(!select || select.querySelector('option[value="salida"]')) return;
+  const option = document.createElement('option');
+  option.value = 'salida';
+  option.textContent = 'Solo salida';
+  const entradaSalida = select.querySelector('option[value="entrada_salida"]');
+  select.insertBefore(option,entradaSalida || null);
+}
+
 function populateConfig(){
   if(!state) return;
+  ensureModeOptions();
   const cfg = state.config || {};
   $('cfg-sede').value = cfg.sede || 'Sede principal';
   $('cfg-activo').value = cfg.activo === false ? 'false' : 'true';
@@ -414,6 +425,7 @@ function bind(){
 }
 
 bind();
+ensureModeOptions();
 $('records-date').value = localDate();
 $('today-label').textContent = new Date().toLocaleDateString('es-PE',{timeZone:'America/Lima',weekday:'long',day:'2-digit',month:'long',year:'numeric'});
 
