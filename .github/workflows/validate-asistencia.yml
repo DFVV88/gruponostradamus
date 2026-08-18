@@ -5,6 +5,7 @@ on:
     paths:
       - "admin-asistencia.html"
       - "asistencia.html"
+      - "asistencia/index.html"
       - "assets/js/admin-asistencia.js"
       - "assets/js/asistencia.js"
       - "functions/**"
@@ -46,13 +47,17 @@ jobs:
       - name: Verificar archivos HTML esenciales
         run: |
           grep -q 'assets/js/asistencia.js' asistencia.html
+          grep -q 'assets/js/asistencia.js' asistencia/index.html
           grep -q 'assets/js/admin-asistencia.js' admin-asistencia.html
           grep -q 'NostraASISTENCIA' admin-asistencia.html
           grep -q 'NostraASISTENCIA' asistencia.html
+          grep -q 'NostraASISTENCIA' asistencia/index.html
+          grep -q 'vincularDispositivo' assets/js/asistencia.js
+          grep -q 'DEVICE_TOKEN_RE' functions/asistencia.js
 
       - name: Impedir secretos privados en frontend
         run: |
-          if grep -R -n -E "sk_(test|live)_|CULQI_SECRET_KEY" asistencia.html admin-asistencia.html assets/js/asistencia.js assets/js/admin-asistencia.js; then
+          if grep -R -n -E "sk_(test|live)_|CULQI_SECRET_KEY" asistencia.html asistencia/index.html admin-asistencia.html assets/js/asistencia.js assets/js/admin-asistencia.js; then
             echo "Se encontró un secreto privado en el frontend de asistencia."
             exit 1
           fi
