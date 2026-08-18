@@ -35,6 +35,9 @@ jobs:
       - name: Aplicar protección de DNI
         run: python tools/apply-dni-unico.py
 
+      - name: Ensamblar reglas Firestore
+        run: bash scripts/build-firestore-rules.sh
+
       - name: Validar JavaScript modificado
         run: |
           node --check assets/js/preinscripcion-firebase.js
@@ -42,10 +45,15 @@ jobs:
           node --check assets/js/admin-alumnos-manuales-editor.js
           node --check assets/js/admin-dni-unico-sync.js
 
+      - name: Validar regla universal de DNI
+        run: |
+          grep -q "request.resource.data.tipo == 'preinscripcion_web'" firestore.rules
+          grep -q "existsAfter(" firestore.rules
+
       - name: Publicar cambios
         shell: bash
         run: |
-          if git diff --quiet -- assets/js/preinscripcion-firebase.js assets/js/preinscripcion-alumno-existente.js assets/js/admin-alumnos-manuales-editor.js assets/js/admin-dni-unico-sync.js preinscripcion.html admin-preinscripciones.html .nostrachat/firestore-rules-parts/insert-alumnos-manuales.rules; then
+          if git diff --quiet -- assets/js/preinscripcion-firebase.js assets/js/preinscripcion-alumno-existente.js assets/js/admin-alumnos-manuales-editor.js assets/js/admin-dni-unico-sync.js preinscripcion.html admin-preinscripciones.html .nostrachat/firestore-rules-parts/insert-alumnos-manuales.rules firestore.rules; then
             echo "La protección de DNI ya estaba aplicada."
             exit 0
           fi
@@ -57,6 +65,7 @@ jobs:
                   assets/js/admin-dni-unico-sync.js \
                   preinscripcion.html \
                   admin-preinscripciones.html \
-                  .nostrachat/firestore-rules-parts/insert-alumnos-manuales.rules
+                  .nostrachat/firestore-rules-parts/insert-alumnos-manuales.rules \
+                  firestore.rules
           git commit -m "Bloquea preinscripciones duplicadas por DNI"
           git push origin HEAD:main
