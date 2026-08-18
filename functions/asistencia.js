@@ -270,7 +270,6 @@ async function createDeviceLink(dni, person, req) {
   await db.collection('asistencia_dispositivos').doc(deviceHash).set({
     deviceId: deviceHash.slice(0, 16),
     dni,
-    personaId: person ? person.nombre && person.tipo ? '' : '' : '',
     nombre: person ? safeText(person.nombre || '', 140) : '',
     tipo: person && ALLOWED_TYPES.has(person.tipo) ? person.tipo : '',
     ciclo: person ? safeText(person.ciclo || '', 120) : '',
