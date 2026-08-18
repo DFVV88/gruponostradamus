@@ -18,7 +18,7 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 const $ = id => document.getElementById(id);
 const clean = value => String(value == null ? '' : value).replace(/\s+/g,' ').trim();
-const esc = value => clean(value).replace(/[&<>'"]/g,char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+const esc = value => clean(value).replace(/[&<>'\"]/g,char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','\"':'&quot;'}[char]));
 
 let currentUser = null;
 let state = null;
@@ -103,6 +103,160 @@ function ensureModeOptions(){
   select.insertBefore(option,entradaSalida || null);
 }
 
+function injectDirectoryStyles(){
+  if(document.getElementById('directory-enhancements-style')) return;
+  const style = document.createElement('style');
+  style.id = 'directory-enhancements-style';
+  style.textContent = `
+    .directory-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 12px}
+    .directory-toolbar input,.directory-toolbar select{border:1px solid var(--line);border-radius:12px;padding:9px 10px;font:inherit;font-size:11px;background:#fbfdfe;min-width:150px}
+    .directory-toolbar .directory-search{flex:1;min-width:220px}
+    .directory-quick{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+    .directory-quick .btn{padding:9px 11px}
+    #person-form.directory-form{grid-template-columns:1fr 1.35fr .85fr 1.1fr 1.1fr auto}
+    #person-form.directory-form .person-cycle-field.is-hidden{display:none}
+    .pending-action{white-space:nowrap}
+    .pending-action .btn{padding:7px 10px;font-size:9px}
+    .directory-focus{outline:3px solid rgba(7,140,149,.14);outline-offset:4px;border-radius:14px}
+    .directory-origin{font-size:8px;font-weight:900;color:#647482}
+    @media(max-width:1180px){#person-form.directory-form{grid-template-columns:1fr 1fr 1fr}.directory-quick{margin-left:0}}
+    @media(max-width:680px){#person-form.directory-form{grid-template-columns:1fr}.directory-toolbar>*{width:100%}.directory-quick{width:100%}.directory-quick .btn{flex:1}}
+  `;
+  document.head.appendChild(style);
+}
+
+function updatePersonFieldLabels(){
+  const type = $('person-type')?.value || '';
+  const detail = $('person-detail');
+  const detailLabel = detail?.closest('label');
+  const detailSpan = detailLabel?.querySelector('span');
+  const cycleField = document.querySelector('.person-cycle-field');
+  const cycleSpan = cycleField?.querySelector('span');
+  const cycleInput = $('person-cycle');
+  if(!detail || !detailSpan || !cycleField || !cycleSpan || !cycleInput) return;
+
+  cycleField.classList.remove('is-hidden');
+  if(type === 'docente'){
+    detailSpan.textContent = 'Curso / especialidad';
+    detail.placeholder = 'Ej. Física';
+    cycleSpan.textContent = 'Ciclo / programa';
+    cycleInput.placeholder = 'Ej. NostraPOWER';
+  }else if(type === 'alumno'){
+    detailSpan.textContent = 'Grupo / turno';
+    detail.placeholder = 'Ej. Mañana A';
+    cycleSpan.textContent = 'Ciclo / programa';
+    cycleInput.placeholder = 'Ej. NostraWEEKEND';
+  }else if(type === 'administrativo'){
+    detailSpan.textContent = 'Cargo / área';
+    detail.placeholder = 'Ej. Recepción';
+    cycleInput.value = '';
+    cycleField.classList.add('is-hidden');
+  }else{
+    detailSpan.textContent = 'Curso / ciclo / cargo';
+    detail.placeholder = 'Selecciona primero el tipo';
+    cycleSpan.textContent = 'Ciclo / programa';
+    cycleInput.placeholder = 'Opcional';
+  }
+}
+
+function resetPersonForm(type=''){
+  const form = $('person-form');
+  if(!form) return;
+  form.reset();
+  $('person-type').value = type;
+  $('person-dni').readOnly = false;
+  $('person-dni').dataset.pendingLink = '';
+  updatePersonFieldLabels();
+  clearMessage('person-msg');
+}
+
+function focusPersonForm(){
+  const form = $('person-form');
+  if(!form) return;
+  form.classList.add('directory-focus');
+  form.scrollIntoView({behavior:'smooth',block:'center'});
+  window.setTimeout(() => form.classList.remove('directory-focus'),1800);
+}
+
+function prefillPending(dni){
+  resetPersonForm('');
+  $('person-dni').value = String(dni || '').replace(/\D/g,'').slice(0,12);
+  $('person-dni').readOnly = true;
+  $('person-dni').dataset.pendingLink = '1';
+  message('person-msg','info',`DNI ${$('person-dni').value} listo para vincular. Selecciona Alumno, Docente o Administrativo y completa sus datos.`);
+  focusPersonForm();
+  $('person-type').focus();
+}
+
+function enhanceDirectoryUi(){
+  const form = $('person-form');
+  const pendingBody = $('pending-body');
+  if(!form || form.dataset.enhanced === '1') return;
+  form.dataset.enhanced = '1';
+  injectDirectoryStyles();
+
+  const section = form.closest('.section');
+  const title = section?.querySelector('.section-head h2');
+  const subtitle = section?.querySelector('.section-head p');
+  if(title) title.textContent = 'Directorio institucional de asistencia';
+  if(subtitle) subtitle.textContent = 'Identifica manualmente alumnos, docentes y administrativos que aún no estén completos en otros módulos. La asistencia y el historial quedan vinculados por DNI.';
+
+  const typeSelect = $('person-type');
+  if(typeSelect && !typeSelect.querySelector('option[value=""]')){
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = 'Seleccionar tipo...';
+    typeSelect.insertBefore(placeholder,typeSelect.firstChild);
+    typeSelect.value = '';
+    typeSelect.required = true;
+  }
+
+  const detailLabel = $('person-detail')?.closest('label');
+  if(detailLabel && !$('person-cycle')){
+    const cycleLabel = document.createElement('label');
+    cycleLabel.className = 'person-cycle-field';
+    cycleLabel.innerHTML = '<span>Ciclo / programa</span><input id="person-cycle" maxlength="120" placeholder="Opcional">';
+    detailLabel.insertAdjacentElement('afterend',cycleLabel);
+  }
+
+  form.classList.add('directory-form');
+  const submitButton = form.querySelector('button[type="submit"]');
+  if(submitButton) submitButton.textContent = 'Guardar persona';
+
+  const toolbar = document.createElement('div');
+  toolbar.className = 'directory-toolbar';
+  toolbar.innerHTML = `
+    <input class="directory-search" id="people-search" placeholder="Buscar por nombre, DNI, curso, ciclo o cargo">
+    <select id="people-type-filter">
+      <option value="">Todos los tipos</option>
+      <option value="alumno">Alumnos</option>
+      <option value="docente">Docentes</option>
+      <option value="administrativo">Administrativos</option>
+    </select>
+    <div class="directory-quick">
+      <button class="btn btn-light" type="button" data-new-person="alumno">+ Alumno</button>
+      <button class="btn btn-light" type="button" data-new-person="docente">+ Docente</button>
+      <button class="btn btn-light" type="button" data-new-person="administrativo">+ Administrativo</button>
+    </div>`;
+  form.parentNode.insertBefore(toolbar,form);
+
+  const peopleTable = $('people-body')?.closest('table');
+  if(peopleTable){
+    peopleTable.style.minWidth = '820px';
+    const row = peopleTable.querySelector('thead tr');
+    if(row) row.innerHTML = '<th>Persona</th><th>DNI</th><th>Tipo</th><th>Curso / ciclo / cargo</th><th>Origen</th><th>Estado</th>';
+  }
+
+  const pendingTable = pendingBody?.closest('table');
+  if(pendingTable){
+    pendingTable.style.minWidth = '760px';
+    const row = pendingTable.querySelector('thead tr');
+    if(row) row.innerHTML = '<th>DNI</th><th>Registros</th><th>Primera vez</th><th>Última vez</th><th>Estado</th><th>Acciones</th>';
+  }
+
+  updatePersonFieldLabels();
+}
+
 function populateConfig(){
   if(!state) return;
   ensureModeOptions();
@@ -175,16 +329,46 @@ function renderRecords(){
 function renderPending(){
   const data = state?.pending || [];
   const body = $('pending-body');
-  if(!data.length){ body.innerHTML = '<tr><td colspan="5" class="empty">No hay DNI pendientes de vinculación.</td></tr>'; return; }
-  body.innerHTML = data.map(item => `<tr><td><b>${esc(item.dni)}</b></td><td>${Number(item.registros || 1)}</td><td>${esc(dateTimeLabel(item.firstSeenAt))}</td><td>${esc(dateTimeLabel(item.lastSeenAt))}</td><td><span class="badge blue">Pendiente</span></td></tr>`).join('');
+  if(!data.length){ body.innerHTML = '<tr><td colspan="6" class="empty">No hay DNI pendientes de vinculación.</td></tr>'; return; }
+  body.innerHTML = data.map(item => `<tr>
+    <td><b>${esc(item.dni)}</b></td>
+    <td>${Number(item.registros || 1)}</td>
+    <td>${esc(dateTimeLabel(item.firstSeenAt))}</td>
+    <td>${esc(dateTimeLabel(item.lastSeenAt))}</td>
+    <td><span class="badge blue">Pendiente</span></td>
+    <td class="pending-action"><button class="btn btn-light" type="button" data-link-pending="${esc(item.dni)}">Vincular persona</button></td>
+  </tr>`).join('');
+}
+
+function sourceLabel(item){
+  const origin = clean(item.origen || item.origenPersona || '').toLowerCase();
+  if(origin.includes('manual') || origin.includes('directorio')) return 'Manual';
+  if(origin.includes('finanzas')) return 'Finanzas docentes';
+  if(origin.includes('preinscripciones')) return 'Preinscripciones';
+  return origin ? origin.replace(/_/g,' ') : 'Directorio';
 }
 
 function renderPeople(){
-  const data = state?.people || [];
-  $('people-count').textContent = `${data.length} persona${data.length === 1 ? '' : 's'}`;
+  const all = state?.people || [];
+  const term = clean($('people-search')?.value).toLowerCase();
+  const type = $('people-type-filter')?.value || '';
+  const data = all.filter(item => {
+    const hay = `${item.nombre || ''} ${item.dni || ''} ${item.tipo || ''} ${item.detalle || ''} ${item.ciclo || ''}`.toLowerCase();
+    return (!term || hay.includes(term)) && (!type || item.tipo === type);
+  });
+  $('people-count').textContent = data.length === all.length
+    ? `${all.length} persona${all.length === 1 ? '' : 's'}`
+    : `${data.length} de ${all.length}`;
   const body = $('people-body');
-  if(!data.length){ body.innerHTML = '<tr><td colspan="4" class="empty">Aún no hay personas adicionales en el directorio.</td></tr>'; return; }
-  body.innerHTML = data.map(item => `<tr><td><b>${esc(item.nombre)}</b></td><td>${esc(item.dni)}</td><td><span class="badge blue">${esc(item.tipo)}</span></td><td>${esc(item.detalle || item.ciclo || '-')}</td></tr>`).join('');
+  if(!data.length){ body.innerHTML = '<tr><td colspan="6" class="empty">No hay personas con este filtro.</td></tr>'; return; }
+  body.innerHTML = data.map(item => `<tr>
+    <td><b>${esc(item.nombre)}</b></td>
+    <td>${esc(item.dni)}</td>
+    <td><span class="badge blue">${esc(item.tipo)}</span></td>
+    <td>${esc(item.ciclo || item.detalle || '-')}<br>${item.ciclo && item.detalle ? `<small>${esc(item.detalle)}</small>` : ''}</td>
+    <td><span class="directory-origin">${esc(sourceLabel(item))}</span></td>
+    <td>${item.activo === false ? '<span class="badge red">Inactivo</span>' : '<span class="badge green">Activo</span>'}</td>
+  </tr>`).join('');
 }
 
 function renderState(){
@@ -329,7 +513,7 @@ async function crossPending(){
   const button = $('cross-pending');
   try{
     button.disabled = true;
-    message('pending-msg','info','Cruzando DNI con alumnos, docentes y directorio de asistencia...');
+    message('pending-msg','info','Cruzando DNI con alumnos, docentes y directorio institucional...');
     const result = await adminApi('cross_pending');
     message('pending-msg','ok',`Cruce terminado: ${result.vinculados} vinculados de ${result.revisados} revisados.`);
     await loadState();
@@ -345,18 +529,29 @@ async function createPerson(event){
   event.preventDefault();
   const form = event.currentTarget;
   const dni = $('person-dni').value.replace(/\D/g,'');
+  const tipo = $('person-type').value;
+  if(!tipo){
+    message('person-msg','err','Selecciona si la persona es alumno, docente o administrativo.');
+    $('person-type').focus();
+    return;
+  }
   try{
-    message('person-msg','info','Guardando persona...');
+    message('person-msg','info','Guardando persona y vinculando registros...');
     await adminApi('create_person',{
       dni,
       nombre:clean($('person-name').value),
-      tipo:$('person-type').value,
-      detalle:clean($('person-detail').value)
+      tipo,
+      detalle:clean($('person-detail').value),
+      ciclo:clean($('person-cycle')?.value)
     });
-    message('person-msg','ok','Persona guardada. Ahora puede ser reconocida por DNI.');
-    form.reset();
-    $('person-type').value = 'administrativo';
     await adminApi('cross_pending');
+    const typeLabel = tipo === 'docente' ? 'Docente' : tipo === 'alumno' ? 'Alumno' : 'Administrativo';
+    message('person-msg','ok',`${typeLabel} guardado y vinculado correctamente por DNI.`);
+    form.reset();
+    $('person-type').value = '';
+    $('person-dni').readOnly = false;
+    $('person-dni').dataset.pendingLink = '';
+    updatePersonFieldLabels();
     await loadState();
   }catch(error){
     console.error(error);
@@ -365,8 +560,8 @@ async function createPerson(event){
 }
 
 function csvCell(value){
-  const text = String(value == null ? '' : value).replace(/"/g,'""');
-  return `"${text}"`;
+  const text = String(value == null ? '' : value).replace(/\"/g,'\"\"');
+  return `\"${text}\"`;
 }
 
 function exportCsv(){
@@ -415,7 +610,22 @@ function bind(){
   $('records-filter').addEventListener('change',renderRecords);
   $('export-csv').addEventListener('click',exportCsv);
   $('manual-dni').addEventListener('input',event => { event.target.value = event.target.value.replace(/\D/g,'').slice(0,12); });
-  $('person-dni').addEventListener('input',event => { event.target.value = event.target.value.replace(/\D/g,'').slice(0,12); });
+  $('person-dni').addEventListener('input',event => { if(!event.target.readOnly) event.target.value = event.target.value.replace(/\D/g,'').slice(0,12); });
+  $('person-type').addEventListener('change',updatePersonFieldLabels);
+  $('people-search')?.addEventListener('input',renderPeople);
+  $('people-type-filter')?.addEventListener('change',renderPeople);
+  document.querySelector('.directory-quick')?.addEventListener('click',event => {
+    const button = event.target.closest('[data-new-person]');
+    if(!button) return;
+    resetPersonForm(button.dataset.newPerson || '');
+    focusPersonForm();
+    $('person-dni').focus();
+  });
+  $('pending-body').addEventListener('click',event => {
+    const button = event.target.closest('[data-link-pending]');
+    if(!button) return;
+    prefillPending(button.dataset.linkPending || '');
+  });
   document.addEventListener('fullscreenchange',() => {
     if(!document.fullscreenElement && document.body.classList.contains('terminal-mode')){
       document.body.classList.remove('terminal-mode');
@@ -424,6 +634,7 @@ function bind(){
   });
 }
 
+enhanceDirectoryUi();
 bind();
 ensureModeOptions();
 $('records-date').value = localDate();
