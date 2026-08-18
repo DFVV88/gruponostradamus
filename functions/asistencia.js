@@ -21,7 +21,6 @@ const ALLOWED_TYPES = new Set(['alumno', 'docente', 'administrativo']);
 const ALLOWED_ORIGINS = [
   'https://gruponostradamus.edu.pe',
   'https://www.gruponostradamus.edu.pe',
-  'https://asistencia.gruponostradamus.edu.pe',
   'https://dfvv88.github.io',
   'http://localhost:5500',
   'http://127.0.0.1:5500'
@@ -118,7 +117,7 @@ async function getGeneralConfig() {
   return {
     activo: data.activo !== false,
     sede: safeText(data.sede || 'Sede principal', 100),
-    publicBaseUrl: safeText(data.publicBaseUrl || 'https://asistencia.gruponostradamus.edu.pe/', 300),
+    publicBaseUrl: 'https://gruponostradamus.edu.pe/asistencia',
     horaGeneral: TIME_RE.test(data.horaGeneral || '') ? data.horaGeneral : '08:00',
     toleranciaGeneral: clamp(data.toleranciaGeneral, 0, 120, 10),
     qrRotacionSegundos: clamp(data.qrRotacionSegundos, 30, 300, 60),
@@ -360,8 +359,7 @@ async function adminState(dateKey) {
 
 async function saveConfig(body, admin) {
   const configInput = body.config || {};
-  const publicBaseUrl = safeText(configInput.publicBaseUrl, 300);
-  if (!/^https:\/\//i.test(publicBaseUrl)) throw new PublicError(400, 'URL_INVALIDA', 'La URL pública de asistencia debe usar HTTPS.');
+  const publicBaseUrl = 'https://gruponostradamus.edu.pe/asistencia';
   const config = {
     activo: configInput.activo !== false,
     sede: safeText(configInput.sede || 'Sede principal', 100),
@@ -412,11 +410,10 @@ async function createToken(admin) {
     createdAt: FieldValue.serverTimestamp(),
     lastUsedAt: null
   });
-  const base = config.publicBaseUrl.endsWith('/') ? config.publicBaseUrl : `${config.publicBaseUrl}/`;
-  const separator = base.includes('?') ? '&' : '?';
+  const separator = config.publicBaseUrl.includes('?') ? '&' : '?';
   return {
     token,
-    url: `${base}${separator}token=${token}`,
+    url: `${config.publicBaseUrl}${separator}token=${token}`,
     expiresAt: expiresAt.toDate().toISOString(),
     rotateAfterSeconds: config.qrRotacionSegundos
   };

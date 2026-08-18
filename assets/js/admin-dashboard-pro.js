@@ -53,6 +53,7 @@
         '<div class="admin-pro-nav-label">Gestión</div>' +
         navButton('preinscripciones','◎','Preinscripciones') +
         navButton('cuentas','◇','NostraCUENTAS') +
+        '<button type="button" onclick="window.location.href=\'admin-asistencia.html\'"><span class="admin-pro-nav-icon">✓</span><span>Asistencia</span></button>' +
         '<div class="admin-pro-nav-label">Finanzas</div>' +
         navButton('finanzas','S/','Finanzas') +
       '</nav>' +
