@@ -49,20 +49,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <section class="card">
       <span class="eyebrow"><i class="dot"></i> Registro rápido</span>
       <h1>Marca tu asistencia</h1>
-      <p>Ingresa únicamente tu DNI. Si ya estás en nuestra base, te reconoceremos automáticamente; si aún no, guardaremos tu registro para vincularlo después.</p>
+      <p>Escanea el QR del local. Si este celular ya está vinculado, tu asistencia se registra automáticamente. Si es la primera vez, te pediremos tu DNI una sola vez.</p>
       <div class="clock"><span>Hora actual<br><b id="today-label"></b></span><strong id="clock">--:--</strong></div>
-      <form id="attendance-form" autocomplete="off">
+      <form id="attendance-form" autocomplete="off" style="display:none">
         <label for="dni">DNI</label>
         <input class="dni" id="dni" name="dni" inputmode="numeric" pattern="[0-9]*" minlength="8" maxlength="12" placeholder="Ej. 74852136" aria-describedby="dni-help" required>
-        <button id="submit-btn" type="submit">Registrar asistencia</button>
-        <small class="micro" id="dni-help">El proceso toma solo unos segundos.</small>
+        <button id="submit-btn" type="submit">Vincular celular y registrar</button>
+        <small class="micro" id="dni-help">Solo se solicita la primera vez en este celular.</small>
       </form>
       <div class="result" id="result" role="status" aria-live="polite"></div>
       <div class="no-token" id="no-token">Este enlace no contiene un QR vigente. Escanea el código que se muestra actualmente en el local para registrar tu asistencia.</div>
     </section>
     <div class="footer"><b>Grupo Nostradamus</b> · Control de asistencia institucional</div>
   </main>
-  <script type="module" src="assets/js/asistencia.js?v=2026-08-18-1"></script>
+  <script type="module" src="assets/js/asistencia.js?v=2026-08-18-2"></script>
 <!-- Conversion tracking - Grupo Nostradamus -->
 <script>
 (function(){
