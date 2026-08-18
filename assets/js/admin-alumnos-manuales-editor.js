@@ -39,7 +39,8 @@ const PROGRAMS = [
   ['ciclo-ien','IEN UNI'],
   ['proyecto-escolar','Proyecto Escolar'],
   ['paralelo-cepre-uni','Paralelo CEPRE UNI'],
-  ['ciclo-verano-uni','Ciclo Verano UNI']
+  ['ciclo-verano-uni','Ciclo Verano UNI'],
+  ['nostra-weekend-uni','NostraWEEKEND']
 ];
 
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
@@ -99,7 +100,7 @@ function ensureUi(){
     const entry = document.createElement('div');
     entry.id = 'manual-edit-entry';
     entry.className = 'manual-edit-entry';
-    entry.innerHTML = '<div><strong>Ficha administrativa editable</strong><small>Corrige datos personales, académicos y referencias generales sin modificar pagos ni cuotas registradas.</small></div><button type="button" class="btn btn-blue" id="manual-edit-open">Editar datos del alumno</button>';
+    entry.innerHTML = '<div><strong>Ficha del alumno editable</strong><small>Corrige datos del formulario y referencias académicas sin modificar pagos, cuotas ni movimientos financieros.</small></div><button type="button" class="btn btn-blue" id="manual-edit-open">Editar datos del alumno</button>';
     detailGrid.insertAdjacentElement('afterend',entry);
   }
 
@@ -123,7 +124,7 @@ function ensureUi(){
             <label><span>Colegio</span><input id="manual-edit-school" maxlength="150" placeholder="Opcional"></label>
             <label><span>Situación académica</span><input id="manual-edit-situation" maxlength="80" placeholder="Opcional"></label>
             <label><span>Programa</span><select id="manual-edit-program">${PROGRAMS.map(item => `<option value="${esc(item[0])}">${esc(item[1])}</option>`).join('')}</select></label>
-            <label><span>Turno</span><select id="manual-edit-turn"><option value="Por confirmar">Por confirmar</option><option>Mañana</option><option>Tarde</option><option>Noche</option><option>FULL</option></select></label>
+            <label><span>Turno</span><select id="manual-edit-turn"><option value="Por confirmar">Por confirmar</option><option>Mañana</option><option>Tarde</option><option>Noche</option><option>FULL</option><option>Sabatino</option><option>Dominical</option></select></label>
             <label><span>Plan asignado</span><input id="manual-edit-plan" maxlength="100" placeholder="Ej. Presencial FULL"></label>
             <label><span>Salón / grupo</span><input id="manual-edit-group" maxlength="100" placeholder="Ej. POWER-A"></label>
             <label><span>Pensión mensual acordada (S/)</span><input id="manual-edit-price" type="number" min="0" max="1000000" step="0.01"></label>
@@ -202,7 +203,6 @@ async function loadManualRecord(id){
     const snapshot = await getDoc(doc(db,PRE_COLLECTION,id));
     if(!snapshot.exists()) return;
     const data = snapshot.data() || {};
-    if(!isManualRecord(data)) return;
     currentRecordId = id;
     currentRecord = {id,...data};
     if(entry) entry.classList.add('show');
@@ -312,16 +312,18 @@ async function saveEditor(event){
         dniCorreccionMotivo:correctionReason
       });
 
-      batch.delete(doc(db,DNI_REGISTRY_COLLECTION,oldHash));
-      batch.set(newRegistryRef,{
-        dniHash:newHash,
-        registroId:currentRecordId,
-        tipo:'registro_manual_admin',
-        activo:true,
-        creadoPor:clean(currentUser.email || ADMIN_EMAIL),
-        createdAt:serverTimestamp(),
-        updatedAt:serverTimestamp()
-      });
+      if(isManualRecord(currentRecord)){
+        batch.delete(doc(db,DNI_REGISTRY_COLLECTION,oldHash));
+        batch.set(newRegistryRef,{
+          dniHash:newHash,
+          registroId:currentRecordId,
+          tipo:'registro_manual_admin',
+          activo:true,
+          creadoPor:clean(currentUser.email || ADMIN_EMAIL),
+          createdAt:serverTimestamp(),
+          updatedAt:serverTimestamp()
+        });
+      }
     }
 
     patch.actualizadoManualmenteAt = serverTimestamp();
@@ -331,7 +333,9 @@ async function saveEditor(event){
     await batch.commit();
 
     setMessage('ok',dniChanged
-      ? 'Datos guardados y DNI corregido correctamente. El índice anti-duplicados también fue actualizado.'
+      ? (isManualRecord(currentRecord)
+          ? 'Datos guardados y DNI corregido correctamente. El índice anti-duplicados también fue actualizado.'
+          : 'Datos guardados y DNI corregido correctamente. La ficha conserva el mismo ID y el historial financiero no fue modificado.')
       : 'Datos del alumno actualizados correctamente. Cuotas y pagos existentes permanecen sin cambios.');
 
     currentRecord = {...currentRecord,...patch,dni:dniChanged ? newDni : currentRecord.dni};
@@ -341,7 +345,7 @@ async function saveEditor(event){
       document.getElementById('close-modal')?.click();
     },900);
   }catch(error){
-    console.error('No se pudo editar el alumno manual:',error);
+    console.error('No se pudo editar la ficha del alumno:',error);
     setMessage('err',esc(error?.message || 'No se pudieron guardar los cambios.'));
   }finally{
     busy = false;
