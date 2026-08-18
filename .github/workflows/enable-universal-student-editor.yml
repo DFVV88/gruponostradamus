@@ -1,0 +1,110 @@
+name: Enable universal student editor
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/enable-universal-student-editor.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Patch student editor
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          editor_path = Path('assets/js/admin-alumnos-manuales-editor.js')
+          html_path = Path('admin-preinscripciones.html')
+          editor = editor_path.read_text(encoding='utf-8')
+          html = html_path.read_text(encoding='utf-8')
+
+          def replace_once(text, old, new, label):
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{label}: expected 1 occurrence, found {count}')
+              return text.replace(old, new, 1)
+
+          editor = replace_once(
+              editor,
+              "  ['ciclo-verano-uni','Ciclo Verano UNI']\n];",
+              "  ['ciclo-verano-uni','Ciclo Verano UNI'],\n  ['nostra-weekend-uni','NostraWEEKEND']\n];",
+              'program list'
+          )
+
+          editor = replace_once(
+              editor,
+              '<option>Mañana</option><option>Tarde</option><option>Noche</option><option>FULL</option></select>',
+              '<option>Mañana</option><option>Tarde</option><option>Noche</option><option>FULL</option><option>Sabatino</option><option>Dominical</option></select>',
+              'turn options'
+          )
+
+          editor = replace_once(
+              editor,
+              "    if(!isManualRecord(data)) return;\n    currentRecordId = id;",
+              "    currentRecordId = id;",
+              'manual-only restriction'
+          )
+
+          editor = replace_once(
+              editor,
+              "    entry.innerHTML = '<div><strong>Ficha administrativa editable</strong><small>Corrige datos personales, académicos y referencias generales sin modificar pagos ni cuotas registradas.</small></div><button type=\"button\" class=\"btn btn-blue\" id=\"manual-edit-open\">Editar datos del alumno</button>';",
+              "    entry.innerHTML = '<div><strong>Ficha del alumno editable</strong><small>Corrige datos del formulario y referencias académicas sin modificar pagos, cuotas ni movimientos financieros.</small></div><button type=\"button\" class=\"btn btn-blue\" id=\"manual-edit-open\">Editar datos del alumno</button>';",
+              'entry copy'
+          )
+
+          editor = replace_once(
+              editor,
+              "      batch.delete(doc(db,DNI_REGISTRY_COLLECTION,oldHash));\n      batch.set(newRegistryRef,{\n        dniHash:newHash,\n        registroId:currentRecordId,\n        tipo:'registro_manual_admin',\n        activo:true,\n        creadoPor:clean(currentUser.email || ADMIN_EMAIL),\n        createdAt:serverTimestamp(),\n        updatedAt:serverTimestamp()\n      });",
+              "      if(isManualRecord(currentRecord)){\n        batch.delete(doc(db,DNI_REGISTRY_COLLECTION,oldHash));\n        batch.set(newRegistryRef,{\n          dniHash:newHash,\n          registroId:currentRecordId,\n          tipo:'registro_manual_admin',\n          activo:true,\n          creadoPor:clean(currentUser.email || ADMIN_EMAIL),\n          createdAt:serverTimestamp(),\n          updatedAt:serverTimestamp()\n        });\n      }",
+              'dni registry handling'
+          )
+
+          editor = replace_once(
+              editor,
+              "    setMessage('ok',dniChanged\n      ? 'Datos guardados y DNI corregido correctamente. El índice anti-duplicados también fue actualizado.'\n      : 'Datos del alumno actualizados correctamente. Cuotas y pagos existentes permanecen sin cambios.');",
+              "    setMessage('ok',dniChanged\n      ? (isManualRecord(currentRecord)\n          ? 'Datos guardados y DNI corregido correctamente. El índice anti-duplicados también fue actualizado.'\n          : 'Datos guardados y DNI corregido correctamente. La ficha conserva el mismo ID y el historial financiero no fue modificado.')\n      : 'Datos del alumno actualizados correctamente. Cuotas y pagos existentes permanecen sin cambios.');",
+              'success message'
+          )
+
+          editor = editor.replace("console.error('No se pudo editar el alumno manual:',error);", "console.error('No se pudo editar la ficha del alumno:',error);")
+
+          loader = '  <script type="module" src="assets/js/admin-alumnos-manuales-editor.js?v=2026-08-18-universal-1"></script>\n'
+          if 'admin-alumnos-manuales-editor.js' not in html:
+              anchor = '  <script type="module" src="assets/js/admin-alumnos-manuales-layout.js?v=2026-08-11-1"></script>\n'
+              if anchor not in html:
+                  raise SystemExit('HTML loader anchor not found')
+              html = html.replace(anchor, anchor + loader, 1)
+
+          editor_path.write_text(editor, encoding='utf-8')
+          html_path.write_text(html, encoding='utf-8')
+          PY
+
+      - name: Validate JavaScript and HTML wiring
+        run: |
+          node --check assets/js/admin-alumnos-manuales-editor.js
+          grep -q 'admin-alumnos-manuales-editor.js?v=2026-08-18-universal-1' admin-preinscripciones.html
+          grep -q "\['nostra-weekend-uni','NostraWEEKEND'\]" assets/js/admin-alumnos-manuales-editor.js
+          if grep -q 'if(!isManualRecord(data)) return;' assets/js/admin-alumnos-manuales-editor.js; then
+            echo 'Manual-only restriction still present' >&2
+            exit 1
+          fi
+
+      - name: Commit patch and remove temporary workflow
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/enable-universal-student-editor.yml
+          git add assets/js/admin-alumnos-manuales-editor.js admin-preinscripciones.html
+          git commit -m 'Habilita edición de fichas para todos los alumnos'
+          git push origin main
