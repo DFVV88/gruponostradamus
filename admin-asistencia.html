@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#061426">
+  <title>NostraASISTENCIA | NostraADMIN</title>
+  <link rel="shortcut icon" href="assets/img/favicons/iocon-ostradamus.png" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{--dark:#02070d;--navy:#061426;--teal:#078c95;--cyan:#16c7b7;--orange:#ff941e;--green:#14855a;--red:#b42318;--line:#dce9ed;--muted:#647482;--bg:#eef8fa}
+    *{box-sizing:border-box}body{margin:0;font-family:Jost,Arial,sans-serif;background:var(--bg);color:#172033}.hidden{display:none!important}.wrap{width:min(1420px,95%);margin:auto}.topline{height:5px;background:linear-gradient(90deg,var(--navy),var(--teal),var(--cyan),var(--orange))}
+    .topbar{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}.topbar-in{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:12px 0}.brand{display:flex;align-items:center;gap:11px;text-decoration:none}.brand img{width:54px}.brand strong{display:block;color:var(--navy);font:800 22px/1 'Baloo 2'}.brand span{color:var(--teal);font-size:10px;font-weight:950;letter-spacing:.12em}.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .btn{border:0;border-radius:999px;padding:10px 14px;font:900 11px Jost,Arial,sans-serif;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}.btn-primary{background:linear-gradient(135deg,var(--navy),var(--teal));color:#fff}.btn-green{background:var(--green);color:#fff}.btn-orange{background:var(--orange);color:#1d2730}.btn-light{background:#fff;color:var(--navy);border:1px solid var(--line)}.btn-red{background:#fff1f0;color:var(--red);border:1px solid #f2cbc7}.btn:disabled{opacity:.5;cursor:wait}
+    .auth{width:min(520px,92%);margin:80px auto;background:#fff;border:1px solid var(--line);border-radius:28px;padding:28px;box-shadow:0 20px 65px rgba(6,20,38,.1)}.auth h1,.hero h1,.section h2{font-family:'Baloo 2';color:var(--navy);line-height:1}.auth h1{font-size:42px;margin:0 0 8px}.auth p{color:var(--muted);line-height:1.55}.auth .btn{width:100%;padding:14px;margin-top:10px}
+    .hero{padding:28px 0 16px}.hero-row{display:flex;align-items:flex-end;justify-content:space-between;gap:20px}.hero h1{font-size:clamp(38px,5vw,58px);margin:0}.hero p{margin:7px 0 0;color:var(--muted);font-size:15px}.date-pill{border:1px solid var(--line);border-radius:999px;background:#fff;padding:9px 13px;color:var(--teal);font-size:11px;font-weight:900}
+    .stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:11px;margin-bottom:18px}.stat{background:#fff;border:1px solid var(--line);border-radius:20px;padding:15px}.stat span{display:block;color:#74848f;font-size:9px;font-weight:950;text-transform:uppercase;letter-spacing:.05em}.stat strong{display:block;margin-top:4px;color:var(--navy);font:800 28px/1 'Baloo 2'}.stat.good strong{color:var(--green)}.stat.warn strong{color:#a66300}.stat.bad strong{color:var(--red)}.stat.pending strong{color:var(--teal)}
+    .grid-main{display:grid;grid-template-columns:minmax(370px,.85fr) minmax(560px,1.4fr);gap:16px;align-items:start}.section{background:#fff;border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:0 12px 35px rgba(6,20,38,.055);margin-bottom:16px}.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.section h2{font-size:31px;margin:0}.section-head p{margin:5px 0 0;color:var(--muted);font-size:11px;line-height:1.45}.tag{display:inline-flex;padding:6px 9px;border-radius:999px;background:#eafafa;color:#075b65;font-size:9px;font-weight:950;white-space:nowrap}
+    .terminal{background:radial-gradient(circle at 10% 0%,rgba(22,199,183,.22),transparent 42%),linear-gradient(145deg,#03111d,#07353d);color:#fff;border-color:transparent}.terminal h2,.terminal .section-head p{color:#fff}.terminal .section-head p{opacity:.7}.terminal .tag{background:rgba(255,255,255,.1);color:#d9ffff}.qr-box{display:grid;grid-template-columns:220px 1fr;gap:16px;align-items:center}.qr-card{background:#fff;border-radius:20px;padding:13px;display:grid;place-items:center;min-height:220px}.qr-card canvas{width:194px!important;height:194px!important}.qr-info strong{display:block;font:800 27px/1 'Baloo 2';margin-bottom:6px}.qr-info p{font-size:11px;color:#d2e7e9;line-height:1.45}.countdown{margin:10px 0;padding:10px 12px;border:1px solid rgba(255,255,255,.14);border-radius:13px;background:rgba(255,255,255,.07);font-size:11px}.countdown b{color:#6ff5e8}.terminal-actions{display:flex;gap:7px;flex-wrap:wrap}.terminal-actions .btn-light{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18);color:#fff}
+    .manual-form{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:15px}.manual-form input{border:1px solid rgba(255,255,255,.18);border-radius:14px;background:rgba(255,255,255,.1);color:#fff;padding:12px 13px;font:800 17px Jost;outline:none}.manual-form input::placeholder{color:#aac7ca}.manual-result{min-height:18px;margin-top:8px;font-size:10px;font-weight:850;color:#aff5de}
+    .fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:block}.field.wide{grid-column:1/-1}.field span{display:block;margin:0 0 5px;color:var(--navy);font-size:9px;font-weight:950;text-transform:uppercase}.field input,.field select{width:100%;border:1px solid var(--line);border-radius:13px;padding:10px 11px;background:#fbfdfe;color:#172033;font:inherit;font-size:12px;outline:none}.field input:focus,.field select:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(7,140,149,.08)}
+    .role-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:13px}.role{border:1px solid var(--line);border-radius:16px;padding:12px;background:#fbfdfe}.role strong{display:block;color:var(--navy);font-size:12px;margin-bottom:8px}.role-line{display:grid;grid-template-columns:1fr 1fr;gap:7px}.role label{font-size:8px;font-weight:950;color:#71808c;text-transform:uppercase}.role input{width:100%;margin-top:4px;border:1px solid var(--line);border-radius:10px;padding:8px;font:inherit;font-size:11px}.switch{display:flex!important;align-items:center;gap:6px;margin-top:8px!important;text-transform:none!important;font-size:9px!important}.switch input{width:auto!important;margin:0!important}
+    .msg{display:none;margin-top:10px;border-radius:13px;padding:10px 11px;font-size:10px;font-weight:850}.msg.show{display:block}.msg.ok{background:#eaf9f1;color:#146a4c}.msg.err{background:#fff1f0;color:var(--red)}.msg.info{background:#eef8fa;color:#075b65}.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}.toolbar input,.toolbar select{border:1px solid var(--line);border-radius:12px;padding:9px 10px;font:inherit;font-size:11px;background:#fbfdfe}
+    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:16px}.table-wrap table{width:100%;border-collapse:collapse;min-width:840px}th,td{padding:10px 9px;border-bottom:1px solid #edf2f4;text-align:left;vertical-align:top;font-size:10px}th{background:#f3fafb;color:var(--navy);font-size:8px;text-transform:uppercase;letter-spacing:.04em}td b{color:var(--navy)}td small{color:#71808c}.badge{display:inline-flex;border-radius:999px;padding:5px 8px;font-size:8px;font-weight:950}.badge.green{background:#eaf9f1;color:#146a4c}.badge.orange{background:#fff6e5;color:#955800}.badge.red{background:#fff1f0;color:var(--red)}.badge.blue{background:#eafafa;color:#075b65}.empty{padding:18px;text-align:center;color:#71808c;font-size:11px}
+    .person-form{display:grid;grid-template-columns:1fr 1.4fr 1fr 1.2fr auto;gap:8px;align-items:end}.person-form label span{display:block;margin-bottom:4px;font-size:8px;font-weight:950;color:#71808c;text-transform:uppercase}.person-form input,.person-form select{width:100%;border:1px solid var(--line);border-radius:11px;padding:9px 10px;font:inherit;font-size:11px}
+    body.terminal-mode{background:#02070d}body.terminal-mode .topbar,body.terminal-mode .hero,body.terminal-mode .stats,body.terminal-mode .right-col,body.terminal-mode .section:not(.terminal){display:none!important}body.terminal-mode .wrap{width:min(980px,96%)}body.terminal-mode .grid-main{display:block;padding-top:3vh}body.terminal-mode .terminal{min-height:90vh;display:flex;flex-direction:column;justify-content:center;padding:clamp(28px,5vw,58px)}body.terminal-mode .terminal h2{font-size:clamp(36px,5vw,58px)}body.terminal-mode .qr-box{grid-template-columns:minmax(280px,380px) 1fr}body.terminal-mode .qr-card{min-height:380px}body.terminal-mode .qr-card canvas{width:350px!important;height:350px!important}
+    @media(max-width:1100px){.stats{grid-template-columns:repeat(3,1fr)}.grid-main{grid-template-columns:1fr}.qr-box{grid-template-columns:210px 1fr}.role-grid{grid-template-columns:1fr 1fr}.person-form{grid-template-columns:1fr 1fr}.person-form .btn{width:100%}}
+    @media(max-width:680px){.topbar-in,.hero-row,.section-head{align-items:flex-start}.topbar-in{display:block}.actions{margin-top:10px}.actions .btn{flex:1}.stats{grid-template-columns:1fr 1fr}.qr-box,.role-grid,.fields,.manual-form,.person-form{grid-template-columns:1fr}.qr-card{min-height:250px}.qr-card canvas{width:220px!important;height:220px!important}.hero h1{font-size:40px}.section{padding:16px}body.terminal-mode .qr-box{grid-template-columns:1fr}body.terminal-mode .qr-card canvas{width:250px!important;height:250px!important}body.terminal-mode .qr-card{min-height:280px}}
+  </style>
+</head>
+<body>
+  <div class="topline"></div>
+  <header class="topbar"><div class="wrap topbar-in">
+    <a class="brand" href="admin-preinscripciones.html"><img src="assets/img/logo.png" alt="Grupo Nostradamus"><div><strong>NostraASISTENCIA</strong><span>NOSTRAADMIN</span></div></a>
+    <div class="actions"><a class="btn btn-light" href="admin-preinscripciones.html">← NostraADMIN</a><a class="btn btn-light" href="asistencia.html" target="_blank" rel="noopener">Ver pantalla pública</a><button class="btn btn-red hidden" id="logout-btn">Cerrar sesión</button></div>
+  </div></header>
+
+  <section class="auth" id="auth-card"><h1>Control de asistencia</h1><p>Ingresa con la cuenta administrativa autorizada. Desde aquí se configura el QR, horarios, tolerancias, tardanzas, registros y vinculaciones.</p><button class="btn btn-primary" id="login-btn">Ingresar con Google</button><div class="msg" id="auth-msg"></div></section>
+
+  <main class="wrap hidden" id="admin-panel">
+    <div class="hero"><div class="hero-row"><div><h1>Asistencia institucional</h1><p>Registro rápido para alumnos, docentes y administrativos. La complejidad queda en el sistema, no en la fila de ingreso.</p></div><span class="date-pill" id="today-label"></span></div></div>
+    <div class="stats">
+      <article class="stat"><span>Registros del día</span><strong id="stat-total">0</strong></article>
+      <article class="stat good"><span>Puntuales</span><strong id="stat-puntuales">0</strong></article>
+      <article class="stat warn"><span>Tardanzas</span><strong id="stat-tardanzas">0</strong></article>
+      <article class="stat pending"><span>Por vincular</span><strong id="stat-pendientes">0</strong></article>
+      <article class="stat bad"><span>Min. tardanza</span><strong id="stat-minutos">0</strong></article>
+    </div>
+
+    <div class="grid-main">
+      <div class="left-col">
+        <section class="section terminal" id="terminal-section">
+          <div class="section-head"><div><h2>Terminal de ingreso</h2><p>El QR se renueva automáticamente. También permite registrar el DNI manualmente desde esta terminal.</p></div><span class="tag" id="terminal-sede">Sede principal</span></div>
+          <div class="qr-box">
+            <div class="qr-card"><canvas id="qr-canvas" width="220" height="220"></canvas></div>
+            <div class="qr-info"><strong>Escanea y registra</strong><p>El alumno, docente o administrativo escanea el QR y solo escribe su DNI. No se solicitan más datos durante el ingreso.</p><div class="countdown">QR vigente · cambia en <b id="qr-countdown">--</b></div><div class="terminal-actions"><button class="btn btn-orange" id="rotate-qr">Nuevo QR</button><button class="btn btn-light" id="fullscreen-terminal">Pantalla completa</button></div></div>
+          </div>
+          <form class="manual-form" id="manual-form"><input id="manual-dni" inputmode="numeric" maxlength="12" placeholder="Ingresar DNI manualmente"><button class="btn btn-green" id="manual-submit" type="submit">Registrar</button></form><div class="manual-result" id="manual-result"></div>
+        </section>
+
+        <section class="section">
+          <div class="section-head"><div><h2>Configuración</h2><p>Estas reglas determinan automáticamente puntualidad y tardanzas.</p></div><span class="tag">Todo desde administración</span></div>
+          <div class="fields">
+            <label class="field"><span>Sede</span><input id="cfg-sede" maxlength="100"></label>
+            <label class="field"><span>Estado del registro</span><select id="cfg-activo"><option value="true">Activo</option><option value="false">Pausado</option></select></label>
+            <label class="field wide"><span>URL pública / subdominio</span><input id="cfg-public-url" type="url" placeholder="https://asistencia.gruponostradamus.edu.pe/"></label>
+            <label class="field"><span>Hora general</span><input id="cfg-hora" type="time"></label>
+            <label class="field"><span>Tolerancia general (min)</span><input id="cfg-tolerancia" type="number" min="0" max="120"></label>
+            <label class="field"><span>Renovar QR cada (seg)</span><input id="cfg-rotacion" type="number" min="30" max="300"></label>
+            <label class="field"><span>Vigencia QR (seg)</span><input id="cfg-vigencia" type="number" min="45" max="600"></label>
+            <label class="field"><span>Duplicado protegido (min)</span><input id="cfg-duplicado" type="number" min="1" max="60"></label>
+            <label class="field"><span>Modo</span><select id="cfg-modo"><option value="entrada">Solo entrada</option><option value="entrada_salida">Entrada y salida</option></select></label>
+            <label class="field"><span>Salida mínima tras (min)</span><input id="cfg-min-salida" type="number" min="15" max="720"></label>
+          </div>
+          <div class="role-grid">
+            <article class="role" data-role="alumno"><strong>Alumnos</strong><div class="role-line"><label>Hora<input data-field="hora" type="time"></label><label>Tolerancia<input data-field="tolerancia" type="number" min="0" max="120"></label></div><label class="switch"><input data-field="activo" type="checkbox"> Regla activa</label></article>
+            <article class="role" data-role="docente"><strong>Docentes</strong><div class="role-line"><label>Hora<input data-field="hora" type="time"></label><label>Tolerancia<input data-field="tolerancia" type="number" min="0" max="120"></label></div><label class="switch"><input data-field="activo" type="checkbox"> Regla activa</label></article>
+            <article class="role" data-role="administrativo"><strong>Administrativos</strong><div class="role-line"><label>Hora<input data-field="hora" type="time"></label><label>Tolerancia<input data-field="tolerancia" type="number" min="0" max="120"></label></div><label class="switch"><input data-field="activo" type="checkbox"> Regla activa</label></article>
+          </div>
+          <button class="btn btn-primary" id="save-config" style="margin-top:13px">Guardar configuración</button><div class="msg" id="config-msg"></div>
+        </section>
+      </div>
+
+      <div class="right-col">
+        <section class="section">
+          <div class="section-head"><div><h2>Asistencia del día</h2><p>Entradas, salidas, puntualidad, tardanzas y estado de vinculación.</p></div><span class="tag" id="record-count">0 registros</span></div>
+          <div class="toolbar"><input id="records-date" type="date"><input id="records-search" placeholder="Buscar nombre o DNI"><select id="records-filter"><option value="">Todos</option><option value="puntual">Puntuales</option><option value="tardanza">Tardanzas</option><option value="pendiente">Por vincular</option></select><button class="btn btn-light" id="refresh-records">Actualizar</button><button class="btn btn-light" id="export-csv">Exportar CSV</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Persona</th><th>Tipo</th><th>Entrada</th><th>Horario</th><th>Estado</th><th>Salida</th><th>Vinculación</th></tr></thead><tbody id="records-body"><tr><td colspan="7" class="empty">Cargando...</td></tr></tbody></table></div>
+        </section>
+
+        <section class="section">
+          <div class="section-head"><div><h2>Registros por vincular</h2><p>DNI detectados por asistencia que aún no existen en la base institucional. El cruce se puede ejecutar sin detener el ingreso.</p></div><button class="btn btn-green" id="cross-pending">Cruzar con base</button></div>
+          <div class="msg" id="pending-msg"></div>
+          <div class="table-wrap"><table style="min-width:620px"><thead><tr><th>DNI</th><th>Registros</th><th>Primera vez</th><th>Última vez</th><th>Estado</th></tr></thead><tbody id="pending-body"><tr><td colspan="5" class="empty">Sin datos.</td></tr></tbody></table></div>
+        </section>
+
+        <section class="section">
+          <div class="section-head"><div><h2>Directorio de asistencia</h2><p>Úsalo para personal administrativo u otras personas que todavía no estén en los módulos existentes. El DNI será reconocido desde la siguiente marcación.</p></div><span class="tag" id="people-count">0 personas</span></div>
+          <form class="person-form" id="person-form"><label><span>DNI</span><input id="person-dni" inputmode="numeric" maxlength="12" required></label><label><span>Nombre completo</span><input id="person-name" maxlength="140" required></label><label><span>Tipo</span><select id="person-type"><option value="administrativo">Administrativo</option><option value="docente">Docente</option><option value="alumno">Alumno</option></select></label><label><span>Cargo / detalle</span><input id="person-detail" maxlength="140" placeholder="Ej. Recepción"></label><button class="btn btn-primary" type="submit">Guardar</button></form><div class="msg" id="person-msg"></div>
+          <div class="table-wrap" style="margin-top:12px"><table style="min-width:600px"><thead><tr><th>Persona</th><th>DNI</th><th>Tipo</th><th>Detalle</th></tr></thead><tbody id="people-body"><tr><td colspan="4" class="empty">Sin personas adicionales.</td></tr></tbody></table></div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+  <script type="module" src="assets/js/admin-asistencia.js?v=2026-08-18-1"></script>
+</body>
+</html>
