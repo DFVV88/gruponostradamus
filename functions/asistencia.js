@@ -16,6 +16,7 @@ const ADMIN_EMAIL = 'fernandodaniel8888@gmail.com';
 const LIMA_TZ = 'America/Lima';
 const DNI_RE = /^\d{8,12}$/;
 const TOKEN_RE = /^[a-f0-9]{48}$/;
+const DEVICE_TOKEN_RE = /^[a-f0-9]{64}$/;
 const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
 const ALLOWED_TYPES = new Set(['alumno', 'docente', 'administrativo']);
 const ALLOWED_ORIGINS = [
@@ -244,8 +245,46 @@ async function validateToken(token) {
   return { ref, data };
 }
 
-async function registerAttendance(dni, token) {
-  const tokenInfo = await validateToken(token);
+async function resolveDevice(deviceToken) {
+  const normalized = clean(deviceToken).toLowerCase();
+  if (!DEVICE_TOKEN_RE.test(normalized)) {
+    throw new PublicError(401, 'DISPOSITIVO_NO_VINCULADO', 'Este celular no está vinculado. Ingresa tu DNI una sola vez para vincularlo.');
+  }
+  const ref = db.collection('asistencia_dispositivos').doc(hash(normalized));
+  const snap = await ref.get();
+  if (!snap.exists) {
+    throw new PublicError(401, 'DISPOSITIVO_NO_VINCULADO', 'Este celular no está vinculado. Ingresa tu DNI una sola vez para vincularlo.');
+  }
+  const data = snap.data();
+  const dni = clean(data.dni).replace(/\D/g, '');
+  if (data.activo === false || !DNI_RE.test(dni)) {
+    throw new PublicError(401, 'DISPOSITIVO_NO_VINCULADO', 'La vinculación de este celular ya no está activa. Ingresa tu DNI para vincularlo nuevamente.');
+  }
+  return { ref, data, dni };
+}
+
+async function createDeviceLink(dni, person, req) {
+  const deviceToken = crypto.randomBytes(32).toString('hex');
+  const deviceHash = hash(deviceToken);
+  const userAgent = safeText(req.headers['user-agent'] || '', 300);
+  await db.collection('asistencia_dispositivos').doc(deviceHash).set({
+    deviceId: deviceHash.slice(0, 16),
+    dni,
+    nombre: person ? safeText(person.nombre || '', 140) : '',
+    tipo: person && ALLOWED_TYPES.has(person.tipo) ? person.tipo : '',
+    ciclo: person ? safeText(person.ciclo || '', 120) : '',
+    activo: true,
+    userAgentHash: userAgent ? hash(userAgent) : '',
+    usos: 0,
+    createdAt: FieldValue.serverTimestamp(),
+    lastSeenAt: FieldValue.serverTimestamp(),
+    updatedAt: FieldValue.serverTimestamp()
+  });
+  return deviceToken;
+}
+
+async function registerAttendance(dni, token, sourceRegistro = 'qr_dni', validatedToken = null) {
+  const tokenInfo = validatedToken || await validateToken(token);
   const config = await getGeneralConfig();
   if (!config.activo) throw new PublicError(503, 'ASISTENCIA_PAUSADA', 'El registro de asistencia está temporalmente pausado.');
 
@@ -276,7 +315,7 @@ async function registerAttendance(dni, token) {
         ciclo: person ? person.ciclo : '',
         detalle: person ? person.detalle : '',
         sede: safeText(tokenInfo.data.sede || config.sede, 100),
-        fuenteRegistro: 'qr_dni',
+        fuenteRegistro: sourceRegistro,
         entradaAt: now,
         entradaHora: clock.horaCompleta,
         salidaAt: null,
@@ -329,11 +368,39 @@ exports.asistenciaRegistrar = onRequest(OPTIONS, async (req, res) => {
   try {
     requirePost(req);
     const body = bodyOf(req);
-    const dni = clean(body.dni).replace(/\D/g, '');
     const token = clean(body.token).toLowerCase();
+    const deviceToken = clean(body.deviceToken).toLowerCase();
+
+    if (deviceToken) {
+      const tokenInfo = await validateToken(token);
+      const device = await resolveDevice(deviceToken);
+      const result = await registerAttendance(device.dni, token, 'qr_dispositivo', tokenInfo);
+      await device.ref.set({
+        nombre: result.persona ? safeText(result.persona.nombre || '', 140) : safeText(device.data.nombre || '', 140),
+        tipo: result.persona && ALLOWED_TYPES.has(result.persona.tipo) ? result.persona.tipo : safeText(device.data.tipo || '', 30),
+        ciclo: result.persona ? safeText(result.persona.ciclo || '', 120) : safeText(device.data.ciclo || '', 120),
+        usos: FieldValue.increment(1),
+        lastSeenAt: FieldValue.serverTimestamp(),
+        lastMovimiento: result.movimiento,
+        lastEstado: result.estado,
+        updatedAt: FieldValue.serverTimestamp()
+      }, { merge: true });
+      return send(res, 200, {
+        asistencia: result,
+        dispositivo: { reconocido: true, vinculado: true }
+      });
+    }
+
+    const dni = clean(body.dni).replace(/\D/g, '');
     if (!DNI_RE.test(dni)) throw new PublicError(400, 'DNI_INVALIDO', 'Ingresa un DNI válido.');
-    const result = await registerAttendance(dni, token);
-    return send(res, 200, { asistencia: result });
+    const shouldLinkDevice = body.vincularDispositivo === true;
+    const result = await registerAttendance(dni, token, shouldLinkDevice ? 'qr_dni_vinculacion' : 'dni_manual');
+    let dispositivo = { reconocido: false, vinculado: false };
+    if (shouldLinkDevice) {
+      const newDeviceToken = await createDeviceLink(dni, result.persona, req);
+      dispositivo = { reconocido: false, vinculado: true, token: newDeviceToken };
+    }
+    return send(res, 200, { asistencia: result, dispositivo });
   } catch (error) {
     return fail(res, error, 'Error registrando asistencia');
   }
