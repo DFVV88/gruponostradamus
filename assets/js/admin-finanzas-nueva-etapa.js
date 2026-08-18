@@ -210,7 +210,7 @@ import('./admin-finanzas-auditoria.js?v=2026-08-08-1').catch(error => {
   console.error('No se pudo cargar la auditoría financiera.',error);
 });
 
-import('./admin-vouchers.js?v=2026-08-02-1').catch(error => {
+import('./admin-vouchers.js?v=2026-08-18-opcional-1').catch(error => {
   console.error('No se pudo cargar el módulo de vouchers.',error);
 });
 

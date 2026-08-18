@@ -72,8 +72,8 @@ function fileExtension(file){
   return 'jpg';
 }
 
-function needsVoucher(account){
-  return clean(account) !== 'caja_efectivo';
+function needsVoucher(){
+  return false;
 }
 
 function formatSize(bytes){
@@ -170,15 +170,11 @@ function renderExistingVoucher(previewId,data){
 }
 
 function syncRequirement(accountId,inputId,helpId){
-  const account = document.getElementById(accountId);
   const input = document.getElementById(inputId);
   const help = document.getElementById(helpId);
-  if(!account || !input || !help) return;
-  const required = needsVoucher(account.value);
-  input.required = required;
-  help.textContent = required
-    ? 'Obligatorio para Yape, Plin, BCP, Culqi y otras transferencias. Formatos JPG, PNG o PDF; máximo 8 MB.'
-    : 'Opcional para pagos en efectivo. Puedes adjuntar una foto del recibo de caja.';
+  if(!input || !help) return;
+  input.required = false;
+  help.textContent = 'Opcional. Recomendado para Yape, Plin, BCP y otras transferencias. Puedes adjuntarlo ahora o posteriormente. Formatos JPG, PNG o PDF; máximo 8 MB.';
 }
 
 function ensureInitialUi(){
@@ -187,7 +183,7 @@ function ensureInitialUi(){
   const field = document.createElement('label');
   field.className = 'nostra-voucher-field';
   field.innerHTML = `
-    <span>Voucher o constancia de pago</span>
+    <span>Voucher o constancia de pago (opcional)</span>
     <input id="npm-payment-voucher" type="file" accept="image/jpeg,image/png,application/pdf">
     <small class="nostra-voucher-help" id="npm-payment-voucher-help"></small>`;
   grid.appendChild(field);
@@ -217,7 +213,7 @@ function ensureInstallmentUi(){
   const field = document.createElement('label');
   field.className = 'nostra-voucher-field';
   field.innerHTML = `
-    <span>Voucher o constancia de pago</span>
+    <span>Voucher o constancia de pago (opcional)</span>
     <input id="student-installment-payment-voucher" type="file" accept="image/jpeg,image/png,application/pdf">
     <small class="nostra-voucher-help" id="student-installment-payment-voucher-help"></small>`;
   grid.appendChild(field);
