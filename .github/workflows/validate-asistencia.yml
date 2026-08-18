@@ -1,0 +1,58 @@
+name: Validar NostraASISTENCIA
+
+on:
+  pull_request:
+    paths:
+      - "admin-asistencia.html"
+      - "asistencia.html"
+      - "assets/js/admin-asistencia.js"
+      - "assets/js/asistencia.js"
+      - "functions/**"
+      - ".github/workflows/validate-asistencia.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-asistencia-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Instalar dependencias del backend
+        working-directory: functions
+        run: npm install --no-audit --no-fund
+
+      - name: Verificar backend y pruebas existentes
+        working-directory: functions
+        run: npm run check
+
+      - name: Verificar JavaScript de asistencia
+        run: |
+          node --input-type=module --check < assets/js/asistencia.js
+          node --input-type=module --check < assets/js/admin-asistencia.js
+
+      - name: Verificar archivos HTML esenciales
+        run: |
+          grep -q 'assets/js/asistencia.js' asistencia.html
+          grep -q 'assets/js/admin-asistencia.js' admin-asistencia.html
+          grep -q 'NostraASISTENCIA' admin-asistencia.html
+          grep -q 'NostraASISTENCIA' asistencia.html
+
+      - name: Impedir secretos privados en frontend
+        run: |
+          if grep -R -n -E "sk_(test|live)_|CULQI_SECRET_KEY" asistencia.html admin-asistencia.html assets/js/asistencia.js assets/js/admin-asistencia.js; then
+            echo "Se encontró un secreto privado en el frontend de asistencia."
+            exit 1
+          fi
