@@ -410,7 +410,7 @@ async function createToken(admin) {
     createdAt: FieldValue.serverTimestamp(),
     lastUsedAt: null
   });
-  const separator = base.includes('?') ? '&' : '?';
+  const separator = config.publicBaseUrl.includes('?') ? '&' : '?';
   return {
     token,
     url: `${config.publicBaseUrl}${separator}token=${token}`,
