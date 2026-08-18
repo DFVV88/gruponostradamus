@@ -312,18 +312,16 @@ async function saveEditor(event){
         dniCorreccionMotivo:correctionReason
       });
 
-      if(isManualRecord(currentRecord)){
-        batch.delete(doc(db,DNI_REGISTRY_COLLECTION,oldHash));
-        batch.set(newRegistryRef,{
-          dniHash:newHash,
-          registroId:currentRecordId,
-          tipo:'registro_manual_admin',
-          activo:true,
-          creadoPor:clean(currentUser.email || ADMIN_EMAIL),
-          createdAt:serverTimestamp(),
-          updatedAt:serverTimestamp()
-        });
-      }
+      batch.delete(doc(db,DNI_REGISTRY_COLLECTION,oldHash));
+      batch.set(newRegistryRef,{
+        dniHash:newHash,
+        registroId:currentRecordId,
+        tipo:isManualRecord(currentRecord) ? 'registro_manual_admin' : 'preinscripcion_web',
+        activo:true,
+        creadoPor:clean(currentUser.email || ADMIN_EMAIL),
+        createdAt:serverTimestamp(),
+        updatedAt:serverTimestamp()
+      });
     }
 
     patch.actualizadoManualmenteAt = serverTimestamp();
@@ -333,9 +331,7 @@ async function saveEditor(event){
     await batch.commit();
 
     setMessage('ok',dniChanged
-      ? (isManualRecord(currentRecord)
-          ? 'Datos guardados y DNI corregido correctamente. El índice anti-duplicados también fue actualizado.'
-          : 'Datos guardados y DNI corregido correctamente. La ficha conserva el mismo ID y el historial financiero no fue modificado.')
+      ? 'Datos guardados y DNI corregido correctamente. El índice anti-duplicados también fue actualizado.'
       : 'Datos del alumno actualizados correctamente. Cuotas y pagos existentes permanecen sin cambios.');
 
     currentRecord = {...currentRecord,...patch,dni:dniChanged ? newDni : currentRecord.dni};

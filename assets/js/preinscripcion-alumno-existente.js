@@ -1,7 +1,7 @@
 /* ==================================================
    Grupo Nostradamus - Vinculación de alumno existente
    Se ejecuta antes del flujo normal de preinscripción.
-   Si el DNI pertenece a un alumno manual, completa la misma ficha sin tocar Finanzas.
+   Si el DNI ya existe, bloquea una segunda preinscripción y lo reconoce como alumno existente.
 ================================================== */
 (function(){
   'use strict';
@@ -127,26 +127,14 @@
         resumeNormalFlow(form);
         return null;
       }
-      var registry = registrySnapshot.data() || {};
-      var recordId = clean(registry.registroId);
-      if(!recordId) throw Object.assign(new Error('Registro administrativo incompleto'),{code:'invalid-registry'});
-
-      message('info','Encontramos una ficha creada por administración. Completando tus datos sin modificar matrícula ni pagos...');
-      var patch = safePatch(form,ctx.fs);
-      patch.dni = identity.dni;
-      patch.celular = identity.phone;
-      return ctx.fs.updateDoc(ctx.fs.doc(ctx.db,PRE_COLLECTION,recordId),patch).then(function(){
-        message('ok','✅ Tus datos fueron vinculados a la ficha que ya tenía Coordinación.<br><b>No se creó una segunda preinscripción.</b><br><small>Tu matrícula, precio acordado, cronograma y pagos existentes permanecen sin cambios.</small>');
-        form.reset();
-        var cycle = form.elements.ciclo;
-        if(cycle) cycle.dispatchEvent(new Event('change',{bubbles:true}));
-        if(typeof window.gtag === 'function'){
-          window.gtag('event','alumno_existente_formulario_completado',{
-            event_category:'student_update',
-            event_label:'ficha_manual_vinculada'
-          });
-        }
-      });
+      message('error','⚠️ Este DNI ya se encuentra registrado en Grupo Nostradamus.<br><b>El sistema te reconoce como alumno antiguo o existente.</b><br><small>No se creó una nueva preinscripción. Si necesitas cambiar de ciclo o corregir tus datos, comunícate con Coordinación.</small>');
+      if(typeof window.gtag === 'function'){
+        window.gtag('event','preinscripcion_dni_existente_bloqueada',{
+          event_category:'student_update',
+          event_label:'dni_existente'
+        });
+      }
+      return null;
     }).catch(function(error){
       console.error('No se pudo comprobar o vincular el alumno existente:',error);
       if(error && error.code === 'permission-denied'){

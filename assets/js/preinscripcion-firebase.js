@@ -41,6 +41,12 @@
   var preferredPlanName = query.get('planNombre') || '';
 
   function clean(value){ return String(value == null ? '' : value).trim(); }
+  function dniDigits(value){ return clean(value).replace(/\D/g,'').slice(0,12); }
+  function sha256(value){
+    return crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)).then(function(buffer){
+      return Array.from(new Uint8Array(buffer)).map(function(byte){ return byte.toString(16).padStart(2,'0'); }).join('');
+    });
+  }
   function esc(value){
     return String(value == null ? '' : value).replace(/[&<>'"]/g,function(c){
       return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c];
@@ -258,7 +264,7 @@
 
     return {
       nombre:value('nombre'),
-      dni:value('dni'),
+      dni:dniDigits(value('dni')),
       celular:value('celular'),
       correo:value('correo').toLowerCase(),
       colegio:value('colegio'),
@@ -321,9 +327,37 @@
     msg('info','Guardando tus datos de preinscripción en el sistema...');
 
     initFirebase().then(function(ctx){
-      data.createdAt = ctx.fs.serverTimestamp();
-      data.updatedAt = ctx.fs.serverTimestamp();
-      return ctx.fs.addDoc(ctx.fs.collection(ctx.db,'preinscripciones'),data);
+      return sha256(data.dni).then(function(hash){
+        var registryRef = ctx.fs.doc(ctx.db,'alumnos_registro_dni',hash);
+        var preRef = ctx.fs.doc(ctx.fs.collection(ctx.db,'preinscripciones'));
+        return ctx.fs.runTransaction(ctx.db,function(transaction){
+          return transaction.get(registryRef).then(function(registrySnapshot){
+            if(registrySnapshot.exists()){
+              throw Object.assign(new Error('Este DNI ya se encuentra registrado en Grupo Nostradamus.'),{code:'dni-already-exists'});
+            }
+            data.createdAt = ctx.fs.serverTimestamp();
+            data.updatedAt = ctx.fs.serverTimestamp();
+            transaction.set(preRef,data);
+            transaction.set(registryRef,{
+              dniHash:hash,
+              registroId:preRef.id,
+              tipo:'preinscripcion_web',
+              activo:true,
+              createdAt:ctx.fs.serverTimestamp(),
+              updatedAt:ctx.fs.serverTimestamp()
+            });
+            return preRef;
+          });
+        }).catch(function(error){
+          if(error && error.code === 'permission-denied'){
+            console.warn('El indice unico de DNI aun no esta publicado; se usa temporalmente el flujo compatible.',error);
+            data.createdAt = ctx.fs.serverTimestamp();
+            data.updatedAt = ctx.fs.serverTimestamp();
+            return ctx.fs.addDoc(ctx.fs.collection(ctx.db,'preinscripciones'),data);
+          }
+          throw error;
+        });
+      });
     }).then(function(ref){
       var extra = '';
       if(data.metodoPagoPreferido === 'voucher_whatsapp'){
@@ -345,6 +379,10 @@
       }
     }).catch(function(err){
       console.error('Error guardando preinscripción:',err);
+      if(err && err.code === 'dni-already-exists'){
+        msg('error','⚠️ Este DNI ya se encuentra registrado en Grupo Nostradamus.<br><b>El sistema te reconoce como alumno antiguo o existente.</b><br><small>No se creó una nueva preinscripción. Si necesitas cambiar de ciclo o corregir datos, comunícate con Coordinación.</small>');
+        return;
+      }
       msg('error','No se pudo guardar la preinscripción en Firebase. Revisa las reglas de Firestore o intenta nuevamente.');
     }).finally(function(){
       if(btn){ btn.disabled = false; btn.textContent = 'Enviar preinscripción'; }

@@ -139,18 +139,44 @@
       allow get: if true;
       allow list: if false;
 
-      allow create: if isAdmin()
-        && dniHash.matches('^[0-9a-f]{64}$')
-        && request.resource.data.keys().hasOnly([
-          'dniHash','registroId','tipo','activo','creadoPor','createdAt','updatedAt'
-        ])
+      allow create: if dniHash.matches('^[0-9a-f]{64}$')
         && request.resource.data.dniHash == dniHash
-        && request.resource.data.registroId.matches('^manual_[0-9a-f]{24}$')
-        && request.resource.data.tipo == 'registro_manual_admin'
+        && request.resource.data.registroId is string
+        && request.resource.data.registroId.size() >= 5
+        && request.resource.data.registroId.size() <= 180
+        && request.resource.data.tipo in ['registro_manual_admin','preinscripcion_web']
         && request.resource.data.activo == true
-        && request.resource.data.creadoPor == request.auth.token.email
         && request.resource.data.createdAt == request.time
-        && request.resource.data.updatedAt == request.time;
+        && request.resource.data.updatedAt == request.time
+        && (
+          (
+            isAdmin()
+            && request.resource.data.keys().hasOnly([
+              'dniHash','registroId','tipo','activo','creadoPor','createdAt','updatedAt'
+            ])
+            && request.resource.data.creadoPor == request.auth.token.email
+          )
+          ||
+          (
+            request.auth == null
+            && request.resource.data.keys().hasOnly([
+              'dniHash','registroId','tipo','activo','createdAt','updatedAt'
+            ])
+            && request.resource.data.tipo == 'preinscripcion_web'
+            && existsAfter(
+              /databases/$(database)/documents/preinscripciones/$(request.resource.data.registroId)
+            )
+            && getAfter(
+              /databases/$(database)/documents/preinscripciones/$(request.resource.data.registroId)
+            ).data.origen == 'web_preinscripcion'
+            && getAfter(
+              /databases/$(database)/documents/preinscripciones/$(request.resource.data.registroId)
+            ).data.dni is string
+            && getAfter(
+              /databases/$(database)/documents/preinscripciones/$(request.resource.data.registroId)
+            ).data.dni.matches('^[0-9]{8,12}$')
+          )
+        );
 
       allow update, delete: if isAdmin();
     }
