@@ -19,6 +19,7 @@ const TOKEN_RE = /^[a-f0-9]{48}$/;
 const DEVICE_TOKEN_RE = /^[a-f0-9]{64}$/;
 const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
 const ALLOWED_TYPES = new Set(['alumno', 'docente', 'administrativo']);
+const REGISTRATION_MODES = new Set(['entrada', 'salida', 'entrada_salida']);
 const ALLOWED_ORIGINS = [
   'https://gruponostradamus.edu.pe',
   'https://www.gruponostradamus.edu.pe',
@@ -124,7 +125,7 @@ async function getGeneralConfig() {
     qrRotacionSegundos: clamp(data.qrRotacionSegundos, 30, 300, 60),
     qrVigenciaSegundos: clamp(data.qrVigenciaSegundos, 45, 600, 120),
     duplicateWindowMinutes: clamp(data.duplicateWindowMinutes, 1, 60, 5),
-    modoRegistro: data.modoRegistro === 'entrada_salida' ? 'entrada_salida' : 'entrada',
+    modoRegistro: REGISTRATION_MODES.has(data.modoRegistro) ? data.modoRegistro : 'entrada',
     minSalidaMinutos: clamp(data.minSalidaMinutos, 15, 720, 45)
   };
 }
@@ -302,6 +303,9 @@ async function registerAttendance(dni, token, sourceRegistro = 'qr_dni', validat
   const result = await db.runTransaction(async tx => {
     const snap = await tx.get(ref);
     if (!snap.exists) {
+      if (mode === 'salida') {
+        throw new PublicError(409, 'ENTRADA_NO_REGISTRADA', 'No hay una entrada registrada hoy. Primero debe registrarse la entrada.');
+      }
       const data = {
         registroId: recordId,
         fecha: clock.fecha,
@@ -337,6 +341,27 @@ async function registerAttendance(dni, token, sourceRegistro = 'qr_dni', validat
     const current = snap.data();
     const entryMs = current.entradaAt && typeof current.entradaAt.toMillis === 'function' ? current.entradaAt.toMillis() : now.toMillis();
     const elapsedMinutes = Math.max(0, Math.floor((now.toMillis() - entryMs) / 60000));
+
+    if (mode === 'salida') {
+      if (current.salidaAt) {
+        return { movimiento: 'duplicado', duplicate: true, data: current };
+      }
+      if (!current.entradaAt) {
+        throw new PublicError(409, 'ENTRADA_NO_REGISTRADA', 'No hay una entrada válida registrada hoy. Primero debe registrarse la entrada.');
+      }
+      if (elapsedMinutes < config.minSalidaMinutos) {
+        const remaining = Math.max(1, config.minSalidaMinutos - elapsedMinutes);
+        throw new PublicError(409, 'SALIDA_ANTICIPADA', `La salida aún no puede registrarse. Intenta nuevamente en ${remaining} min.`);
+      }
+      tx.update(ref, {
+        salidaAt: now,
+        salidaHora: clock.horaCompleta,
+        updatedAt: FieldValue.serverTimestamp()
+      });
+      tx.update(tokenInfo.ref, { usos: FieldValue.increment(1), lastUsedAt: FieldValue.serverTimestamp() });
+      return { movimiento: 'salida', duplicate: false, data: { ...current, salidaHora: clock.horaCompleta } };
+    }
+
     if (elapsedMinutes < config.duplicateWindowMinutes) {
       return { movimiento: 'duplicado', duplicate: true, data: current };
     }
@@ -436,7 +461,7 @@ async function saveConfig(body, admin) {
     qrRotacionSegundos: clamp(configInput.qrRotacionSegundos, 30, 300, 60),
     qrVigenciaSegundos: clamp(configInput.qrVigenciaSegundos, 45, 600, 120),
     duplicateWindowMinutes: clamp(configInput.duplicateWindowMinutes, 1, 60, 5),
-    modoRegistro: configInput.modoRegistro === 'entrada_salida' ? 'entrada_salida' : 'entrada',
+    modoRegistro: REGISTRATION_MODES.has(configInput.modoRegistro) ? configInput.modoRegistro : 'entrada',
     minSalidaMinutos: clamp(configInput.minSalidaMinutos, 15, 720, 45),
     actualizadoPor: admin.email,
     updatedAt: FieldValue.serverTimestamp()
