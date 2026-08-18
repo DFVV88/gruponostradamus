@@ -1,0 +1,128 @@
+name: Aplicar ruta oficial NostraASISTENCIA
+
+on:
+  push:
+    branches:
+      - feat/asistencia-ruta-oficial
+    paths:
+      - ".github/workflows/apply-asistencia-route.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  integrate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+        with:
+          ref: feat/asistencia-ruta-oficial
+          fetch-depth: 0
+
+      - name: Aplicar ruta oficial
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          official = 'https://gruponostradamus.edu.pe/asistencia'
+
+          # 1) Backend: la ruta publica queda fija al dominio oficial.
+          p = Path('functions/asistencia.js')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace("  'https://asistencia.gruponostradamus.edu.pe',\n", '')
+          s = s.replace(
+              "    publicBaseUrl: safeText(data.publicBaseUrl || 'https://asistencia.gruponostradamus.edu.pe/', 300),",
+              f"    publicBaseUrl: '{official}',"
+          )
+          s = s.replace(
+              "  const publicBaseUrl = safeText(configInput.publicBaseUrl, 300);\n  if (!/^https:\\/\\//i.test(publicBaseUrl)) throw new PublicError(400, 'URL_INVALIDA', 'La URL pública de asistencia debe usar HTTPS.');",
+              f"  const publicBaseUrl = '{official}';"
+          )
+          s = s.replace(
+              "  const base = config.publicBaseUrl.endsWith('/') ? config.publicBaseUrl : `${config.publicBaseUrl}/`;\n  const separator = base.includes('?') ? '&' : '?';\n  return {\n    token,\n    url: `${base}${separator}token=${token}` ,",
+              "  const separator = config.publicBaseUrl.includes('?') ? '&' : '?';\n  return {\n    token,\n    url: `${config.publicBaseUrl}${separator}token=${token}` ,"
+          )
+          # Compatibilidad por si el formato exacto no contenia espacio antes de la coma.
+          s = s.replace(
+              "  const base = config.publicBaseUrl.endsWith('/') ? config.publicBaseUrl : `${config.publicBaseUrl}/`;\n  const separator = base.includes('?') ? '&' : '?';\n  return {\n    token,\n    url: `${base}${separator}token=${token}` ,",
+              "  const separator = config.publicBaseUrl.includes('?') ? '&' : '?';\n  return {\n    token,\n    url: `${config.publicBaseUrl}${separator}token=${token}` ,"
+          )
+          s = s.replace("url: `${base}${separator}token=${token}`,", "url: `${config.publicBaseUrl}${separator}token=${token}`,")
+          s = s.replace("  const base = config.publicBaseUrl.endsWith('/') ? config.publicBaseUrl : `${config.publicBaseUrl}/`;\n", '')
+          p.write_text(s, encoding='utf-8')
+
+          # 2) Panel de asistencia: mostrar siempre la ruta oficial.
+          p = Path('assets/js/admin-asistencia.js')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace(
+              "  $('cfg-public-url').value = cfg.publicBaseUrl || 'https://asistencia.gruponostradamus.edu.pe/asistencia.html';",
+              f"  $('cfg-public-url').value = '{official}';"
+          )
+          p.write_text(s, encoding='utf-8')
+
+          p = Path('admin-asistencia.html')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('href="asistencia.html" target="_blank"', 'href="/asistencia" target="_blank"')
+          s = s.replace(
+              '<label class="field wide"><span>URL pública / subdominio</span><input id="cfg-public-url" type="url" placeholder="https://asistencia.gruponostradamus.edu.pe/"></label>',
+              f'<label class="field wide"><span>URL pública oficial</span><input id="cfg-public-url" type="url" value="{official}" readonly></label>'
+          )
+          p.write_text(s, encoding='utf-8')
+
+          # 3) Ruta /asistencia mediante carpeta index, conservando la pantalla existente.
+          source = Path('asistencia.html').read_text(encoding='utf-8')
+          routed = source.replace('href="assets/', 'href="../assets/').replace('src="assets/', 'src="../assets/')
+          routed = routed.replace('<title>NostraASISTENCIA | Grupo Nostradamus</title>', '<title>NostraASISTENCIA | Grupo Nostradamus</title>\n  <link rel="canonical" href="https://gruponostradamus.edu.pe/asistencia">')
+          out = Path('asistencia/index.html')
+          out.parent.mkdir(parents=True, exist_ok=True)
+          out.write_text(routed, encoding='utf-8')
+
+          # 4) Entrada visible desde NostraADMIN.
+          p = Path('assets/js/admin-dashboard-pro.js')
+          s = p.read_text(encoding='utf-8')
+          needle = "        navButton('cuentas','◇','NostraCUENTAS') +\n        '<div class=\"admin-pro-nav-label\">Finanzas</div>' +"
+          replacement = "        navButton('cuentas','◇','NostraCUENTAS') +\n        '<button type=\"button\" onclick=\"window.location.href=\\\'admin-asistencia.html\\\'\"><span class=\"admin-pro-nav-icon\">✓</span><span>Asistencia</span></button>' +\n        '<div class=\"admin-pro-nav-label\">Finanzas</div>' +"
+          if needle not in s:
+              raise SystemExit('No se encontro el punto de insercion de Asistencia en NostraADMIN')
+          s = s.replace(needle, replacement, 1)
+          p.write_text(s, encoding='utf-8')
+
+          # Validaciones de contenido.
+          checks = {
+              'backend oficial': official in Path('functions/asistencia.js').read_text(encoding='utf-8'),
+              'sin subdominio backend': 'asistencia.gruponostradamus.edu.pe' not in Path('functions/asistencia.js').read_text(encoding='utf-8'),
+              'ruta publica': Path('asistencia/index.html').exists(),
+              'panel enlazado': 'admin-asistencia.html' in Path('assets/js/admin-dashboard-pro.js').read_text(encoding='utf-8'),
+              'panel URL fija': official in Path('admin-asistencia.html').read_text(encoding='utf-8'),
+          }
+          failed = [name for name, ok in checks.items() if not ok]
+          if failed:
+              raise SystemExit('Fallaron validaciones: ' + ', '.join(failed))
+          print('Ruta oficial NostraASISTENCIA aplicada correctamente')
+          PY
+
+      - name: Validar sintaxis
+        run: |
+          node --check functions/asistencia.js
+          node --check assets/js/admin-asistencia.js
+          node --check assets/js/asistencia.js
+          node --check assets/js/admin-dashboard-pro.js
+          test -f asistencia/index.html
+          grep -q "https://gruponostradamus.edu.pe/asistencia" functions/asistencia.js
+          grep -q "https://gruponostradamus.edu.pe/asistencia" admin-asistencia.html
+
+      - name: Publicar ajuste en la rama
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add functions/asistencia.js assets/js/admin-asistencia.js admin-asistencia.html assets/js/admin-dashboard-pro.js asistencia/index.html
+          if git diff --cached --quiet; then
+            echo "La ruta oficial ya estaba aplicada."
+            exit 0
+          fi
+          git commit -m "Usa /asistencia como ruta oficial [skip ci]"
+          git push origin HEAD:feat/asistencia-ruta-oficial
