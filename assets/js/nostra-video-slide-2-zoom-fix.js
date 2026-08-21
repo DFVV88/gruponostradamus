@@ -1,6 +1,7 @@
 /* ==================================================
    Grupo Nostradamus - Video del hero bajo demanda
    Mantiene una miniatura ligera y crea YouTube solo al pulsar.
+   Estabiliza el carrusel para evitar parpadeos entre slides.
 ================================================== */
 (function () {
   'use strict';
@@ -11,13 +12,6 @@
   var POSTER_FALLBACK = 'https://img.youtube.com/vi/' + VIDEO_ID + '/hqdefault.jpg';
   var boundSlider = false;
 
-  function heroHeight() {
-    if (window.innerWidth <= 430) return 390;
-    if (window.innerWidth <= 767) return 430;
-    if (window.innerWidth <= 991) return 520;
-    return 620;
-  }
-
   function markVideoSlide() {
     document.querySelectorAll('#hero .th-hero-slide').forEach(function (slide) {
       if (slide.querySelector('.contenido-min-slider-tovideo,.contenido-max-slider.contenido-min-slider-tovideo,.frame-video,.nostra-video-lazy')) {
@@ -27,21 +21,28 @@
   }
 
   function injectCss() {
-    var old = document.getElementById('nostra-video-slide-2-zoom-fix-style');
-    if (old) old.remove();
+    if (document.getElementById('nostra-video-slide-2-zoom-fix-style')) return;
 
     var style = document.createElement('style');
     style.id = 'nostra-video-slide-2-zoom-fix-style';
     style.textContent = `
-      #hero.nostra-video-active,
-      #hero.nostra-video-active #heroSlide6,
-      #hero.nostra-video-active .slick-list,
-      #hero.nostra-video-active .slick-track,
-      #hero.nostra-video-active .slick-slide,
-      #hero.nostra-video-active .slick-slide>div,
-      #hero.nostra-video-active .nostra-video-slide-fix,
-      #hero.nostra-video-active .nostra-video-slide-fix .th-hero-bg,
-      #hero.nostra-video-active .nostra-video-slide-fix .container{
+      /*
+       * Slick ya controla el fade. La hoja nostra-home.css aplica
+       * "transition: all" al mismo elemento; restringimos esa transición
+       * a opacity para evitar repaints de tamaño/posición.
+       */
+      #hero .th-hero-slide{
+        transition-property:opacity!important;
+        will-change:opacity;
+      }
+
+      /*
+       * El slide del video conserva su tamaño siempre, incluso cuando está
+       * oculto. No se alteran .slick-list ni .slick-track al cambiar de slide.
+       */
+      #hero .nostra-video-slide-fix,
+      #hero .nostra-video-slide-fix .th-hero-bg,
+      #hero .nostra-video-slide-fix .container{
         min-height:620px!important;
         height:620px!important;
         max-height:620px!important;
@@ -141,59 +142,70 @@
         text-shadow:0 2px 10px rgba(0,0,0,.8);
       }
       @media(max-width:991px){
-        #hero.nostra-video-active,
-        #hero.nostra-video-active #heroSlide6,
-        #hero.nostra-video-active .slick-list,
-        #hero.nostra-video-active .slick-track,
-        #hero.nostra-video-active .slick-slide,
-        #hero.nostra-video-active .slick-slide>div,
-        #hero.nostra-video-active .nostra-video-slide-fix,
-        #hero.nostra-video-active .nostra-video-slide-fix .th-hero-bg,
-        #hero.nostra-video-active .nostra-video-slide-fix .container{
-          min-height:520px!important;height:520px!important;max-height:520px!important;
+        #hero .nostra-video-slide-fix,
+        #hero .nostra-video-slide-fix .th-hero-bg,
+        #hero .nostra-video-slide-fix .container{
+          min-height:520px!important;
+          height:520px!important;
+          max-height:520px!important;
         }
         #hero .nostra-video-slide-fix .contenido-min-slider-tovideo,
         #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo{
-          width:min(600px,82vw)!important;max-width:600px!important;transform:translateY(58px)!important;
+          width:min(600px,82vw)!important;
+          max-width:600px!important;
+          transform:translateY(58px)!important;
         }
       }
       @media(max-width:767px){
-        #hero.nostra-video-active,
-        #hero.nostra-video-active #heroSlide6,
-        #hero.nostra-video-active .slick-list,
-        #hero.nostra-video-active .slick-track,
-        #hero.nostra-video-active .slick-slide,
-        #hero.nostra-video-active .slick-slide>div,
-        #hero.nostra-video-active .nostra-video-slide-fix,
-        #hero.nostra-video-active .nostra-video-slide-fix .th-hero-bg,
-        #hero.nostra-video-active .nostra-video-slide-fix .container{
-          min-height:430px!important;height:430px!important;max-height:430px!important;
+        #hero .nostra-video-slide-fix,
+        #hero .nostra-video-slide-fix .th-hero-bg,
+        #hero .nostra-video-slide-fix .container{
+          min-height:430px!important;
+          height:430px!important;
+          max-height:430px!important;
         }
-        #hero .nostra-video-slide-fix .th-hero-bg{background-size:185% auto!important;background-position:center 18%!important;}
-        #hero .nostra-video-slide-fix .container{padding:0 14px!important;}
+        #hero .nostra-video-slide-fix .th-hero-bg{
+          background-size:185% auto!important;
+          background-position:center 18%!important;
+        }
+        #hero .nostra-video-slide-fix .container{
+          padding:0 14px!important;
+        }
         #hero .nostra-video-slide-fix .contenido-min-slider-tovideo,
         #hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo{
-          width:calc(100vw - 28px)!important;max-width:430px!important;transform:translateY(-10px)!important;
+          width:calc(100vw - 28px)!important;
+          max-width:430px!important;
+          transform:translateY(-10px)!important;
         }
-        #hero .nostra-video-lazy{border-radius:16px!important;}
-        #hero .nostra-video-lazy__play{width:72px!important;height:52px!important;font-size:28px!important;}
-        #hero .nostra-video-lazy__label{font-size:11.5px;bottom:10px;}
+        #hero .nostra-video-lazy{
+          border-radius:16px!important;
+        }
+        #hero .nostra-video-lazy__play{
+          width:72px!important;
+          height:52px!important;
+          font-size:28px!important;
+        }
+        #hero .nostra-video-lazy__label{
+          font-size:11.5px;
+          bottom:10px;
+        }
       }
       @media(max-width:430px){
-        #hero.nostra-video-active,
-        #hero.nostra-video-active #heroSlide6,
-        #hero.nostra-video-active .slick-list,
-        #hero.nostra-video-active .slick-track,
-        #hero.nostra-video-active .slick-slide,
-        #hero.nostra-video-active .slick-slide>div,
-        #hero.nostra-video-active .nostra-video-slide-fix,
-        #hero.nostra-video-active .nostra-video-slide-fix .th-hero-bg,
-        #hero.nostra-video-active .nostra-video-slide-fix .container{
-          min-height:390px!important;height:390px!important;max-height:390px!important;
+        #hero .nostra-video-slide-fix,
+        #hero .nostra-video-slide-fix .th-hero-bg,
+        #hero .nostra-video-slide-fix .container{
+          min-height:390px!important;
+          height:390px!important;
+          max-height:390px!important;
         }
       }
       @media(prefers-reduced-motion:reduce){
-        #hero .nostra-video-lazy__play{transition:none!important;}
+        #hero .th-hero-slide{
+          will-change:auto;
+        }
+        #hero .nostra-video-lazy__play{
+          transition:none!important;
+        }
       }
     `;
     document.head.appendChild(style);
@@ -263,6 +275,7 @@
 
   function restorePoster(box) {
     if (!box) return;
+
     var iframe = box.querySelector('.nostra-video-player,iframe');
     if (iframe) iframe.remove();
 
@@ -276,31 +289,13 @@
 
   function prepareVideoBox() {
     markVideoSlide();
-    document.querySelectorAll('#hero .nostra-video-slide-fix .contenido-min-slider-tovideo,#hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo').forEach(function (box) {
+
+    document.querySelectorAll(
+      '#hero .nostra-video-slide-fix .contenido-min-slider-tovideo,' +
+      '#hero .nostra-video-slide-fix .contenido-max-slider.contenido-min-slider-tovideo'
+    ).forEach(function (box) {
       restorePoster(box);
     });
-  }
-
-  function updateHeroState() {
-    var hero = document.getElementById('hero');
-    var slider = document.getElementById('heroSlide6');
-    if (!hero || !slider) return;
-
-    markVideoSlide();
-    var current = slider.querySelector('.slick-current');
-    var isVideo = !!(current && current.classList.contains('nostra-video-slide-fix'));
-    hero.classList.toggle('nostra-video-active', isVideo);
-
-    var list = slider.querySelector('.slick-list');
-    var track = slider.querySelector('.slick-track');
-    if (isVideo) {
-      var height = heroHeight() + 'px';
-      if (list) list.style.height = height;
-      if (track) track.style.height = height;
-    } else {
-      if (list) list.style.height = '';
-      if (track) track.style.height = '';
-    }
   }
 
   function unloadHiddenPlayer() {
@@ -308,7 +303,11 @@
 
     document.querySelectorAll('#hero .nostra-video-slide-fix').forEach(function (slide) {
       if (slide.classList.contains('slick-current')) return;
-      var box = slide.querySelector('.contenido-min-slider-tovideo,.contenido-max-slider.contenido-min-slider-tovideo');
+
+      var box = slide.querySelector(
+        '.contenido-min-slider-tovideo,.contenido-max-slider.contenido-min-slider-tovideo'
+      );
+
       if (box && box.getAttribute('data-nostra-video-playing') === '1') {
         restorePoster(box);
         unloaded = true;
@@ -325,41 +324,32 @@
   }
 
   function bindSlider() {
-    if (boundSlider || !window.jQuery || !window.jQuery.fn || !window.jQuery.fn.slick) return;
+    if (boundSlider || !window.jQuery || !window.jQuery.fn || !window.jQuery.fn.slick) return false;
+
     var slider = window.jQuery('#heroSlide6');
-    if (!slider.length) return;
+    if (!slider.length) return false;
 
     boundSlider = true;
-    slider.on('init afterChange', function () {
-      window.setTimeout(function () {
-        updateHeroState();
-        unloadHiddenPlayer();
-      }, 30);
+    slider.on('afterChange.nostraVideo', function () {
+      unloadHiddenPlayer();
     });
-  }
 
-  function refresh() {
-    injectCss();
-    prepareVideoBox();
-    bindSlider();
-    updateHeroState();
-
-    if (window.jQuery && window.jQuery.fn && window.jQuery.fn.slick) {
-      try {
-        var slider = window.jQuery('#heroSlide6');
-        if (slider.hasClass('slick-initialized')) slider.slick('setPosition');
-      } catch (error) {}
-    }
+    return true;
   }
 
   function init() {
-    refresh();
-    window.setTimeout(refresh, 300);
-    window.setTimeout(refresh, 900);
+    injectCss();
+    prepareVideoBox();
+
+    if (!bindSlider()) {
+      window.setTimeout(bindSlider, 250);
+      window.setTimeout(bindSlider, 750);
+    }
   }
 
   document.addEventListener('visibilitychange', function () {
     if (!document.hidden) return;
+
     document.querySelectorAll('#hero [data-nostra-video-playing="1"]').forEach(function (box) {
       restorePoster(box);
     });
@@ -370,9 +360,4 @@
   } else {
     init();
   }
-
-  window.addEventListener('resize', function () {
-    window.clearTimeout(window.__nostraVideoResizeTimer);
-    window.__nostraVideoResizeTimer = window.setTimeout(updateHeroState, 160);
-  }, { passive:true });
 })();
