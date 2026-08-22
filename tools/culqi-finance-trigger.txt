@@ -1,2 +1,0 @@
-Trigger temporal para ejecutar y validar la integración Culqi → Finanzas.
-Reintento v2 después de corregir la validación del workflow.
