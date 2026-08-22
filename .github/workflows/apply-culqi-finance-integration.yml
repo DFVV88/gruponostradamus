@@ -8,6 +8,9 @@ on:
     paths:
       - "tools/apply-culqi-finance-integration.py"
       - ".github/workflows/apply-culqi-finance-integration.yml"
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -71,4 +74,4 @@ jobs:
           git commit -m "Integra pagos Culqi automáticamente con Finanzas"
           git push origin HEAD:main
 
-# trigger: 2026-08-21 culqi-finance
+# trigger: 2026-08-21 culqi-finance-pr
