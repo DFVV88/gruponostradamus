@@ -46,10 +46,6 @@ jobs:
           node --check functions/webhook.js
           node --check functions/lib/culqi-finance.js
 
-      - name: Instalar dependencias de Functions
-        working-directory: functions
-        run: npm ci
-
       - name: Ejecutar checks y pruebas
         working-directory: functions
         run: npm run check
@@ -74,4 +70,4 @@ jobs:
           git commit -m "Integra pagos Culqi automáticamente con Finanzas"
           git push origin HEAD:main
 
-# trigger: 2026-08-21 culqi-finance-pr
+# trigger: 2026-08-21 culqi-finance-pr-v2
