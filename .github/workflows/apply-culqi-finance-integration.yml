@@ -70,3 +70,5 @@ jobs:
                   admin-preinscripciones.html
           git commit -m "Integra pagos Culqi automáticamente con Finanzas"
           git push origin HEAD:main
+
+# trigger: 2026-08-21 culqi-finance
