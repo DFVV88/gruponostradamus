@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel financiero | Grupo Nostradamus</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">N</span>
+      <div><strong>Grupo Nostradamus</strong><small>Panel financiero</small></div>
+    </div>
+    <nav>
+      <button class="nav-item active" data-section="resumen">Resumen</button>
+      <button class="nav-item" data-section="movimientos">Movimientos</button>
+      <button class="nav-item" data-section="reportes">Reportes</button>
+      <button class="nav-item disabled" title="Disponible en una siguiente etapa">Pagos de alumnos</button>
+      <button class="nav-item disabled" title="Disponible en una siguiente etapa">Pagos de docentes</button>
+    </nav>
+    <div class="stage-note">Etapa 1 · Control básico de caja</div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <div>
+        <h1>Control de ingresos y egresos</h1>
+        <p>Registro y seguimiento diario, mensual y anual.</p>
+      </div>
+      <button id="newMovementBtn" class="primary">+ Nuevo movimiento</button>
+    </header>
+
+    <section id="resumen" class="panel-section active">
+      <div class="filters card">
+        <label>Periodo
+          <select id="periodFilter">
+            <option value="day">Hoy</option>
+            <option value="month" selected>Este mes</option>
+            <option value="year">Este año</option>
+            <option value="all">Todo</option>
+          </select>
+        </label>
+        <label>Fecha de referencia
+          <input id="referenceDate" type="date">
+        </label>
+      </div>
+
+      <div class="stats-grid">
+        <article class="stat card"><span>Ingresos</span><strong id="incomeTotal">S/ 0.00</strong><small>Periodo seleccionado</small></article>
+        <article class="stat card"><span>Egresos</span><strong id="expenseTotal">S/ 0.00</strong><small>Periodo seleccionado</small></article>
+        <article class="stat card"><span>Saldo</span><strong id="balanceTotal">S/ 0.00</strong><small>Ingresos menos egresos</small></article>
+        <article class="stat card"><span>Movimientos</span><strong id="movementCount">0</strong><small>Registros encontrados</small></article>
+      </div>
+
+      <div class="content-grid">
+        <article class="card">
+          <div class="card-heading"><h2>Últimos movimientos</h2><button class="link-button" data-go="movimientos">Ver todos</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Concepto</th><th>Categoría</th><th>Medio</th><th>Tipo</th><th>Monto</th></tr></thead><tbody id="recentRows"></tbody></table></div>
+          <p id="recentEmpty" class="empty">Todavía no hay movimientos registrados.</p>
+        </article>
+        <article class="card summary-box">
+          <h2>Distribución</h2>
+          <div class="bar-row"><span>Ingresos</span><div class="bar"><i id="incomeBar"></i></div><b id="incomePercent">0%</b></div>
+          <div class="bar-row"><span>Egresos</span><div class="bar"><i id="expenseBar"></i></div><b id="expensePercent">0%</b></div>
+          <hr>
+          <p>El saldo mostrado es referencial y se calcula únicamente con los movimientos registrados en este módulo.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="movimientos" class="panel-section">
+      <div class="card">
+        <div class="card-heading"><h2>Historial de movimientos</h2><button id="exportBtn" class="secondary">Exportar CSV</button></div>
+        <div class="movement-filters">
+          <input id="searchInput" type="search" placeholder="Buscar concepto, categoría o medio">
+          <select id="typeFilter"><option value="all">Todos los tipos</option><option value="income">Ingresos</option><option value="expense">Egresos</option></select>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Concepto</th><th>Categoría</th><th>Medio</th><th>Tipo</th><th>Monto</th><th></th></tr></thead><tbody id="movementRows"></tbody></table></div>
+        <p id="movementEmpty" class="empty">No se encontraron movimientos.</p>
+      </div>
+    </section>
+
+    <section id="reportes" class="panel-section">
+      <article class="card report-card">
+        <h2>Reporte rápido</h2>
+        <p>Utiliza el filtro del resumen para elegir día, mes, año o todo el historial. Luego exporta el detalle desde Movimientos.</p>
+        <div class="report-values"><div><span>Ingresos acumulados</span><strong id="reportIncome">S/ 0.00</strong></div><div><span>Egresos acumulados</span><strong id="reportExpense">S/ 0.00</strong></div><div><span>Resultado</span><strong id="reportBalance">S/ 0.00</strong></div></div>
+      </article>
+    </section>
+  </main>
+
+  <dialog id="movementDialog">
+    <form id="movementForm" method="dialog">
+      <div class="dialog-heading"><div><h2>Nuevo movimiento</h2><p>Registra un ingreso o egreso.</p></div><button type="button" id="closeDialog" class="icon-button">×</button></div>
+      <div class="form-grid">
+        <label>Tipo<select id="movementType" required><option value="income">Ingreso</option><option value="expense">Egreso</option></select></label>
+        <label>Fecha<input id="movementDate" type="date" required></label>
+        <label class="full">Concepto<input id="movementDescription" maxlength="100" required placeholder="Ej.: Pago de pensión"></label>
+        <label>Categoría<select id="movementCategory" required></select></label>
+        <label>Método de pago<select id="paymentMethod" required><option>Efectivo</option><option>Yape</option><option>Plin</option><option>Transferencia BCP</option><option>Tarjeta / pasarela</option><option>Otro</option></select></label>
+        <label>Monto (S/)<input id="movementAmount" type="number" min="0.01" step="0.01" required></label>
+        <label>Número de operación<input id="operationNumber" maxlength="50" placeholder="Opcional"></label>
+        <label class="full">Observación<textarea id="movementNotes" rows="3" maxlength="250" placeholder="Opcional"></textarea></label>
+      </div>
+      <div class="dialog-actions"><button type="button" id="cancelDialog" class="secondary">Cancelar</button><button type="submit" class="primary">Guardar movimiento</button></div>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
