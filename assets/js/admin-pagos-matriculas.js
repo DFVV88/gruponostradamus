@@ -100,7 +100,32 @@ function paymentMethodForAccount(account){
 }
 
 function paymentAmount(record){
-  return num(record?.montoPagoValidado || record?.montoPagoInicial || record?.totalInicial || record?.precioReferencia || 0);
+  const culqiCentimos = Number(record?.montoPagadoCentimos || 0);
+  return num(record?.montoPagoValidado || (culqiCentimos > 0 ? culqiCentimos / 100 : 0) || record?.montoPagoInicial || record?.totalInicial || record?.precioReferencia || 0);
+}
+
+function isValidatedCulqi(record){
+  const paid = record?.pagoValidado === true || record?.estadoPago === 'pago_validado';
+  return paid && /^chr_(?:test|live)_[A-Za-z0-9]+$/.test(clean(record?.culqiChargeId));
+}
+
+function peruDateFrom(value){
+  let date = null;
+  if(value && typeof value.toDate === 'function') date = value.toDate();
+  else if(value instanceof Date) date = value;
+  else if(Number.isFinite(Number(value)) && Number(value) > 0) date = new Date(Number(value) * 1000);
+  if(!date || Number.isNaN(date.getTime())) return '';
+  const parts = new Intl.DateTimeFormat('en-US',{timeZone:'America/Lima',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(date);
+  const map = Object.fromEntries(parts.map(part => [part.type,part.value]));
+  return `${map.year}-${map.month}-${map.day}`;
+}
+
+function paymentDate(record){
+  const explicit = clean(record?.fechaPagoValidado);
+  if(/^\d{4}-\d{2}-\d{2}$/.test(explicit)) return explicit;
+  return peruDateFrom(record?.pagoValidadoAt)
+    || peruDateFrom(record?.culqiResumen?.creationDate || record?.culqiResumen?.creation_date)
+    || todayIso();
 }
 
 function studentStatus(record){
@@ -312,6 +337,89 @@ function setup(){
   return true;
 }
 
+async function reconcileExistingCulqiFinance(){
+  if(!currentUser) return 0;
+  const candidates = preinscriptions.filter(record => isValidatedCulqi(record) && !clean(record.ingresoFinancieroId));
+  let reconciled = 0;
+
+  for(const record of candidates){
+    try{
+      const amount = paymentAmount(record);
+      const chargeId = clean(record.culqiChargeId);
+      if(amount <= 0 || !chargeId) continue;
+      const movementId = `pago_${record.id}_inicial`;
+      const movementRef = doc(db,FINANCE_COLLECTION,movementId);
+      const existingMovement = await getDoc(movementRef);
+      const group = groupFor(record);
+      const date = paymentDate(record);
+      const conceptBase = (clean(record.conceptoPagoInicial) || `Pago inicial de ${clean(record.ciclo)}`).slice(0,150);
+      const email = currentUser.email || ADMIN_EMAIL;
+      const patch = {
+        montoPagoValidado:amount,
+        fechaPagoValidado:date,
+        cuentaPagoValidado:'culqi',
+        metodoPagoValidado:'culqi',
+        numeroOperacionPago:chargeId,
+        ingresoFinancieroId:movementId,
+        ingresoFinancieroGenerado:true,
+        registroAlumnoId:record.id,
+        matriculaId:record.id,
+        grupoId:group.id,
+        grupoNombre:group.nombre,
+        salonNombre:group.salonNombre,
+        updatedAt:serverTimestamp()
+      };
+      const batch = writeBatch(db);
+
+      if(!existingMovement.exists()){
+        batch.set(movementRef,{
+          tipo:'ingreso',
+          fechaOperacion:date,
+          categoria:categoryFor(record,''),
+          concepto:`${conceptBase} · ${clean(record.nombre)}`.slice(0,160),
+          monto:amount,
+          metodoPago:'culqi',
+          cuenta:'culqi',
+          numeroOperacion:chargeId,
+          observacion:[
+            'Conciliación automática de pago Culqi',
+            `Alumno: ${clean(record.nombre)}`,
+            `DNI: ${clean(record.dni)}`,
+            `Preinscripción: ${record.id}`,
+            `Cargo Culqi: ${chargeId}`
+          ].join(' · ').slice(0,1000),
+          estado:'activo',
+          origen:'pago_alumno_admin',
+          creadoPor:email,
+          pagoId:movementId,
+          preinscripcionId:record.id,
+          registroAlumnoId:record.id,
+          matriculaId:record.id,
+          grupoId:group.id,
+          alumnoNombre:clean(record.nombre).slice(0,160),
+          alumnoDni:clean(record.dni).slice(0,20),
+          conceptoPago:conceptBase,
+          createdAt:serverTimestamp(),
+          updatedAt:serverTimestamp()
+        });
+      }
+
+      batch.update(doc(db,PRE_COLLECTION,record.id),patch);
+      batch.set(doc(db,GROUP_COLLECTION,group.id),{
+        ...group,
+        actualizadoPor:email,
+        updatedAt:serverTimestamp()
+      },{merge:true});
+      await batch.commit();
+      Object.assign(record,patch);
+      reconciled += 1;
+    }catch(error){
+      console.warn('No se pudo conciliar automáticamente un pago Culqi existente:',record.id,error);
+    }
+  }
+  return reconciled;
+}
+
 async function loadAll(){
   if(!currentUser || !setup() || syncing) return;
   setMessage('npm-message','info','Actualizando alumnos, grupos y estados de pago...');
@@ -324,12 +432,15 @@ async function loadAll(){
     preinscriptions = preSnapshot.docs.map(item => ({id:item.id,...item.data()}));
     groups = groupSnapshot.docs.map(item => ({id:item.id,...item.data()}));
     studentRecords = studentSnapshot.docs.map(item => ({id:item.id,...item.data()}));
+    const culqiReconciled = await reconcileExistingCulqiFinance();
     await syncAcademicRecords();
     renderPanel();
     const missing = preinscriptions.filter(item => studentStatus(item) === 'pago_validado' && !clean(item.ingresoFinancieroId)).length;
     setMessage('npm-message',missing ? 'info' : 'ok',missing
       ? `${missing} pago${missing === 1 ? '' : 's'} validado${missing === 1 ? '' : 's'} requiere${missing === 1 ? '' : 'n'} regularización financiera.`
-      : 'Alumnos, matrículas y grupos actualizados.');
+      : (culqiReconciled
+        ? `${culqiReconciled} pago${culqiReconciled === 1 ? '' : 's'} Culqi conciliado${culqiReconciled === 1 ? '' : 's'} automáticamente con Finanzas.`
+        : 'Alumnos, matrículas y grupos actualizados.'));
   }catch(error){
     console.error(error);
     setMessage('npm-message','err',error?.code === 'permission-denied'
@@ -495,11 +606,11 @@ async function openPaymentModal(id){
     document.getElementById('npm-payment-target').innerHTML = `<strong>${esc(paymentRecord.nombre)}</strong> · DNI ${esc(paymentRecord.dni)}<br>${esc(paymentRecord.ciclo)} · ${esc(paymentRecord.planNombre)}<br><b>Grupo/salón:</b> ${esc(group.salonNombre)} · ${esc(group.turno)}`;
     document.getElementById('npm-payment-amount').value = paymentAmount(paymentRecord).toFixed(2);
     document.getElementById('npm-payment-date').max = todayIso();
-    document.getElementById('npm-payment-date').value = clean(paymentRecord.fechaPagoValidado) || todayIso();
+    document.getElementById('npm-payment-date').value = paymentDate(paymentRecord);
     document.getElementById('npm-payment-category').value = categoryFor(paymentRecord,'');
-    document.getElementById('npm-payment-account').value = clean(paymentRecord.cuentaPagoValidado) || 'yape';
+    document.getElementById('npm-payment-account').value = clean(paymentRecord.cuentaPagoValidado) || (isValidatedCulqi(paymentRecord) ? 'culqi' : 'yape');
     document.getElementById('npm-payment-concept').value = clean(paymentRecord.conceptoPagoInicial) || `Pago inicial de ${clean(paymentRecord.ciclo)}`;
-    document.getElementById('npm-payment-operation').value = clean(paymentRecord.numeroOperacionPago);
+    document.getElementById('npm-payment-operation').value = clean(paymentRecord.numeroOperacionPago) || (isValidatedCulqi(paymentRecord) ? clean(paymentRecord.culqiChargeId) : '');
     document.getElementById('npm-payment-note').value = clean(paymentRecord.pagoObservacion);
     const save = document.getElementById('npm-payment-save');
     if(save) save.disabled = Boolean(alreadyLinked);

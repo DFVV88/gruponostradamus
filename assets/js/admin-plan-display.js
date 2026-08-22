@@ -1,6 +1,6 @@
 /* Grupo Nostradamus - Visibilidad de programa, plan y pago inicial en administración */
 import './admin-reclamos-panel.js?v=2026-01';
-import './admin-pagos-matriculas.js?v=2026-08-02-1';
+import './admin-pagos-matriculas.js?v=2026-08-21-culqi-finance-1';
 import './admin-preinscripciones-acordeon.js?v=2026-08-02-1';
 import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';

@@ -26,6 +26,7 @@ const {
   normalizeAuthentication3DS,
   paymentContextHash
 } = require('./lib/culqi3ds');
+const { buildCulqiFinanceIntegration } = require('./lib/culqi-finance');
 
 const app = getApps().length ? getApp() : initializeApp();
 const db = getFirestore(app);
@@ -455,6 +456,14 @@ exports.culqiCreateCharge = onRequest(
       }
 
       const summary = chargeSummary(data);
+      const finance = buildCulqiFinanceIntegration({
+        preId,
+        pre: reserved.pre,
+        amountCentimos: summary.amount || amount,
+        chargeId: summary.id,
+        concept: reserved.selection.pricing.conceptoInicial,
+        creationDate: summary.creationDate
+      });
       const batch = db.batch();
       batch.update(reserved.attemptRef, {
         estado: 'aprobado',
@@ -468,6 +477,11 @@ exports.culqiCreateCharge = onRequest(
         approvedAt: FieldValue.serverTimestamp(),
         updatedAt: FieldValue.serverTimestamp()
       });
+      batch.set(db.collection('finanzas_movimientos').doc(finance.movementId), {
+        ...finance.movement,
+        createdAt: FieldValue.serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp()
+      }, { merge: true });
       batch.update(reserved.preRef, {
         estadoPago: 'pago_validado',
         pagoValidado: true,
@@ -483,6 +497,7 @@ exports.culqiCreateCharge = onRequest(
         culqiEntorno: environment,
         montoPagadoCentimos: summary.amount || amount,
         monedaPago: 'PEN',
+        ...finance.prePatch,
         pagoValidadoAt: FieldValue.serverTimestamp(),
         updatedAt: FieldValue.serverTimestamp()
       });

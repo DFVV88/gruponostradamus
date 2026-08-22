@@ -17,6 +17,7 @@ const {
   metadataValue,
   verifiedChargeSummary
 } = require('./lib/culqi-webhook');
+const { buildCulqiFinanceIntegration } = require('./lib/culqi-finance');
 
 const app = getApps().length ? getApp() : initializeApp();
 const db = getFirestore(app);
@@ -230,6 +231,19 @@ async function reconcileWebhook(payload, charge, environment) {
     }
 
     if (eventClass === 'success') {
+      const finance = buildCulqiFinanceIntegration({
+        preId: refs.preId,
+        pre,
+        amountCentimos: summary.amount,
+        chargeId: summary.id,
+        concept: clean(attempt.conceptoPago || pre.conceptoPagoInicial || `Pago inicial de ${clean(pre.ciclo)}`),
+        creationDate: summary.creationDate
+      });
+      tx.set(db.collection('finanzas_movimientos').doc(finance.movementId), {
+        ...finance.movement,
+        createdAt: FieldValue.serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp()
+      }, { merge: true });
       tx.update(attemptRef, {
         estado: 'aprobado',
         entorno: environment,
@@ -255,6 +269,7 @@ async function reconcileWebhook(payload, charge, environment) {
         culqiEntorno: environment,
         montoPagadoCentimos: summary.amount,
         monedaPago: 'PEN',
+        ...finance.prePatch,
         confirmadoPorWebhook: true,
         webhookEventType: eventType,
         webhookConfirmedAt: FieldValue.serverTimestamp(),
