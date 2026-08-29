@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#022D33">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="NostraPLAY, plataforma interactiva de aprendizaje y evaluación de Grupo Nostradamus.">
+  <title>NostraPLAY · Grupo Nostradamus</title>
+  <link rel="icon" href="../assets/img/favicons/iocon-ostradamus.png" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Grupo Nostradamus">
+        <img src="../assets/img/logo.png" alt="Grupo Nostradamus">
+      </a>
+      <div class="product-lockup" aria-label="NostraPLAY">
+        <span class="product-name">Nostra<span>PLAY</span></span>
+        <span class="product-tag">Aprende. Compite. Mejora. Ingresa.</span>
+      </div>
+      <div class="status-chip" title="Subpágina en etapa inicial">
+        <span class="status-dot"></span>
+        Base v1.0
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">PLATAFORMA INTERACTIVA · GRUPO NOSTRADAMUS</span>
+          <h1>Aprende el concepto.<br><span>Domina el problema.</span></h1>
+          <p>NostraPLAY organiza cada tema en conceptos, ejemplos y entrenamiento progresivo con lenguaje matemático profesional y gráficos académicos de alta calidad.</p>
+          <div class="hero-actions">
+            <a class="primary-btn" href="#cursos">EXPLORAR CURSOS</a>
+            <span class="quiet-note">Banco académico en construcción</span>
+          </div>
+          <div class="feature-row" aria-label="Características">
+            <span>∑ LaTeX profesional</span>
+            <span>◇ NostraGRAPH</span>
+            <span>🎯 Niveles progresivos</span>
+            <span>✓ Soluciones verificadas</span>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="visual-card visual-card-back"></div>
+          <div class="visual-card visual-card-main">
+            <div class="mini-kicker">FÍSICA · VECTORES</div>
+            <h2>Suma de vectores</h2>
+            <div class="mini-formula" data-latex-display="\vec{R}=\vec{A}+\vec{B}"></div>
+            <div class="mini-track"><i style="width: 66%"></i></div>
+            <div class="mini-grid">
+              <div><span>COMPRENDE</span><strong>10</strong></div>
+              <div><span>APLICA</span><strong>10</strong></div>
+              <div><span>DOMINA</span><strong>10</strong></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="cursos" class="section courses-section">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">NOSTRABANCO · ESTRUCTURA INICIAL</span>
+            <h2>8 cursos principales</h2>
+          </div>
+          <p>Las unidades aparecerán automáticamente aquí conforme NostraPLAY Builder las incorpore al repositorio.</p>
+        </div>
+        <div id="courseGrid" class="course-grid" aria-live="polite"></div>
+      </section>
+
+      <section class="section units-section">
+        <div class="section-heading compact">
+          <div>
+            <span class="eyebrow">UNIDADES DISPONIBLES</span>
+            <h2 id="unitsTitle">Banco inicial</h2>
+          </div>
+          <span id="unitCount" class="counter-chip">0 unidades</span>
+        </div>
+        <div id="unitsGrid" class="units-grid"></div>
+        <div id="emptyState" class="empty-state">
+          <div class="empty-icon">NP</div>
+          <h3>La estructura está lista.</h3>
+          <p>El primer contenido será incorporado por NostraPLAY Builder después de validarse en una rama independiente.</p>
+        </div>
+      </section>
+
+      <section class="section architecture-section">
+        <div class="architecture-card">
+          <div>
+            <span class="eyebrow">FLUJO NOSTRAPLAY</span>
+            <h2>Contenido consistente, sin rediseñar la plataforma.</h2>
+          </div>
+          <div class="flow">
+            <span>Tema</span><b>→</b><span>Concepto</span><b>→</b><span>Ejemplo</span><b>→</b><span>Práctica</span><b>→</b><span>Dominio</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Grupo Nostradamus · NostraPLAY</span>
+      <span>gruponostradamus.edu.pe/nostraplay</span>
+    </footer>
+  </div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
