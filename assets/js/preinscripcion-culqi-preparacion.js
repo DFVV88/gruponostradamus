@@ -44,6 +44,12 @@
   var scriptPromises = {};
 
   function clean(value){ return String(value == null ? '' : value).replace(/\s+/g,' ').trim(); }
+  function dniDigits(value){ return clean(value).replace(/\D/g,'').slice(0,12); }
+  function sha256(value){
+    return crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)).then(function(buffer){
+      return Array.from(new Uint8Array(buffer)).map(function(byte){ return byte.toString(16).padStart(2,'0'); }).join('');
+    });
+  }
   function esc(value){
     return String(value == null ? '' : value).replace(/[&<>'"]/g,function(c){
       return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c];
@@ -285,7 +291,7 @@
   }
   function validateBasic(form){
     if(formValue(form,'nombre').length < 5) return 'Escribe nombres y apellidos completos.';
-    if(formValue(form,'dni').length < 8) return 'Escribe un DNI válido.';
+    if(dniDigits(formValue(form,'dni')).length < 8) return 'Escribe un DNI válido.';
     if(formValue(form,'celular').length < 9) return 'Escribe un celular válido.';
     if(formValue(form,'correo').indexOf('@') === -1) return 'Escribe un correo personal válido.';
     if(!formValue(form,'ciclo')) return 'Selecciona un programa.';
@@ -306,7 +312,7 @@
     var now = new Date().toISOString();
     return {
       nombre:formValue(form,'nombre'),
-      dni:formValue(form,'dni'),
+      dni:dniDigits(formValue(form,'dni')),
       celular:formValue(form,'celular'),
       correo:formValue(form,'correo').toLowerCase(),
       colegio:formValue(form,'colegio'),
@@ -696,12 +702,35 @@
       return officialSelection(form).then(function(official){ return {official:official,publicKey:publicKey}; });
     }).then(function(step){
       var ctx = step.official.ctx;
-      var ref = ctx.fs.doc(ctx.fs.collection(ctx.db,'preinscripciones'));
-      var data = buildData(form,step.official,ref.id);
-      data.createdAt = ctx.fs.serverTimestamp();
-      data.updatedAt = ctx.fs.serverTimestamp();
-      return ctx.fs.setDoc(ref,data).then(function(){
-        return {ref:ref,data:data,publicKey:step.publicKey};
+      var dni = dniDigits(formValue(form,'dni'));
+      return sha256(dni).then(function(hash){
+        var registryRef = ctx.fs.doc(ctx.db,'alumnos_registro_dni',hash);
+        var ref = ctx.fs.doc(ctx.db,'preinscripciones',hash);
+        var data = buildData(form,step.official,ref.id);
+        data.createdAt = ctx.fs.serverTimestamp();
+        data.updatedAt = ctx.fs.serverTimestamp();
+        return ctx.fs.runTransaction(ctx.db,function(transaction){
+          return transaction.get(registryRef).then(function(registrySnapshot){
+            if(registrySnapshot.exists()){
+              throw Object.assign(new Error('Este DNI ya se encuentra registrado en Grupo Nostradamus.'),{code:'dni-already-exists'});
+            }
+            return transaction.get(ref).then(function(preSnapshot){
+              if(preSnapshot.exists()){
+                throw Object.assign(new Error('Este DNI ya cuenta con una preinscripción.'),{code:'dni-already-exists'});
+              }
+              transaction.set(ref,data);
+              transaction.set(registryRef,{
+                dniHash:hash,
+                registroId:ref.id,
+                tipo:'preinscripcion_web',
+                activo:true,
+                createdAt:ctx.fs.serverTimestamp(),
+                updatedAt:ctx.fs.serverTimestamp()
+              });
+              return {ref:ref,data:data,publicKey:step.publicKey};
+            });
+          });
+        });
       });
     }).then(function(result){
       var data = result.data;
@@ -732,9 +761,15 @@
       }
     }).catch(function(saveError){
       console.error('No se pudo registrar o preparar la preinscripción:',saveError);
-      message('error',saveError && saveError.code === 'permission-denied'
-        ? 'Firebase no permitió registrar la solicitud. Deben revisarse las reglas de preinscripciones.'
-        : esc(saveError && saveError.message ? saveError.message : 'No se pudo verificar el tarifario o preparar el pago.'));
+      if(saveError && saveError.code === 'dni-already-exists'){
+        message('error','⚠️ Este DNI ya se encuentra registrado en Grupo Nostradamus.<br><b>No se creó una segunda preinscripción.</b><br><small>Si necesitas cambiar de ciclo, forma de pago o corregir datos, comunícate con Coordinación.</small>');
+        return;
+      }
+      if(saveError && saveError.code === 'permission-denied'){
+        message('error','No se pudo verificar de forma segura si este DNI ya está registrado. <b>No se creó ninguna preinscripción.</b> Intenta nuevamente o comunícate con Coordinación.');
+        return;
+      }
+      message('error',esc(saveError && saveError.message ? saveError.message : 'No se pudo verificar el tarifario o preparar el pago.'));
     }).finally(function(){
       if(button){ button.disabled = false; button.textContent = 'Enviar preinscripción'; }
     });

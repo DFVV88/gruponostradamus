@@ -329,33 +329,30 @@
     initFirebase().then(function(ctx){
       return sha256(data.dni).then(function(hash){
         var registryRef = ctx.fs.doc(ctx.db,'alumnos_registro_dni',hash);
-        var preRef = ctx.fs.doc(ctx.fs.collection(ctx.db,'preinscripciones'));
+        var preRef = ctx.fs.doc(ctx.db,'preinscripciones',hash);
         return ctx.fs.runTransaction(ctx.db,function(transaction){
           return transaction.get(registryRef).then(function(registrySnapshot){
             if(registrySnapshot.exists()){
               throw Object.assign(new Error('Este DNI ya se encuentra registrado en Grupo Nostradamus.'),{code:'dni-already-exists'});
             }
-            data.createdAt = ctx.fs.serverTimestamp();
-            data.updatedAt = ctx.fs.serverTimestamp();
-            transaction.set(preRef,data);
-            transaction.set(registryRef,{
-              dniHash:hash,
-              registroId:preRef.id,
-              tipo:'preinscripcion_web',
-              activo:true,
-              createdAt:ctx.fs.serverTimestamp(),
-              updatedAt:ctx.fs.serverTimestamp()
+            return transaction.get(preRef).then(function(preSnapshot){
+              if(preSnapshot.exists()){
+                throw Object.assign(new Error('Este DNI ya cuenta con una preinscripción.'),{code:'dni-already-exists'});
+              }
+              data.createdAt = ctx.fs.serverTimestamp();
+              data.updatedAt = ctx.fs.serverTimestamp();
+              transaction.set(preRef,data);
+              transaction.set(registryRef,{
+                dniHash:hash,
+                registroId:preRef.id,
+                tipo:'preinscripcion_web',
+                activo:true,
+                createdAt:ctx.fs.serverTimestamp(),
+                updatedAt:ctx.fs.serverTimestamp()
+              });
+              return preRef;
             });
-            return preRef;
           });
-        }).catch(function(error){
-          if(error && error.code === 'permission-denied'){
-            console.warn('El indice unico de DNI aun no esta publicado; se usa temporalmente el flujo compatible.',error);
-            data.createdAt = ctx.fs.serverTimestamp();
-            data.updatedAt = ctx.fs.serverTimestamp();
-            return ctx.fs.addDoc(ctx.fs.collection(ctx.db,'preinscripciones'),data);
-          }
-          throw error;
         });
       });
     }).then(function(ref){
@@ -380,10 +377,14 @@
     }).catch(function(err){
       console.error('Error guardando preinscripción:',err);
       if(err && err.code === 'dni-already-exists'){
-        msg('error','⚠️ Este DNI ya se encuentra registrado en Grupo Nostradamus.<br><b>El sistema te reconoce como alumno antiguo o existente.</b><br><small>No se creó una nueva preinscripción. Si necesitas cambiar de ciclo o corregir datos, comunícate con Coordinación.</small>');
+        msg('error','⚠️ Este DNI ya se encuentra registrado en Grupo Nostradamus.<br><b>No se creó una segunda preinscripción.</b><br><small>Si necesitas cambiar de ciclo, forma de pago o corregir datos, comunícate con Coordinación.</small>');
         return;
       }
-      msg('error','No se pudo guardar la preinscripción en Firebase. Revisa las reglas de Firestore o intenta nuevamente.');
+      if(err && err.code === 'permission-denied'){
+        msg('error','No se pudo verificar de forma segura si este DNI ya está registrado. <b>No se creó ninguna preinscripción.</b> Intenta nuevamente o comunícate con Coordinación.');
+        return;
+      }
+      msg('error','No se pudo guardar la preinscripción. Intenta nuevamente o comunícate con Coordinación.');
     }).finally(function(){
       if(btn){ btn.disabled = false; btn.textContent = 'Enviar preinscripción'; }
     });
