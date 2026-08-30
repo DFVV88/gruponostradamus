@@ -85,14 +85,15 @@ function ensureTablePresentationStyles(){
   const style = document.createElement('style');
   style.id = 'nostra-preinscripciones-readable-layout';
   style.textContent = `
-    .preinscripciones-table th:nth-child(1){width:19%!important}
-    .preinscripciones-table th:nth-child(2){width:14%!important}
-    .preinscripciones-table th:nth-child(3){width:14%!important}
+    .preinscripciones-table th:nth-child(1){width:20%!important}
+    .preinscripciones-table th:nth-child(2){width:15%!important}
+    .preinscripciones-table th:nth-child(3){width:16%!important}
     .preinscripciones-table th:nth-child(4){width:18%!important}
     .preinscripciones-table th:nth-child(5){width:15%!important}
     .preinscripciones-table th:nth-child(6){width:7%!important}
-    .preinscripciones-table th:nth-child(7){width:5%!important}
-    .preinscripciones-table th:nth-child(8){width:8%!important}
+    .preinscripciones-table th:nth-child(7),
+    .preinscripciones-table td.col-asesor{display:none!important}
+    .preinscripciones-table th:nth-child(8){width:9%!important}
     .preinscripciones-table .row-given-names{
       display:block;color:#061426;font-weight:900;font-size:14px;line-height:1.12;margin:0 0 2px;
     }
