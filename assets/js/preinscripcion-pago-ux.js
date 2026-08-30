@@ -44,8 +44,43 @@
     document.head.appendChild(style);
   }
 
+  function addCompactPaymentStyles(){
+    if(document.getElementById('nostra-payment-choice-style')) return;
+    var style = document.createElement('style');
+    style.id = 'nostra-payment-choice-style';
+    style.textContent = [
+      '.payment-block{padding:14px 16px!important;border-radius:20px!important}',
+      '.payment-block h3{font-size:26px!important;margin:0 0 5px!important}',
+      '.payment-block>p{margin:0 0 10px!important;font-size:14px!important;line-height:1.4!important}',
+      '.payment-options{gap:10px!important}',
+      '.pay-option{min-height:92px;padding:12px 44px 12px 14px!important;border-radius:16px!important;box-shadow:none!important;transform:none!important;transition:border-color .16s ease,background .16s ease,box-shadow .16s ease!important}',
+      '.pay-option:hover{transform:none!important;border-color:rgba(7,140,149,.38)!important;box-shadow:0 8px 20px rgba(6,20,38,.06)!important}',
+      '.pay-option>div{outline:0!important}',
+      '.pay-option strong{font-size:17px!important;line-height:1.2!important;margin-bottom:4px!important}',
+      '.pay-option small{font-size:12px!important;line-height:1.35!important;font-weight:700!important}',
+      '.pay-option .pay-tag{display:none!important;margin-top:7px!important;padding:4px 8px!important;font-size:10.5px!important}',
+      '.pay-option .npu-checkout-note{display:none!important;margin-top:7px!important;padding:7px 9px!important;font-size:10.5px!important;line-height:1.35!important}',
+      '.pay-option.is-selected{border:2px solid #078c95!important;background:linear-gradient(180deg,#f0fbfc,#fff)!important;box-shadow:0 0 0 4px rgba(0,194,209,.10),0 10px 24px rgba(6,20,38,.07)!important;padding:11px 43px 11px 13px!important}',
+      '.pay-option.is-selected:after{content:"✓";position:absolute;top:11px;right:12px;width:24px;height:24px;display:grid;place-items:center;border-radius:50%;background:#078c95;color:#fff;font:900 14px/1 Jost,Arial,sans-serif}',
+      '.pay-option.is-selected .pay-tag{display:inline-flex!important}',
+      '.pay-option.is-selected .pay-tag.orange{display:none!important}',
+      '.pay-option.is-selected .npu-checkout-note{display:block!important}',
+      '.pay-option:focus-within{outline:3px solid rgba(0,194,209,.18);outline-offset:2px}',
+      '@media(max-width:620px){.payment-block{padding:13px!important}.payment-options{gap:8px!important}.pay-option{min-height:0;padding:11px 42px 11px 13px!important}.pay-option.is-selected{padding:10px 41px 10px 12px!important}.pay-option strong{font-size:16px!important}}'
+    ].join('');
+    document.head.appendChild(style);
+  }
+
+  function syncPaymentSelection(){
+    document.querySelectorAll('.pay-option').forEach(function(option){
+      var input = option.querySelector('input[name="metodoPagoPreferido"]');
+      option.classList.toggle('is-selected',!!(input && input.checked));
+    });
+  }
+
   function buildUi(){
     addStyles();
+    addCompactPaymentStyles();
     if(!document.getElementById('nostra-payment-overlay')){
       var overlay = document.createElement('div');
       overlay.id = 'nostra-payment-overlay';
@@ -81,14 +116,33 @@
   }
 
   function enhancePaymentCopy(){
+    var block = document.querySelector('.payment-block');
+    if(block){
+      var intro = block.querySelector('p');
+      if(intro) intro.textContent = 'Selecciona cómo deseas pagar. La matrícula se aprobará después de validar el pago.';
+    }
+
+    var voucherInput = document.querySelector('input[name="metodoPagoPreferido"][value="voucher_whatsapp"]');
+    var voucherOption = voucherInput && voucherInput.closest('.pay-option');
+    if(voucherOption){
+      var voucherCopy = voucherOption.querySelector('small');
+      if(voucherCopy) voucherCopy.textContent = 'Paga por Yape, Plin, transferencia o depósito y envía tu voucher.';
+    }
+
     var input = document.querySelector('input[name="metodoPagoPreferido"][value="pago_online"]');
     var option = input && input.closest('.pay-option');
-    if(!option || option.querySelector('.npu-checkout-note')) return;
-    var note = document.createElement('span');
-    note.className = 'npu-checkout-note';
-    note.textContent = 'Por seguridad, Culqi oculta los datos mientras los escribes. Puedes revisarlos con el ícono del ojo antes de pagar.';
-    var content = input.nextElementSibling || option;
-    content.appendChild(note);
+    if(option){
+      var onlineCopy = option.querySelector('small');
+      if(onlineCopy) onlineCopy.textContent = 'Paga con tarjeta mediante Culqi.';
+      if(!option.querySelector('.npu-checkout-note')){
+        var note = document.createElement('span');
+        note.className = 'npu-checkout-note';
+        note.textContent = 'Culqi protege y oculta los datos de tu tarjeta durante el pago.';
+        var content = input.nextElementSibling || option;
+        content.appendChild(note);
+      }
+    }
+    syncPaymentSelection();
   }
 
   function stopTimer(){
@@ -242,6 +296,13 @@
       observeMessage();
       if(state.observer || attempts >= 30) window.clearInterval(timer);
     },150);
+
+    document.addEventListener('change',function(event){
+      var target = event.target;
+      if(target && target.matches && target.matches('input[name="metodoPagoPreferido"]')){
+        syncPaymentSelection();
+      }
+    },true);
 
     document.addEventListener('submit',function(event){
       var form = event.target;
