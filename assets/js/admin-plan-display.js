@@ -85,11 +85,13 @@ function decorateRows(){
     if(!record) return;
 
     const cells = row.querySelectorAll('td');
-    if(cells.length < 4) return;
+    if(cells.length < 5) return;
+    const cycleCell = row.querySelector('.col-ciclo') || cells[1];
+    const paymentCell = row.querySelector('.col-pago') || cells[4];
 
     const plan = planName(record);
     syncLine(
-      cells[1],
+      cycleCell,
       'nostra-admin-plan',
       'display:block;margin-top:4px;color:#075b65;font-weight:900;',
       plan ? 'Plan: ' + plan : ''
@@ -103,7 +105,7 @@ function decorateRows(){
         ? 'Precio del plan: ' + money(reference)
         : '';
     syncLine(
-      cells[3],
+      paymentCell,
       'nostra-admin-price',
       'display:block;margin-top:5px;color:#4b5d70;font-weight:850;',
       priceText
@@ -111,7 +113,7 @@ function decorateRows(){
 
     const initial = totalInitial(record);
     syncLine(
-      cells[3],
+      paymentCell,
       'nostra-admin-initial-total',
       'display:block;margin-top:4px;color:#075b65;font-weight:950;',
       initial ? 'Pago inicial: ' + money(initial) : ''

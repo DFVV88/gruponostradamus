@@ -268,15 +268,15 @@ function renderTable(){
   const data = filteredRecords();
   if(!data.length){ els.rows.innerHTML = '<tr><td colspan="8">No hay resultados.</td></tr>'; return; }
   els.rows.innerHTML = data.map(r => `
-    <tr>
-      <td><b>${esc(r.nombre)}</b><br><small>DNI: ${esc(r.dni)}</small></td>
-      <td><b>${esc(formatDateTime(r.createdAt))}</b><br><small>${r.updatedAt ? 'Act.: ' + esc(formatDateTime(r.updatedAt)) : '-'}</small></td>
-      <td>${esc(r.ciclo)}<br><small>${esc(r.turno) || '-'}</small></td>
-      <td>${esc(r.celular)}<br><small>${esc(r.correo)}</small></td>
-      <td>${esc(r.metodoPagoLabel)}<br>${paymentBadge(r.estadoPago)}</td>
-      <td>${estadoBadge(r.estado)}</td>
-      <td>${esc(r.asesorAsignado) || '-'}</td>
-      <td><button class="mini" data-open="${r.id}">Ver ficha</button>${paymentAction(r)}</td>
+    <tr class="pre-row">
+      <td class="col-alumno"><b class="row-name">${esc(r.nombre)}</b><small>DNI: ${esc(r.dni)}</small></td>
+      <td class="col-ciclo"><span class="cell-cycle-title">${esc(r.ciclo)}</span><small>${esc(r.turno) || '-'}</small></td>
+      <td class="col-contacto"><span class="cell-contact-main">${esc(r.celular)}</span><small>${esc(r.correo)}</small></td>
+      <td class="col-registro"><span class="cell-date">${esc(formatDateTime(r.createdAt))}</span><small>${r.updatedAt ? 'Act.: ' + esc(formatDateTime(r.updatedAt)) : '-'}</small></td>
+      <td class="col-pago"><span class="cell-payment-method">${esc(r.metodoPagoLabel)}</span>${paymentBadge(r.estadoPago)}</td>
+      <td class="col-estado">${estadoBadge(r.estado)}</td>
+      <td class="col-asesor">${esc(r.asesorAsignado) || '-'}</td>
+      <td class="col-actions"><div class="row-actions"><button class="mini" data-open="${r.id}">Ver ficha</button>${paymentAction(r)}</div></td>
     </tr>`).join('');
 }
 function detail(label, value){ return `<div class="detail"><b>${esc(label)}</b><span>${esc(value) || '-'}</span></div>`; }
