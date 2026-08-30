@@ -27,9 +27,31 @@ let loadingRecords = false;
 
 function clean(value){ return String(value == null ? '' : value).trim(); }
 function esc(value){
-  return String(value == null ? '' : value).replace(/[&<>'"]/g,c => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'
+  return String(value == null ? '' : value).replace(/[&<>'\"]/g,c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','\"':'&quot;'
   }[c]));
+}
+function timestampDate(value){
+  if(!value) return null;
+  if(typeof value.toDate === 'function') return value.toDate();
+  if(Number.isFinite(Number(value.seconds))) return new Date(Number(value.seconds) * 1000);
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+function formatTableDate(value){
+  const date = timestampDate(value);
+  if(!date) return '-';
+  return new Intl.DateTimeFormat('es-PE',{
+    timeZone:'America/Lima', year:'numeric', month:'2-digit', day:'2-digit',
+    hour:'2-digit', minute:'2-digit', hour12:true
+  }).format(date).replace(',', ' ·');
+}
+function splitPersonName(value){
+  const parts = clean(value).split(/\s+/).filter(Boolean);
+  if(parts.length <= 1) return {names:parts.join(' '), surnames:''};
+  if(parts.length === 2) return {names:parts[0], surnames:parts[1]};
+  if(parts.length === 3) return {names:parts[0], surnames:parts.slice(1).join(' ')};
+  return {names:parts.slice(0,2).join(' '), surnames:parts.slice(2).join(' ')};
 }
 function num(value){
   const parsed = Number(String(value == null ? '' : value).replace(',','.'));
@@ -58,6 +80,40 @@ function purchaseConcept(record){
   return clean(record.conceptoPagoInicial || snap.conceptoInicial);
 }
 
+function ensureTablePresentationStyles(){
+  if(document.getElementById('nostra-preinscripciones-readable-layout')) return;
+  const style = document.createElement('style');
+  style.id = 'nostra-preinscripciones-readable-layout';
+  style.textContent = `
+    .preinscripciones-table th:nth-child(1){width:19%!important}
+    .preinscripciones-table th:nth-child(2){width:14%!important}
+    .preinscripciones-table th:nth-child(3){width:14%!important}
+    .preinscripciones-table th:nth-child(4){width:18%!important}
+    .preinscripciones-table th:nth-child(5){width:15%!important}
+    .preinscripciones-table th:nth-child(6){width:7%!important}
+    .preinscripciones-table th:nth-child(7){width:5%!important}
+    .preinscripciones-table th:nth-child(8){width:8%!important}
+    .preinscripciones-table .row-given-names{
+      display:block;color:#061426;font-weight:900;font-size:14px;line-height:1.12;margin:0 0 2px;
+    }
+    .preinscripciones-table .row-surnames{
+      display:block;color:#061426;font-weight:800;font-size:13px;line-height:1.12;margin:0 0 5px;
+    }
+    .preinscripciones-table .row-dni{margin-top:0!important}
+    .preinscripciones-table .cell-date-created,
+    .preinscripciones-table .cell-date-updated{
+      display:block;white-space:nowrap;font-variant-numeric:tabular-nums;letter-spacing:-.01em;
+    }
+    .preinscripciones-table .cell-date-created{
+      color:#061426;font-size:11px;font-weight:900;line-height:1.25;
+    }
+    .preinscripciones-table .cell-date-updated{
+      color:#526170;font-size:10.5px;font-weight:600;line-height:1.25;margin-top:5px;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 function syncLine(cell,className,css,text){
   if(!cell) return;
   let line = cell.querySelector('.' + className);
@@ -77,6 +133,7 @@ function syncLine(cell,className,css,text){
 function decorateRows(){
   const body = document.getElementById('rows');
   if(!body) return;
+  ensureTablePresentationStyles();
 
   body.querySelectorAll('tr').forEach(row => {
     const button = row.querySelector('[data-open],[data-pay]');
@@ -86,8 +143,22 @@ function decorateRows(){
 
     const cells = row.querySelectorAll('td');
     if(cells.length < 5) return;
+    const studentCell = row.querySelector('.col-alumno') || cells[0];
     const cycleCell = row.querySelector('.col-ciclo') || cells[1];
+    const registrationCell = row.querySelector('.col-registro') || cells[3];
     const paymentCell = row.querySelector('.col-pago') || cells[4];
+
+    const person = splitPersonName(record.nombre);
+    studentCell.innerHTML = `
+      <b class="row-given-names">${esc(person.names || record.nombre)}</b>
+      ${person.surnames ? `<span class="row-surnames">${esc(person.surnames)}</span>` : ''}
+      <small class="row-dni">DNI: ${esc(record.dni)}</small>`;
+
+    const registered = formatTableDate(record.createdAt);
+    const updated = formatTableDate(record.updatedAt);
+    registrationCell.innerHTML = `
+      <span class="cell-date-created">${esc(registered)}</span>
+      ${record.updatedAt ? `<small class="cell-date-updated">Act. ${esc(updated)}</small>` : ''}`;
 
     const plan = planName(record);
     syncLine(
@@ -231,6 +302,7 @@ onAuthStateChanged(auth,user => {
     records = new Map();
     return;
   }
+  ensureTablePresentationStyles();
   ensureObserver();
   loadRecords();
 });
