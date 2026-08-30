@@ -30,16 +30,16 @@ jobs:
           grep -q "onlineAttemptExpired" assets/js/admin-preinscripciones.js
           grep -q "30 \* 60 \* 1000" assets/js/admin-preinscripciones.js
           grep -q "delete-not-allowed" assets/js/admin-preinscripciones.js
-          grep -q "2026-08-30-delete-online-2" admin.html
+          grep -q "2026-08-30-delete-online-2" admin-preinscripciones.html
 
       - name: Commit y push
         run: |
-          if git diff --quiet -- assets/js/admin-preinscripciones.js admin.html; then
+          if git diff --quiet -- assets/js/admin-preinscripciones.js admin-preinscripciones.html; then
             echo "No hay cambios por aplicar"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/js/admin-preinscripciones.js admin.html
+          git add assets/js/admin-preinscripciones.js admin-preinscripciones.html
           git commit -m "Permite eliminar pagos online abandonados"
           git push
