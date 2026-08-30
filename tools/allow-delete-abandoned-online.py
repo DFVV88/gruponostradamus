@@ -4,7 +4,7 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 JS = ROOT / 'assets/js/admin-preinscripciones.js'
-HTML = ROOT / 'admin.html'
+HTML = ROOT / 'admin-preinscripciones.html'
 
 text = JS.read_text(encoding='utf-8')
 
@@ -147,7 +147,7 @@ JS.write_text(text, encoding='utf-8')
 html = HTML.read_text(encoding='utf-8')
 html = html.replace('assets/js/admin-preinscripciones.js?v=2026-08-30-delete-time-1', 'assets/js/admin-preinscripciones.js?v=2026-08-30-delete-online-2')
 if 'assets/js/admin-preinscripciones.js?v=2026-08-30-delete-online-2' not in html:
-    raise SystemExit('No se pudo actualizar la versión del JS en admin.html')
+    raise SystemExit('No se pudo actualizar la versión del JS en admin-preinscripciones.html')
 HTML.write_text(html, encoding='utf-8')
 
 print('OK: pago online abandonado habilitado para eliminación segura tras 30 minutos')
