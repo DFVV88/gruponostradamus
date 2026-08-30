@@ -94,6 +94,8 @@ function ensureTablePresentationStyles(){
     .preinscripciones-table th:nth-child(7),
     .preinscripciones-table td.col-asesor{display:none!important}
     .preinscripciones-table th:nth-child(8){width:9%!important}
+    .preinscripciones-table .nostra-admin-price,
+    .preinscripciones-table .nostra-admin-initial-total{display:none!important}
     .preinscripciones-table .row-given-names{
       display:block;color:#061426;font-weight:900;font-size:14px;line-height:1.12;margin:0 0 2px;
     }
