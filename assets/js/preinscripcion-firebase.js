@@ -335,23 +335,22 @@
             if(registrySnapshot.exists()){
               throw Object.assign(new Error('Este DNI ya se encuentra registrado en Grupo Nostradamus.'),{code:'dni-already-exists'});
             }
-            return transaction.get(preRef).then(function(preSnapshot){
-              if(preSnapshot.exists()){
-                throw Object.assign(new Error('Este DNI ya cuenta con una preinscripción.'),{code:'dni-already-exists'});
-              }
-              data.createdAt = ctx.fs.serverTimestamp();
-              data.updatedAt = ctx.fs.serverTimestamp();
-              transaction.set(preRef,data);
-              transaction.set(registryRef,{
-                dniHash:hash,
-                registroId:preRef.id,
-                tipo:'preinscripcion_web',
-                activo:true,
-                createdAt:ctx.fs.serverTimestamp(),
-                updatedAt:ctx.fs.serverTimestamp()
-              });
-              return preRef;
+
+            // Mantener el mismo criterio del flujo principal: no hacer una
+            // lectura publica de preinscripciones/{hash}, porque Firestore
+            // reserva esas lecturas al administrador.
+            data.createdAt = ctx.fs.serverTimestamp();
+            data.updatedAt = ctx.fs.serverTimestamp();
+            transaction.set(preRef,data);
+            transaction.set(registryRef,{
+              dniHash:hash,
+              registroId:preRef.id,
+              tipo:'preinscripcion_web',
+              activo:true,
+              createdAt:ctx.fs.serverTimestamp(),
+              updatedAt:ctx.fs.serverTimestamp()
             });
+            return preRef;
           });
         });
       });

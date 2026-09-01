@@ -714,21 +714,26 @@
             if(registrySnapshot.exists()){
               throw Object.assign(new Error('Este DNI ya se encuentra registrado en Grupo Nostradamus.'),{code:'dni-already-exists'});
             }
-            return transaction.get(ref).then(function(preSnapshot){
-              if(preSnapshot.exists()){
-                throw Object.assign(new Error('Este DNI ya cuenta con una preinscripción.'),{code:'dni-already-exists'});
-              }
-              transaction.set(ref,data);
-              transaction.set(registryRef,{
-                dniHash:hash,
-                registroId:ref.id,
-                tipo:'preinscripcion_web',
-                activo:true,
-                createdAt:ctx.fs.serverTimestamp(),
-                updatedAt:ctx.fs.serverTimestamp()
-              });
-              return {ref:ref,data:data,publicKey:step.publicKey};
+
+            // No se intenta leer preinscripciones/{hash} desde la web publica.
+            // Las reglas permiten CREATE publico, pero READ solo al administrador.
+            // Leer este documento hacia que TODOS los DNI nuevos terminaran en
+            // permission-denied antes de poder registrarse.
+            //
+            // La unicidad sigue protegida por dos capas:
+            // 1) alumnos_registro_dni/{hash}, consultado dentro de la transaccion.
+            // 2) preinscripciones/{hash}, ID deterministico. Si ya existe, este
+            //    set seria una actualizacion y Firestore la rechaza al publico.
+            transaction.set(ref,data);
+            transaction.set(registryRef,{
+              dniHash:hash,
+              registroId:ref.id,
+              tipo:'preinscripcion_web',
+              activo:true,
+              createdAt:ctx.fs.serverTimestamp(),
+              updatedAt:ctx.fs.serverTimestamp()
             });
+            return {ref:ref,data:data,publicKey:step.publicKey};
           });
         });
       });
