@@ -28,8 +28,26 @@ MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]}};
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Article","headline":"Trabajo, Energía y Potencia: guía de Física para nivel UNI","author":{"@type":"Organization","name":"Equipo Académico de Grupo Nostradamus"},"publisher":{"@type":"Organization","name":"Grupo Nostradamus","url":"https://gruponostradamus.edu.pe/"},"dateModified":"2026-10-22","mainEntityOfPage":"https://gruponostradamus.edu.pe/trabajo-energia-potencia-guia-uni.html","inLanguage":"es-PE"}
 </script>
+<!-- Google Analytics - Grupo Nostradamus -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SHGP6KW962"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-SHGP6KW962", { anonymize_ip: true });
+</script>
+<!-- /Google Analytics - Grupo Nostradamus -->
+<!-- Google Tag Manager - Grupo Nostradamus -->
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-WZ5RPX4C');
+</script>
+<!-- /Google Tag Manager - Grupo Nostradamus -->
 </head>
 <body>
+<!-- Google Tag Manager (noscript) - Grupo Nostradamus -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WZ5RPX4C"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- /Google Tag Manager (noscript) - Grupo Nostradamus -->
 <div class="top">Centro Académico UNI · Grupo Nostradamus</div>
 <header class="wrap nav"><a class="logo" href="index.html"><img src="assets/img/logo.png" alt="Grupo Nostradamus"><span>Grupo Nostradamus</span></a><nav class="menu"><a href="blog.html">Centro Académico</a><a href="ciclos.html">Ciclos</a><a href="docentes.html">Docentes</a><a href="sedes.html">Sede UNI</a></nav></header>
 <section class="hero"><div class="wrap"><span class="badge">Física · Mecánica</span><h1>Trabajo, Energía y Potencia: guía de Física para nivel UNI</h1><p class="lead">Una guía para entender las relaciones entre fuerza, desplazamiento, energía y potencia, evitando los errores de signos, unidades y elección de sistema que suelen aparecer al resolver problemas.</p></div></section>
@@ -86,5 +104,27 @@ MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]}};
 <div class="cta"><h2>Continúa tu preparación con una ruta acorde a tu nivel</h2><p>La teoría es solo una parte del proceso. El siguiente paso es practicar, medir errores y elegir una etapa académica coherente con tu base actual.</p><a class="btn" href="ciclos.html">Comparar ciclos UNI</a><a class="btn" href="blog.html">Volver al Centro Académico</a></div>
 </article></main>
 <footer>© Grupo Nostradamus · Sede UNI: Av. Gerardo Unger 239, San Martín de Porres, Lima.</footer>
+<!-- Conversion tracking - Grupo Nostradamus -->
+<script>
+(function(){
+  function cleanText(value){return (value || "").replace(/\s+/g," ").trim().slice(0,120);}
+  function pageName(){var p=location.pathname||"/";return (p==="/"||p.endsWith("/"))?"home":(p.split("/").pop().replace(".html","")||"home");}
+  function sendEvent(name, params){
+    if(typeof window.gtag!=="function") return;
+    window.gtag("event", name, Object.assign({page_name: pageName(), page_path: location.pathname, page_url: location.href}, params || {}));
+  }
+  document.addEventListener("click", function(event){
+    var link = event.target && event.target.closest ? event.target.closest("a") : null;
+    if(!link || !link.href) return;
+    var href = link.href.toLowerCase();
+    var text = (link.textContent || "").toLowerCase();
+    var label = cleanText(link.getAttribute("aria-label") || link.textContent || link.href || "sin_texto");
+    if(href.indexOf("wa.me") !== -1 || href.indexOf("whatsapp") !== -1){sendEvent("click_whatsapp", {event_category:"lead", event_label:label, link_url:link.href, conversion_type:"whatsapp"}); return;}
+    if(href.indexOf("clases-en-vivo.html") !== -1 || href.indexOf("teams.microsoft.com") !== -1 || text.indexOf("clases en vivo") !== -1){sendEvent("click_clases_en_vivo", {event_category:"engagement", event_label:label, link_url:link.href}); return;}
+    if(text.indexOf("matric") !== -1 || text.indexOf("informes") !== -1 || text.indexOf("vacante") !== -1 || text.indexOf("quiero ingresar") !== -1 || href.indexOf("ingresa-uni.html") !== -1){sendEvent("click_comercial", {event_category:"conversion", event_label:label, link_url:link.href});}
+  }, true);
+})();
+</script>
+<!-- /Conversion tracking - Grupo Nostradamus -->
 </body>
 </html>
