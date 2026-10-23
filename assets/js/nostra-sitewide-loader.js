@@ -41,6 +41,42 @@
     });
   }
 
+  function shouldLoadAdSense() {
+    var robots = document.querySelector('meta[name="robots"]');
+    var robotsValue = robots ? String(robots.getAttribute('content') || '').toLowerCase() : '';
+    if (robotsValue.indexOf('noindex') !== -1) return false;
+
+    var excludedFiles = {
+      'admin-asistencia.html':1,
+      'admin-preinscripciones.html':1,
+      'asistencia.html':1,
+      'blog-details.html':1,
+      'clases-en-vivo.html':1,
+      'contacto.html':1,
+      'cuenta-nostra.html':1,
+      'index-2.html':1,
+      'index-propuesta.html':1,
+      'libro-de-reclamaciones.html':1,
+      'nostrachat-admin.html':1,
+      'nostrachat.html':1,
+      'nostracuenta.html':1,
+      'nostrashop.html':1,
+      'pago-exitoso.html':1,
+      'pago-pendiente.html':1,
+      'pago-rechazado.html':1,
+      'politica-cambios-devoluciones.html':1,
+      'politica-de-privacidad.html':1,
+      'preinscripcion.html':1,
+      'registro.html':1,
+      'sobre-nosotros.html':1,
+      'terminos-y-condiciones.html':1
+    };
+
+    if (excludedFiles[file]) return false;
+    if (path.indexOf('/nostraplay/') !== -1 || path.indexOf('/nostraprofe/') !== -1) return false;
+    return true;
+  }
+
   function loadAdSense() {
     if (document.querySelector('script[src*="pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]')) return;
 
@@ -185,7 +221,7 @@
     loadHomeModules();
     loadCycleDetailModules();
     loadOtherPageModules();
-    loadAdSense();
+    if (shouldLoadAdSense()) loadAdSense();
   }
 
   if (document.readyState === 'loading') {
