@@ -20,7 +20,7 @@
 .top{background:linear-gradient(90deg,#02070d,#07333b,#078c95);color:#fff;padding:10px;text-align:center;font-weight:900;letter-spacing:.15px}
 .site-nav{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:16px 0}.brand{display:flex;align-items:center;gap:10px;color:var(--navy);font-weight:950}.brand img{width:68px}.menu{display:flex;gap:18px;flex-wrap:wrap}.menu a{font-weight:900;color:var(--navy)}
 .hero{position:relative;overflow:hidden;background:radial-gradient(circle at 78% 20%,rgba(245,197,66,.18),transparent 28%),radial-gradient(circle at 12% 78%,rgba(101,220,229,.20),transparent 30%),linear-gradient(135deg,#02070d,#061426 54%,#087c88);color:#fff;padding:78px 0 68px}.hero h1{font-family:'Baloo 2';font-size:clamp(43px,6vw,78px);line-height:.97;margin:14px 0}.hero p{max-width:900px;font-size:20px;line-height:1.7;color:rgba(255,255,255,.87)}.kicker{display:inline-flex;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.08);border-radius:999px;padding:8px 13px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;font-size:12px}
-.hero-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:34px;align-items:center}.hero-visual{display:grid;place-items:center}.hero-visual svg{width:min(100%,360px);filter:drop-shadow(0 20px 35px rgba(0,0,0,.25))}
+.hero-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:34px;align-items:center}.hero-visual{display:grid;place-items:center}.hero-visual svg{width:min(100%,360px);height:auto;filter:drop-shadow(0 20px 35px rgba(0,0,0,.25))}.tikz-render{width:100%;display:grid;place-items:center}.tikz-render svg{max-width:100%;height:auto}
 .quick{padding:24px 0;background:#fff;border-bottom:1px solid var(--line)}.quick .wrap{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.quick a{padding:9px 13px;border-radius:999px;background:#eef9fa;border:1px solid #d7ecef;color:#075d65;font-weight:900}
 .intro{padding:62px 0}.intro-card{background:#fff;border:1px solid var(--line);border-radius:28px;padding:32px;box-shadow:0 18px 44px rgba(4,37,50,.08)}.intro-card h2,.course h2,.sources h2{font-family:'Baloo 2';color:var(--navy);font-size:clamp(31px,4vw,48px);line-height:1.05;margin:0 0 14px}.intro-card p,.course p,.course li,.sources li{font-size:17.5px;line-height:1.75;color:#435567}.editorial-note{margin-top:22px;padding:18px 20px;border-radius:18px;background:#fff8e8;border-left:6px solid var(--gold);color:#3e4b57}
 .course{padding:70px 0}.course:nth-of-type(even){background:#fff}.course-head{display:grid;grid-template-columns:1fr 280px;gap:28px;align-items:center}.course-art{background:linear-gradient(135deg,#061426,#087c88);border-radius:26px;padding:22px;min-height:220px;display:grid;place-items:center;box-shadow:0 18px 40px rgba(4,37,50,.16)}.course-art svg{width:100%;height:180px}.label{color:var(--teal);font-weight:950;letter-spacing:.7px;text-transform:uppercase;font-size:12px}.timeline{position:relative;margin:36px 0 20px;padding-left:26px}.timeline:before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:3px;background:linear-gradient(var(--teal),var(--cyan))}.milestone{position:relative;margin:0 0 24px;padding:0 0 0 22px}.milestone:before{content:"";position:absolute;left:-25px;top:7px;width:14px;height:14px;border-radius:50%;background:#fff;border:4px solid var(--teal);box-shadow:0 0 0 4px rgba(7,140,149,.08)}.year{font-weight:950;color:var(--navy);font-size:19px}.milestone p{margin:4px 0 0}
@@ -33,7 +33,7 @@ footer{padding:28px;text-align:center;color:#657586;background:#eef6f7}
 <script>
 MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],macros:{sen:'\\operatorname{sen}'}},svg:{fontCache:'global'}};
 </script>
-<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>\n<link rel="stylesheet" href="https://tikzjax.com/v1/fonts.css">\n<script defer src="https://tikzjax.com/v1/tikzjax.js"></script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Article","headline":"Historia y evolución de las ciencias UNI","description":"Recorrido histórico por Aritmética, Álgebra, Geometría, Trigonometría, Física y Química.","author":{"@type":"Organization","name":"Equipo Académico de Grupo Nostradamus"},"datePublished":"2026-10-22","publisher":{"@type":"Organization","name":"Grupo Nostradamus","url":"https://gruponostradamus.edu.pe/"},"dateModified":"2026-10-22","mainEntityOfPage":"https://gruponostradamus.edu.pe/historia-ciencias-uni.html","inLanguage":"es-PE"}
 </script>
@@ -70,18 +70,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <h1>Historia y evolución de las ciencias que sostienen la preparación UNI</h1>
 <p>Antes de convertirse en fórmulas de un examen, la Aritmética, el Álgebra, la Geometría, la Trigonometría, la Física y la Química fueron respuestas a problemas concretos: contar, medir, describir el cielo, comprender el movimiento y explicar la materia. Este recorrido presenta cómo evolucionaron esas ideas y por qué siguen siendo fundamentales para un postulante a ingeniería.</p>
 </div>
-<div class="hero-visual" aria-hidden="true">
-<svg viewBox="0 0 420 330" role="img">
-<defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#65dce5"/><stop offset="1" stop-color="#f5c542"/></linearGradient></defs>
-<circle cx="210" cy="165" r="122" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
-<circle cx="210" cy="165" r="76" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="2"/>
-<path d="M85 210 L210 72 L335 210 Z" fill="none" stroke="url(#g)" stroke-width="5"/>
-<path d="M80 245 H340" stroke="rgba(255,255,255,.7)" stroke-width="4"/>
-<path d="M120 265 C170 220 250 310 305 250" fill="none" stroke="#65dce5" stroke-width="5"/>
-<circle cx="210" cy="72" r="9" fill="#f5c542"/><circle cx="85" cy="210" r="9" fill="#65dce5"/><circle cx="335" cy="210" r="9" fill="#65dce5"/>
-<text x="210" y="175" text-anchor="middle" fill="#fff" font-size="34" font-family="Jost" font-weight="900">UNI</text>
-</svg>
-</div>
+<div class="hero-visual" aria-label="Ilustración TikZ de matemática y ciencias"><div class="tikz-render" data-source="assets/tikz/historia-ciencias/hero.tex">
+<script type="text/tikz">
+\definecolor{nostranavy}{HTML}{061426}
+\definecolor{nostrateal}{HTML}{078C95}
+\definecolor{nostracyan}{HTML}{65DCE5}
+\definecolor{nostragold}{HTML}{F5C542}
+\begin{tikzpicture}[line cap=round,line join=round]
+\fill[nostranavy] (-4,-3.1) rectangle (4,3.1);
+\draw[white,opacity=.20,line width=.8pt] (0,0) circle (2.45);
+\draw[white,opacity=.13,line width=.7pt] (0,0) circle (1.50);
+\coordinate (A) at (-2.5,-.85); \coordinate (B) at (0,2.25); \coordinate (C) at (2.5,-.85);
+\draw[nostracyan,line width=2.1pt] (A)--(B);
+\draw[nostragold,line width=2.1pt] (B)--(C);
+\draw[nostracyan!70!nostragold,line width=2.1pt] (C)--(A);
+\fill[nostracyan] (A) circle (4pt); \fill[nostragold] (B) circle (4pt); \fill[nostracyan] (C) circle (4pt);
+\node[white,font=\bfseries\Large] at (0,0) {UNI};
+\node[nostragold,font=\bfseries\small] at (0,-1.18) {MATEM\'ATICA Y CIENCIAS};
+\draw[white,opacity=.80,line width=1.6pt] (-2.65,-1.78)--(2.65,-1.78);
+\draw[nostracyan,line width=1.8pt] plot[smooth] coordinates {(-2.55,-2.30) (-1.65,-1.75) (-.65,-2.20) (.45,-1.78) (1.40,-2.42) (2.45,-1.95)};
+\end{tikzpicture}
+</script></div></div>
 </div>
 </section>
 
@@ -93,13 +102,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <h2>Una cronología para entender, no para memorizar</h2>
 <p>La historia de una ciencia permite ver algo que suele perderse en una lista de fórmulas: cada concepto apareció porque alguien necesitó resolver un problema. Los sistemas de numeración facilitaron el cálculo; el álgebra permitió trabajar con cantidades desconocidas; la geometría organizó la medición del espacio; la trigonometría nació muy ligada a la astronomía; la física convirtió el movimiento y las fuerzas en leyes matemáticas; y la química adoptó medición, experimentación y clasificación para explicar las transformaciones de la materia.</p>
 <p>En esta página no intentamos reemplazar una historia completa de cada disciplina. Presentamos un mapa cronológico inicial, con hitos seleccionados y conexiones con la formación preuniversitaria. Las futuras monografías individuales de cada curso se publicarán únicamente después de revisión académica, revisión de fuentes y control de calidad visual.</p>
-<div class="editorial-note"><strong>Criterio editorial:</strong> las fórmulas se muestran con notación LaTeX/MathJax y las ilustraciones de esta página son vectores propios. Las referencias históricas se contrastan con archivos universitarios y sociedades científicas.</div>
+<div class="editorial-note"><strong>Criterio editorial:</strong> las fórmulas se muestran con notación LaTeX/MathJax y las ilustraciones de esta página están construidas en LaTeX/TikZ y conservan su fuente .tex editable. Las referencias históricas se contrastan con archivos universitarios y sociedades científicas.</div>
 </div></div></section>
 
 <section class="course" id="aritmetica"><div class="wrap">
 <div class="course-head"><div><span class="label">01 · Aritmética</span><h2>Del conteo al sistema decimal posicional</h2><p>La Aritmética es la historia de cómo las sociedades aprendieron a representar cantidades y operar con ellas de manera cada vez más eficiente. Antes de existir una notación estándar, distintas culturas utilizaron marcas, palabras, ábacos y sistemas con bases diferentes.</p></div>
 <div class="course-art" aria-label="Ilustración vectorial de aritmética">
-<svg viewBox="0 0 300 180"><g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"><path d="M45 35v110M255 35v110M45 55h210M45 90h210M45 125h210"/></g><g fill="#f5c542"><circle cx="90" cy="55" r="12"/><circle cx="120" cy="55" r="12"/><circle cx="180" cy="90" r="12"/><circle cx="210" cy="125" r="12"/></g><text x="150" y="168" text-anchor="middle" fill="#65dce5" font-size="22" font-weight="900">0 1 2 3 4 5 6 7 8 9</text></svg>
+<div class="tikz-render" data-source="assets/tikz/historia-ciencias/aritmetica.tex"><script type="text/tikz">
+\definecolor{nostranavy}{HTML}{061426}
+\definecolor{nostrateal}{HTML}{078C95}
+\definecolor{nostracyan}{HTML}{65DCE5}
+\definecolor{nostragold}{HTML}{F5C542}
+\begin{tikzpicture}[line cap=round,line join=round]
+\fill[nostranavy] (-3.7,-2.5) rectangle (3.7,2.5);
+\draw[white,line width=1.5pt] (-2.7,-1.55)--(-2.7,1.55) (2.7,-1.55)--(2.7,1.55);
+\foreach \y in {-1.05,-.35,.35,1.05}{\draw[white,opacity=.88,line width=1.2pt] (-2.7,\y)--(2.7,\y);}
+\foreach \x in {-1.75,-1.20}{\fill[nostragold] (\x,1.05) circle (5.3pt);}
+\foreach \x in {.65,1.15,1.65}{\fill[nostracyan] (\x,.35) circle (5.3pt);}
+\foreach \x in {-1.95,-1.45,-.95,-.45}{\fill[nostracyan] (\x,-.35) circle (5.3pt);}
+\fill[nostragold] (1.65,-1.05) circle (5.3pt);
+\node[nostracyan,font=\bfseries\large] at (0,-2.05) {$0\;1\;2\;3\;4\;5\;6\;7\;8\;9$};
+\end{tikzpicture}
+</script></div>
 </div></div>
 <div class="timeline">
 <div class="milestone"><div class="year">Antigüedad</div><p>Egipto, Mesopotamia, India, China y otras culturas desarrollaron técnicas de cálculo ligadas al comercio, la astronomía, la medición y la administración. No existió un único camino: coexistieron sistemas aditivos, posicionales y sexagesimales.</p></div>
@@ -114,7 +138,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section class="course" id="algebra"><div class="wrap">
 <div class="course-head"><div><span class="label">02 · Álgebra</span><h2>De problemas escritos con palabras al lenguaje simbólico</h2><p>El Álgebra transformó una pregunta concreta —“¿qué cantidad desconocida satisface estas condiciones?”— en un lenguaje general. Su evolución muestra el paso desde procedimientos verbales hasta ecuaciones y estructuras simbólicas.</p></div>
 <div class="course-art" aria-label="Ilustración vectorial de álgebra">
-<svg viewBox="0 0 300 180"><text x="150" y="82" text-anchor="middle" fill="#fff" font-size="42" font-family="Jost" font-weight="900">ax² + bx + c</text><path d="M55 118H245" stroke="#65dce5" stroke-width="4"/><text x="150" y="150" text-anchor="middle" fill="#f5c542" font-size="28" font-weight="900">x = ?</text></svg>
+<div class="tikz-render" data-source="assets/tikz/historia-ciencias/algebra.tex"><script type="text/tikz">
+\definecolor{nostranavy}{HTML}{061426}
+\definecolor{nostrateal}{HTML}{078C95}
+\definecolor{nostracyan}{HTML}{65DCE5}
+\definecolor{nostragold}{HTML}{F5C542}
+\begin{tikzpicture}[line cap=round,line join=round]
+\fill[nostranavy] (-3.7,-2.5) rectangle (3.7,2.5);
+\node[white,font=\bfseries\Large] at (0,.65) {$ax^2+bx+c=0$};
+\draw[nostracyan,line width=1.8pt] (-2.55,-.05)--(2.55,-.05);
+\node[nostragold,font=\bfseries\Large] at (0,-1.05) {$x=?$};
+\draw[white,opacity=.35,line width=.8pt] (-3,-1.65) parabola bend (0,-.55) (3,-1.65);
+\end{tikzpicture}
+</script></div>
 </div></div>
 <div class="timeline">
 <div class="milestone"><div class="year">Antiguas civilizaciones</div><p>Problemas equivalentes a ecuaciones lineales y cuadráticas aparecieron en tradiciones matemáticas mucho antes de la notación algebraica moderna. Las soluciones se expresaban mediante instrucciones verbales.</p></div>
@@ -129,7 +165,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section class="course" id="geometria"><div class="wrap">
 <div class="course-head"><div><span class="label">03 · Geometría</span><h2>De medir terrenos a construir sistemas deductivos</h2><p>La Geometría nació vinculada a la medición, la construcción y la astronomía. Con la matemática griega adquirió una organización deductiva basada en definiciones, postulados y demostraciones.</p></div>
 <div class="course-art" aria-label="Ilustración vectorial de geometría">
-<svg viewBox="0 0 300 180"><circle cx="205" cy="87" r="54" fill="none" stroke="#65dce5" stroke-width="5"/><path d="M45 140L118 35l62 105z" fill="none" stroke="#fff" stroke-width="5"/><path d="M118 35v105" stroke="#f5c542" stroke-width="4" stroke-dasharray="8 7"/><circle cx="118" cy="140" r="6" fill="#f5c542"/></svg>
+<div class="tikz-render" data-source="assets/tikz/historia-ciencias/geometria.tex"><script type="text/tikz">
+\definecolor{nostranavy}{HTML}{061426}
+\definecolor{nostrateal}{HTML}{078C95}
+\definecolor{nostracyan}{HTML}{65DCE5}
+\definecolor{nostragold}{HTML}{F5C542}
+\begin{tikzpicture}[line cap=round,line join=round]
+\fill[nostranavy] (-3.7,-2.5) rectangle (3.7,2.5);
+\coordinate (A) at (-2.75,-1.45); \coordinate (B) at (-.65,1.55); \coordinate (C) at (1.15,-1.45);
+\draw[white,line width=1.7pt] (A)--(B)--(C)--cycle;
+\draw[nostragold,line width=1.3pt,dashed] (B)--(-.65,-1.45);
+\fill[nostragold] (-.65,-1.45) circle (3pt);
+\draw[nostracyan,line width=1.8pt] (2.05,.15) circle (1.15);
+\draw[white,opacity=.75,line width=1pt] (1.15,-1.45)--(2.95,1.25);
+\node[nostracyan,font=\bfseries\small] at (-.65,-1.93) {altura};
+\end{tikzpicture}
+</script></div>
 </div></div>
 <div class="timeline">
 <div class="milestone"><div class="year">Egipto y Mesopotamia</div><p>La medición de terrenos, áreas y volúmenes impulsó procedimientos geométricos prácticos. Tradiciones posteriores conservaron y ampliaron estas ideas.</p></div>
@@ -144,7 +195,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section class="course" id="trigonometria"><div class="wrap">
 <div class="course-head"><div><span class="label">04 · Trigonometría</span><h2>Del cielo y las cuerdas a las funciones</h2><p>La Trigonometría se desarrolló estrechamente ligada a la astronomía. Resolver triángulos permitió estimar posiciones, distancias y ángulos cuando la medición directa era imposible.</p></div>
 <div class="course-art" aria-label="Ilustración vectorial de trigonometría">
-<svg viewBox="0 0 300 180"><circle cx="145" cy="90" r="62" fill="none" stroke="#fff" stroke-width="4"/><path d="M145 90L205 90M145 90L190 48" stroke="#65dce5" stroke-width="5"/><path d="M178 90A33 33 0 0 0 168 66" fill="none" stroke="#f5c542" stroke-width="5"/><text x="176" y="78" fill="#f5c542" font-size="20" font-weight="900">θ</text></svg>
+<div class="tikz-render" data-source="assets/tikz/historia-ciencias/trigonometria.tex"><script type="text/tikz">
+\definecolor{nostranavy}{HTML}{061426}
+\definecolor{nostrateal}{HTML}{078C95}
+\definecolor{nostracyan}{HTML}{65DCE5}
+\definecolor{nostragold}{HTML}{F5C542}
+\begin{tikzpicture}[line cap=round,line join=round]
+\fill[nostranavy] (-3.7,-2.5) rectangle (3.7,2.5);
+\draw[white,opacity=.35,line width=.8pt] (-2.8,0)--(2.8,0) (0,-2)--(0,2);
+\draw[white,line width=1.6pt] (0,0) circle (1.60);
+\coordinate (O) at (0,0); \coordinate (P) at (1.22,1.04);
+\draw[nostracyan,line width=2pt] (O)--(P);
+\draw[nostragold,line width=1.8pt] (0,0) arc[start angle=0,end angle=40,radius=.72];
+\fill[nostragold] (P) circle (3.5pt);
+\node[nostragold,font=\bfseries\large] at (.92,.38) {$\theta$};
+\node[white,font=\bfseries\small] at (1.65,1.25) {$(\cos\theta,\mathrm{sen}\,\theta)$};
+\end{tikzpicture}
+</script></div>
 </div></div>
 <div class="timeline">
 <div class="milestone"><div class="year">Babilonia y Egipto</div><p>Problemas astronómicos y de pendientes contienen antecedentes de relaciones que más tarde formarían parte de la trigonometría.</p></div>
@@ -159,7 +226,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section class="course" id="fisica"><div class="wrap">
 <div class="course-head"><div><span class="label">05 · Física</span><h2>De la filosofía natural a las leyes cuantitativas</h2><p>La Física cambió cuando describir la naturaleza dejó de depender solo de explicaciones cualitativas y empezó a apoyarse cada vez más en experimentos, mediciones y modelos matemáticos.</p></div>
 <div class="course-art" aria-label="Ilustración vectorial de física">
-<svg viewBox="0 0 300 180"><path d="M150 25v35" stroke="#fff" stroke-width="5"/><path d="M150 60L105 135" stroke="#65dce5" stroke-width="5"/><circle cx="105" cy="135" r="18" fill="#f5c542"/><path d="M150 60A78 78 0 0 1 205 134" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="3" stroke-dasharray="7 7"/><path d="M45 153H255" stroke="#fff" stroke-width="4"/></svg>
+<div class="tikz-render" data-source="assets/tikz/historia-ciencias/fisica.tex"><script type="text/tikz">
+\definecolor{nostranavy}{HTML}{061426}
+\definecolor{nostrateal}{HTML}{078C95}
+\definecolor{nostracyan}{HTML}{65DCE5}
+\definecolor{nostragold}{HTML}{F5C542}
+\begin{tikzpicture}[line cap=round,line join=round,>=stealth]
+\fill[nostranavy] (-3.7,-2.5) rectangle (3.7,2.5);
+\draw[white,line width=1.8pt] (0,1.85)--(0,1.25);
+\draw[nostracyan,line width=2pt] (0,1.25)--(-1.15,-1.15);
+\fill[nostragold] (-1.15,-1.15) circle (8pt);
+\draw[white,opacity=.45,line width=1.1pt,dashed] (0,1.25) arc[start angle=90,end angle=-35,radius=2.7];
+\draw[white,opacity=.85,line width=1.5pt] (-2.75,-1.65)--(2.75,-1.65);
+\draw[nostragold,->,line width=1.7pt] (-1.15,-1.15)--(.35,-1.15) node[midway,above,font=\bfseries\small] {$\vec v$};
+\node[white,font=\bfseries\large] at (1.55,.80) {$\vec F=m\vec a$};
+\end{tikzpicture}
+</script></div>
 </div></div>
 <div class="timeline">
 <div class="milestone"><div class="year">Siglos XVI–XVII</div><p>Galileo impulsó una descripción cuantitativa del movimiento y el uso sistemático de experimentos y matemáticas para estudiar fenómenos físicos.</p></div>
@@ -174,7 +256,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section class="course" id="quimica"><div class="wrap">
 <div class="course-head"><div><span class="label">06 · Química</span><h2>De la transformación de sustancias a la teoría atómica</h2><p>La Química se consolidó cuando la experimentación cuantitativa permitió comparar masas, gases, composiciones y reacciones con precisión. La clasificación de sustancias abrió el camino hacia modelos atómicos y periódicos.</p></div>
 <div class="course-art" aria-label="Ilustración vectorial de química">
-<svg viewBox="0 0 300 180"><path d="M115 28h70M130 28v47l-45 70h130l-45-70V28" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/><path d="M105 118h90" stroke="#65dce5" stroke-width="5"/><circle cx="133" cy="104" r="8" fill="#f5c542"/><circle cx="170" cy="132" r="10" fill="#65dce5"/><circle cx="158" cy="94" r="6" fill="#fff"/></svg>
+<div class="tikz-render" data-source="assets/tikz/historia-ciencias/quimica.tex"><script type="text/tikz">
+\definecolor{nostranavy}{HTML}{061426}
+\definecolor{nostrateal}{HTML}{078C95}
+\definecolor{nostracyan}{HTML}{65DCE5}
+\definecolor{nostragold}{HTML}{F5C542}
+\begin{tikzpicture}[line cap=round,line join=round]
+\fill[nostranavy] (-3.7,-2.5) rectangle (3.7,2.5);
+\draw[white,line width=1.7pt] (-.85,1.75)--(.85,1.75) (-.48,1.75)--(-.48,.60)--(-1.65,-1.45)--(1.65,-1.45)--(.48,.60)--(.48,1.75);
+\draw[nostracyan,line width=2pt] (-1.30,-.82)--(1.30,-.82);
+\fill[nostragold] (-.55,-.35) circle (4.7pt); \fill[nostracyan] (.45,-1.12) circle (6pt); \fill[white] (.20,.03) circle (3.6pt);
+\node[white,font=\bfseries\large] at (2.25,.55) {$n=\frac{m}{M}$};
+\end{tikzpicture}
+</script></div>
 </div></div>
 <div class="timeline">
 <div class="milestone"><div class="year">Antigüedad y alquimia</div><p>Durante siglos se acumularon técnicas para trabajar metales, pigmentos, sales, destilaciones y otras transformaciones. La interpretación teórica, sin embargo, todavía mezclaba observación con marcos filosóficos.</p></div>
