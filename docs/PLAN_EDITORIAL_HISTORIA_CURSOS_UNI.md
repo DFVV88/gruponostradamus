@@ -61,10 +61,12 @@ Requisitos:
 2. Usar `tikzpicture` real; no simular TikZ con SVG dibujado manualmente.
 3. La notación dentro del gráfico debe usar tipografía matemática LaTeX.
 4. Etiquetas, ejes, ángulos, vectores y fórmulas deben seguir la notación académica de Grupo Nostradamus.
-5. Para publicación web se permite renderizar TikZ en cliente o usar una salida compilada generada desde el `.tex`, siempre conservando trazabilidad al fuente.
+5. Para publicación web es obligatorio compilar previamente el `.tex` a una salida visual estable (preferencia: SVG; alternativa: PNG/WebP de alta resolución). No usar TikZJax ni compilación TikZ en tiempo de ejecución en producción.
 6. En Física, los diagramas deben conservar realismo académico suficiente sin sacrificar claridad.
 7. En Geometría y Trigonometría, puntos, segmentos, arcos y proyecciones deben ser legibles y semánticamente correctos.
 8. En Química, fórmulas y símbolos deben mantener notación científica profesional.
+9. Toda salida compilada debe pasar revisión visual obligatoria en escritorio y móvil antes de publicarse.
+10. Si el compilado falla o se ve vacío, desalineado o ilegible, el gráfico no se publica.
 
 ### Imágenes históricas o documentales
 Prioridad:
