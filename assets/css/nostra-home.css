@@ -1079,3 +1079,139 @@
   .nostra-orientation-visual{margin-top:6px;max-height:190px}
   .nostra-orientation-visual img{max-height:190px}
 }
+
+
+/* ==================================================
+   INDEX HEADER STABILITY FIX · 2026-10-22
+   Una sola fila, IQ100 visible y navegación compacta
+================================================== */
+@media (min-width: 992px) {
+  .header-layout6 .menu-area{
+    background:#ffffff !important;
+    box-shadow:0 10px 28px rgba(6,20,38,.08) !important;
+  }
+  .header-layout6 .menu-area .container{
+    width:100% !important;
+    max-width:1840px !important;
+    padding-left:28px !important;
+    padding-right:28px !important;
+  }
+  .header-layout6 .logo-shape{
+    display:none !important;
+  }
+  .nostra-main-header-row{
+    min-height:88px !important;
+    flex-wrap:nowrap !important;
+    gap:22px !important;
+  }
+  .nostra-header-brands{
+    display:flex !important;
+    align-items:center !important;
+    gap:14px !important;
+    flex-wrap:nowrap !important;
+    min-width:max-content !important;
+  }
+  .nostra-header-brands .header-logo{
+    padding:8px 0 !important;
+    margin:0 !important;
+  }
+  .nostra-header-brands .header-logo img{
+    display:block !important;
+    width:150px !important;
+    max-width:150px !important;
+    height:auto !important;
+  }
+  .nostra-header-iq100{
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    padding-left:14px !important;
+    border-left:1px solid rgba(6,20,38,.13) !important;
+    flex:0 0 auto !important;
+  }
+  .nostra-header-iq100 img{
+    display:block !important;
+    width:62px !important;
+    max-width:62px !important;
+    height:auto !important;
+  }
+  .nostra-header-nav-col{
+    min-width:0 !important;
+    flex:1 1 auto !important;
+  }
+  .header-layout6 .main-menu > ul{
+    display:flex !important;
+    align-items:center !important;
+    flex-wrap:nowrap !important;
+    white-space:nowrap !important;
+    margin:0 !important;
+  }
+  .header-layout6 .main-menu > ul > li{
+    margin:0 9px !important;
+  }
+  .header-layout6 .main-menu > ul > li > a{
+    color:#071426 !important;
+    padding:31px 0 !important;
+    font-size:14px !important;
+    line-height:1 !important;
+    font-weight:900 !important;
+    letter-spacing:.1px !important;
+  }
+  .header-layout6 .main-menu > ul > li > a:hover{
+    color:#078c95 !important;
+  }
+  .header-layout6 .header-button{
+    margin-left:14px !important;
+  }
+  .header-layout6 .header-button .th-btn{
+    min-height:50px !important;
+    padding:13px 18px !important;
+    border-radius:16px !important;
+    font-size:12px !important;
+    white-space:nowrap !important;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1399.98px) {
+  .header-layout6 .menu-area .container{
+    padding-left:18px !important;
+    padding-right:18px !important;
+  }
+  .nostra-main-header-row{gap:14px !important;}
+  .nostra-header-brands .header-logo img{
+    width:132px !important;
+    max-width:132px !important;
+  }
+  .nostra-header-iq100{
+    padding-left:10px !important;
+  }
+  .nostra-header-iq100 img{
+    width:50px !important;
+    max-width:50px !important;
+  }
+  .header-layout6 .main-menu > ul > li{
+    margin:0 6px !important;
+  }
+  .header-layout6 .main-menu > ul > li > a{
+    font-size:12.5px !important;
+  }
+  .header-layout6 .header-button{
+    display:none !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .nostra-header-brands{
+    display:flex !important;
+    align-items:center !important;
+    gap:10px !important;
+  }
+  .nostra-header-iq100{
+    display:none !important;
+  }
+}
+
+/* El popup antiguo fue retirado del HTML; este seguro evita overlays residuales. */
+#popup{
+  display:none !important;
+}
