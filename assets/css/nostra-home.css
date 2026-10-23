@@ -2117,3 +2117,129 @@ body > .nostra-pro-topbar{
     max-width:78px !important;
   }
 }
+
+
+/* ==================================================
+   HEADER DESKTOP COMPACT PREMIUM · 2026-10-22
+   Objetivo: conservar tipografía legible y las 3 franjas,
+   pero reducir la huella vertical al 100% de zoom.
+================================================== */
+@media (min-width:1200px){
+  body > .nostra-pro-topbar{
+    min-height:40px !important;
+    padding:8px 22px !important;
+    line-height:1.1 !important;
+  }
+
+  .header-layout6 .header-top,
+  .nostra-band2-grid{
+    min-height:60px !important;
+  }
+
+  .header-layout6 .nostra-band2-container{
+    max-width:1810px !important;
+    padding-left:26px !important;
+    padding-right:26px !important;
+  }
+
+  .nostra-band2-grid{
+    grid-template-columns:minmax(0,.90fr) minmax(0,1.10fr) !important;
+    gap:18px !important;
+  }
+
+  .header-layout6 .nostra-band2-contact > ul > li,
+  .header-layout6 .nostra-band2-tools > ul > li{
+    min-height:34px !important;
+    padding-left:10px !important;
+    padding-right:10px !important;
+  }
+
+  .header-layout6 .nostra-top-chat,
+  .header-layout6 .header-top .btn-live,
+  .header-layout6 .header-top .nostra-cuenta-top-btn{
+    min-height:34px !important;
+    height:34px !important;
+    padding:7px 11px !important;
+    border-radius:11px !important;
+  }
+
+  .header-layout6 .nostra-band2-tools .header-social a{
+    width:30px !important;
+    height:30px !important;
+  }
+
+  .header-layout6 .nostra-band3-container{
+    max-width:1810px !important;
+    padding-left:26px !important;
+    padding-right:26px !important;
+  }
+
+  .nostra-main-header-grid{
+    min-height:84px !important;
+    grid-template-columns:180px minmax(0,1fr) 315px !important;
+    column-gap:22px !important;
+  }
+
+  .nostra-main-header-grid .header-logo img{
+    width:150px !important;
+    max-width:150px !important;
+  }
+
+  .nostra-header-menu-center .main-menu > ul > li > a{
+    padding:31px 0 !important;
+  }
+
+  .nostra-main-header-grid .nostra-header-enroll{
+    min-height:44px !important;
+    padding:11px 16px !important;
+  }
+
+  .nostra-main-header-grid .nostra-header-iq100{
+    min-width:112px !important;
+    height:54px !important;
+    padding-left:14px !important;
+  }
+
+  .nostra-main-header-grid .nostra-header-iq100 img{
+    width:100px !important;
+    max-width:100px !important;
+  }
+}
+
+@media (min-width:1600px){
+  body > .nostra-pro-topbar{
+    font-size:16px !important;
+    font-weight:950 !important;
+  }
+
+  .header-layout6 .nostra-band2-contact a{
+    font-size:13.5px !important;
+  }
+
+  .header-layout6 .nostra-band2-contact i{
+    font-size:16px !important;
+  }
+
+  .header-layout6 .nostra-top-chat,
+  .header-layout6 .header-top .btn-live,
+  .header-layout6 .header-top .nostra-cuenta-top-btn{
+    font-size:12px !important;
+  }
+
+  .header-layout6 .nostra-band2-tools .social-title{
+    font-size:13px !important;
+  }
+
+  .nostra-header-menu-center .main-menu > ul{
+    gap:26px !important;
+  }
+
+  .nostra-header-menu-center .main-menu > ul > li > a{
+    font-size:15px !important;
+    font-weight:900 !important;
+  }
+
+  .nostra-main-header-grid .nostra-header-enroll{
+    font-size:12.5px !important;
+  }
+}
