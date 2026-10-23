@@ -1012,3 +1012,70 @@
   .nostra-faq-home .faq-img{border-radius:22px}
   .nostra-academic-home .blog-content{min-height:auto}
 }
+
+
+/* Final home polish */
+.nostra-orientation-strip{
+  padding:48px 0;
+  background:linear-gradient(135deg,#071b22 0%,#0b3942 58%,#078c95 100%);
+  overflow:hidden;
+}
+.nostra-orientation-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(260px,.45fr);
+  align-items:center;
+  gap:34px;
+}
+.nostra-orientation-copy .nostra-kicker{color:#79e4eb}
+.nostra-orientation-copy h2{
+  color:#fff;
+  margin:0 0 12px;
+  font-family:"Baloo 2",Jost,sans-serif;
+  font-size:clamp(34px,4vw,50px);
+  line-height:1;
+}
+.nostra-orientation-copy p{
+  color:rgba(255,255,255,.82);
+  max-width:720px;
+  font-size:16px;
+  line-height:1.7;
+  margin:0 0 20px;
+}
+.nostra-orientation-actions{display:flex;gap:12px;flex-wrap:wrap}
+.nostra-orientation-actions .style6{
+  color:#fff!important;
+  background:rgba(255,255,255,.09)!important;
+  border:1px solid rgba(255,255,255,.22)!important;
+}
+.nostra-orientation-visual{
+  align-self:end;
+  display:flex;
+  justify-content:flex-end;
+  max-height:280px;
+}
+.nostra-orientation-visual img{
+  max-height:280px;
+  width:auto;
+  max-width:100%;
+  object-fit:contain;
+  filter:drop-shadow(0 18px 34px rgba(0,0,0,.28));
+}
+.nostra-academic-grid .th-blog{height:100%}
+.nostra-academic-grid > div{display:flex}
+.nostra-academic-grid .th-blog{width:100%}
+@media(max-width:991.98px){
+  .nostra-orientation-grid{grid-template-columns:1fr}
+  .nostra-orientation-copy{text-align:center}
+  .nostra-orientation-copy p{margin-left:auto;margin-right:auto}
+  .nostra-orientation-actions{justify-content:center}
+  .nostra-orientation-visual{justify-content:center;max-height:220px}
+  .nostra-orientation-visual img{max-height:220px}
+}
+@media(max-width:767.98px){
+  .nostra-orientation-strip{padding:38px 0 0}
+  .nostra-orientation-copy h2{font-size:34px}
+  .nostra-orientation-actions{display:grid;grid-template-columns:1fr}
+  .nostra-orientation-actions .th-btn{width:100%;justify-content:center}
+  .nostra-orientation-visual{margin-top:6px;max-height:190px}
+  .nostra-orientation-visual img{max-height:190px}
+}
