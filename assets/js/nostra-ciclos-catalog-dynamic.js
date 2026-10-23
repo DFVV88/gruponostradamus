@@ -97,7 +97,7 @@
   }
   function modalityHtml(program){
     var names = modalityNames(program);
-    if(!names.length) return '<span class="nc-chip nc-chip--muted">Modalidades por confirmar</span>';
+    if(!names.length) return '<span class="nc-chip nc-chip--muted">Consulta modalidades vigentes</span>';
     return names.map(function(name){ return '<span class="nc-chip">' + esc(name) + '</span>'; }).join('');
   }
   function quickNavHtml(){
