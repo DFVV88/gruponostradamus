@@ -1215,3 +1215,94 @@
 #popup{
   display:none !important;
 }
+
+
+/* ==================================================
+   HEADER RIGHT IQ100 + NEWS VISIBILITY FIX · 2026-10-22
+================================================== */
+@media (min-width: 992px) {
+  .nostra-header-actions{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:flex-end !important;
+    gap:18px !important;
+    flex-wrap:nowrap !important;
+  }
+  .nostra-header-actions .header-button{
+    margin-left:0 !important;
+  }
+  .nostra-header-actions .nostra-header-iq100{
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    padding-left:18px !important;
+    border-left:1px solid rgba(6,20,38,.14) !important;
+    flex:0 0 auto !important;
+  }
+  .nostra-header-actions .nostra-header-iq100 img{
+    display:block !important;
+    width:104px !important;
+    max-width:104px !important;
+    height:auto !important;
+  }
+  .nostra-header-brands .nostra-header-iq100{
+    display:none !important;
+  }
+  #blog-sec.nostra-academic-home > .container > *{
+    visibility:visible !important;
+    opacity:1 !important;
+  }
+  #blog-sec.nostra-academic-home{
+    min-height:0 !important;
+  }
+}
+
+@media (min-width: 1400px) {
+  .header-layout6 .menu-area .container{
+    max-width:1900px !important;
+  }
+  .nostra-main-header-row{
+    gap:26px !important;
+  }
+  .nostra-header-brands .header-logo img{
+    width:158px !important;
+    max-width:158px !important;
+  }
+  .header-layout6 .main-menu > ul > li{
+    margin:0 8px !important;
+  }
+  .header-layout6 .main-menu > ul > li > a{
+    font-size:13.5px !important;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+  .nostra-header-actions{
+    gap:10px !important;
+  }
+  .nostra-header-actions .header-button{
+    display:none !important;
+  }
+  .nostra-header-actions .nostra-header-iq100{
+    padding-left:10px !important;
+    border-left:0 !important;
+  }
+  .nostra-header-actions .nostra-header-iq100 img{
+    width:82px !important;
+    max-width:82px !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .nostra-header-actions .nostra-header-iq100{
+    display:none !important;
+  }
+}
+
+#blog-sec.nostra-academic-home{
+  display:block !important;
+}
+#blog-sec.nostra-academic-home .nostra-academic-grid{
+  visibility:visible !important;
+  opacity:1 !important;
+}

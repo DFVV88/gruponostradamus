@@ -78,10 +78,6 @@
       '#course-sec{overflow-anchor:none!important}#course-sec:not([data-nhc-ready="1"]){min-height:330px!important}#course-sec:not([data-nhc-ready="1"]) .filter-active{display:none!important;visibility:hidden!important}'
     );
     addPrehideStyle(
-      'nostra-home-news-prehide',
-      '#blog-sec{overflow-anchor:none!important}#blog-sec:not([data-nin-ready="1"]){min-height:330px!important}#blog-sec:not([data-nin-ready="1"])>.container>*{visibility:hidden!important}'
-    );
-    addPrehideStyle(
       'nostra-home-results-prehide',
       '.counter-area-2{overflow-anchor:none!important}.counter-area-2:not([data-nostra-results-ready="1"]){min-height:390px!important}.counter-area-2:not([data-nostra-results-ready="1"])>.container{visibility:hidden!important}'
     );
@@ -93,8 +89,7 @@
         'nostra-index-resultados-pro.js',
         'nostra-home-ruta-premium.js',
         'nostra-plataforma-accordion.js',
-        'nostra-home-cycles-accordion.js',
-        'nostra-index-noticias-pro.js'
+        'nostra-home-cycles-accordion.js'
       ]);
     }
 
