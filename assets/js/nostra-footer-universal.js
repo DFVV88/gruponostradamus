@@ -121,15 +121,15 @@
               '<div>' +
                 '<h2 class="ngf-title">Programas académicos</h2>' +
                 '<ul class="ngf-list ngf-programs">' +
-                  '<li><a href="ciclo-anual-uni.html">Nostra 360 UNI</a></li>' +
-                  '<li><a href="ciclo-semianual-uni.html">Nostra Power UNI</a></li>' +
-                  '<li><a href="ciclo-semestral-uni.html">Nostra Élite UNI</a></li>' +
-                  '<li><a href="ciclo-repaso-uni.html">Nostra Prime UNI</a></li>' +
-                  '<li><a href="ciclo-elite-uni.html">Nostra Talentum UNI</a></li>' +
-                  '<li><a href="ciclo-ien.html">IEN UNI</a></li>' +
+                  '<li><a href="ciclo-anual-uni.html">Anual UNI</a></li>' +
+                  '<li><a href="ciclo-semianual-uni.html">Semianual UNI</a></li>' +
+                  '<li><a href="ciclo-semestral-uni.html">Semestral UNI</a></li>' +
+                  '<li><a href="ciclo-repaso-uni.html">Repaso UNI</a></li>' +
+                  '<li><a href="ciclo-elite-uni.html">Élite UNI</a></li>' +
+                  '<li><a href="ciclo-ien.html">IEN</a></li>' +
                   '<li><a href="ciclo-proyecto-escolar.html">Proyecto Escolar</a></li>' +
                   '<li><a href="ciclo-paralelo-cepre-uni.html">Paralelo CEPRE UNI</a></li>' +
-                  '<li><a href="ciclo-verano-uni.html">Ciclo Verano UNI</a></li>' +
+                  '<li><a href="ciclo-verano-uni.html">Verano UNI</a></li>' +
                   '<li><a href="ciclo-weekend-uni.html">NostraWEEKEND</a></li>' +
                 '</ul>' +
               '</div>' +
