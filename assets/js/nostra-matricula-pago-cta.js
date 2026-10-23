@@ -8,6 +8,7 @@
 
   var PRE = 'https://gruponostradamus.edu.pe/preinscripcion.html';
   var LABEL = 'Matricularme y pagar';
+  var HEADER_LABEL = 'Matricularme';
   var SELECTOR = 'a[href*="preinscripcion.html"]';
 
   function clean(value) {
@@ -41,12 +42,14 @@
 
     var icon = link.querySelector('i,svg');
     var iconHtml = icon ? icon.outerHTML : '';
-    var alreadyCorrect = clean(link.textContent) === LABEL &&
+    var isHeader = !!link.closest('.header-button,.nostra-header-actions');
+    var desiredLabel = isHeader ? HEADER_LABEL : LABEL;
+    var alreadyCorrect = clean(link.textContent) === desiredLabel &&
       link.getAttribute('data-nostra-payment-cta') === '1';
 
     if (!alreadyCorrect) {
-      link.innerHTML = LABEL + (iconHtml ? ' ' + iconHtml : '');
-      link.setAttribute('aria-label', LABEL);
+      link.innerHTML = desiredLabel + (iconHtml ? ' ' + iconHtml : '');
+      link.setAttribute('aria-label', desiredLabel);
       link.setAttribute('data-nostra-payment-cta', '1');
     }
   }
