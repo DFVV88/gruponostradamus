@@ -2291,3 +2291,118 @@ body > .nostra-pro-topbar{
     font-size:16.5px !important;
   }
 }
+
+
+/* ==================================================
+   HEADER BUTTONS + MENU SCALE · 2026-10-22
+   Botones superiores unificados + navegación central protagonista
+================================================== */
+@media (min-width:1200px){
+  /* Franja 2: grupo de acciones limpio, sin barras entre botones */
+  .header-layout6 .nostra-band2-tools > ul{
+    gap:12px !important;
+  }
+  .header-layout6 .nostra-band2-tools > ul > li{
+    padding:0 !important;
+  }
+  .header-layout6 .nostra-band2-tools > ul > li + li:before{
+    display:none !important;
+  }
+  .header-layout6 .nostra-band2-social-item{
+    margin-left:6px !important;
+    padding-left:18px !important;
+    border-left:1px solid rgba(101,220,229,.28) !important;
+  }
+
+  /* CLASES EN VIVO */
+  .header-layout6 .header-top .btn-live{
+    min-height:42px !important;
+    height:42px !important;
+    padding:0 17px !important;
+    border-radius:14px !important;
+    background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.06)) !important;
+    border:1px solid rgba(255,255,255,.22) !important;
+    color:#fff !important;
+    font-size:12.8px !important;
+    font-weight:950 !important;
+    letter-spacing:.22px !important;
+    box-shadow:0 8px 22px rgba(1,15,28,.18),inset 0 1px 0 rgba(255,255,255,.10) !important;
+    backdrop-filter:blur(8px) !important;
+  }
+  .header-layout6 .header-top .btn-live:hover{
+    background:linear-gradient(135deg,rgba(255,255,255,.17),rgba(15,175,194,.12)) !important;
+    border-color:rgba(112,229,237,.42) !important;
+    transform:translateY(-1px) !important;
+    box-shadow:0 10px 26px rgba(1,15,28,.22) !important;
+  }
+  .nostra-live-indicator{
+    width:12px;
+    height:12px;
+    margin-right:9px;
+    display:inline-block;
+    flex:0 0 auto;
+    border-radius:50%;
+    background:#ff3f70;
+    border:2px solid rgba(255,255,255,.72);
+    box-shadow:0 0 0 4px rgba(255,63,112,.14),0 0 14px rgba(255,63,112,.62);
+  }
+
+  /* NOSTRACUENTA: misma geometría, identidad azul */
+  .header-layout6 .header-top .nostra-cuenta-top-btn{
+    min-height:42px !important;
+    height:42px !important;
+    padding:0 18px !important;
+    border-radius:14px !important;
+    gap:8px !important;
+    background:linear-gradient(135deg,#0ba7d4 0%,#1276ef 58%,#253db5 100%) !important;
+    border:1px solid rgba(138,218,255,.48) !important;
+    color:#fff !important;
+    font-size:12.8px !important;
+    font-weight:950 !important;
+    letter-spacing:.22px !important;
+    box-shadow:0 8px 22px rgba(0,76,190,.24),inset 0 1px 0 rgba(255,255,255,.22) !important;
+  }
+  .header-layout6 .header-top .nostra-cuenta-top-btn:hover{
+    filter:brightness(1.06) saturate(1.08) !important;
+    transform:translateY(-1px) !important;
+    box-shadow:0 10px 28px rgba(0,76,190,.30) !important;
+  }
+  .header-layout6 .header-top .nostra-cuenta-top-btn i{
+    font-size:13px !important;
+    color:#dff8ff !important;
+  }
+
+  /* Franja 3: texto central más protagonista */
+  .nostra-header-menu-center .main-menu > ul > li > a{
+    font-size:16px !important;
+    font-weight:950 !important;
+    letter-spacing:.05px !important;
+  }
+}
+
+@media (min-width:1400px){
+  .nostra-header-menu-center .main-menu > ul{
+    gap:27px !important;
+  }
+  .nostra-header-menu-center .main-menu > ul > li > a{
+    font-size:17px !important;
+  }
+}
+
+@media (min-width:1600px){
+  .nostra-header-menu-center .main-menu > ul{
+    gap:32px !important;
+  }
+  .nostra-header-menu-center .main-menu > ul > li > a{
+    font-size:18.5px !important;
+  }
+
+  .header-layout6 .header-top .btn-live,
+  .header-layout6 .header-top .nostra-cuenta-top-btn{
+    min-height:44px !important;
+    height:44px !important;
+    padding-left:19px !important;
+    padding-right:19px !important;
+    font-size:13.5px !important;
+  }
+}
