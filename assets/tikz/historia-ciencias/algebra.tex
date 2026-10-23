@@ -2,11 +2,15 @@
 \usepackage{amsmath,amssymb}
 \input{common.tex}
 \begin{document}
-\begin{tikzpicture}[line cap=round,line join=round]
+\begin{tikzpicture}[line cap=round,line join=round,>=stealth]
 \fill[nostranavy] (-3.7,-2.5) rectangle (3.7,2.5);
-\node[white,font=\bfseries\Large] at (0,.65) {$ax^2+bx+c=0$};
-\draw[nostracyan,line width=1.8pt] (-2.55,-.05)--(2.55,-.05);
-\node[nostragold,font=\bfseries\Large] at (0,-1.05) {$x=?$};
-\draw[white,opacity=.35,line width=.8pt] (-3,-1.65) parabola bend (0,-.55) (3,-1.65);
+\node[white,align=center,font=\small] (r) at (-2.45,.9) {un cuadrado\\y diez raíces};
+\node[nostragold,font=\bfseries] (s) at (0,.9) {$x^2+10x$};
+\node[nostracyan,font=\bfseries] (e) at (2.35,.9) {$=39$};
+\draw[white,->,line width=1.2pt] (-1.45,.9)--(-.65,.9);
+\draw[white,->,line width=1.2pt] (.85,.9)--(1.55,.9);
+\draw[nostracyan,line width=1.2pt] (-1.25,-.65) rectangle (.05,.65);
+\draw[nostragold,line width=1.2pt] (.05,-.65) rectangle (1.30,.65);
+\node[white,font=\small] at (0,-1.25) {retórica $\rightarrow$ símbolos $\rightarrow$ estructura};
 \end{tikzpicture}
 \end{document}
