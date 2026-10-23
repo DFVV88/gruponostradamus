@@ -4,9 +4,14 @@
 \begin{document}
 \begin{tikzpicture}[line cap=round,line join=round]
 \fill[nostranavy] (-3.7,-2.5) rectangle (3.7,2.5);
-\draw[white,line width=1.7pt] (-.85,1.75)--(.85,1.75) (-.48,1.75)--(-.48,.60)--(-1.65,-1.45)--(1.65,-1.45)--(.48,.60)--(.48,1.75);
-\draw[nostracyan,line width=2pt] (-1.30,-.82)--(1.30,-.82);
-\fill[nostragold] (-.55,-.35) circle (4.7pt); \fill[nostracyan] (.45,-1.12) circle (6pt); \fill[white] (.20,.03) circle (3.6pt);
-\node[white,font=\bfseries\large] at (2.25,.55) {$n=\dfrac{m}{M}$};
+\draw[white,line width=1.5pt] (0,1.55)--(0,-1.1);
+\draw[white,line width=1.5pt] (-2.35,.55)--(2.35,.55);
+\draw[white,line width=1.2pt] (-2.1,.55)--(-2.55,-.55)--(-1.65,-.55)--cycle;
+\draw[white,line width=1.2pt] (2.1,.55)--(1.65,-.55)--(2.55,-.55)--cycle;
+\node[nostracyan,font=\bfseries] at (-2.1,-1.02) {$m_{\rm reactivos}$};
+\node[nostragold,font=\bfseries] at (2.1,-1.02) {$m_{\rm productos}$};
+\node[white,font=\bfseries\large] at (0,-1.75) {$m_R=m_P$};
+\fill[nostracyan] (-2.15,-.15) circle (4pt);\fill[nostracyan] (-1.92,-.05) circle (4pt);
+\fill[nostragold] (2.05,-.10) circle (4pt);\fill[nostragold] (2.25,-.18) circle (4pt);
 \end{tikzpicture}
 \end{document}
