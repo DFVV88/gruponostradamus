@@ -2243,3 +2243,51 @@ body > .nostra-pro-topbar{
     font-size:12.5px !important;
   }
 }
+
+
+/* ==================================================
+   HEADER REFINEMENT · FRANJAS 1-3 · 2026-10-22
+   1) Franja superior realmente centrada.
+   2) Franja 2 más limpia sin NostraCHAT.
+   3) Menú central de franja 3 con mayor presencia.
+================================================== */
+@media (min-width:1200px){
+  /* Franja 1: centro geométrico real */
+  body > .nostra-pro-topbar{
+    display:block !important;
+    width:100% !important;
+    text-align:center !important;
+    padding-left:24px !important;
+    padding-right:24px !important;
+  }
+  body > .nostra-pro-topbar > a{
+    display:inline !important;
+  }
+
+  /* Franja 2: al quitar NostraCHAT, equilibrar accesos y redes */
+  .nostra-band2-grid{
+    grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr) !important;
+  }
+  .header-layout6 .nostra-band2-tools > ul{
+    justify-content:flex-end !important;
+  }
+
+  /* Franja 3: navegación central más grande y legible */
+  .nostra-header-menu-center .main-menu > ul{
+    gap:24px !important;
+  }
+  .nostra-header-menu-center .main-menu > ul > li > a{
+    font-size:15px !important;
+    font-weight:950 !important;
+    letter-spacing:.08px !important;
+  }
+}
+
+@media (min-width:1600px){
+  .nostra-header-menu-center .main-menu > ul{
+    gap:28px !important;
+  }
+  .nostra-header-menu-center .main-menu > ul > li > a{
+    font-size:16.5px !important;
+  }
+}
