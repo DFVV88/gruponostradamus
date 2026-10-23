@@ -2495,3 +2495,95 @@ body > .nostra-pro-topbar{
     font-size:15.5px !important;
   }
 }
+
+
+/* ==================================================
+   HEADER MATRICULARME PREMIUM · 2026-10-22
+   CTA principal más refinado, legible y coherente
+================================================== */
+@media (min-width:1200px){
+  .nostra-main-header-grid .nostra-header-enroll{
+    min-height:48px !important;
+    height:48px !important;
+    padding:0 10px 0 20px !important;
+    border-radius:15px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:12px !important;
+    background:linear-gradient(135deg,#0c9ca7 0%,#087986 38%,#06263a 72%,#031420 100%) !important;
+    border:1px solid rgba(65,212,220,.34) !important;
+    color:#fff !important;
+    font-size:12.8px !important;
+    font-weight:950 !important;
+    line-height:1 !important;
+    letter-spacing:.3px !important;
+    text-transform:uppercase !important;
+    box-shadow:
+      0 10px 24px rgba(2,38,55,.20),
+      inset 0 1px 0 rgba(255,255,255,.13) !important;
+    overflow:hidden !important;
+    transition:
+      transform .18s ease,
+      box-shadow .18s ease,
+      filter .18s ease !important;
+  }
+
+  .nostra-main-header-grid .nostra-header-enroll:hover{
+    color:#fff !important;
+    transform:translateY(-2px) !important;
+    filter:brightness(1.05) saturate(1.05) !important;
+    box-shadow:
+      0 14px 30px rgba(2,38,55,.26),
+      0 0 0 3px rgba(28,194,205,.08),
+      inset 0 1px 0 rgba(255,255,255,.16) !important;
+  }
+
+  .nostra-main-header-grid .nostra-header-enroll .nostra-enroll-label{
+    display:inline-block !important;
+    white-space:nowrap !important;
+  }
+
+  .nostra-main-header-grid .nostra-header-enroll .nostra-enroll-arrow{
+    width:30px !important;
+    height:30px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    flex:0 0 30px !important;
+    border-radius:10px !important;
+    background:rgba(255,255,255,.12) !important;
+    border:1px solid rgba(255,255,255,.12) !important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.10) !important;
+    transition:transform .18s ease, background .18s ease !important;
+  }
+
+  .nostra-main-header-grid .nostra-header-enroll:hover .nostra-enroll-arrow{
+    transform:translateX(2px) !important;
+    background:rgba(255,255,255,.18) !important;
+  }
+
+  .nostra-main-header-grid .nostra-header-enroll .nostra-enroll-arrow i{
+    margin:0 !important;
+    font-size:12px !important;
+    line-height:1 !important;
+    color:#fff !important;
+  }
+}
+
+@media (min-width:1600px){
+  .nostra-main-header-grid .nostra-header-enroll{
+    min-height:50px !important;
+    height:50px !important;
+    padding-left:22px !important;
+    padding-right:10px !important;
+    font-size:13.5px !important;
+    gap:13px !important;
+  }
+
+  .nostra-main-header-grid .nostra-header-enroll .nostra-enroll-arrow{
+    width:32px !important;
+    height:32px !important;
+    flex-basis:32px !important;
+  }
+}
