@@ -82,7 +82,7 @@
       .ngf-floating-wa .ngf-wa-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.16);font-size:21px}\
       .ngf-floating-wa small,.ngf-floating-wa strong{display:block;line-height:1.05;text-transform:uppercase}\
       .ngf-floating-wa small{font-size:12px;font-weight:850}.ngf-floating-wa strong{font-size:17px;font-weight:950}\
-      @media(max-width:1299px){#nostra-global-footer .ngf-wrap,#nostra-global-footer .ngf-bottom-inner{width:min(100% - 44px,1400px)}#nostra-global-footer .ngf-main{grid-template-columns:minmax(270px,.9fr) minmax(0,1.5fr)}#nostra-global-footer .ngf-contact{grid-column:1/-1;display:grid;grid-template-columns:1fr 1.15fr auto;gap:24px;align-items:center}#nostra-global-footer .ngf-contact .ngf-title,#nostra-global-footer .ngf-contact .ngf-contact-intro{grid-column:1}#nostra-global-footer .ngf-contact-list{grid-column:2;grid-row:1/3;margin:0}#nostra-global-footer .ngf-actions{grid-column:3;grid-row:1/3;grid-template-columns:1fr;min-width:210px}}\
+      @media(max-width:1299px){.ngf-floating-wa{padding:10px 14px}.ngf-floating-wa small{display:none}.ngf-floating-wa strong{font-size:14px}#nostra-global-footer .ngf-wrap,#nostra-global-footer .ngf-bottom-inner{width:min(100% - 44px,1400px)}#nostra-global-footer .ngf-main{grid-template-columns:minmax(270px,.9fr) minmax(0,1.5fr)}#nostra-global-footer .ngf-contact{grid-column:1/-1;display:grid;grid-template-columns:1fr 1.15fr auto;gap:24px;align-items:center}#nostra-global-footer .ngf-contact .ngf-title,#nostra-global-footer .ngf-contact .ngf-contact-intro{grid-column:1}#nostra-global-footer .ngf-contact-list{grid-column:2;grid-row:1/3;margin:0}#nostra-global-footer .ngf-actions{grid-column:3;grid-row:1/3;grid-template-columns:1fr;min-width:210px}}\
       @media(max-width:900px){#nostra-global-footer .ngf-main{grid-template-columns:1fr}#nostra-global-footer .ngf-navigation{grid-template-columns:1fr 1.35fr}#nostra-global-footer .ngf-contact{grid-column:auto;display:flex}#nostra-global-footer .ngf-bottom-inner{align-items:flex-start;flex-direction:column}#nostra-global-footer .ngf-legal{justify-content:flex-start}.ngf-floating-wa{max-width:calc(100vw - 36px)}}\
       @media(max-width:620px){#nostra-global-footer .ngf-wrap,#nostra-global-footer .ngf-bottom-inner{width:min(100% - 28px,1400px)}#nostra-global-footer .ngf-main{padding:30px 0 22px;gap:16px}#nostra-global-footer .ngf-card{padding:21px;border-radius:22px}#nostra-global-footer .ngf-navigation{grid-template-columns:1fr;gap:27px}#nostra-global-footer .ngf-programs{grid-template-columns:1fr}#nostra-global-footer .ngf-title{font-size:23px}#nostra-global-footer .ngf-actions{grid-template-columns:1fr}#nostra-global-footer .ngf-bottom-inner{padding-bottom:100px}#nostra-global-footer .ngf-copy{white-space:normal}.ngf-scroll-top{right:13px;bottom:85px;width:52px;height:52px}.ngf-floating-wa{right:13px;bottom:14px;padding:10px 14px}.ngf-floating-wa small{display:none}.ngf-floating-wa strong{font-size:14px}}\
       @media print{#nostra-global-footer,.ngf-scroll-top,.ngf-floating-wa,.nostra-floating-whatsapp,.float-wa,.scroll-top{display:none!important}}';
@@ -114,7 +114,7 @@
                   '<li><a href="sedes.html">Sede UNI</a></li>' +
                   '<li><a href="docentes.html">Docentes</a></li>' +
                   '<li><a href="cachimbos.html">Cachimbos</a></li>' +
-                  '<li><a href="blog.html">Noticias</a></li>' +
+                  '<li><a href="blog.html">Centro Académico</a></li>' +
                   '<li><a href="cuenta-nostra.html">NostraCUENTA</a></li>' +
                 '</ul>' +
               '</div>' +
@@ -134,13 +134,13 @@
                 '</ul>' +
               '</div>' +
             '</section>' +
-            '<section class="ngf-card ngf-contact" aria-label="Matrícula e informes">' +
+            '<section class="ngf-card ngf-contact" aria-label="Sede UNI e informes">' +
               '<div>' +
-                '<h2 class="ngf-title">Matrícula e informes</h2>' +
-                '<p class="ngf-contact-intro">Conoce el programa adecuado y asegura tu vacante para iniciar tu preparación.</p>' +
+                '<h2 class="ngf-title">Sede UNI e informes</h2>' +
+                '<p class="ngf-contact-intro">Conoce el programa adecuado para tu nivel y consulta la disponibilidad vigente antes de matricularte.</p>' +
               '</div>' +
               '<div class="ngf-contact-list">' +
-                '<div class="ngf-contact-item"><span class="ngf-contact-icon">' + svgIcon('pin') + '</span><a href="https://www.google.com/maps/search/?api=1&query=Av.%20Gerardo%20Unger%20239%2C%20San%20Mart%C3%ADn%20de%20Porres%2C%20Lima" target="_blank" rel="noopener noreferrer">Av. Gerardo Unger 239, Lima 15102</a></div>' +
+                '<div class="ngf-contact-item"><span class="ngf-contact-icon">' + svgIcon('pin') + '</span><a href="https://www.google.com/maps/search/?api=1&query=Av.%20Gerardo%20Unger%20239%2C%20San%20Mart%C3%ADn%20de%20Porres%2C%20Lima" target="_blank" rel="noopener noreferrer">Av. Gerardo Unger 239, San Martín de Porres, Lima 15102</a></div>' +
                 '<div class="ngf-contact-item"><span class="ngf-contact-icon">' + svgIcon('mail') + '</span><a href="mailto:informes@gruponostradamus.edu.pe">informes@gruponostradamus.edu.pe</a></div>' +
                 '<div class="ngf-contact-item"><span class="ngf-contact-icon">' + svgIcon('phone') + '</span><a href="' + WHATSAPP + '" target="_blank" rel="noopener noreferrer">+51 993 750 351</a></div>' +
               '</div>' +
