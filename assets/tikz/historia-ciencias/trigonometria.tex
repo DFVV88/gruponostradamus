@@ -4,13 +4,13 @@
 \begin{document}
 \begin{tikzpicture}[line cap=round,line join=round]
 \fill[nostranavy] (-3.7,-2.5) rectangle (3.7,2.5);
-\draw[white,opacity=.35,line width=.8pt] (-2.8,0)--(2.8,0) (0,-2)--(0,2);
-\draw[white,line width=1.6pt] (0,0) circle (1.60);
-\coordinate (O) at (0,0); \coordinate (P) at (1.22,1.04);
-\draw[nostracyan,line width=2pt] (O)--(P);
-\draw[nostragold,line width=1.8pt] (0,0) arc[start angle=0,end angle=40,radius=.72];
-\fill[nostragold] (P) circle (3.5pt);
-\node[nostragold,font=\bfseries\large] at (.92,.38) {$\theta$};
-\node[white,font=\bfseries\small] at (1.65,1.25) {$(\cos\theta,\sen\theta)$};
+\draw[white,line width=1.5pt] (0,0) circle (1.75);
+\coordinate (A) at (140:1.75);\coordinate (B) at (40:1.75);
+\draw[nostracyan,line width=2pt] (A)--(B);
+\draw[white,opacity=.75] (0,0)--(A) (0,0)--(B);
+\draw[nostragold,line width=1.6pt] (0,0) arc[start angle=40,end angle=140,radius=.60];
+\node[nostragold,font=\bfseries] at (0,.88) {$2\theta$};
+\node[nostracyan,font=\bfseries] at (0,1.67) {$\operatorname{crd}(2\theta)$};
+\node[white,font=\bfseries\small] at (0,-2.05) {$\operatorname{crd}(2\theta)=2R\,\sen\theta$};
 \end{tikzpicture}
 \end{document}
