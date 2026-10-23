@@ -1521,3 +1521,351 @@
     max-width:100px !important;
   }
 }
+
+
+/* ==================================================
+   HEADER 3 BANDAS · RETÍCULA FINAL · 2026-10-22
+================================================== */
+
+/* Franja 1: anuncio centrado y contenido */
+body > .nostra-pro-topbar{
+  min-height:46px !important;
+  padding:10px 24px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  font-size:15px !important;
+  line-height:1.2 !important;
+  letter-spacing:.55px !important;
+}
+
+/* Franja 2: información / accesos en dos zonas equilibradas */
+.header-layout6 .header-top{
+  min-height:76px !important;
+  padding:0 !important;
+}
+.header-layout6 .nostra-band2-container{
+  width:100% !important;
+  max-width:1760px !important;
+  padding-left:32px !important;
+  padding-right:32px !important;
+}
+.nostra-band2-grid{
+  min-height:76px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  align-items:center;
+  gap:34px;
+}
+.nostra-band2-contact,
+.nostra-band2-tools{
+  min-width:0;
+}
+.header-layout6 .nostra-band2-contact > ul,
+.header-layout6 .nostra-band2-tools > ul{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  list-style:none !important;
+  flex-wrap:nowrap !important;
+}
+.header-layout6 .nostra-band2-contact > ul > li,
+.header-layout6 .nostra-band2-tools > ul > li{
+  display:inline-flex !important;
+  align-items:center !important;
+  min-height:38px !important;
+  margin:0 !important;
+  padding:0 16px !important;
+  white-space:nowrap !important;
+  position:relative;
+}
+.header-layout6 .nostra-band2-contact > ul > li + li:before,
+.header-layout6 .nostra-band2-tools > ul > li + li:before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:50%;
+  width:1px;
+  height:22px;
+  transform:translateY(-50%);
+  background:rgba(101,220,229,.38);
+}
+.header-layout6 .nostra-band2-contact a{
+  font-size:13px !important;
+  font-weight:800 !important;
+  line-height:1 !important;
+}
+.header-layout6 .nostra-band2-contact i{
+  margin-right:8px !important;
+  color:#67dce4 !important;
+}
+.header-layout6 .nostra-top-chat,
+.header-layout6 .header-top .btn-live,
+.header-layout6 .header-top .nostra-cuenta-top-btn{
+  min-height:36px !important;
+  height:36px !important;
+  padding:8px 13px !important;
+  border-radius:12px !important;
+  font-size:11px !important;
+  font-weight:900 !important;
+  line-height:1 !important;
+  letter-spacing:.25px !important;
+  box-shadow:none !important;
+  transform:none !important;
+}
+.header-layout6 .header-top .nostra-cuenta-top-btn{
+  background:rgba(255,255,255,.08) !important;
+  border:1px solid rgba(101,220,229,.28) !important;
+  color:#fff !important;
+}
+.header-layout6 .nostra-top-chat{
+  background:rgba(255,255,255,.06) !important;
+  border:1px solid rgba(101,220,229,.24) !important;
+}
+.header-layout6 .header-top .btn-live{
+  background:rgba(255,255,255,.08) !important;
+  border:1px solid rgba(255,255,255,.22) !important;
+}
+.header-layout6 .nostra-band2-tools .header-social{
+  display:flex !important;
+  align-items:center !important;
+  gap:12px !important;
+}
+.header-layout6 .nostra-band2-tools .social-title{
+  margin-right:2px !important;
+  font-size:12px !important;
+  font-weight:800 !important;
+}
+.header-layout6 .nostra-band2-tools .header-social a{
+  width:28px !important;
+  height:28px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border-radius:50% !important;
+  background:rgba(255,255,255,.07) !important;
+  font-size:12px !important;
+}
+
+/* Franja 3: marca / menú / acciones en tres columnas reales */
+.header-layout6 .menu-area{
+  background:#fff !important;
+  box-shadow:0 8px 26px rgba(6,20,38,.07) !important;
+}
+.header-layout6 .nostra-band3-container{
+  width:100% !important;
+  max-width:1780px !important;
+  padding-left:32px !important;
+  padding-right:32px !important;
+}
+.nostra-main-header-grid{
+  min-height:94px;
+  display:grid;
+  grid-template-columns:180px minmax(0,1fr) 300px;
+  align-items:center;
+  column-gap:28px;
+}
+.nostra-main-header-grid .nostra-header-brands{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  min-width:0 !important;
+}
+.nostra-main-header-grid .header-logo{
+  padding:0 !important;
+  margin:0 !important;
+}
+.nostra-main-header-grid .header-logo img{
+  width:148px !important;
+  max-width:148px !important;
+  height:auto !important;
+  display:block !important;
+}
+.nostra-header-menu-center{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.nostra-header-menu-center .main-menu{
+  width:auto !important;
+}
+.nostra-header-menu-center .main-menu > ul{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  flex-wrap:nowrap !important;
+  gap:26px !important;
+  margin:0 !important;
+  padding:0 !important;
+  white-space:nowrap !important;
+}
+.nostra-header-menu-center .main-menu > ul > li{
+  margin:0 !important;
+}
+.nostra-header-menu-center .main-menu > ul > li > a{
+  padding:38px 0 !important;
+  color:#0a1d2f !important;
+  font-size:13px !important;
+  line-height:1 !important;
+  font-weight:850 !important;
+  letter-spacing:.15px !important;
+  text-transform:uppercase !important;
+}
+.nostra-header-menu-center .main-menu > ul > li > a:hover{
+  color:#078c95 !important;
+}
+.nostra-main-header-grid .nostra-header-actions{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-end !important;
+  gap:16px !important;
+  margin:0 !important;
+  min-width:0 !important;
+}
+.nostra-main-header-grid .nostra-header-enroll{
+  min-height:46px !important;
+  padding:12px 18px !important;
+  border-radius:14px !important;
+  font-size:11.5px !important;
+  font-weight:900 !important;
+  letter-spacing:.2px !important;
+  box-shadow:0 8px 22px rgba(7,140,149,.16) !important;
+  white-space:nowrap !important;
+}
+.nostra-main-header-grid .nostra-header-iq100{
+  min-width:112px !important;
+  height:58px !important;
+  padding-left:16px !important;
+  border-left:1px solid rgba(6,20,38,.13) !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+.nostra-main-header-grid .nostra-header-iq100 img{
+  width:96px !important;
+  max-width:96px !important;
+  height:auto !important;
+  display:block !important;
+}
+
+/* 1366–1599: mantiene las tres columnas sin apretar el centro */
+@media (min-width:1200px) and (max-width:1599.98px){
+  .header-layout6 .nostra-band2-container,
+  .header-layout6 .nostra-band3-container{
+    padding-left:20px !important;
+    padding-right:20px !important;
+  }
+  .nostra-band2-grid{
+    gap:16px !important;
+  }
+  .header-layout6 .nostra-band2-contact > ul > li,
+  .header-layout6 .nostra-band2-tools > ul > li{
+    padding-left:10px !important;
+    padding-right:10px !important;
+  }
+  .header-layout6 .nostra-band2-contact a{
+    font-size:11.5px !important;
+  }
+  .header-layout6 .nostra-top-chat,
+  .header-layout6 .header-top .btn-live,
+  .header-layout6 .header-top .nostra-cuenta-top-btn{
+    padding:7px 10px !important;
+    font-size:10px !important;
+  }
+  .nostra-main-header-grid{
+    grid-template-columns:150px minmax(0,1fr) 245px !important;
+    column-gap:18px !important;
+  }
+  .nostra-main-header-grid .header-logo img{
+    width:132px !important;
+    max-width:132px !important;
+  }
+  .nostra-header-menu-center .main-menu > ul{
+    gap:16px !important;
+  }
+  .nostra-header-menu-center .main-menu > ul > li > a{
+    font-size:11.8px !important;
+  }
+  .nostra-main-header-grid .nostra-header-enroll{
+    min-height:42px !important;
+    padding:10px 13px !important;
+    font-size:10.5px !important;
+  }
+  .nostra-main-header-grid .nostra-header-actions{
+    gap:10px !important;
+  }
+  .nostra-main-header-grid .nostra-header-iq100{
+    min-width:92px !important;
+    height:52px !important;
+    padding-left:10px !important;
+  }
+  .nostra-main-header-grid .nostra-header-iq100 img{
+    width:82px !important;
+    max-width:82px !important;
+  }
+}
+
+/* Tablet y móvil: conserva el comportamiento responsive existente */
+@media (max-width:1199.98px){
+  .header-layout6 .header-top{
+    min-height:52px !important;
+  }
+  .header-layout6 .nostra-band2-container{
+    padding-left:16px !important;
+    padding-right:16px !important;
+  }
+  .nostra-band2-grid{
+    min-height:52px !important;
+    grid-template-columns:1fr !important;
+    gap:0 !important;
+  }
+  .nostra-band2-contact{
+    display:none !important;
+  }
+  .header-layout6 .nostra-band2-tools > ul{
+    justify-content:center !important;
+  }
+  .nostra-main-header-grid{
+    min-height:78px !important;
+    grid-template-columns:150px minmax(0,1fr) !important;
+    column-gap:16px !important;
+  }
+  .nostra-main-header-grid .header-logo img{
+    width:128px !important;
+    max-width:128px !important;
+  }
+  .nostra-header-menu-center{
+    justify-content:flex-end !important;
+  }
+  .nostra-main-header-grid .nostra-header-actions{
+    display:none !important;
+  }
+}
+
+@media (max-width:767.98px){
+  body > .nostra-pro-topbar{
+    min-height:38px !important;
+    padding:8px 12px !important;
+    font-size:11px !important;
+  }
+  .header-layout6 .header-top{
+    min-height:44px !important;
+  }
+  .header-layout6 .nostra-band2-tools .social-title,
+  .header-layout6 .nostra-band2-social-item{
+    display:none !important;
+  }
+  .nostra-main-header-grid{
+    min-height:72px !important;
+    grid-template-columns:135px minmax(0,1fr) !important;
+  }
+  .nostra-main-header-grid .header-logo img{
+    width:116px !important;
+    max-width:116px !important;
+  }
+}
