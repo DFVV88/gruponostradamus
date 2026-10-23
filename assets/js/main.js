@@ -1372,7 +1372,7 @@
 (function () {
   if (document.querySelector('script[src*="nostra-sitewide-loader.js"]')) return;
   var script = document.createElement('script');
-  script.src = 'assets/js/nostra-sitewide-loader.js?v=2026-10-22-adsense-audit';
+  script.src = 'assets/js/nostra-sitewide-loader.js?v=20261023-ruta-force-1';
   script.defer = true;
   document.body.appendChild(script);
 })();
