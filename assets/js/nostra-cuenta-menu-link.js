@@ -58,7 +58,7 @@
     var a = document.createElement('a');
     a.className = 'nostra-cuenta-top-btn' + (isCuenta ? ' active' : '');
     a.href = 'cuenta-nostra.html';
-    a.textContent = '🔐 NOSTRACUENTA';
+    a.innerHTML = '<i class="fas fa-lock" aria-hidden="true"></i><span>NOSTRACUENTA</span>';
     a.setAttribute('aria-label', 'Ingresar o activar NostraCUENTA');
     return a;
   }
