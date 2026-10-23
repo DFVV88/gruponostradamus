@@ -60,8 +60,8 @@
   }
   function scheduleFallback(name){
     var normalized = clean(name).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-    if(normalized.indexOf('sabatino') !== -1 || normalized.indexOf('sabado') !== -1) return ['Sábados','Horario por confirmar'];
-    if(normalized.indexOf('dominical') !== -1 || normalized.indexOf('domingo') !== -1) return ['Domingos','Horario por confirmar'];
+    if(normalized.indexOf('sabatino') !== -1 || normalized.indexOf('sabado') !== -1) return ['Sábados','Consulta horario vigente'];
+    if(normalized.indexOf('dominical') !== -1 || normalized.indexOf('domingo') !== -1) return ['Domingos','Consulta horario vigente'];
     if(normalized.indexOf('full') !== -1 || normalized.indexOf('unico') !== -1) return FULL_SCHEDULE.slice();
     if(normalized.indexOf('tarde') !== -1) return AFTERNOON_SCHEDULE.slice();
     if(normalized.indexOf('manana') !== -1) return MORNING_SCHEDULE.slice();
