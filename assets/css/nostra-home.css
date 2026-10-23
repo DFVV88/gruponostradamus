@@ -2587,3 +2587,73 @@ body > .nostra-pro-topbar{
     flex-basis:32px !important;
   }
 }
+
+
+/* ==================================================
+   ORIENTATION PERSON ZOOM · 2026-10-23
+   Mayor presencia del personaje sin romper responsive
+================================================== */
+@media (min-width:1200px){
+  .nostra-orientation-grid{
+    grid-template-columns:minmax(0,1fr) minmax(330px,.52fr) !important;
+    gap:28px !important;
+  }
+
+  .nostra-orientation-visual{
+    position:relative !important;
+    align-self:stretch !important;
+    display:flex !important;
+    align-items:flex-end !important;
+    justify-content:center !important;
+    min-height:330px !important;
+    max-height:none !important;
+    overflow:visible !important;
+  }
+
+  .nostra-orientation-visual img{
+    display:block !important;
+    width:auto !important;
+    height:355px !important;
+    max-height:none !important;
+    max-width:none !important;
+    object-fit:contain !important;
+    object-position:center bottom !important;
+    transform:translateY(10px) scale(1.06) !important;
+    transform-origin:center bottom !important;
+    filter:drop-shadow(0 20px 34px rgba(0,0,0,.26)) !important;
+  }
+}
+
+@media (min-width:1600px){
+  .nostra-orientation-visual{
+    min-height:350px !important;
+  }
+  .nostra-orientation-visual img{
+    height:380px !important;
+    transform:translateY(12px) scale(1.08) !important;
+  }
+}
+
+@media (max-width:1199.98px) and (min-width:992px){
+  .nostra-orientation-visual img{
+    max-height:300px !important;
+    transform:scale(1.05) !important;
+    transform-origin:center bottom !important;
+  }
+}
+
+@media (max-width:991.98px){
+  .nostra-orientation-visual{
+    overflow:hidden !important;
+  }
+  .nostra-orientation-visual img{
+    transform:scale(1.03) !important;
+    transform-origin:center bottom !important;
+  }
+}
+
+@media (max-width:767.98px){
+  .nostra-orientation-visual img{
+    transform:scale(1.02) !important;
+  }
+}
