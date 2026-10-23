@@ -24,11 +24,11 @@
 .quick{padding:24px 0;background:#fff;border-bottom:1px solid var(--line)}.quick .wrap{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.quick a{padding:9px 13px;border-radius:999px;background:#eef9fa;border:1px solid #d7ecef;color:#075d65;font-weight:900}
 .intro{padding:62px 0}.intro-card{background:#fff;border:1px solid var(--line);border-radius:28px;padding:32px;box-shadow:0 18px 44px rgba(4,37,50,.08)}.intro-card h2,.course h2,.sources h2{font-family:'Baloo 2';color:var(--navy);font-size:clamp(31px,4vw,48px);line-height:1.05;margin:0 0 14px}.intro-card p,.course p,.course li,.sources li{font-size:17.5px;line-height:1.75;color:#435567}.editorial-note{margin-top:22px;padding:18px 20px;border-radius:18px;background:#fff8e8;border-left:6px solid var(--gold);color:#3e4b57}
 .course{padding:70px 0}.course:nth-of-type(even){background:#fff}.course-head{display:grid;grid-template-columns:1fr 280px;gap:28px;align-items:center}.course-art{background:linear-gradient(135deg,#061426,#087c88);border-radius:26px;padding:22px;min-height:220px;display:grid;place-items:center;box-shadow:0 18px 40px rgba(4,37,50,.16)}.course-art svg{width:100%;height:180px}.label{color:var(--teal);font-weight:950;letter-spacing:.7px;text-transform:uppercase;font-size:12px}.timeline{position:relative;margin:36px 0 20px;padding-left:26px}.timeline:before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:3px;background:linear-gradient(var(--teal),var(--cyan))}.milestone{position:relative;margin:0 0 24px;padding:0 0 0 22px}.milestone:before{content:"";position:absolute;left:-25px;top:7px;width:14px;height:14px;border-radius:50%;background:#fff;border:4px solid var(--teal);box-shadow:0 0 0 4px rgba(7,140,149,.08)}.year{font-weight:950;color:var(--navy);font-size:19px}.milestone p{margin:4px 0 0}
-.math-box{margin:26px 0;padding:22px;border-radius:20px;background:#eff9fa;border:1px solid #cfe8eb;text-align:center;color:var(--navy);font-size:24px;overflow:auto}.uni-link{margin-top:24px;padding:22px;border-radius:20px;background:linear-gradient(135deg,#061426,#07333b);color:#fff}.uni-link strong{display:block;font-size:20px;margin-bottom:5px}.uni-link span{color:rgba(255,255,255,.82);line-height:1.65}
+.math-box{margin:26px 0;padding:22px;border-radius:20px;background:#eff9fa;border:1px solid #cfe8eb;text-align:center;color:var(--navy);font-size:24px;overflow:auto}.uni-link{margin-top:24px;padding:22px;border-radius:20px;background:linear-gradient(135deg,#061426,#07333b);color:#fff}.uni-link strong{display:block;font-size:20px;margin-bottom:5px}.uni-link span{color:rgba(255,255,255,.82);line-height:1.65}.evolution{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:24px 0}.evo-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px}.evo-card strong{display:block;color:var(--navy);font-size:17px;margin-bottom:5px}.evo-card span{color:#536577;line-height:1.55}.history-note{margin:22px 0;padding:18px 20px;border-radius:18px;background:#fff8e8;border-left:6px solid var(--gold);color:#3e4b57;line-height:1.65}.source-note{font-size:14px!important;color:#6a7b8b!important;margin-top:18px!important}.source-note a{text-decoration:underline;text-underline-offset:3px}
 .sources{padding:70px 0;background:#061426;color:#fff}.sources h2{color:#fff}.sources p,.sources li{color:rgba(255,255,255,.82)}.sources a{color:#7ce9f0;text-decoration:underline;text-underline-offset:3px}.source-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.source-card{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);border-radius:20px;padding:20px}
 .final{padding:60px 0;background:#fff}.final-box{background:linear-gradient(135deg,#02070d,#07333b,#078c95);color:#fff;border-radius:28px;padding:30px}.final-box h2{font-family:'Baloo 2';font-size:38px;margin:0 0 8px}.final-box p{color:rgba(255,255,255,.84);font-size:17px;line-height:1.7}.btn{display:inline-flex;margin-top:8px;background:#fff;color:#061426;border-radius:999px;padding:12px 17px;font-weight:950}
 footer{padding:28px;text-align:center;color:#657586;background:#eef6f7}
-@media(max-width:860px){.site-nav{align-items:flex-start;flex-direction:column}.hero-grid,.course-head{grid-template-columns:1fr}.hero-visual{order:-1}.hero-visual svg{max-width:240px}.course-art{min-height:180px}.source-grid{grid-template-columns:1fr}.course{padding:54px 0}}
+@media(max-width:860px){.site-nav{align-items:flex-start;flex-direction:column}.hero-grid,.course-head{grid-template-columns:1fr}.hero-visual{order:-1}.hero-visual svg{max-width:240px}.course-art{min-height:180px}.source-grid,.evolution{grid-template-columns:1fr}.course{padding:54px 0}}
 </style>
 <script>
 MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],macros:{sen:'\\operatorname{sen}'}},svg:{fontCache:'global'}};
@@ -106,178 +106,194 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div></div></section>
 
 <section class="course" id="aritmetica"><div class="wrap">
-<div class="course-head"><div><span class="label">01 · Aritmética</span><h2>Del conteo al sistema decimal posicional</h2><p>La Aritmética es la historia de cómo las sociedades aprendieron a representar cantidades y operar con ellas de manera cada vez más eficiente. Antes de existir una notación estándar, distintas culturas utilizaron marcas, palabras, ábacos y sistemas con bases diferentes.</p></div>
-<div class="course-art" aria-label="Ilustración vectorial de aritmética">
-<div class="tikz-render" data-source="assets/tikz/historia-ciencias/aritmetica.tex"><script type="text/tikz">
-\definecolor{nostranavy}{HTML}{061426}
-\definecolor{nostrateal}{HTML}{078C95}
-\definecolor{nostracyan}{HTML}{65DCE5}
-\definecolor{nostragold}{HTML}{F5C542}
+<div class="course-head"><div><span class="label">01 · Aritmética</span><h2>Del conteo al sistema decimal posicional</h2><p>La Aritmética nació de necesidades elementales —contar, repartir, comerciar y medir—, pero su historia es también la historia de la notación. Un mismo número puede representarse de muchas maneras; lo revolucionario fue disponer de un sistema posicional capaz de expresar cantidades grandes con pocos símbolos y algoritmos reutilizables.</p></div>
+<div class="course-art" aria-label="Gráfico TikZ de valor posicional"><div class="tikz-render" data-source="assets/tikz/historia-ciencias/aritmetica.tex"><script type="text/tikz">
+\definecolor{nostranavy}{HTML}{061426}\definecolor{nostrateal}{HTML}{078C95}\definecolor{nostracyan}{HTML}{65DCE5}\definecolor{nostragold}{HTML}{F5C542}
 \begin{tikzpicture}[line cap=round,line join=round]
 \fill[nostranavy] (-3.7,-2.5) rectangle (3.7,2.5);
-\draw[white,line width=1.5pt] (-2.7,-1.55)--(-2.7,1.55) (2.7,-1.55)--(2.7,1.55);
-\foreach \y in {-1.05,-.35,.35,1.05}{\draw[white,opacity=.88,line width=1.2pt] (-2.7,\y)--(2.7,\y);}
-\foreach \x in {-1.75,-1.20}{\fill[nostragold] (\x,1.05) circle (5.3pt);}
-\foreach \x in {.65,1.15,1.65}{\fill[nostracyan] (\x,.35) circle (5.3pt);}
-\foreach \x in {-1.95,-1.45,-.95,-.45}{\fill[nostracyan] (\x,-.35) circle (5.3pt);}
-\fill[nostragold] (1.65,-1.05) circle (5.3pt);
-\node[nostracyan,font=\bfseries\large] at (0,-2.05) {$0\;1\;2\;3\;4\;5\;6\;7\;8\;9$};
+\node[white,font=\bfseries\large] at (0,1.55) {$247$};
+\node[nostracyan,font=\bfseries] at (-2.05,.55) {$2\times10^2$};
+\node[white,font=\bfseries] at (0,.55) {$+$};
+\node[nostragold,font=\bfseries] at (.55,.55) {$4\times10$};
+\node[white,font=\bfseries] at (1.75,.55) {$+$};
+\node[nostracyan,font=\bfseries] at (2.35,.55) {$7$};
+\draw[white,opacity=.75,->,line width=1.2pt] (0,1.20)--(-2.0,.85);
+\draw[white,opacity=.75,->,line width=1.2pt] (0,1.20)--(.55,.85);
+\draw[white,opacity=.75,->,line width=1.2pt] (0,1.20)--(2.30,.85);
+\node[white,font=\small] at (-2.0,-.35) {centenas};
+\node[white,font=\small] at (.55,-.35) {decenas};
+\node[white,font=\small] at (2.30,-.35) {unidades};
+\node[nostragold,font=\bfseries\small] at (0,-1.35) {EL LUGAR CAMBIA EL VALOR};
 \end{tikzpicture}
-</script></div>
-</div></div>
+</script></div></div></div>
 <div class="timeline">
-<div class="milestone"><div class="year">Antigüedad</div><p>Egipto, Mesopotamia, India, China y otras culturas desarrollaron técnicas de cálculo ligadas al comercio, la astronomía, la medición y la administración. No existió un único camino: coexistieron sistemas aditivos, posicionales y sexagesimales.</p></div>
-<div class="milestone"><div class="year">India y el valor posicional</div><p>El sistema decimal posicional con las cifras que dieron origen a nuestros numerales modernos permitió expresar números grandes con pocos símbolos y realizar algoritmos de cálculo de forma sistemática.</p></div>
-<div class="milestone"><div class="year">Siglos IX–XII</div><p>Al-Khwarizmi escribió sobre el cálculo con numerales indo-arábigos. A través de traducciones y del trabajo de autores posteriores, estos métodos circularon hacia Europa.</p></div>
-<div class="milestone"><div class="year">1202</div><p>El <em>Liber Abaci</em> de Fibonacci ayudó a difundir en Europa el sistema decimal posicional y sus aplicaciones comerciales.</p></div>
+<div class="milestone"><div class="year">Primeras sociedades urbanas</div><p>Egipto y Mesopotamia desarrollaron sistemas para registrar tributos, comercio, calendarios y mediciones. En Mesopotamia fue especialmente importante la base sesenta, cuya huella permanece hoy en horas, minutos y ángulos.</p></div>
+<div class="milestone"><div class="year">China, India y otras tradiciones</div><p>Distintas culturas construyeron procedimientos propios para sumar, multiplicar, extraer raíces y trabajar con fracciones. La historia de la Aritmética no es una línea única europea, sino una acumulación de técnicas surgidas en varios centros.</p></div>
+<div class="milestone"><div class="year">India · valor posicional y cero</div><p>La notación decimal posicional permitió que el valor de una cifra dependiera de su posición. El cero cumplió una doble función decisiva: representar ausencia de unidades en una posición y participar como número en operaciones.</p></div>
+<div class="milestone"><div class="year">Siglo IX · Al-Khwarizmi</div><p>Al-Khwarizmi escribió sobre el cálculo con numerales indios. Sus obras contribuyeron a transmitir algoritmos de cálculo que, a través de traducciones y escuelas posteriores, circularon ampliamente.</p></div>
+<div class="milestone"><div class="year">1202 · Fibonacci</div><p>En el <em>Liber Abaci</em>, Fibonacci mostró la utilidad práctica del sistema indo-arábigo para comerciantes europeos: cambios de moneda, precios, ganancias y problemas de proporcionalidad.</p></div>
+<div class="milestone"><div class="year">Edad moderna</div><p>La notación decimal, los logaritmos y la estandarización de algoritmos hicieron el cálculo cada vez más eficiente. La Aritmética escolar moderna heredó esa búsqueda de representaciones compactas y procedimientos generales.</p></div>
 </div>
+<div class="evolution"><div class="evo-card"><strong>Antes</strong><span>La cantidad podía representarse mediante marcas, palabras o símbolos con reglas específicas.</span></div><div class="evo-card"><strong>Cambio decisivo</strong><span>El valor posicional permite reutilizar diez cifras para representar infinitas cantidades.</span></div><div class="evo-card"><strong>Hoy</strong><span>Trabajamos con propiedades, divisibilidad, congruencias, razones y estructuras numéricas.</span></div></div>
 <div class="math-box">\[N=a_n10^n+a_{n-1}10^{n-1}+\cdots+a_110+a_0\]</div>
-<div class="uni-link"><strong>Conexión con la preparación UNI</strong><span>Divisibilidad, razones, proporciones, porcentajes, conteo y teoría elemental de números dependen de comprender estructuras numéricas, no solo de ejecutar operaciones.</span></div>
+<div class="history-note"><strong>Idea histórica clave.</strong> Un algoritmo no es solo una receta: es una forma de organizar información numérica. La palabra “algoritmo” está históricamente vinculada a la latinización del nombre de Al-Khwarizmi.</div>
+<div class="uni-link"><strong>Conexión con la preparación UNI</strong><span>Divisibilidad, sistemas de numeración, razones, proporciones, porcentajes y conteo dependen de reconocer estructura y propiedades. El objetivo no es únicamente calcular rápido, sino saber por qué una transformación conserva o modifica una cantidad.</span></div>
+<p class="source-note">Referencia histórica: <a href="https://mathshistory.st-andrews.ac.uk/Miller/mathword/h/" target="_blank" rel="noopener">MacTutor · numerales indo-arábigos</a> y <a href="https://mathshistory.st-andrews.ac.uk/Biographies/Fibonacci/" target="_blank" rel="noopener">Fibonacci y el Liber Abaci</a>.</p>
 </div></section>
 
 <section class="course" id="algebra"><div class="wrap">
-<div class="course-head"><div><span class="label">02 · Álgebra</span><h2>De problemas escritos con palabras al lenguaje simbólico</h2><p>El Álgebra transformó una pregunta concreta —“¿qué cantidad desconocida satisface estas condiciones?”— en un lenguaje general. Su evolución muestra el paso desde procedimientos verbales hasta ecuaciones y estructuras simbólicas.</p></div>
-<div class="course-art" aria-label="Ilustración vectorial de álgebra">
-<div class="tikz-render" data-source="assets/tikz/historia-ciencias/algebra.tex"><script type="text/tikz">
-\definecolor{nostranavy}{HTML}{061426}
-\definecolor{nostrateal}{HTML}{078C95}
-\definecolor{nostracyan}{HTML}{65DCE5}
-\definecolor{nostragold}{HTML}{F5C542}
-\begin{tikzpicture}[line cap=round,line join=round]
+<div class="course-head"><div><span class="label">02 · Álgebra</span><h2>De describir problemas con palabras a operar con símbolos</h2><p>El Álgebra permitió pasar de resolver un problema particular a representar una familia completa de problemas. Su evolución no consistió solo en descubrir nuevas fórmulas: cambió la manera de escribir matemáticas, pasando de explicaciones verbales a expresiones compactas donde letras y signos podían manipularse siguiendo reglas generales.</p></div>
+<div class="course-art" aria-label="Gráfico TikZ de evolución algebraica"><div class="tikz-render" data-source="assets/tikz/historia-ciencias/algebra.tex"><script type="text/tikz">
+\definecolor{nostranavy}{HTML}{061426}\definecolor{nostracyan}{HTML}{65DCE5}\definecolor{nostragold}{HTML}{F5C542}
+\begin{tikzpicture}[line cap=round,line join=round,>=stealth]
 \fill[nostranavy] (-3.7,-2.5) rectangle (3.7,2.5);
-\node[white,font=\bfseries\Large] at (0,.65) {$ax^2+bx+c=0$};
-\draw[nostracyan,line width=1.8pt] (-2.55,-.05)--(2.55,-.05);
-\node[nostragold,font=\bfseries\Large] at (0,-1.05) {$x=?$};
-\draw[white,opacity=.35,line width=.8pt] (-3,-1.65) parabola bend (0,-.55) (3,-1.65);
+\node[white,align=center,font=\small] (r) at (-2.45,.9) {un cuadrado\\y diez raíces};
+\node[nostragold,font=\bfseries] (s) at (0,.9) {$x^2+10x$};
+\node[nostracyan,font=\bfseries] (e) at (2.35,.9) {$=39$};
+\draw[white,->,line width=1.2pt] (-1.45,.9)--(-.65,.9);
+\draw[white,->,line width=1.2pt] (.85,.9)--(1.55,.9);
+\draw[nostracyan,line width=1.2pt] (-1.25,-.65) rectangle (.05,.65);
+\draw[nostragold,line width=1.2pt] (.05,-.65) rectangle (1.30,.65);
+\node[white,font=\small] at (0,-1.25) {retórica $\rightarrow$ símbolos $\rightarrow$ estructura};
 \end{tikzpicture}
-</script></div>
-</div></div>
+</script></div></div></div>
 <div class="timeline">
-<div class="milestone"><div class="year">Antiguas civilizaciones</div><p>Problemas equivalentes a ecuaciones lineales y cuadráticas aparecieron en tradiciones matemáticas mucho antes de la notación algebraica moderna. Las soluciones se expresaban mediante instrucciones verbales.</p></div>
-<div class="milestone"><div class="year">Siglo IX</div><p>Al-Khwarizmi presentó un tratamiento sistemático de ecuaciones lineales y cuadráticas. El término “álgebra” se relaciona con <em>al-jabr</em>, palabra del título de su tratado.</p></div>
-<div class="milestone"><div class="year">1591</div><p>François Viète introdujo una notación algebraica sistemática con letras para representar cantidades conocidas y desconocidas, un paso decisivo hacia el lenguaje simbólico.</p></div>
-<div class="milestone"><div class="year">Siglo XVII</div><p>Descartes vinculó álgebra y geometría mediante coordenadas, permitiendo que una curva pudiera estudiarse a través de ecuaciones.</p></div>
+<div class="milestone"><div class="year">Mesopotamia</div><p>Tablillas babilónicas contienen procedimientos que hoy interpretaríamos como resolución de ecuaciones lineales y cuadráticas. No utilizaban nuestra notación: los problemas y las instrucciones se expresaban en lenguaje verbal.</p></div>
+<div class="milestone"><div class="year">Siglo III · Diofanto</div><p>Diofanto empleó abreviaciones para incógnitas y operaciones, un paso intermedio entre el álgebra completamente retórica y el simbolismo moderno. Su obra influyó posteriormente en problemas de ecuaciones enteras.</p></div>
+<div class="milestone"><div class="year">Siglo VII · Brahmagupta</div><p>La matemática india desarrolló reglas explícitas para operar con números positivos, negativos y cero, además de métodos para ecuaciones cuadráticas y otros problemas algebraicos.</p></div>
+<div class="milestone"><div class="year">Siglo IX · Al-Khwarizmi</div><p>Su tratado sistematizó tipos de ecuaciones lineales y cuadráticas y las resolvió mediante procedimientos verbales apoyados en argumentos geométricos. Es importante: Al-Khwarizmi no escribía expresiones como \(x^2+10x=39\); esa es una traducción moderna.</p></div>
+<div class="milestone"><div class="year">1591 · François Viète</div><p>Viète impulsó una notación sistemática con letras para cantidades conocidas y desconocidas. Esto permitió trabajar con relaciones generales en vez de limitarse a números concretos.</p></div>
+<div class="milestone"><div class="year">Siglo XVII · Descartes</div><p>La geometría analítica mostró que una ecuación podía representar una curva. Álgebra y Geometría dejaron de ser compartimentos separados y comenzaron a reforzarse mutuamente.</p></div>
 </div>
+<div class="evolution"><div class="evo-card"><strong>Álgebra retórica</strong><span>Todo se describe con palabras.</span></div><div class="evo-card"><strong>Álgebra sincopada</strong><span>Aparecen abreviaciones para incógnitas y operaciones.</span></div><div class="evo-card"><strong>Álgebra simbólica</strong><span>Letras y signos permiten manipular relaciones generales.</span></div></div>
 <div class="math-box">\[ax^2+bx+c=0\qquad\Longrightarrow\qquad x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}\]</div>
-<div class="uni-link"><strong>Conexión con la preparación UNI</strong><span>Factorización, ecuaciones, funciones, desigualdades y sistemas se entienden mejor cuando el estudiante ve al Álgebra como un lenguaje de relaciones, no como una colección de trucos.</span></div>
+<div class="history-note"><strong>Precisión importante.</strong> La fórmula cuadrática anterior es una expresión moderna. Históricamente, distintas culturas resolvieron casos equivalentes con lenguaje y métodos geométricos muy diferentes.</div>
+<div class="uni-link"><strong>Conexión con la preparación UNI</strong><span>Factorización, ecuaciones, funciones, desigualdades y sistemas se entienden mejor cuando se reconoce al Álgebra como un lenguaje para transformar relaciones sin perder equivalencia lógica.</span></div>
+<p class="source-note">Referencia histórica: <a href="https://mathshistory.st-andrews.ac.uk/Biographies/Al-Khwarizmi/" target="_blank" rel="noopener">MacTutor · Al-Khwarizmi</a>.</p>
 </div></section>
 
 <section class="course" id="geometria"><div class="wrap">
-<div class="course-head"><div><span class="label">03 · Geometría</span><h2>De medir terrenos a construir sistemas deductivos</h2><p>La Geometría nació vinculada a la medición, la construcción y la astronomía. Con la matemática griega adquirió una organización deductiva basada en definiciones, postulados y demostraciones.</p></div>
-<div class="course-art" aria-label="Ilustración vectorial de geometría">
-<div class="tikz-render" data-source="assets/tikz/historia-ciencias/geometria.tex"><script type="text/tikz">
-\definecolor{nostranavy}{HTML}{061426}
-\definecolor{nostrateal}{HTML}{078C95}
-\definecolor{nostracyan}{HTML}{65DCE5}
-\definecolor{nostragold}{HTML}{F5C542}
+<div class="course-head"><div><span class="label">03 · Geometría</span><h2>De medir el espacio a demostrar propiedades</h2><p>La Geometría comenzó ligada a problemas de agrimensura, construcción y astronomía. Su gran transformación histórica ocurrió cuando las propiedades dejaron de aceptarse únicamente porque “funcionaban” y comenzaron a organizarse dentro de sistemas deductivos: definiciones, postulados y demostraciones.</p></div>
+<div class="course-art" aria-label="Gráfico TikZ del teorema de Pitágoras"><div class="tikz-render" data-source="assets/tikz/historia-ciencias/geometria.tex"><script type="text/tikz">
+\definecolor{nostranavy}{HTML}{061426}\definecolor{nostracyan}{HTML}{65DCE5}\definecolor{nostragold}{HTML}{F5C542}
 \begin{tikzpicture}[line cap=round,line join=round]
 \fill[nostranavy] (-3.7,-2.5) rectangle (3.7,2.5);
-\coordinate (A) at (-2.75,-1.45); \coordinate (B) at (-.65,1.55); \coordinate (C) at (1.15,-1.45);
-\draw[white,line width=1.7pt] (A)--(B)--(C)--cycle;
-\draw[nostragold,line width=1.3pt,dashed] (B)--(-.65,-1.45);
-\fill[nostragold] (-.65,-1.45) circle (3pt);
-\draw[nostracyan,line width=1.8pt] (2.05,.15) circle (1.15);
-\draw[white,opacity=.75,line width=1pt] (1.15,-1.45)--(2.95,1.25);
-\node[nostracyan,font=\bfseries\small] at (-.65,-1.93) {altura};
+\coordinate (A) at (-1.7,-1.25);\coordinate (B) at (1.5,-1.25);\coordinate (C) at (-1.7,1.15);
+\draw[white,line width=1.5pt] (A)--(B)--(C)--cycle;
+\draw[nostracyan,line width=1.3pt] (-1.7,-1.25) rectangle (-2.6,1.15);
+\draw[nostragold,line width=1.3pt] (-1.7,-1.25) rectangle (1.5,-2.05);
+\draw[white,opacity=.75,line width=1.1pt] (1.5,-1.25)--(2.45,1.95)--(-.75,2.90);
+\node[nostracyan,font=\bfseries] at (-2.15,0) {$a^2$};
+\node[nostragold,font=\bfseries] at (0,-1.68) {$b^2$};
+\node[white,font=\bfseries] at (.95,1.20) {$c^2$};
 \end{tikzpicture}
-</script></div>
-</div></div>
+</script></div></div></div>
 <div class="timeline">
-<div class="milestone"><div class="year">Egipto y Mesopotamia</div><p>La medición de terrenos, áreas y volúmenes impulsó procedimientos geométricos prácticos. Tradiciones posteriores conservaron y ampliaron estas ideas.</p></div>
-<div class="milestone"><div class="year">Alrededor de 300 a. C.</div><p>Los <em>Elementos</em> de Euclides organizaron gran parte del conocimiento geométrico en un sistema deductivo que influyó en la enseñanza de la matemática durante siglos.</p></div>
-<div class="milestone"><div class="year">Siglo XVII</div><p>Descartes y Fermat desarrollaron métodos de coordenadas que conectaron figuras geométricas con ecuaciones: nació la geometría analítica.</p></div>
-<div class="milestone"><div class="year">Siglo XIX</div><p>El estudio del postulado de las paralelas condujo al desarrollo de geometrías no euclidianas, ampliando la idea de qué podía significar “espacio” en matemática.</p></div>
+<div class="milestone"><div class="year">Egipto y Mesopotamia</div><p>El cálculo de áreas, volúmenes, pendientes y repartos de terreno generó procedimientos geométricos prácticos. Estos conocimientos muestran una tradición de medición muy anterior a la geometría axiomática griega.</p></div>
+<div class="milestone"><div class="year">Grecia clásica</div><p>La matemática griega convirtió muchas reglas geométricas en afirmaciones que debían justificarse mediante razonamiento. La demostración pasó a ocupar un lugar central.</p></div>
+<div class="milestone"><div class="year">≈300 a. C. · Euclides</div><p>Los <em>Elementos</em> organizaron geometría plana, proporciones y teoría de números a partir de definiciones, nociones comunes y postulados. Su influencia en la enseñanza matemática se extendió durante más de dos milenios.</p></div>
+<div class="milestone"><div class="year">Arquímedes</div><p>El estudio riguroso de áreas, volúmenes y centros de gravedad llevó el razonamiento geométrico a problemas que anticipan ideas del cálculo integral.</p></div>
+<div class="milestone"><div class="year">Siglo XVII · Descartes y Fermat</div><p>La introducción de coordenadas permitió traducir figuras a ecuaciones. Una recta, una circunferencia o una parábola podían estudiarse algebraicamente.</p></div>
+<div class="milestone"><div class="year">Siglo XIX</div><p>Lobachevsky, Bolyai y otros matemáticos mostraron que podían construirse geometrías coherentes modificando el postulado de las paralelas. El concepto de espacio matemático se amplió radicalmente.</p></div>
 </div>
+<div class="evolution"><div class="evo-card"><strong>Medir</strong><span>Longitudes, áreas, volúmenes y pendientes.</span></div><div class="evo-card"><strong>Demostrar</strong><span>Derivar resultados desde postulados y resultados previos.</span></div><div class="evo-card"><strong>Modelar</strong><span>Usar coordenadas y ecuaciones para representar figuras.</span></div></div>
 <div class="math-box">\[a^2+b^2=c^2\]</div>
-<div class="uni-link"><strong>Conexión con la preparación UNI</strong><span>Triángulos, circunferencias, semejanza, áreas y relaciones métricas exigen visualizar configuraciones y justificar propiedades; la geometría histórica recuerda que demostrar es tan importante como calcular.</span></div>
+<div class="history-note"><strong>Precisión histórica.</strong> La relación pitagórica era conocida en diversas tradiciones antiguas; lo característico de la matemática griega fue integrarla dentro de una cultura de demostración deductiva.</div>
+<div class="uni-link"><strong>Conexión con la preparación UNI</strong><span>Triángulos, circunferencias, semejanza, áreas y relaciones métricas exigen reconocer hipótesis y justificar relaciones. Dibujar bien una configuración es parte del razonamiento, no un adorno.</span></div>
+<p class="source-note">Referencia histórica: <a href="https://mathshistory.st-andrews.ac.uk/Biographies/Euclid/" target="_blank" rel="noopener">MacTutor · Euclides</a> y <a href="https://mathshistory.st-andrews.ac.uk/HistTopics/Non-Euclidean_geometry/" target="_blank" rel="noopener">geometría no euclidiana</a>.</p>
 </div></section>
 
 <section class="course" id="trigonometria"><div class="wrap">
-<div class="course-head"><div><span class="label">04 · Trigonometría</span><h2>Del cielo y las cuerdas a las funciones</h2><p>La Trigonometría se desarrolló estrechamente ligada a la astronomía. Resolver triángulos permitió estimar posiciones, distancias y ángulos cuando la medición directa era imposible.</p></div>
-<div class="course-art" aria-label="Ilustración vectorial de trigonometría">
-<div class="tikz-render" data-source="assets/tikz/historia-ciencias/trigonometria.tex"><script type="text/tikz">
-\definecolor{nostranavy}{HTML}{061426}
-\definecolor{nostrateal}{HTML}{078C95}
-\definecolor{nostracyan}{HTML}{65DCE5}
-\definecolor{nostragold}{HTML}{F5C542}
+<div class="course-head"><div><span class="label">04 · Trigonometría</span><h2>De las cuerdas astronómicas al seno y al coseno</h2><p>La Trigonometría nació estrechamente ligada a la astronomía. Cuando una distancia no podía medirse directamente, los ángulos y los triángulos permitían inferirla. La transición histórica más interesante fue pasar de tablas de cuerdas en círculos a funciones como seno y coseno.</p></div>
+<div class="course-art" aria-label="Gráfico TikZ de cuerda y seno"><div class="tikz-render" data-source="assets/tikz/historia-ciencias/trigonometria.tex"><script type="text/tikz">
+\definecolor{nostranavy}{HTML}{061426}\definecolor{nostracyan}{HTML}{65DCE5}\definecolor{nostragold}{HTML}{F5C542}
 \begin{tikzpicture}[line cap=round,line join=round]
 \fill[nostranavy] (-3.7,-2.5) rectangle (3.7,2.5);
-\draw[white,opacity=.35,line width=.8pt] (-2.8,0)--(2.8,0) (0,-2)--(0,2);
-\draw[white,line width=1.6pt] (0,0) circle (1.60);
-\coordinate (O) at (0,0); \coordinate (P) at (1.22,1.04);
-\draw[nostracyan,line width=2pt] (O)--(P);
-\draw[nostragold,line width=1.8pt] (0,0) arc[start angle=0,end angle=40,radius=.72];
-\fill[nostragold] (P) circle (3.5pt);
-\node[nostragold,font=\bfseries\large] at (.92,.38) {$\theta$};
-\node[white,font=\bfseries\small] at (1.65,1.25) {$(\cos\theta,\mathrm{sen}\,\theta)$};
+\draw[white,line width=1.5pt] (0,0) circle (1.75);
+\coordinate (A) at (140:1.75);\coordinate (B) at (40:1.75);
+\draw[nostracyan,line width=2pt] (A)--(B);
+\draw[white,opacity=.75] (0,0)--(A) (0,0)--(B);
+\draw[nostragold,line width=1.6pt] (0,0) arc[start angle=40,end angle=140,radius=.60];
+\node[nostragold,font=\bfseries] at (0,.88) {$2\theta$};
+\node[nostracyan,font=\bfseries] at (0,1.67) {$\operatorname{crd}(2\theta)$};
+\node[white,font=\bfseries\small] at (0,-2.05) {$\operatorname{crd}(2\theta)=2R\,\sen\theta$};
 \end{tikzpicture}
-</script></div>
-</div></div>
+</script></div></div></div>
 <div class="timeline">
-<div class="milestone"><div class="year">Babilonia y Egipto</div><p>Problemas astronómicos y de pendientes contienen antecedentes de relaciones que más tarde formarían parte de la trigonometría.</p></div>
-<div class="milestone"><div class="year">Siglo II a. C.</div><p>Hiparco es asociado con una de las primeras utilizaciones sistemáticas de tablas de cuerdas para problemas astronómicos.</p></div>
-<div class="milestone"><div class="year">India</div><p>La tradición matemática india desarrolló tablas relacionadas con el seno, transformando gradualmente el enfoque de cuerdas heredado de la astronomía griega.</p></div>
-<div class="milestone"><div class="year">Mundo islámico y Europa</div><p>Matemáticos y astrónomos ampliaron métodos trigonométricos; con el tiempo las razones trigonométricas se convirtieron en funciones centrales de la matemática moderna.</p></div>
+<div class="milestone"><div class="year">Astronomía antigua</div><p>Los ciclos celestes exigían medir arcos, posiciones y tiempos. Babilonios y otras culturas desarrollaron procedimientos numéricos y angulares que formaron parte del trasfondo de la trigonometría.</p></div>
+<div class="milestone"><div class="year">≈140 a. C. · Hiparco</div><p>Se atribuye a Hiparco una de las primeras tablas sistemáticas de cuerdas. Para un ángulo central dado, la cuerda de una circunferencia proporcionaba una longitud útil para cálculos astronómicos.</p></div>
+<div class="milestone"><div class="year">Siglo II · Ptolomeo</div><p>El <em>Almagesto</em> utilizó tablas de cuerdas y métodos geométricos de gran precisión. Muchas relaciones que hoy escribimos con senos y cosenos estaban implícitas en ese lenguaje de cuerdas.</p></div>
+<div class="milestone"><div class="year">499 · Aryabhata</div><p>La tradición india utilizó medias cuerdas, equivalentes conceptualmente a valores de seno. El <em>Aryabhatiya</em> contiene una tabla de senos y contribuyó a cambiar el objeto de cálculo.</p></div>
+<div class="milestone"><div class="year">Mundo islámico medieval</div><p>Matemáticos y astrónomos desarrollaron tablas de seno, coseno, tangente y métodos de trigonometría esférica. La disciplina ganó independencia respecto de la astronomía puramente descriptiva.</p></div>
+<div class="milestone"><div class="year">Siglos XVI–XVII</div><p>En Europa se consolidaron tratados de trigonometría y una notación cada vez más uniforme. Las razones trigonométricas terminaron entendiéndose como funciones, conectadas posteriormente con coordenadas, series y análisis.</p></div>
 </div>
-<div class="math-box">\[\sen^2\theta+\cos^2\theta=1\]</div>
-<div class="uni-link"><strong>Conexión con la preparación UNI</strong><span>Razones, identidades, ecuaciones y resolución de triángulos se vuelven más naturales cuando se entiende la conexión entre ángulo, círculo, coordenadas y medición.</span></div>
+<div class="evolution"><div class="evo-card"><strong>Cuerda</strong><span>Relaciona un ángulo central con una longitud dentro de una circunferencia.</span></div><div class="evo-card"><strong>Media cuerda</strong><span>Conduce naturalmente a la noción de seno.</span></div><div class="evo-card"><strong>Función</strong><span>El seno deja de ser solo una tabla geométrica y pasa a ser una función del ángulo.</span></div></div>
+<div class="math-box">\[\operatorname{crd}(2\theta)=2R\sen\theta\qquad\Longrightarrow\qquad \sen^2\theta+\cos^2\theta=1\]</div>
+<div class="history-note"><strong>Idea histórica clave.</strong> Ptolomeo no escribía \(\sen\theta\) ni \(\cos\theta\). Trabajaba con cuerdas. Nuestra notación moderna permite traducir aquellas relaciones a un lenguaje mucho más compacto.</div>
+<div class="uni-link"><strong>Conexión con la preparación UNI</strong><span>Razones, identidades, ecuaciones y resolución de triángulos se vuelven más claras cuando el estudiante entiende que seno y coseno nacen de relaciones geométricas en la circunferencia.</span></div>
+<p class="source-note">Referencia histórica: <a href="https://mathshistory.st-andrews.ac.uk/HistTopics/Trigonometric_functions/" target="_blank" rel="noopener">MacTutor · historia de las funciones trigonométricas</a>.</p>
 </div></section>
 
 <section class="course" id="fisica"><div class="wrap">
-<div class="course-head"><div><span class="label">05 · Física</span><h2>De la filosofía natural a las leyes cuantitativas</h2><p>La Física cambió cuando describir la naturaleza dejó de depender solo de explicaciones cualitativas y empezó a apoyarse cada vez más en experimentos, mediciones y modelos matemáticos.</p></div>
-<div class="course-art" aria-label="Ilustración vectorial de física">
-<div class="tikz-render" data-source="assets/tikz/historia-ciencias/fisica.tex"><script type="text/tikz">
-\definecolor{nostranavy}{HTML}{061426}
-\definecolor{nostrateal}{HTML}{078C95}
-\definecolor{nostracyan}{HTML}{65DCE5}
-\definecolor{nostragold}{HTML}{F5C542}
+<div class="course-head"><div><span class="label">05 · Física</span><h2>De describir el movimiento a construir leyes cuantitativas</h2><p>La Física moderna se desarrolló cuando los fenómenos comenzaron a expresarse mediante relaciones entre magnitudes medibles. Experimento, matemática y modelo se volvieron inseparables. Por eso la historia de la Física puede leerse como una sucesión de marcos que explican cada vez más fenómenos con menos principios.</p></div>
+<div class="course-art" aria-label="Gráfico TikZ de mecánica y energía"><div class="tikz-render" data-source="assets/tikz/historia-ciencias/fisica.tex"><script type="text/tikz">
+\definecolor{nostranavy}{HTML}{061426}\definecolor{nostracyan}{HTML}{65DCE5}\definecolor{nostragold}{HTML}{F5C542}
 \begin{tikzpicture}[line cap=round,line join=round,>=stealth]
 \fill[nostranavy] (-3.7,-2.5) rectangle (3.7,2.5);
-\draw[white,line width=1.8pt] (0,1.85)--(0,1.25);
-\draw[nostracyan,line width=2pt] (0,1.25)--(-1.15,-1.15);
-\fill[nostragold] (-1.15,-1.15) circle (8pt);
-\draw[white,opacity=.45,line width=1.1pt,dashed] (0,1.25) arc[start angle=90,end angle=-35,radius=2.7];
-\draw[white,opacity=.85,line width=1.5pt] (-2.75,-1.65)--(2.75,-1.65);
-\draw[nostragold,->,line width=1.7pt] (-1.15,-1.15)--(.35,-1.15) node[midway,above,font=\bfseries\small] {$\vec v$};
-\node[white,font=\bfseries\large] at (1.55,.80) {$\vec F=m\vec a$};
+\draw[white,line width=1.4pt] (-3,-1.3)--(3,-1.3);
+\draw[white,opacity=.55,line width=1pt] (-2.4,1.15)--(-.5,-1.3);
+\fill[nostragold] (-1.65,.25) circle (6pt);
+\draw[nostracyan,->,line width=1.7pt] (-1.65,.25)--(-.55,-.55) node[midway,above right,font=\small] {$\vec v$};
+\draw[nostragold,->,line width=1.7pt] (.35,-.65)--(2.0,-.65) node[midway,above,font=\small] {$\vec F$};
+\node[white,font=\bfseries] at (1.1,.70) {$W_{\rm neto}=\Delta K$};
+\node[nostracyan,font=\bfseries] at (1.1,1.35) {$\vec F=m\vec a$};
 \end{tikzpicture}
-</script></div>
-</div></div>
+</script></div></div></div>
 <div class="timeline">
-<div class="milestone"><div class="year">Siglos XVI–XVII</div><p>Galileo impulsó una descripción cuantitativa del movimiento y el uso sistemático de experimentos y matemáticas para estudiar fenómenos físicos.</p></div>
-<div class="milestone"><div class="year">1687</div><p>Newton publicó los <em>Principia</em>, donde organizó leyes del movimiento y gravitación dentro de una estructura matemática capaz de conectar fenómenos terrestres y astronómicos.</p></div>
-<div class="milestone"><div class="year">Siglo XIX</div><p>Faraday y Maxwell ayudaron a construir una teoría unificada del electromagnetismo. La noción de campo se volvió central para describir interacciones eléctricas y magnéticas.</p></div>
-<div class="milestone"><div class="year">Siglo XX</div><p>Relatividad y mecánica cuántica ampliaron los límites de la física clásica y mostraron que las leyes conocidas debían reformularse en escalas extremas de velocidad, gravedad y tamaño.</p></div>
+<div class="milestone"><div class="year">Antigüedad y Edad Media</div><p>Las explicaciones del movimiento mezclaban observación, filosofía natural y geometría. Varias tradiciones debatieron conceptos como velocidad, caída y causa del movimiento sin disponer todavía de la formulación matemática moderna.</p></div>
+<div class="milestone"><div class="year">Siglos XVI–XVII · Galileo</div><p>El estudio de la caída y del movimiento acelerado impulsó una descripción cuantitativa. Idealizar situaciones —por ejemplo, reducir el efecto de la fricción— permitió descubrir regularidades que no son evidentes a simple vista.</p></div>
+<div class="milestone"><div class="year">1687 · Newton</div><p>Los <em>Principia</em> integraron leyes del movimiento y gravitación. El mismo marco podía explicar un proyectil terrestre y el movimiento orbital, una unificación conceptual extraordinaria.</p></div>
+<div class="milestone"><div class="year">Siglos XVIII–XIX · energía y termodinámica</div><p>Trabajo, calor y energía fueron conectándose dentro de principios de conservación. La Física dejó de estudiar solo trayectorias y fuerzas para analizar también transformaciones energéticas.</p></div>
+<div class="milestone"><div class="year">Siglo XIX · Faraday y Maxwell</div><p>La noción de campo permitió describir electricidad y magnetismo sin reducirlos a fuerzas instantáneas entre cuerpos. Maxwell formuló un marco matemático que vinculó electromagnetismo y luz.</p></div>
+<div class="milestone"><div class="year">Siglo XX · relatividad y cuántica</div><p>Einstein, Planck y otros físicos mostraron que la mecánica clásica no es universal. A velocidades extremas, campos gravitatorios intensos y escalas atómicas aparecen nuevas leyes y conceptos.</p></div>
 </div>
-<div class="math-box">\[\vec F=m\vec a\]</div>
-<div class="uni-link"><strong>Conexión con la preparación UNI</strong><span>Cinemática, dinámica, trabajo, energía y potencia no son capítulos aislados: forman parte de una misma tradición de construir modelos que relacionan magnitudes medibles.</span></div>
+<div class="evolution"><div class="evo-card"><strong>Medición</strong><span>Posición, tiempo, masa, temperatura, carga.</span></div><div class="evo-card"><strong>Modelo</strong><span>Idealizar para aislar relaciones esenciales.</span></div><div class="evo-card"><strong>Ley</strong><span>Expresar regularidades mediante ecuaciones contrastables.</span></div></div>
+<div class="math-box">\[\vec F=m\vec a\qquad\text{y}\qquad W_{\rm neto}=\Delta K\]</div>
+<div class="history-note"><strong>Precisión importante.</strong> \(\vec F=m\vec a\) es una formulación moderna y compacta de la segunda ley. Newton no la escribió con esta notación vectorial contemporánea.</div>
+<div class="uni-link"><strong>Conexión con la preparación UNI</strong><span>Cinemática, dinámica, trabajo, energía y potencia forman una cadena conceptual: describir el movimiento, identificar interacciones y comparar estados mediante magnitudes conservadas o transferidas.</span></div>
+<p class="source-note">Para ampliar: <a href="https://mathshistory.st-andrews.ac.uk/Biographies/Newton/" target="_blank" rel="noopener">MacTutor · Newton</a> y cronologías históricas de la American Physical Society.</p>
 </div></section>
 
 <section class="course" id="quimica"><div class="wrap">
-<div class="course-head"><div><span class="label">06 · Química</span><h2>De la transformación de sustancias a la teoría atómica</h2><p>La Química se consolidó cuando la experimentación cuantitativa permitió comparar masas, gases, composiciones y reacciones con precisión. La clasificación de sustancias abrió el camino hacia modelos atómicos y periódicos.</p></div>
-<div class="course-art" aria-label="Ilustración vectorial de química">
-<div class="tikz-render" data-source="assets/tikz/historia-ciencias/quimica.tex"><script type="text/tikz">
-\definecolor{nostranavy}{HTML}{061426}
-\definecolor{nostrateal}{HTML}{078C95}
-\definecolor{nostracyan}{HTML}{65DCE5}
-\definecolor{nostragold}{HTML}{F5C542}
+<div class="course-head"><div><span class="label">06 · Química</span><h2>De transformar sustancias a explicar la materia cuantitativamente</h2><p>La Química se consolidó cuando observar cambios dejó de ser suficiente y comenzó a medirse cuánto reaccionaba, cuánto producto se formaba y qué regularidades aparecían entre distintas sustancias. La balanza fue tan importante para la revolución química como el telescopio lo fue para la astronomía.</p></div>
+<div class="course-art" aria-label="Gráfico TikZ de conservación de masa"><div class="tikz-render" data-source="assets/tikz/historia-ciencias/quimica.tex"><script type="text/tikz">
+\definecolor{nostranavy}{HTML}{061426}\definecolor{nostracyan}{HTML}{65DCE5}\definecolor{nostragold}{HTML}{F5C542}
 \begin{tikzpicture}[line cap=round,line join=round]
 \fill[nostranavy] (-3.7,-2.5) rectangle (3.7,2.5);
-\draw[white,line width=1.7pt] (-.85,1.75)--(.85,1.75) (-.48,1.75)--(-.48,.60)--(-1.65,-1.45)--(1.65,-1.45)--(.48,.60)--(.48,1.75);
-\draw[nostracyan,line width=2pt] (-1.30,-.82)--(1.30,-.82);
-\fill[nostragold] (-.55,-.35) circle (4.7pt); \fill[nostracyan] (.45,-1.12) circle (6pt); \fill[white] (.20,.03) circle (3.6pt);
-\node[white,font=\bfseries\large] at (2.25,.55) {$n=\frac{m}{M}$};
+\draw[white,line width=1.5pt] (0,1.55)--(0,-1.1);
+\draw[white,line width=1.5pt] (-2.35,.55)--(2.35,.55);
+\draw[white,line width=1.2pt] (-2.1,.55)--(-2.55,-.55)--(-1.65,-.55)--cycle;
+\draw[white,line width=1.2pt] (2.1,.55)--(1.65,-.55)--(2.55,-.55)--cycle;
+\node[nostracyan,font=\bfseries] at (-2.1,-1.02) {$m_{\rm reactivos}$};
+\node[nostragold,font=\bfseries] at (2.1,-1.02) {$m_{\rm productos}$};
+\node[white,font=\bfseries\large] at (0,-1.75) {$m_R=m_P$};
+\fill[nostracyan] (-2.15,-.15) circle (4pt);\fill[nostracyan] (-1.92,-.05) circle (4pt);
+\fill[nostragold] (2.05,-.10) circle (4pt);\fill[nostragold] (2.25,-.18) circle (4pt);
 \end{tikzpicture}
-</script></div>
-</div></div>
+</script></div></div></div>
 <div class="timeline">
-<div class="milestone"><div class="year">Antigüedad y alquimia</div><p>Durante siglos se acumularon técnicas para trabajar metales, pigmentos, sales, destilaciones y otras transformaciones. La interpretación teórica, sin embargo, todavía mezclaba observación con marcos filosóficos.</p></div>
-<div class="milestone"><div class="year">Finales del siglo XVIII</div><p>Lavoisier impulsó una revolución cuantitativa en química: medición de masas, nueva nomenclatura y una definición operativa de sustancias simples ayudaron a reemplazar explicaciones antiguas como la teoría del flogisto.</p></div>
-<div class="milestone"><div class="year">Siglo XIX</div><p>Dalton formuló una teoría atómica cuantitativa y la investigación sobre masas y propiedades de los elementos permitió construir nuevas regularidades.</p></div>
-<div class="milestone"><div class="year">1869 y después</div><p>Mendeleev organizó los elementos de acuerdo con regularidades periódicas. Más tarde, el número atómico y la física cuántica dieron una base más profunda a la estructura de la tabla periódica.</p></div>
+<div class="milestone"><div class="year">Técnicas antiguas y alquimia</div><p>Metalurgia, pigmentos, fermentación, vidrio y destilación acumularon conocimiento experimental durante siglos. La alquimia aportó técnicas de laboratorio, aunque sus marcos explicativos mezclaban observación con ideas filosóficas y simbólicas.</p></div>
+<div class="milestone"><div class="year">Siglo XVII · Boyle</div><p>El énfasis en experimentos reproducibles y en una definición más operativa de elemento contribuyó a separar progresivamente la química de antiguas interpretaciones alquímicas.</p></div>
+<div class="milestone"><div class="year">Finales del siglo XVIII · Lavoisier</div><p>La medición rigurosa de masas ayudó a desmontar la teoría del flogisto. Lavoisier impulsó una nueva nomenclatura y en 1789 publicó el <em>Traité Élémentaire de Chimie</em>, obra fundamental de la revolución química.</p></div>
+<div class="milestone"><div class="year">Finales del XVIII · Proust</div><p>Las proporciones definidas reforzaron la idea de que los compuestos no poseen composiciones arbitrarias: sus elementos se combinan en relaciones de masa reproducibles.</p></div>
+<div class="milestone"><div class="year">Inicio del siglo XIX · Dalton y Avogadro</div><p>La teoría atómica de Dalton interpretó las leyes ponderales mediante partículas discretas. Avogadro ayudó a distinguir conceptualmente átomos y moléculas y a conectar volúmenes gaseosos con cantidades de partículas.</p></div>
+<div class="milestone"><div class="year">1869–siglo XX · Mendeleev y Moseley</div><p>Mendeleev organizó los elementos según regularidades periódicas y dejó espacios para elementos aún desconocidos. Más tarde, el número atómico dio una base física más precisa al orden periódico.</p></div>
 </div>
-<div class="math-box">\[n=\frac{m}{M}\qquad\text{y}\qquad \sum m_{reactivos}=\sum m_{productos}\]</div>
-<div class="uni-link"><strong>Conexión con la preparación UNI</strong><span>Mol, masa molar, balance, estequiometría y periodicidad nacen de la misma exigencia histórica: medir y relacionar cantidades para explicar transformaciones de materia.</span></div>
+<div class="evolution"><div class="evo-card"><strong>Observar</strong><span>Describir color, precipitados, combustión y transformaciones.</span></div><div class="evo-card"><strong>Medir</strong><span>Comparar masas, volúmenes y composiciones.</span></div><div class="evo-card"><strong>Modelar</strong><span>Interpretar regularidades mediante átomos, moléculas y estructura electrónica.</span></div></div>
+<div class="math-box">\[n=\frac{m}{M}\qquad\text{y, en un sistema cerrado,}\qquad \sum m_{\rm reactivos}=\sum m_{\rm productos}\]</div>
+<div class="history-note"><strong>Idea histórica clave.</strong> La estequiometría moderna depende de una revolución previa: confiar en mediciones cuantitativas y en que las relaciones entre sustancias pueden expresarse numéricamente.</div>
+<div class="uni-link"><strong>Conexión con la preparación UNI</strong><span>Mol, masa molar, balance, estequiometría, leyes ponderales y periodicidad son expresiones modernas de ese objetivo histórico: medir y relacionar cantidades para explicar transformaciones de materia.</span></div>
+<p class="source-note">Referencia histórica: <a href="https://www.acs.org/education/whatischemistry/landmarks/lavoisier.html" target="_blank" rel="noopener">American Chemical Society · Lavoisier y la revolución química</a>.</p>
 </div></section>
 
 <section class="sources"><div class="wrap">
