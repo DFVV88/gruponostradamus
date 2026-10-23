@@ -114,7 +114,7 @@
                   '<li><a href="sedes.html">Sede UNI</a></li>' +
                   '<li><a href="docentes.html">Docentes</a></li>' +
                   '<li><a href="cachimbos.html">Cachimbos</a></li>' +
-                  '<li><a href="blog.html">Centro Académico</a></li>' +
+                  '<li><a href="blog.html">Noticias</a></li>' +
                   '<li><a href="cuenta-nostra.html">NostraCUENTA</a></li>' +
                 '</ul>' +
               '</div>' +
