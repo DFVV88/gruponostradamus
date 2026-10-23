@@ -40,32 +40,30 @@
     return true;
   }
 
-  function replaceInicioWithChatOnIndex() {
+  function ensureIndexMobileChat() {
     if (!isIndex) return;
-
-    document.querySelectorAll('.main-menu > ul > li > a, .th-mobile-menu > ul > li > a').forEach(function (a) {
-      var text = (a.textContent || '').trim().toLowerCase();
-      var href = (a.getAttribute('href') || '').toLowerCase();
-      if (text === 'inicio' && (href === 'index.html' || href === '/' || href === './' || href === '')) {
-        a.href = 'nostrachat.html';
-        a.textContent = 'NostraCHAT';
-        a.classList.remove('active');
-        if (a.parentElement) a.parentElement.classList.remove('active');
-      }
+    document.querySelectorAll('.th-mobile-menu > ul').forEach(function (menu) {
+      if (alreadyHasChat(menu)) return;
+      var li = createLi();
+      var noticias = Array.prototype.slice.call(menu.querySelectorAll(':scope > li > a')).find(function (a) {
+        return (a.textContent || '').trim().toLowerCase().includes('noticias');
+      });
+      if (noticias && noticias.parentElement) noticias.parentElement.insertAdjacentElement('beforebegin', li);
+      else menu.appendChild(li);
     });
   }
 
   function removeFromIndexDesktop() {
     if (!isIndex) return;
-    document.querySelectorAll('.main-menu > ul > li > a[href="nostrachat.html"]').forEach(function (a, index) {
-      if (index > 0 && a.parentElement) a.parentElement.remove();
+    document.querySelectorAll('.main-menu > ul > li > a[href="nostrachat.html"]').forEach(function (a) {
+      if (a.parentElement) a.parentElement.remove();
     });
   }
 
   function addToClassicMenus() {
     if (isIndex) {
-      replaceInicioWithChatOnIndex();
       removeFromIndexDesktop();
+      ensureIndexMobileChat();
       return;
     }
 
@@ -126,8 +124,8 @@
     addToClassicMenus();
     addToSharedHeader();
     addToNostrachatOwnMenu();
-    replaceInicioWithChatOnIndex();
     removeFromIndexDesktop();
+    ensureIndexMobileChat();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
