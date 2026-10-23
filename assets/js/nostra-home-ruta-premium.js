@@ -256,6 +256,7 @@
   }
 
   function start() {
+    if (document.getElementById('nostra-ruta-premium')) return;
     addStyles();
     if (insertRuta()) return;
 
