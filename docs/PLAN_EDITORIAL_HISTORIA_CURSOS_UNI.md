@@ -52,14 +52,28 @@ Una monografía SOLO puede pasar de borrador a pública cuando:
 - Unidades físicas: separar magnitud y unidad, por ejemplo `6.32\\,m/s`.
 - Evitar ecuaciones como decoración: cada fórmula debe estar explicada en el texto.
 
-## Imágenes
+## Gráficos e imágenes
+### Regla obligatoria para gráficos académicos
+Todo gráfico matemático, geométrico, trigonométrico, físico, químico, cronológico o esquemático debe construirse en **LaTeX/TikZ**.
+
+Requisitos:
+1. Conservar siempre el archivo fuente `.tex` editable.
+2. Usar `tikzpicture` real; no simular TikZ con SVG dibujado manualmente.
+3. La notación dentro del gráfico debe usar tipografía matemática LaTeX.
+4. Etiquetas, ejes, ángulos, vectores y fórmulas deben seguir la notación académica de Grupo Nostradamus.
+5. Para publicación web se permite renderizar TikZ en cliente o usar una salida compilada generada desde el `.tex`, siempre conservando trazabilidad al fuente.
+6. En Física, los diagramas deben conservar realismo académico suficiente sin sacrificar claridad.
+7. En Geometría y Trigonometría, puntos, segmentos, arcos y proyecciones deben ser legibles y semánticamente correctos.
+8. En Química, fórmulas y símbolos deben mantener notación científica profesional.
+
+### Imágenes históricas o documentales
 Prioridad:
-1. SVG propio creado para el artículo.
-2. Imágenes de dominio público con atribución.
-3. Reproducciones de fuentes históricas con licencia verificable.
-4. Fotografías institucionales propias cuando aporten contexto pedagógico.
+1. Imágenes de dominio público con atribución.
+2. Reproducciones de fuentes históricas con licencia verificable.
+3. Fotografías institucionales propias cuando aporten contexto pedagógico.
 
 No usar:
+- SVG manual como sustituto de un gráfico académico TikZ;
 - imágenes de stock sin función explicativa;
 - capturas con marcas de agua;
 - imágenes copiadas sin licencia;
