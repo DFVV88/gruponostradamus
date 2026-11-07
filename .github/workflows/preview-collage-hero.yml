@@ -18,7 +18,7 @@ jobs:
         with:
           python-version: '3.11'
       - name: Dependencias
-        run: pip install pillow numpy opencv-python-headless
+        run: pip install 'pillow>=10,<14' 'numpy>=1.26,<2.1' 'opencv-python-headless==4.11.0.86'
       - name: Collage autentico
         run: python preview/collage-hero/generate.py
       - uses: actions/upload-artifact@v4
