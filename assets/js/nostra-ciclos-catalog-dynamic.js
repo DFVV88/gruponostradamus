@@ -80,6 +80,7 @@
     return text.slice(0,max).replace(/\s+\S*$/,'') + '…';
   }
   function activePlans(program){
+    if(program.publicado === false) return [];
     return Array.isArray(program.planes) ? program.planes.filter(function(plan){
       return plan && plan.activo !== false && num(plan.precio) > 0;
     }) : [];
