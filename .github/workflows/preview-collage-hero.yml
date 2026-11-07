@@ -1,0 +1,28 @@
+name: Preview Collage Hero Cachimbos Generaciones
+on:
+  push:
+    branches:
+      - preview/collage-hero-generaciones-2022-2026
+    paths:
+      - 'preview/collage-hero/**'
+      - '.github/workflows/preview-collage-hero.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Dependencias
+        run: pip install pillow numpy opencv-python-headless
+      - name: Collage autentico
+        run: python preview/collage-hero/generate.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: collage-generaciones-2022-2026
+          path: preview/collage-hero/output/
+          retention-days: 7
