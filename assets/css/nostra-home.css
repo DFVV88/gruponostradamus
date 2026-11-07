@@ -2897,3 +2897,24 @@ body > .nostra-pro-topbar{
     transition:none!important;
   }
 }
+
+
+/* NOSTRA ABOUT CACHIMBA 22 — 2026-11-07: fotografía institucional en sección Nosotros */
+#about-sec .img-box4 .img1 .nostra-about-cachimba-photo {
+  display: block;
+  width: 100%;
+  max-width: 375px;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center center;
+  border-radius: 18px;
+  box-shadow: 0 16px 40px rgba(6, 43, 51, .13);
+}
+@media (max-width: 767.98px) {
+  #about-sec .img-box4 .img1 .nostra-about-cachimba-photo {
+    max-width: min(100%, 375px);
+    margin-inline: auto;
+    border-radius: 16px;
+  }
+}
