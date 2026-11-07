@@ -3,7 +3,7 @@ from PIL import Image,ImageDraw,ImageFilter
 import numpy as np,cv2,math,json
 root=Path(__file__).resolve().parents[2]
 out=root/"preview/collage-hero/output";out.mkdir(parents=True,exist_ok=True)
-back=[("2022-1","1"),("2023-1","21"),("2024-1","47"),("2025-1","17"),("2026-1","21"),("2022-2","12"),("2023-2","36"),("2024-2","55"),("2025-2","26")]
+back=[("2022-1","1"),("2023-1","22"),("2024-1","47"),("2025-1","17"),("2026-1","21"),("2022-2","14"),("2023-2","31"),("2024-2","55"),("2025-2","26")]
 front=[("2026-2","13"),("2025-1","3"),("2024-1","41"),("2023-2","33"),("2022-2","16"),("2024-2","5"),("2025-2","1"),("2026-2","4")]
 W,H=2000,800
 yy,xx=np.mgrid[0:H,0:W];t=xx/W;v=yy/H
@@ -27,6 +27,16 @@ def paste(year,num,x,y,diam,i,front=False):
  ratio=min(1.,680/max(src.size));small=cv2.resize(gray,None,fx=ratio,fy=ratio) if ratio<1 else gray
  found=cascade.detectMultiScale(small,1.07,4,minSize=(25,25))
  hits=[tuple(float(q)/ratio for q in h) for h in found]
+ # Curated photo subjects: exclude logos/background people in group portraits.
+ overrides={
+  ("2023-1","22"):(197,116,87,87),
+  ("2022-2","14"):(111,22,85,95),
+  ("2023-2","31"):(112,54,92,96)
+ }
+ if (year,num) in overrides:
+  coords=overrides[(year,num)]
+  hits=[(coords[0]*src.width/444,coords[1]*src.height/350,coords[2]*src.width/444,coords[3]*src.height/350)]
+
  if hits:
   bx,by,bw,bh=max(hits,key=lambda h:h[2]*h[3]*(1-.35*abs(h[0]+h[2]/2-src.width/2)/(src.width/2)))
  else:bx,by,bw,bh=src.width*.35,src.height*.20,src.width*.28,src.width*.28
