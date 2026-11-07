@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NostraLAB | Laboratorio científico interactivo - Grupo Nostradamus</title>
+<meta name="description" content="Explora laboratorios científicos interactivos de Física, Química, Biología y Matemática de Grupo Nostradamus. Experimenta desde tu celular o computadora.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://gruponostradamus.edu.pe/nostralab/">
+<link rel="icon" href="../assets/img/favicons/iocon-ostradamus.png">
+<style>
+:root{--deep:#022d33;--teal:#068695;--cyan:#00bbe4;--paper:#e6f4f6;--ink:#18363b;--muted:#56727a;--line:#d8e8eb;--white:#fff}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:#f5f9fa;line-height:1.55}
+a{color:inherit}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+.wrap{width:min(1150px,calc(100% - 36px));margin-inline:auto}
+header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.top{display:flex;align-items:center;justify-content:space-between;gap:18px;min-height:76px}
+.brand{display:flex;align-items:center;gap:14px;text-decoration:none;min-width:0}
+.brand img{width:130px;height:55px;object-fit:contain}
+.brand-label{padding-left:14px;border-left:1px solid var(--line);font-weight:850;letter-spacing:.04em;font-size:20px;color:var(--deep)}
+.navlink{text-decoration:none;font-weight:700;color:var(--teal);font-size:14px}
+.hero{background:radial-gradient(circle at 82% 25%,rgba(0,187,228,.23),transparent 36%),linear-gradient(120deg,#022d33 0%,#064f59 75%,#076c78 100%);color:#fff;padding:74px 0 80px;overflow:hidden}
+.hero-inner{display:grid;grid-template-columns:1fr .8fr;gap:28px;align-items:center}
+.eyebrow{font-size:12px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:#87e6f1;margin-bottom:16px}
+h1{font-size:clamp(38px,6vw,68px);line-height:1.03;letter-spacing:-.04em;margin:0 0 17px}
+.hero p{font-size:clamp(16px,1.8vw,19px);color:#d4edf1;max-width:590px}
+.hero .primary{display:inline-flex;align-items:center;padding:12px 21px;border-radius:10px;background:var(--cyan);color:#012b32;text-decoration:none;font-weight:800;margin-top:12px}
+.hero-visual{min-height:270px;position:relative;display:grid;place-items:center}
+.hero-visual svg{width:100%;max-width:430px;filter:drop-shadow(0 8px 20px rgba(0,0,0,.19))}
+.hero-visual .trace{stroke-dasharray:1300;stroke-dashoffset:1300;animation:draw 4s ease-in-out infinite alternate}
+@keyframes draw{to{stroke-dashoffset:0}}
+section.catalog{padding:54px 0 80px}
+.section-top{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap;margin-bottom:24px}
+h2{margin:0 0 6px;font-size:clamp(25px,3vw,34px);line-height:1.2;color:var(--deep)}
+.section-top p{margin:0;color:var(--muted)}
+.count{font-size:13px;color:var(--teal);font-weight:800}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:24px}
+.search{flex:1 1 240px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:var(--ink);min-width:0;font:inherit;min-height:48px}
+.filters{display:flex;gap:7px;flex-wrap:wrap}
+.filters button{border:1px solid var(--line);background:#fff;color:var(--muted);padding:10px 15px;border-radius:40px;font-weight:750;cursor:pointer;min-height:44px}
+.filters button[aria-pressed="true"]{background:var(--deep);color:#fff;border-color:var(--deep)}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+.lab{background:#fff;border:1px solid var(--line);border-radius:19px;box-shadow:0 8px 26px rgba(0,48,56,.055);padding:22px;display:flex;flex-direction:column;gap:10px;min-height:265px;text-decoration:none;transition:transform .18s,box-shadow .18s}
+.lab:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,48,56,.12)}
+.tag{display:inline-flex;align-self:flex-start;padding:5px 10px;border-radius:8px;background:var(--paper);color:var(--teal);font-size:12px;font-weight:900}
+.lab h3{margin:2px 0 0;font-size:21px;line-height:1.25;color:var(--deep)}
+.lab p{margin:0;flex:1;font-size:14px;color:var(--muted)}
+.lab .go{color:var(--teal);font-weight:800}
+.empty{border:1px dashed #c0dde2;background:#fff;border-radius:20px;padding:50px 22px;text-align:center}
+.empty svg{width:60px;height:60px;margin:0 auto 12px;display:block}
+.empty h3{color:var(--deep);margin:0 0 8px;font-size:22px}
+.empty p{color:var(--muted);margin:0 auto;max-width:540px}
+.footnote{margin-top:28px;padding:19px 24px;border-radius:15px;background:#ebf6f7;color:#375a61;font-size:14px}
+footer{border-top:1px solid var(--line);background:#fff;padding:25px 0;color:#58757a;font-size:13px}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media(max-width:800px){.hero-inner{grid-template-columns:1fr}.hero-visual{min-height:190px}.hero-visual svg{max-width:340px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{padding:50px 0 40px}}
+@media(max-width:550px){.top{min-height:68px}.brand img{width:92px;height:44px}.brand-label{font-size:17px;padding-left:9px}.navlink{font-size:12px}.cards{grid-template-columns:1fr}.hero-visual{display:none}.filters{width:100%}.filters button{flex:1 0 auto}.wrap{width:min(100% - 28px,1150px)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap top"><a class="brand" href="../index.html" aria-label="Inicio Grupo Nostradamus"><img src="../assets/img/logo.png" alt="Grupo Nostradamus"><span class="brand-label">NostraLAB</span></a><a class="navlink" href="../index.html">Volver al inicio</a></div></header>
+<main>
+<section class="hero"><div class="wrap hero-inner"><div><div class="eyebrow">Grupo Nostradamus · Ciencia en movimiento</div><h1>La ciencia se<br>experimenta.</h1><p>Explora fenómenos, modifica variables y descubre las leyes que explican nuestro mundo. Tu laboratorio interactivo, desde cualquier dispositivo.</p><a class="primary" href="#experiencias">Explorar experiencias</a></div><div class="hero-visual" aria-hidden="true"><svg viewBox="0 0 460 300" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="w" x1="0" x2="1"><stop stop-color="#68dfe9"/><stop offset="1" stop-color="#fff"/></linearGradient></defs><rect x="20" y="22" width="420" height="252" rx="22" fill="#ffffff" fill-opacity=".07" stroke="#ffffff" stroke-opacity=".22"/><g stroke="#ffffff" stroke-opacity=".13"><path d="M54 65H409M54 110H409M54 155H409M54 200H409M54 245H409M95 49V252M160 49V252M225 49V252M290 49V252M355 49V252"/></g><path d="M50 158H412" stroke="#ffffff" stroke-opacity=".42" stroke-width="1.5"/><path class="trace" d="M50 157 C95 157 95 157 125 157 S172 76 208 82 S261 219 304 219 S355 157 412 157" fill="none" stroke="url(#w)" stroke-width="5" stroke-linecap="round"/><circle cx="208" cy="82" r="7" fill="#00bbe4"/><text x="54" y="45" font-size="12" fill="#d2eef1" font-family="system-ui">y (m)</text><text x="386" y="264" font-size="12" fill="#d2eef1" font-family="system-ui">x (m)</text></svg></div></div></section>
+<section class="catalog wrap" id="experiencias"><div class="section-top"><div><div class="eyebrow" style="color:var(--teal)">Biblioteca científica</div><h2>Experiencias interactivas</h2><p>Selecciona una disciplina y experimenta a tu ritmo.</p></div><span class="count" id="total" aria-live="polite">Cargando experiencias...</span></div>
+<div class="toolbar"><input class="search" id="buscar" type="search" autocomplete="off" maxlength="120" placeholder="Buscar por tema o fenómeno..." aria-label="Buscar simuladores"><div class="filters" aria-label="Filtrar por disciplina" role="group"><button type="button" data-curso="Todos" aria-pressed="true">Todos</button><button type="button" data-curso="Física" aria-pressed="false">Física</button><button type="button" data-curso="Química" aria-pressed="false">Química</button><button type="button" data-curso="Biología" aria-pressed="false">Biología</button><button type="button" data-curso="Matemática" aria-pressed="false">Matemática</button></div></div>
+<div class="cards" id="resultados" aria-live="polite"></div><div class="empty" id="vacio" hidden><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="29" fill="#e6f4f6"/><path d="M26 13h12M29 13v16L17 49a6 6 0 0 0 5 9h20a6 6 0 0 0 5-9L35 29V13M24 43h16" fill="none" stroke="#068695" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><h3 id="vacioTitulo">Próximamente: primeras experiencias</h3><p id="vacioTexto">Estamos preparando el catálogo del laboratorio. Aquí aparecerán únicamente simulaciones científicas revisadas y aprobadas por Grupo Nostradamus.</p></div>
+<div class="footnote"><strong>Aprender haciendo.</strong> Cada experiencia incluye controles interactivos, explicaciones científicas y magnitudes con unidades del Sistema Internacional. Algunas simulaciones emplean modelos idealizados, que se identifican dentro de cada laboratorio.</div></section>
+</main><footer><div class="wrap"><span>© Grupo Nostradamus · NostraLAB</span><a href="../index.html">Volver a la web institucional</a></div></footer>
+<script>
+(function(){
+'use strict';
+var allowed=new Set(['Física','Química','Biología','Matemática']);
+var entries=[],current='Todos';
+var list=document.getElementById('resultados'),empty=document.getElementById('vacio'),total=document.getElementById('total'),search=document.getElementById('buscar');
+function safe(entry){
+if(!entry||typeof entry!=='object'||entry.publicado!==true||!allowed.has(entry.curso))return false;
+if(typeof entry.id!=='string'||!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry.id))return false;
+if(typeof entry.titulo!=='string'||!entry.titulo.trim()||entry.titulo.length>130)return false;
+if(typeof entry.descripcion!=='string'||entry.descripcion.length>320)return false;
+return entry.ruta==='experiencias/'+entry.id+'/index.html';
+}
+function draw(){
+list.replaceChildren();
+var q=search.value.trim().toLocaleLowerCase('es');
+var filtered=entries.filter(function(x){return(current==='Todos'||x.curso===current)&&(!q||(x.titulo+' '+x.descripcion+' '+x.curso).toLocaleLowerCase('es').includes(q));});
+total.textContent=filtered.length+' '+(filtered.length===1?'experiencia':'experiencias');
+empty.hidden=filtered.length>0;
+document.getElementById('vacioTitulo').textContent=entries.length===0?'Próximamente: primeras experiencias':'No encontramos experiencias';
+document.getElementById('vacioTexto').textContent=entries.length===0?'Aquí aparecerán las simulaciones científicas revisadas y aprobadas por Grupo Nostradamus.':'Prueba otra disciplina o palabra clave para explorar los laboratorios disponibles.';
+filtered.forEach(function(x){
+var a=document.createElement('a');a.className='lab';a.href='./experiencia.html?id='+encodeURIComponent(x.id);
+var tag=document.createElement('span');tag.className='tag';tag.textContent=x.curso;
+var title=document.createElement('h3');title.textContent=x.titulo;
+var desc=document.createElement('p');desc.textContent=x.descripcion;
+var go=document.createElement('span');go.className='go';go.textContent='Abrir simulador →';
+a.append(tag,title,desc,go);list.appendChild(a);
+});
+}
+document.querySelectorAll('[data-curso]').forEach(function(btn){btn.addEventListener('click',function(){current=btn.dataset.curso;document.querySelectorAll('[data-curso]').forEach(function(b){b.setAttribute('aria-pressed',String(b===btn));});draw();});});
+search.addEventListener('input',draw);
+fetch('./catalogo.json',{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('Catálogo no disponible');return r.json();}).then(function(d){entries=Array.isArray(d.experiencias)?d.experiencias.filter(safe):[];entries.sort(function(a,b){return String(b.publicado_el||'').localeCompare(String(a.publicado_el||''));});draw();}).catch(function(){entries=[];draw();});
+})();
+</script>
+</body></html>
