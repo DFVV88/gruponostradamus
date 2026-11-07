@@ -1,5 +1,17 @@
 {
   "schema_version": 1,
   "updated_at": "2026-11-07",
-  "experiencias": []
+  "experiencias": [
+    {
+      "id": "ondas-armonicas-transversales-longitudinales-v8",
+      "titulo": "Ondas armónicas transversales y longitudinales",
+      "curso": "Física",
+      "descripcion": "Compara la vibración perpendicular y paralela de las partículas en ondas armónicas. Ajusta amplitud, longitud de onda y rapidez; destaca entre 1 y 10 partículas.",
+      "ruta": "experiencias/ondas-armonicas-transversales-longitudinales-v8/index.html",
+      "publicado": true,
+      "publicado_el": "2026-11-07",
+      "version": "v8",
+      "sha256": "0f0d45dc30771e3c1fb6827c1f9c98b5bd3914690c44d0b0ae9a84d92386231d"
+    }
+  ]
 }
