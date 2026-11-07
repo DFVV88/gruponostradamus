@@ -17,7 +17,7 @@
 
   if (isIq100) return;
 
-  var VERSION = '2026-10-23-ruta-force-1';
+  var VERSION = '2026-11-07-ciclos-catalog-v2';
   var ADSENSE_CLIENT = 'ca-pub-9810053992087127';
 
   function assetAlreadyLoaded(urlPart) {
