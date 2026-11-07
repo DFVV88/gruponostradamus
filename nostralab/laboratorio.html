@@ -24,7 +24,9 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
 .brand-name{padding-left:11px;border-left:1px solid #c7dcdf;letter-spacing:-.015em}
 .lab-title{font-weight:750;color:#355d65;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;font-size:13px}
 .actions{display:flex;align-items:center;gap:9px;flex:0 0 auto}
-.back,.share-trigger{display:inline-flex;justify-content:center;align-items:center;gap:7px;min-height:42px;text-decoration:none;white-space:nowrap;border-radius:10px;padding:9px 14px;font-size:13px;font-weight:800}
+.enroll,.back,.share-trigger{display:inline-flex;justify-content:center;align-items:center;gap:7px;min-height:42px;text-decoration:none;white-space:nowrap;border-radius:10px;padding:9px 14px;font-size:13px;font-weight:800}
+.enroll{background:linear-gradient(110deg,#007b9e,#068695);color:white;box-shadow:0 3px 10px #02758f26;border:1px solid #00768a}
+.enroll:hover{background:linear-gradient(110deg,#075861,#007b9e)}
 .back{background:var(--deep);color:#fff}
 .back:hover{background:#07505a}
 .share{position:relative}
@@ -50,9 +52,10 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
 #experimento{display:block;border:0;background:#fff;width:100%;height:100%;min-width:0;min-height:0}
 .notice{margin:auto;padding:23px;max-width:460px;text-align:center;color:#57757b;font-size:15px}
 .notice a{color:var(--teal);font-weight:800}
-@media(max-width:860px){.lab-title{font-size:12px}.brand img{width:69px;height:35px}.toolbar-inner{min-height:59px;gap:8px}.back,.share-trigger{padding:9px 11px}}
-@media(max-width:620px){.toolbar-inner{flex-wrap:wrap;gap:4px 9px;padding:6px 10px}.brand{font-size:14px}.brand img{width:72px;height:34px}.brand-name{display:none}.lab-title{order:3;flex:0 0 100%;font-size:11px;padding:0 2px 3px;color:#5b7880}.actions{margin-left:auto;gap:7px}.back,.share-trigger{font-size:12px;min-height:37px;padding:8px 9px}.share{position:static}.share-panel{top:calc(100% + 6px);right:10px;left:auto}.show-desktop{display:none}}
-@media(max-width:375px){.brand img{width:56px}.brand{font-size:13px}.back,.share-trigger{font-size:11px;padding:7px}.share-trigger{gap:4px}}
+@media(max-width:860px){.lab-title{font-size:12px}.brand img{width:69px;height:35px}.toolbar-inner{min-height:59px;gap:8px}.enroll,.back,.share-trigger{padding:9px 11px}}
+@media(max-width:620px){.toolbar-inner{flex-wrap:wrap;gap:4px 9px;padding:6px 10px}.brand{font-size:14px}.brand img{width:72px;height:34px}.brand-name{display:none}.lab-title{order:3;flex:0 0 100%;font-size:11px;padding:0 2px 3px;color:#5b7880}.actions{margin-left:auto;gap:7px}.enroll,.back,.share-trigger{font-size:12px;min-height:37px;padding:8px 9px}.share{position:static}.share-panel{top:calc(100% + 6px);right:10px;left:auto}.show-desktop{display:none}}
+@media(max-width:375px){.brand img{width:56px}.brand{font-size:13px}.enroll,.back,.share-trigger{font-size:11px;padding:7px}.share-trigger{gap:4px}}
+@media(max-width:420px){.toolbar-inner{justify-content:space-between}.actions{margin-left:0;width:100%;justify-content:space-between;order:3}.enroll,.back,.share-trigger{font-size:12px;min-height:40px;padding:8px 11px}.lab-title{order:2;flex:1;text-align:right;max-width:60%;padding:0}.brand{flex:0 0 auto}.share-panel{right:10px;max-width:calc(100vw - 20px)}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -61,6 +64,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
 <a class="brand" href="./" aria-label="Catálogo NostraLAB"><img src="../assets/img/logo.png" alt="Grupo Nostradamus"><span class="brand-name">NostraLAB</span></a>
 <div class="lab-title" id="titulo" aria-live="polite">Laboratorio interactivo</div>
 <nav class="actions" aria-label="Acciones del laboratorio">
+<a class="enroll" id="matricula" href="../preinscripcion.html" target="_blank" rel="noopener noreferrer" aria-label="Matrícula: abrir formulario de preinscripción de Grupo Nostradamus">Matrícula</a>
 <details class="share" id="shareMenu"><summary class="share-trigger" aria-label="Compartir laboratorio en redes sociales"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.9 7.5-4.5m-7.5 6.7 7.5 4.5"/></svg>Compartir</summary>
 <div class="share-panel" aria-label="Compartir en redes sociales">
 <div class="share-heading">Comparte este laboratorio</div>

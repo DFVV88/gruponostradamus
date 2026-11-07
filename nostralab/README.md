@@ -4,7 +4,7 @@ Ruta institucional prevista: https://gruponostradamus.edu.pe/nostralab/
 
 ## Estructura
 - `index.html`: catálogo responsive con filtros por disciplina.
-- `laboratorio.html?id=...`: visor inmersivo que abre el simulador directamente, con solo Compartir (WhatsApp, Facebook, X, Telegram, LinkedIn, menú del dispositivo y Copiar enlace) y Ver otros laboratorios.
+- `laboratorio.html?id=...`: visor inmersivo que abre el simulador directamente, con Matrícula (formulario oficial `../preinscripcion.html`), Compartir (WhatsApp, Facebook, X, Telegram, LinkedIn, menú del dispositivo y Copiar enlace) y Ver otros laboratorios.
 - `experiencia.html?id=...`: compatibilidad; redirige al visor inmersivo para los enlaces anteriores.
 - `catalogo.json`: manifiesto público **solo de laboratorios aprobados para publicación**.
 - `experiencias/<slug>/index.html`: cada simulación definitiva, autónoma y revisada.
@@ -43,4 +43,7 @@ El HTML se entrega primero al solicitante para revisar, antes de archivar ni pub
 No se incluyen experiencias en el catálogo inicial. No confundir esta rama de desarrollo con un despliegue en producción.
 
 ## Navegación de proyectos (regla permanente)
-Todas las tarjetas publicadas deben apuntar directamente a `./laboratorio.html?id=<id>`, sin ficha intermedia ni botón «Abrir en pantalla independiente». El visor debe ocupar el espacio disponible y mostrar solo las acciones de Compartir y Ver otros laboratorios (aparte del logo/título institucional). Las redes sociales comparten la URL del propio visor; el HTML científico aprobado se carga en un iframe aislado, no se altera. Los enlaces antiguos de `experiencia.html?id=<id>` deben redirigir al visor nuevo, manteniendo el identificador. Comprobar en PC y móvil y realizar un despliegue web real. Evitar reutilizar rutas antiguas cacheadas para las tarjetas.
+Todas las tarjetas publicadas deben apuntar directamente a `./laboratorio.html?id=<id>`, sin ficha intermedia ni botón «Abrir en pantalla independiente». El visor debe ocupar el espacio disponible y mostrar las acciones Matrícula, Compartir y Ver otros laboratorios (aparte del logo/título institucional). Matrícula debe abrir `../preinscripcion.html` (formulario institucional verificado) en otra pestaña con `rel="noopener noreferrer"`, manteniendo intacto el experimento. Las tres acciones deben ser accesibles y legibles en móvil, incluso a 320 px. Las redes sociales comparten la URL del propio visor; el HTML científico aprobado se carga en un iframe aislado, no se altera. Los enlaces antiguos de `experiencia.html?id=<id>` deben redirigir al visor nuevo, manteniendo el identificador. Comprobar en PC y móvil y realizar un despliegue web real. Evitar reutilizar rutas antiguas cacheadas para las tarjetas.
+
+## Captación institucional permanente
+En cada visor de NostraLAB, incluir arriba el botón visible «Matrícula» con destino único al formulario oficial `https://gruponostradamus.edu.pe/preinscripcion.html`. No crear formularios paralelos ni redirigir a WhatsApp en sustitución del formulario. La barra de acciones será Matrícula · Compartir · Ver otros laboratorios, sin botón de pantalla independiente. Comprobar destino en escritorio/móvil tras cada actualización.
