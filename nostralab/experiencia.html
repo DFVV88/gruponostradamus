@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Experiencia científica | NostraLAB</title>
+<meta name="robots" content="index,follow">
+<meta name="description" content="Explora una simulación científica interactiva de Grupo Nostradamus.">
+<link rel="icon" href="../assets/img/favicons/iocon-ostradamus.png">
+<style>
+:root{--deep:#022d33;--teal:#068695;--cyan:#00bbe4;--line:#dae8e9;--ink:#14343a}
+*{box-sizing:border-box}
+body{margin:0;background:#f4f8f9;color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:var(--teal)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+header{background:#fff;border-bottom:1px solid var(--line)}
+.wrap{width:min(1240px,calc(100% - 32px));margin:auto}
+.top{display:flex;align-items:center;justify-content:space-between;min-height:68px;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;color:var(--deep);text-decoration:none;font-weight:900;font-size:19px}
+.brand img{width:95px;height:48px;object-fit:contain}
+nav{display:flex;gap:16px;align-items:center;font-size:13px;font-weight:750}
+nav a{text-decoration:none}
+main{padding:24px 0 50px}
+.kicker{font-weight:900;color:var(--teal);font-size:12px;text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px}
+h1{font-size:clamp(25px,3.5vw,40px);margin:0;line-height:1.12;color:var(--deep)}
+.description{color:#58737a;margin:10px 0 22px}
+.framebox{background:white;border:1px solid var(--line);border-radius:19px;padding:8px;box-shadow:0 10px 32px #002d3320}
+iframe{display:block;width:100%;height:min(78vh,900px);min-height:560px;border:0;border-radius:12px;background:white}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 0}
+.actions a{background:var(--deep);color:white;text-decoration:none;font-size:14px;font-weight:800;border-radius:9px;padding:10px 16px;min-height:44px;display:inline-flex;align-items:center}
+.actions a.secondary{color:var(--deep);background:#dceff2}
+.notice{background:white;padding:36px;border:1px solid var(--line);border-radius:16px}
+[hidden]{display:none!important}
+@media(max-width:650px){.brand img{width:64px}.brand{font-size:17px}nav{font-size:12px;gap:8px}main{padding:14px 0 28px}iframe{height:70vh;min-height:500px}.wrap{width:calc(100% - 20px)}.framebox{padding:3px}}
+</style>
+</head>
+<body>
+<header><div class="wrap top"><a class="brand" href="./"><img src="../assets/img/logo.png" alt="Grupo Nostradamus">NostraLAB</a><nav><a href="./">Laboratorios</a><a href="../index.html">Inicio</a></nav></div></header>
+<main class="wrap">
+<div id="loading" class="notice" role="status">Cargando experiencia...</div>
+<section id="lab" hidden>
+<div class="kicker" id="curso"></div><h1 id="titulo"></h1><p class="description" id="descripcion"></p>
+<div class="framebox"><iframe id="experimento" title="Experiencia científica interactiva" loading="eager" sandbox="allow-scripts allow-downloads" referrerpolicy="no-referrer" allowfullscreen></iframe></div>
+<div class="actions"><a id="abrir" target="_blank" rel="noopener" href="./">Abrir en pantalla independiente</a><a class="secondary" id="compartir" href="./">Compartir por WhatsApp</a><a class="secondary" href="./">Ver otros laboratorios</a></div>
+</section>
+</main>
+<script>
+(function(){
+'use strict';
+var id=new URLSearchParams(location.search).get('id');
+if(!id||!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)){document.getElementById('loading').textContent='Experiencia no encontrada. Visita el catálogo de NostraLAB.';return;}
+fetch('./catalogo.json',{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('Sin catálogo');return r.json();}).then(function(d){
+var e=Array.isArray(d.experiencias)?d.experiencias.find(function(x){return x.id===id&&x.publicado===true&&x.ruta==='experiencias/'+id+'/index.html';}):null;
+if(!e)throw Error('No publicada');
+document.title=e.titulo+' | NostraLAB';
+document.getElementById('curso').textContent=e.curso;
+document.getElementById('titulo').textContent=e.titulo;
+document.getElementById('descripcion').textContent=e.descripcion;
+var path='./'+e.ruta;
+document.getElementById('experimento').src=path;
+document.getElementById('abrir').href=path;
+document.getElementById('compartir').href='https://wa.me/?text='+encodeURIComponent(e.titulo+' — NostraLAB · Grupo Nostradamus: '+location.href);
+document.getElementById('loading').hidden=true;document.getElementById('lab').hidden=false;
+}).catch(function(){document.getElementById('loading').textContent='Esta experiencia todavía no está disponible. Regresa al catálogo de NostraLAB.';});
+})();
+</script>
+</body></html>
