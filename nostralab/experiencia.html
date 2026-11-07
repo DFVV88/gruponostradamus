@@ -2,123 +2,22 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Experiencia científica | NostraLAB</title>
-<meta name="description" content="Explora laboratorios científicos interactivos gratuitos de Grupo Nostradamus.">
-<meta name="robots" content="index,follow">
-<link rel="icon" href="../assets/img/favicons/iocon-ostradamus.png">
-<style>
-:root{color-scheme:light;--deep:#022d33;--teal:#068695;--cyan:#00bbe4;--ink:#14343a;--line:#d6e8eb;--light:#eef8fa}
-*{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden}
-body{height:100vh;height:100dvh;display:flex;flex-direction:column;background:#fff;color:var(--ink);font:14px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif}
-a,button,summary{touch-action:manipulation}
-button{font:inherit;cursor:pointer}
-a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
-[hidden]{display:none!important}
-.toolbar{background:#fff;border-bottom:1px solid var(--line);box-shadow:0 2px 8px #0131390d;position:relative;z-index:3;flex:0 0 auto}
-.toolbar-inner{min-height:66px;padding:8px clamp(12px,2.4vw,34px);display:flex;align-items:center;gap:clamp(10px,1.9vw,26px)}
-.brand{display:flex;align-items:center;gap:9px;flex:0 0 auto;text-decoration:none;color:var(--deep);font-size:16px;font-weight:900;white-space:nowrap}
-.brand img{width:85px;height:42px;object-fit:contain}
-.brand-name{padding-left:11px;border-left:1px solid #c7dcdf;letter-spacing:-.015em}
-.lab-title{font-weight:750;color:#355d65;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;font-size:13px}
-.actions{display:flex;align-items:center;gap:9px;flex:0 0 auto}
-.back,.share-trigger{display:inline-flex;justify-content:center;align-items:center;gap:7px;min-height:42px;text-decoration:none;white-space:nowrap;border-radius:10px;padding:9px 14px;font-size:13px;font-weight:800}
-.back{background:var(--deep);color:#fff}
-.back:hover{background:#07505a}
-.share{position:relative}
-.share-trigger{border:1px solid #cde6eb;background:var(--light);color:var(--deep);cursor:pointer;list-style:none}
-.share-trigger::-webkit-details-marker{display:none}
-.share-trigger:hover,.share[open] .share-trigger{background:#d8f0f4}
-.share-trigger svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.share-panel{position:absolute;right:0;top:calc(100% + 11px);width:min(305px,calc(100vw - 22px));border:1px solid #d2e5e9;background:#fff;border-radius:15px;box-shadow:0 18px 42px #092f3940;padding:12px;z-index:6}
-.share-panel::before{content:"";position:absolute;right:32px;top:-7px;width:12px;height:12px;transform:rotate(45deg);background:#fff;border-top:1px solid #d2e5e9;border-left:1px solid #d2e5e9}
-.share-heading{color:#496e76;font-weight:800;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:3px 7px 9px}
-.share-link,.share-button{display:flex;width:100%;gap:11px;align-items:center;text-decoration:none;text-align:left;background:transparent;border:none;border-radius:9px;padding:9px 10px;color:var(--deep);font-size:13px;font-weight:730;min-height:41px}
-.share-link:hover,.share-button:hover{background:#edf8fa}
-.share-mark{width:27px;height:27px;flex:0 0 27px;display:grid;place-items:center;border-radius:8px;color:#fff;background:#167788;font-size:11px;font-weight:950;letter-spacing:-.02em}
-.share-link[data-share="whatsapp"] .share-mark{background:#168a58}
-.share-link[data-share="facebook"] .share-mark{background:#3567ae;font-size:17px}
-.share-link[data-share="x"] .share-mark{background:#172d34}
-.share-link[data-share="telegram"] .share-mark{background:#188fba}
-.share-link[data-share="linkedin"] .share-mark{background:#0a719b}
-.share-separator{height:1px;background:var(--line);margin:7px 0}
-.share-status{min-height:16px;color:#337783;font-size:11px;font-weight:730;padding:3px 9px}
-.stage{display:flex;flex:1;min-height:0;width:100%;background:#fff}
-#lab{display:flex;flex:1;min-width:0;min-height:0}
-#experimento{display:block;border:0;background:#fff;width:100%;height:100%;min-width:0;min-height:0}
-.notice{margin:auto;padding:23px;max-width:460px;text-align:center;color:#57757b;font-size:15px}
-.notice a{color:var(--teal);font-weight:800}
-@media(max-width:860px){.lab-title{font-size:12px}.brand img{width:69px;height:35px}.toolbar-inner{min-height:59px;gap:8px}.back,.share-trigger{padding:9px 11px}}
-@media(max-width:620px){.toolbar-inner{flex-wrap:wrap;gap:4px 9px;padding:6px 10px}.brand{font-size:14px}.brand img{width:72px;height:34px}.brand-name{display:none}.lab-title{order:3;flex:0 0 100%;font-size:11px;padding:0 2px 3px;color:#5b7880}.actions{margin-left:auto;gap:7px}.back,.share-trigger{font-size:12px;min-height:37px;padding:8px 9px}.share{position:static}.share-panel{top:calc(100% + 6px);right:10px;left:auto}.show-desktop{display:none}}
-@media(max-width:375px){.brand img{width:56px}.brand{font-size:13px}.back,.share-trigger{font-size:11px;padding:7px}.share-trigger{gap:4px}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Abriendo laboratorio | NostraLAB</title>
+<style>body{font:16px/1.5 system-ui,sans-serif;margin:0;min-height:100vh;display:grid;place-items:center;background:#f2f9fa;color:#022d33}main{max-width:440px;padding:30px;text-align:center}a{color:#068695;font-weight:800}</style>
 </head>
-<body>
-<header class="toolbar"><div class="toolbar-inner">
-<a class="brand" href="./" aria-label="Catálogo NostraLAB"><img src="../assets/img/logo.png" alt="Grupo Nostradamus"><span class="brand-name">NostraLAB</span></a>
-<div class="lab-title" id="titulo" aria-live="polite">Laboratorio interactivo</div>
-<nav class="actions" aria-label="Acciones del laboratorio">
-<details class="share" id="shareMenu"><summary class="share-trigger" aria-label="Compartir laboratorio en redes sociales"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.9 7.5-4.5m-7.5 6.7 7.5 4.5"/></svg>Compartir</summary>
-<div class="share-panel" aria-label="Compartir en redes sociales">
-<div class="share-heading">Comparte este laboratorio</div>
-<a class="share-link" data-share="whatsapp" href="#" target="_blank" rel="noopener noreferrer"><span class="share-mark">WA</span>WhatsApp</a>
-<a class="share-link" data-share="facebook" href="#" target="_blank" rel="noopener noreferrer"><span class="share-mark">f</span>Facebook</a>
-<a class="share-link" data-share="x" href="#" target="_blank" rel="noopener noreferrer"><span class="share-mark">X</span>X (Twitter)</a>
-<a class="share-link" data-share="telegram" href="#" target="_blank" rel="noopener noreferrer"><span class="share-mark">TG</span>Telegram</a>
-<a class="share-link" data-share="linkedin" href="#" target="_blank" rel="noopener noreferrer"><span class="share-mark">in</span>LinkedIn</a>
-<div class="share-separator"></div>
-<button type="button" class="share-button" id="shareNative" hidden><span class="share-mark">↗</span>Otras aplicaciones</button>
-<button type="button" class="share-button" id="copyLink"><span class="share-mark">⧉</span>Copiar enlace</button>
-<div class="share-status" id="shareStatus" role="status" aria-live="polite"></div>
-</div></details>
-<a class="back" href="./#experiencias" aria-label="Ver otros laboratorios"><span class="show-desktop">Ver </span>otros laboratorios</a>
-</nav></div></header>
-<main class="stage" id="stage">
-<div id="loading" class="notice" role="status">Cargando laboratorio...</div>
-<section id="lab" hidden aria-label="Simulador interactivo"><iframe id="experimento" title="Experiencia científica interactiva" loading="eager" sandbox="allow-scripts allow-downloads" referrerpolicy="no-referrer" allowfullscreen></iframe></section>
-</main>
+<body><main><p>Abriendo tu laboratorio en pantalla independiente…</p><p><a id="destino" href="./">Ver otros laboratorios</a></p></main>
 <script>
 (function(){
-'use strict';
-var id=new URLSearchParams(location.search).get('id');
-var loading=document.getElementById('loading');
-var menu=document.getElementById('shareMenu');
-var status=document.getElementById('shareStatus');
-var nativeButton=document.getElementById('shareNative');
-var copyButton=document.getElementById('copyLink');
-var title='NostraLAB · Grupo Nostradamus';
-var cleanUrl=new URL(location.pathname,location.origin); // URL pública limpia, sin parámetros de campaña
-if(id)cleanUrl.searchParams.set('id',id);
-var shareUrl=cleanUrl.toString();
-function shareTargets(label){
-var message=label+' — Experimento interactivo gratuito de Grupo Nostradamus';
-var u=encodeURIComponent(shareUrl), t=encodeURIComponent(message);
-var links={whatsapp:'https://wa.me/?text='+encodeURIComponent(message+' '+shareUrl),facebook:'https://www.facebook.com/sharer/sharer.php?u='+u,x:'https://twitter.com/intent/tweet?text='+t+'&url='+u,telegram:'https://t.me/share/url?url='+u+'&text='+t,linkedin:'https://www.linkedin.com/sharing/share-offsite/?url='+u};
-document.querySelectorAll('[data-share]').forEach(function(el){el.href=links[el.getAttribute('data-share')];});
-}
-shareTargets(title);
-if(typeof navigator.share==='function')nativeButton.hidden=false;
-nativeButton.addEventListener('click',function(){if(typeof navigator.share!=='function')return;navigator.share({title:title,text:'Experimenta gratis con NostraLAB · Grupo Nostradamus',url:shareUrl}).then(function(){menu.open=false;}).catch(function(err){if(err&&err.name!=='AbortError')status.textContent='No se pudo compartir desde este dispositivo.';});});
-copyButton.addEventListener('click',function(){
-var ok=function(){status.textContent='Enlace copiado';};
-if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(shareUrl).then(ok,function(){status.textContent='No se pudo copiar. Prueba otra aplicación.';});}
-else{var input=document.createElement('textarea');input.value=shareUrl;input.setAttribute('readonly','');input.style.position='fixed';input.style.left='-9999px';document.body.append(input);input.select();try{if(document.execCommand('copy'))ok();else status.textContent='No se pudo copiar.';}catch(err){status.textContent='No se pudo copiar.';}input.remove();}
-});
-document.addEventListener('pointerdown',function(e){if(menu.open&&!menu.contains(e.target))menu.open=false;});
-document.addEventListener('keydown',function(e){if(e.key==='Escape')menu.open=false;});
-if(!id||!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)){loading.textContent='Experiencia no encontrada. Regresa al catálogo de NostraLAB.';return;}
-fetch('./catalogo.json',{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('Catálogo no disponible');return r.json();}).then(function(d){
-var e=Array.isArray(d.experiencias)?d.experiencias.find(function(x){return x.id===id&&x.publicado===true&&x.ruta==='experiencias/'+id+'/index.html';}):null;
-if(!e)throw Error('Experiencia no publicada');
-title=e.titulo+' | NostraLAB';
-document.title=title;
-document.getElementById('titulo').textContent=e.titulo;
-var frame=document.getElementById('experimento');frame.title=e.titulo+' — Simulador interactivo';frame.src='./'+e.ruta;
-shareTargets(e.titulo);
-loading.hidden=true;document.getElementById('lab').hidden=false;
-}).catch(function(){loading.innerHTML='Esta experiencia todavía no está disponible. <a href="./#experiencias">Ver otros laboratorios</a>.';});
+  'use strict';
+  var id=new URLSearchParams(location.search).get('id');
+  if(!id||!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)){location.replace('./');return;}
+  var target='./laboratorio.html?id='+encodeURIComponent(id);
+  document.getElementById('destino').href=target;
+  document.getElementById('destino').textContent='Abrir laboratorio';
+  location.replace(target);
 })();
 </script>
 </body></html>

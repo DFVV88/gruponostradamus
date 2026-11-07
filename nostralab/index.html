@@ -99,7 +99,7 @@ empty.hidden=filtered.length>0;
 document.getElementById('vacioTitulo').textContent=entries.length===0?'Próximamente: primeras experiencias':'No encontramos experiencias';
 document.getElementById('vacioTexto').textContent=entries.length===0?'Aquí aparecerán las simulaciones científicas revisadas y aprobadas por Grupo Nostradamus.':'Prueba otra disciplina o palabra clave para explorar los laboratorios disponibles.';
 filtered.forEach(function(x){
-var a=document.createElement('a');a.className='lab';a.href='./experiencia.html?id='+encodeURIComponent(x.id);
+var a=document.createElement('a');a.className='lab';a.href='./laboratorio.html?id='+encodeURIComponent(x.id);
 var tag=document.createElement('span');tag.className='tag';tag.textContent=x.curso;
 var title=document.createElement('h3');title.textContent=x.titulo;
 var desc=document.createElement('p');desc.textContent=x.descripcion;
