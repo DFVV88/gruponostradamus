@@ -36,6 +36,20 @@
     appId:'1:869749182265:web:5f5c9174680585f142e2e8'
   };
 
+  // Media editorial; los datos comerciales siguen llegando desde Firestore.
+  var IMAGES = {
+    'nostra-360-uni':'assets/img/ciclos/ciclo-anual.jpg',
+    'nostra-power-uni':'assets/img/ciclos/ciclo-semianual.jpg',
+    'nostra-elite-uni':'assets/img/ciclos/ciclo-semestral.jpg',
+    'nostra-prime-uni':'assets/img/ciclos/ciclo-repaso.jpg',
+    'nostra-talentum-uni':'assets/img/ciclos/ciclo-elite.jpg',
+    'ciclo-ien':'assets/img/ciclos/ciclo-ien.jpg',
+    'proyecto-escolar':'assets/img/ciclos/ciclo-proyecto-escolar.jpg',
+    'paralelo-cepre-uni':'assets/img/ciclos/ciclo-paralelol.jpg',
+    'ciclo-verano-uni':'assets/img/ciclos/ciclo-verano.jpg'
+  };
+  var activeGroup = 'todos';
+
   var catalog = PROGRAMS.map(function(item){
     return Object.assign({},item,{publicado:true,fechaInicio:'',duracion:'',planes:[]});
   });
@@ -93,45 +107,93 @@
     return 'preinscripcion.html?' + params.toString();
   }
   function statusLabel(program){
-    return program.publicado === false ? 'En actualización' : 'Inscripciones disponibles';
+    if(program.publicado === false) return 'En actualización';
+    return activePlans(program).length ? 'Planes publicados' : 'Consultar información';
+  }
+  function actualPrice(plan){
+    var regular = num(plan.precio);
+    var promo = num(plan.precioPromocional);
+    var valid = plan.promocionActiva === true && promo > 0 && promo < regular;
+    if(valid && plan.promocionHasta){
+      var end = new Date(plan.promocionHasta + 'T23:59:59');
+      valid = !Number.isNaN(end.getTime()) && end.getTime() >= Date.now();
+    }
+    return valid ? promo : regular;
+  }
+  function formatMoney(value){
+    return 'S/ ' + num(value).toLocaleString('es-PE',{maximumFractionDigits:2});
+  }
+  function priceSummaryHtml(program){
+    var plans = activePlans(program);
+    if(!plans.length) return '<p class="nc-price-empty">Consulta planes y precios vigentes</p>';
+    var cheapest = plans.reduce(function(low,plan){
+      return actualPrice(plan) < actualPrice(low) ? plan : low;
+    },plans[0]);
+    var suffix = cheapest.tipoCobro === 'unico' ? 'pago único' : 'mensual';
+    return '<div class="nc-price"><span>Planes desde</span><strong>' +
+      esc(formatMoney(actualPrice(cheapest))) +
+      '</strong><small>' + esc(suffix) + '</small></div>';
   }
   function modalityHtml(program){
     var names = modalityNames(program);
     if(!names.length) return '<span class="nc-chip nc-chip--muted">Consulta modalidades vigentes</span>';
     return names.map(function(name){ return '<span class="nc-chip">' + esc(name) + '</span>'; }).join('');
   }
-  function quickNavHtml(){
-    return '<nav class="nc-quick-nav" aria-label="Accesos rápidos a los programas">' + PROGRAMS.map(function(program){
-      return '<button type="button" class="nc-quick-nav__btn' + (activeQuickProgram === program.id ? ' active' : '') + '" data-nc-program="' + esc(program.id) + '">' + esc(program.nombre) + '</button>';
+  function filterNavHtml(){
+    var filters = [{id:'todos',nombre:'Todos',cantidad:PROGRAMS.length}].concat(GROUPS.map(function(group){
+      return {id:group.id,nombre:group.id === 'premium' ? 'Línea Premium UNI' : group.id === 'escolar' ? 'Escolares' : 'Complementarios',cantidad:PROGRAMS.filter(function(p){return p.grupo === group.id;}).length};
+    }));
+    return '<nav class="nc-filters" aria-label="Filtrar ciclos académicos">' + filters.map(function(filter){
+      var selected = activeGroup === filter.id;
+      return '<button id="nc-filter-' + esc(filter.id) + '" type="button" class="nc-filter' +
+        (selected ? ' active' : '') + '" data-nc-filter="' + esc(filter.id) +
+        '" aria-pressed="' + (selected ? 'true' : 'false') + '">' +
+        esc(filter.nombre) + '<span aria-hidden="true">' + filter.cantidad + '</span></button>';
     }).join('') + '</nav>';
   }
   function cardHtml(program){
     var plans = activePlans(program);
-    var description = shorten(program.descripcion || '',220) || program.promesa;
-    return '<article id="programa-' + esc(program.id) + '" class="nc-card' + (program.publicado === false ? ' nc-card--paused' : '') + '" data-nc-card="' + esc(program.id) + '">' +
-      '<div class="nc-card__top"><span class="nc-order">' + String(program.orden).padStart(2,'0') + '</span><span class="nc-status">' + esc(statusLabel(program)) + '</span></div>' +
+    var description = shorten(program.descripcion || '',150) || program.promesa;
+    var image = IMAGES[program.id] || '';
+    var visual = image
+      ? '<img src="' + esc(image) + '" alt="" loading="lazy" decoding="async">'
+      : '<div class="nc-media-fallback" aria-hidden="true"><span>NOSTRA</span><strong>WEEKEND</strong></div>';
+    return '<article id="programa-' + esc(program.id) + '" class="nc-card' +
+      (program.publicado === false ? ' nc-card--paused' : '') +
+      '" data-nc-card="' + esc(program.id) + '">' +
+      '<div class="nc-card__media">' + visual +
+        '<div class="nc-card__top"><span class="nc-order">' + String(program.orden).padStart(2,'0') +
+        '</span><span class="nc-status">' + esc(statusLabel(program)) + '</span></div>' +
+      '</div>' +
       '<div class="nc-card__body">' +
         '<p class="nc-kicker">' + esc(program.promesa) + '</p>' +
         '<h3>' + esc(program.nombre) + '</h3>' +
         '<p class="nc-description">' + esc(description) + '</p>' +
-        '<div class="nc-ideal"><span>Ideal para</span><strong>' + esc(program.ideal) + '</strong></div>' +
+        '<div class="nc-ideal"><span>Recomendado para</span><strong>' + esc(program.ideal) + '</strong></div>' +
         '<div class="nc-meta">' +
           '<div><small>Inicio</small><strong>' + esc(dateLabel(program.fechaInicio)) + '</strong></div>' +
           '<div><small>Duración</small><strong>' + esc(clean(program.duracion) || 'Por anunciar') + '</strong></div>' +
         '</div>' +
-        '<div class="nc-plans-head"><span>Modalidades</span><small>' + (plans.length ? plans.length + (plans.length === 1 ? ' plan disponible' : ' planes disponibles') : 'Información en actualización') + '</small></div>' +
+        '<div class="nc-plans-head"><span>Modalidades</span><small>' +
+          (plans.length ? plans.length + (plans.length === 1 ? ' plan activo' : ' planes activos') : 'Por consultar') +
+        '</small></div>' +
         '<div class="nc-chips">' + modalityHtml(program) + '</div>' +
+        priceSummaryHtml(program) +
       '</div>' +
       '<div class="nc-actions">' +
-        '<a class="nc-btn nc-btn--details" href="' + esc(program.ruta) + '">Ver detalles</a>' +
-        '<a class="nc-btn nc-btn--pre" href="' + esc(preUrl(program)) + '">Preinscribirme</a>' +
+        '<a class="nc-btn nc-btn--details" href="' + esc(program.ruta) + '">Ver programa</a>' +
+        '<a class="nc-btn nc-btn--pre" href="' + esc(preUrl(program)) + '">Preinscribirme <span aria-hidden="true">↗</span></a>' +
       '</div>' +
     '</article>';
   }
   function groupHtml(group){
-    var products = catalog.filter(function(program){ return program.grupo === group.id; }).sort(function(a,b){ return a.orden - b.orden; });
+    var products = catalog.filter(function(program){return program.grupo === group.id;})
+      .sort(function(a,b){return a.orden - b.orden;});
     return '<section class="nc-group" data-group="' + esc(group.id) + '">' +
-      '<div class="nc-group__head"><div><span>Programas académicos</span><h2>' + esc(group.titulo) + '</h2><p>' + esc(group.descripcion) + '</p></div><strong>' + products.length + ' programas</strong></div>' +
+      '<div class="nc-group__head"><div><span>Grupo Nostradamus · ' +
+      (group.id === 'premium' ? '01' : group.id === 'escolar' ? '02' : '03') +
+      '</span><h2>' + esc(group.titulo) + '</h2><p>' + esc(group.descripcion) +
+      '</p></div><strong>' + products.length + ' programas</strong></div>' +
       '<div class="nc-grid">' + products.map(cardHtml).join('') + '</div>' +
     '</section>';
   }
@@ -230,7 +292,21 @@
     var host = prepareHost();
     if(!host) return false;
     addStyles();
-    host.innerHTML = '<div class="nc-intro"><span class="nc-label">Encuentra tu ruta UNI</span><h2>Elige el programa correcto para tu etapa</h2><p>Selecciona un programa para ir directamente a su fecha de inicio, duración, modalidades y opciones de preinscripción.</p>' + quickNavHtml() + '</div>' + GROUPS.map(groupHtml).join('');
+    var groups = GROUPS.filter(function(group){
+      return activeGroup === 'todos' || group.id === activeGroup;
+    });
+    host.innerHTML =
+      '<div class="nc-intro">' +
+        '<div class="nc-intro__copy"><span class="nc-label">Programas académicos · Grupo Nostradamus</span>' +
+        '<h2>La preparación correcta para cada etapa.</h2>' +
+        '<p>Explora nuestros programas especializados para la UNI y elige según tu nivel, tus objetivos y tu disponibilidad.</p>' +
+        '<div class="nc-intro__stats"><strong>10</strong><span>programas académicos</span><i aria-hidden="true"></i><strong>UNI</strong><span>preparación especializada</span></div></div>' +
+        '<div class="nc-filters-head"><span>Explorar por categoría</span><small>Selecciona para organizar los programas</small></div>' +
+        filterNavHtml() +
+      '</div>' +
+      '<div class="nc-results" aria-live="polite">' +
+        groups.map(groupHtml).join('') +
+      '</div>';
     return true;
   }
   function mergeRemote(documents){
@@ -269,26 +345,21 @@
       console.warn('Se mantiene el catálogo base porque no se pudieron leer los productos:',error);
     });
   }
-  function bindQuickNavigation(){
+  function bindGroupFilters(){
     document.addEventListener('click',function(event){
-      var button = event.target && event.target.closest ? event.target.closest('.nc-quick-nav__btn[data-nc-program]') : null;
-      if(!button) return;
-      activeQuickProgram = button.getAttribute('data-nc-program') || '';
-      document.querySelectorAll('.nc-quick-nav__btn').forEach(function(item){
-        item.classList.toggle('active',item === button);
-      });
-      var target = document.getElementById('programa-' + activeQuickProgram);
-      if(!target) return;
-      target.scrollIntoView({behavior:'smooth',block:'start'});
-      target.classList.remove('nc-card--focus');
-      void target.offsetWidth;
-      target.classList.add('nc-card--focus');
-      window.setTimeout(function(){ target.classList.remove('nc-card--focus'); },1600);
+      var button = event.target && event.target.closest ? event.target.closest('.nc-filter[data-nc-filter]') : null;
+      if(!button || !document.getElementById('nostra-ciclos-catalog')) return;
+      var selected = button.getAttribute('data-nc-filter') || 'todos';
+      if(selected !== 'todos' && !GROUPS.some(function(group){return group.id === selected;})) return;
+      activeGroup = selected;
+      render();
+      var focused = document.getElementById('nc-filter-' + selected);
+      if(focused) focused.focus({preventScroll:true});
     });
   }
   function start(){
     addStyles();
-    bindQuickNavigation();
+    bindGroupFilters();
     render();
     loadRemote();
     var attempts = 0;
