@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-07",
+  "updated_at": "2026-11-08",
   "experiencias": [
     {
       "id": "ondas-armonicas-transversales-longitudinales-v8",
@@ -11,9 +11,11 @@
       "publicado": true,
       "publicado_el": "2026-11-07",
       "version": "v8",
-      "sha256": "0f0d45dc30771e3c1fb6827c1f9c98b5bd3914690c44d0b0ae9a84d92386231d",
+      "sha256": "06bacc158c164a9b9971f21f4da7c51e85cdbf43009891a1d9a41c0d318303cd",
       "miniatura": "experiencias/ondas-armonicas-transversales-longitudinales-v8/miniatura.svg",
-      "compartir": "experiencias/ondas-armonicas-transversales-longitudinales-v8/compartir.html"
+      "compartir": "experiencias/ondas-armonicas-transversales-longitudinales-v8/compartir.html",
+      "revision_academica": "UNI-v002",
+      "actualizado_el": "2026-11-08"
     },
     {
       "id": "pulsos-transversales-longitudinales-no-armonicos-v15",
@@ -24,9 +26,11 @@
       "publicado": true,
       "publicado_el": "2026-11-07",
       "version": "v1.5",
-      "sha256": "a4d6bc3463b28104fef7638078d3d29dd7cd52ee65bdaf802f3fca32fc711e7e",
+      "sha256": "0971db1786292855795b563d4cd3fbc1c3b4f88e093ae6d3933223aa1ad2a338",
       "miniatura": "experiencias/pulsos-transversales-longitudinales-no-armonicos-v15/miniatura.svg",
-      "compartir": "experiencias/pulsos-transversales-longitudinales-no-armonicos-v15/compartir.html"
+      "compartir": "experiencias/pulsos-transversales-longitudinales-no-armonicos-v15/compartir.html",
+      "revision_academica": "UNI-v002",
+      "actualizado_el": "2026-11-08"
     },
     {
       "id": "reflexion-transmision-pulsos-cuerdas-v24",
@@ -37,9 +41,11 @@
       "publicado": true,
       "publicado_el": "2026-11-07",
       "version": "v2.4",
-      "sha256": "baa0b72f0e4f090a85e9d956d7455a031edabb26f8c76ca4ff2e83cd909ad036",
+      "sha256": "1ffe26cf96c8ca3edade424c53b06ad47ee535956ed34305b448a424b4908333",
       "miniatura": "experiencias/reflexion-transmision-pulsos-cuerdas-v24/miniatura.svg",
-      "compartir": "experiencias/reflexion-transmision-pulsos-cuerdas-v24/compartir.html"
+      "compartir": "experiencias/reflexion-transmision-pulsos-cuerdas-v24/compartir.html",
+      "revision_academica": "UNI-v002",
+      "actualizado_el": "2026-11-08"
     }
   ]
 }
