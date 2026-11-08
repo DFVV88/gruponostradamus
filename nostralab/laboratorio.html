@@ -70,6 +70,10 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
 @media(max-width:420px){.toolbar-inner{justify-content:space-between}.actions{margin-left:0;width:100%;justify-content:space-between;align-items:stretch;gap:6px;order:3}.enroll,.back,.share{flex:1 1 0;min-width:0}.enroll,.back,.share-trigger{font-size:11px;min-height:44px;padding:7px 4px;line-height:1.12;text-align:center;justify-content:center}.enroll,.back{white-space:normal}.share-trigger{width:100%;gap:4px}.share-trigger svg{width:14px;flex:0 0 14px}.lab-title{order:2;flex:1;text-align:right;max-width:60%;padding:0}.brand{flex:0 0 auto}.share-panel{right:10px;max-width:calc(100vw - 20px)}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
 </style>
+
+<!-- Vista previa social Grupo Nostradamus -->
+<meta property="og:locale" content="es_PE"><meta property="og:type" content="website"><meta property="og:site_name" content="Grupo Nostradamus"><meta property="og:title" content="Laboratorio científico | NostraLAB"><meta property="og:description" content="Explora laboratorios científicos interactivos gratuitos de Grupo Nostradamus."><meta property="og:url" content="https://gruponostradamus.edu.pe/nostralab/laboratorio.html"><meta property="og:image" content="https://gruponostradamus.edu.pe/assets/img/social/nostralab_og.jpg"><meta property="og:image:secure_url" content="https://gruponostradamus.edu.pe/assets/img/social/nostralab_og.jpg"><meta property="og:image:type" content="image/jpeg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Laboratorio científico | NostraLAB"><meta name="twitter:description" content="Explora laboratorios científicos interactivos gratuitos de Grupo Nostradamus."><meta name="twitter:image" content="https://gruponostradamus.edu.pe/assets/img/social/nostralab_og.jpg">
+<!-- Fin vista previa social -->
 </head>
 <body>
 <header class="toolbar"><div class="toolbar-inner">
@@ -132,6 +136,7 @@ if(!e)throw Error('Experiencia no publicada');
 title=e.titulo+' | NostraLAB';
 document.title=title;
 document.getElementById('titulo').textContent=e.titulo;
+if(e.compartir && e.compartir==='experiencias/'+id+'/compartir.html'){shareUrl=new URL('./'+e.compartir,location.href).toString();}
 var frame=document.getElementById('experimento');frame.title=e.titulo+' — Simulador interactivo';frame.src='./'+e.ruta;
 shareTargets(e.titulo);
 loading.hidden=true;document.getElementById('lab').hidden=false;

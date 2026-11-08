@@ -47,3 +47,10 @@ Todas las tarjetas publicadas deben apuntar directamente a `./laboratorio.html?i
 
 ## Captación institucional permanente
 En cada visor de NostraLAB, incluir arriba el botón visible «Matrícula» con destino único al formulario oficial `https://gruponostradamus.edu.pe/preinscripcion.html`. No crear formularios paralelos ni redirigir a WhatsApp en sustitución del formulario. La barra de acciones será Matrícula · Compartir · Ver otros laboratorios, sin botón de pantalla independiente. Comprobar destino en escritorio/móvil tras cada actualización.
+
+## Previsualizaciones WhatsApp/Facebook/X (Open Graph)
+- La web pública tiene portadas JPG institucionales de 1200x630 en `assets/img/social/` y meta `og:image` en páginas públicas.
+- NostraLAB comparte imagen propia; cada laboratorio publicado debe incorporar su página `experiencias/<id>/compartir.html` con metadatos OG específicos y redirección inmediata por JavaScript al visor dedicado, para no mostrar una pantalla intermedia al alumno.
+- Desde `laboratorio.html`, los enlaces Compartir y Copiar deben utilizar el campo `compartir` del catálogo cuando exista; sin él, conservar la URL del visor.
+- Las redes pueden conservar previews en caché durante un tiempo. No borrar el favicon, que cumple otra función.
+- Los originales de las portadas sociales permanecen en SharePoint NOSTRAOS `General/05_COMERCIAL/01_MARKETING/00_ACTIVOS_OFICIALES/09_PORTADAS_SOCIALES`.
