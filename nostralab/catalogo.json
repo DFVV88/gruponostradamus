@@ -27,6 +27,19 @@
       "sha256": "a4d6bc3463b28104fef7638078d3d29dd7cd52ee65bdaf802f3fca32fc711e7e",
       "miniatura": "experiencias/pulsos-transversales-longitudinales-no-armonicos-v15/miniatura.svg",
       "compartir": "experiencias/pulsos-transversales-longitudinales-no-armonicos-v15/compartir.html"
+    },
+    {
+      "id": "reflexion-transmision-pulsos-cuerdas-v24",
+      "titulo": "Reflexión y transmisión de pulsos en cuerdas",
+      "curso": "Física",
+      "descripcion": "Compara la reflexión de un pulso en apoyo fijo o deslizable y su reflexión y transmisión entre cuerdas de distinta densidad con unión ideal. Ajusta tensión y rapidez incidente; analiza el reparto de energía y potencia.",
+      "ruta": "experiencias/reflexion-transmision-pulsos-cuerdas-v24/index.html",
+      "publicado": true,
+      "publicado_el": "2026-11-07",
+      "version": "v2.4",
+      "sha256": "baa0b72f0e4f090a85e9d956d7455a031edabb26f8c76ca4ff2e83cd909ad036",
+      "miniatura": "experiencias/reflexion-transmision-pulsos-cuerdas-v24/miniatura.svg",
+      "compartir": "experiencias/reflexion-transmision-pulsos-cuerdas-v24/compartir.html"
     }
   ]
 }
