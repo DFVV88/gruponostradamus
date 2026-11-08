@@ -14,7 +14,7 @@
   var DEFAULT = {
     title: 'Grupo Nostradamus | Preparación UNI',
     description: 'Grupo de Estudio Nostradamus: preparación UNI con método, tecnología, simulacros tipo admisión y acompañamiento académico para futuros ingenieros.',
-    image: BASE + '/assets/img/slider/slider-1.jpg'
+    image: BASE + '/assets/img/social/nostradamus_og_blanco.png'
   };
 
   var DATA = {
@@ -23,87 +23,87 @@
     'ciclos.html': {
       title: 'Ciclos Académicos UNI | Grupo Nostradamus',
       description: 'Conoce nuestros programas de preparación UNI: NostraRUTA, IEN, Proyecto Escolar, Paralelo CEPRE UNI, Verano y NostraWEEKEND.',
-      image: BASE + '/assets/img/ciclos/ciclo-anual.jpg'
+      image: BASE + '/assets/img/social/nostradamus_og_blanco.png'
     },
     'ciclo-anual-uni.html': {
       title: 'Ciclo Anual UNI | Grupo Nostradamus',
       description: 'Preparación completa desde base hasta nivel admisión UNI, con teoría, práctica intensiva, simulacros y seguimiento académico.',
-      image: BASE + '/assets/img/ciclos/ciclo-anual.jpg'
+      image: BASE + '/assets/img/social/nostradamus_og_blanco.png'
     },
     'ciclo-semianual-uni.html': {
       title: 'Ciclo Semianual UNI | Grupo Nostradamus',
       description: 'Entrenamiento intensivo para postulantes con base previa que quieren elevar su rendimiento hacia la UNI.',
-      image: BASE + '/assets/img/ciclos/ciclo-semianual.jpg'
+      image: BASE + '/assets/img/social/nostradamus_og_blanco.png'
     },
     'ciclo-semestral-uni.html': {
       title: 'Ciclo Semestral UNI | Grupo Nostradamus',
       description: 'Preparación estratégica para avanzar con práctica constante, evaluaciones y enfoque en admisión UNI.',
-      image: BASE + '/assets/img/ciclos/ciclo-semestral.jpg'
+      image: BASE + '/assets/img/social/nostradamus_og_blanco.png'
     },
     'ciclo-elite-uni.html': {
       title: 'Ciclo Élite UNI | Alto Rendimiento',
       description: 'Programa de alta exigencia para postulantes que buscan competir por los primeros puestos en la UNI.',
-      image: BASE + '/assets/img/ciclos/ciclo-elite.jpg'
+      image: BASE + '/assets/img/social/nostradamus_og_blanco.png'
     },
     'ciclo-ien.html': {
       title: 'Ciclo IEN UNI | Grupo Nostradamus',
       description: 'Preparación especializada con práctica intensiva, acompañamiento docente y seguimiento académico.',
-      image: BASE + '/assets/img/logo.png'
+      image: BASE + '/assets/img/social/nostradamus_og_blanco.png'
     },
     'ciclo-verano-uni.html': {
       title: 'Ciclo Verano UNI | Grupo Nostradamus',
       description: 'Avanza durante vacaciones con preparación intensiva, refuerzo de bases y práctica académica.',
-      image: BASE + '/assets/img/ciclos/ciclo-verano.jpg'
+      image: BASE + '/assets/img/social/nostradamus_og_blanco.png'
     },
     'ciclo-weekend-uni.html': {
       title: 'NostraWEEKEND | Grupo Nostradamus',
       description: 'Preparación complementaria UNI con opciones Sabatino y Dominical para estudiar durante el fin de semana.',
-      image: BASE + '/assets/img/logo.png'
+      image: BASE + '/assets/img/social/nostradamus_og_blanco.png'
     },
     'ciclo-repaso-uni.html': {
       title: 'Ciclo Repaso UNI | Grupo Nostradamus',
       description: 'Refuerza temas clave, practica preguntas tipo admisión y consolida tu rendimiento antes del examen.',
-      image: BASE + '/assets/img/ciclos/ciclo-repaso.jpg'
+      image: BASE + '/assets/img/social/nostradamus_og_blanco.png'
     },
     'ciclo-paralelo-cepre-uni.html': {
       title: 'Paralelo CEPRE UNI | Grupo Nostradamus',
       description: 'Refuerzo paralelo para alumnos de CEPRE UNI que buscan mejorar rendimiento y sostener una preparación competitiva.',
-      image: BASE + '/assets/img/logo.png'
+      image: BASE + '/assets/img/social/nostradamus_og_blanco.png'
     },
     'ciclo-proyecto-escolar.html': {
       title: 'Proyecto Escolar | Grupo Nostradamus',
       description: 'Fortalece bases académicas, hábitos de estudio y rendimiento en Matemáticas, Ciencias y Aptitud Académica.',
-      image: BASE + '/assets/img/logo.png'
+      image: BASE + '/assets/img/social/nostradamus_og_blanco.png'
     },
     'docentes.html': {
       title: 'Docentes | Grupo Nostradamus',
       description: 'Conoce a nuestra plana docente especializada en preparación UNI y formación académica de alto nivel.',
-      image: BASE + '/assets/img/logo.png'
+      image: BASE + '/assets/img/social/nostradamus_og_blanco.png'
     },
     'cachimbos.html': {
       title: 'Cachimbos UNI | Grupo Nostradamus',
       description: 'Historias y resultados de alumnos que alcanzaron su ingreso a la Universidad Nacional de Ingeniería.',
-      image: BASE + '/assets/img/logo.png'
+      image: BASE + '/assets/img/social/nostradamus_og_blanco.png'
     },
     'sedes.html': {
       title: 'Sede | Grupo Nostradamus',
       description: 'Ubicación, contacto y canales de atención del Grupo Nostradamus para postulantes y familias.',
-      image: BASE + '/assets/img/logo.png'
+      image: BASE + '/assets/img/social/nostradamus_og_blanco.png'
     },
     'blog.html': {
       title: 'Noticias y Consejos UNI | Grupo Nostradamus',
       description: 'Contenido útil, orientación académica y novedades para postulantes a la UNI.',
-      image: BASE + '/assets/img/logo.png'
+      image: BASE + '/assets/img/social/nostradamus_og_blanco.png'
     },
     'sobre-nosotros.html': {
       title: 'Sobre Nosotros | Grupo Nostradamus',
       description: 'Conoce nuestra trayectoria, método académico y compromiso con la preparación de postulantes UNI.',
-      image: BASE + '/assets/img/logo.png'
+      image: BASE + '/assets/img/social/nostradamus_og_blanco.png'
     },
     'contacto.html': {
       title: 'Contacto | Grupo Nostradamus',
       description: 'Solicita informes sobre ciclos, horarios, matrícula y preparación UNI en Grupo Nostradamus.',
-      image: BASE + '/assets/img/logo.png'
+      image: BASE + '/assets/img/social/nostradamus_og_blanco.png'
     }
   };
 

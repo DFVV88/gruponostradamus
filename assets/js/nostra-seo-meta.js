@@ -188,10 +188,10 @@
   setProperty('og:title', data.title);
   setProperty('og:description', data.description);
   setProperty('og:url', canonicalUrl);
-  setProperty('og:image', base + 'assets/img/logo.png');
+  setProperty('og:image', base + 'assets/img/social/nostradamus_og_blanco.png');
 
   setMeta('twitter:card', 'summary_large_image');
   setMeta('twitter:title', data.title);
   setMeta('twitter:description', data.description);
-  setMeta('twitter:image', base + 'assets/img/logo.png');
+  setMeta('twitter:image', base + 'assets/img/social/nostradamus_og_blanco.png');
 })();
