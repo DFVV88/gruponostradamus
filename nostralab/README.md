@@ -54,3 +54,7 @@ En cada visor de NostraLAB, incluir arriba el botón visible «Matrícula» con 
 - Desde `laboratorio.html`, los enlaces Compartir y Copiar deben utilizar el campo `compartir` del catálogo cuando exista; sin él, conservar la URL del visor.
 - Las redes pueden conservar previews en caché durante un tiempo. No borrar el favicon, que cumple otra función.
 - Los originales de las portadas sociales permanecen en SharePoint NOSTRAOS `General/05_COMERCIAL/01_MARKETING/00_ACTIVOS_OFICIALES/09_PORTADAS_SOCIALES`.
+
+## Visitas acumuladas por simulador (NostraLAB v1.10)
+El visor laboratorio.html?id=<id> muestra el contador individual únicamente tras confirmación real de Firebase. El HTML científico conserva su hash y funciona offline. Cada nuevo proyecto aprobado requiere publicar el slug en catalogo.json y functions/lib/nostralab-approved.json, desplegar la función y validar el registro.
+Ver functions/NOSTRALAB_VISITAS.md para instalación, pruebas, privacidad y activación de Firebase.

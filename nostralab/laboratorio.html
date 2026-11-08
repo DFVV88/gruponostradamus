@@ -70,6 +70,12 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
 @media(max-width:375px){.brand img{width:56px}.brand{font-size:13px}.enroll,.back,.share-trigger{font-size:11px;padding:7px}.share-trigger{gap:4px}}
 @media(max-width:420px){.toolbar-inner{justify-content:space-between}.actions{margin-left:0;width:100%;justify-content:space-between;align-items:stretch;gap:6px;order:3}.enroll,.back,.share{flex:1 1 0;min-width:0}.enroll,.back,.share-trigger{font-size:11px;min-height:44px;padding:7px 4px;line-height:1.12;text-align:center;justify-content:center}.enroll,.back{white-space:normal}.share-trigger{width:100%;gap:4px}.share-trigger svg{width:14px;flex:0 0 14px}.lab-title{order:2;flex:1;text-align:right;max-width:60%;padding:0}.brand{flex:0 0 auto}.share-panel{right:10px;max-width:calc(100vw - 20px)}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+.visit-count{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid #cde3e7;background:#f2fafb;border-radius:999px;color:#075861;font-size:12px;font-weight:680;white-space:nowrap;flex:0 0 auto;max-width:100%}
+.visit-count strong{font-weight:900;font-variant-numeric:tabular-nums;font-size:13px}
+.visit-count svg{flex:0 0 auto}
+@media(max-width:860px){.visit-count{padding:6px 8px;font-size:11px}}
+@media(max-width:620px){.visit-count{order:2;margin-left:auto}.visit-count .vis-label{display:none}}
+@media(max-width:420px){.visit-count{order:2;margin-left:auto}.lab-title{order:4;flex:0 0 100%;max-width:none;text-align:center;padding:2px}.actions{order:3;width:100%}}
 </style>
 
 <!-- Vista previa social Grupo Nostradamus -->
@@ -80,6 +86,11 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
 <header class="toolbar"><div class="toolbar-inner">
 <a class="brand" href="./" aria-label="Catálogo NostraLAB"><img src="../assets/img/logo.png" alt="Grupo Nostradamus"><span class="brand-name">NostraLAB</span></a>
 <div class="lab-title" id="titulo" aria-live="polite">Laboratorio interactivo</div>
+<div class="visit-count" id="nostralab-visitas" hidden title="Visitas acumuladas de este laboratorio" aria-live="polite">
+  <svg viewBox="0 0 24 24" aria-hidden="true" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-6.6 10-6.6S22 12 22 12s-3.6 6.6-10 6.6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+  <strong id="nostralab-visitas-total" aria-live="off">—</strong>
+  <span class="vis-label">visitas acumuladas</span>
+</div>
 <nav class="actions" aria-label="Acciones del laboratorio">
 <a class="enroll enroll-glow" id="matricula" href="../preinscripcion.html" target="_blank" rel="noopener noreferrer" aria-label="Matrícula: abrir formulario de preinscripción de Grupo Nostradamus"><span class="enroll-icon" aria-hidden="true">✦</span><span class="enroll-text">MATRÍCULA</span><span class="enroll-arrow" aria-hidden="true">↗</span></a>
 <details class="share" id="shareMenu"><summary class="share-trigger" aria-label="Compartir laboratorio en redes sociales"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.9 7.5-4.5m-7.5 6.7 7.5 4.5"/></svg>Compartir</summary>
@@ -101,6 +112,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
 <div id="loading" class="notice" role="status">Cargando laboratorio...</div>
 <section id="lab" hidden aria-label="Simulador interactivo"><iframe id="experimento" title="Experiencia científica interactiva" loading="eager" sandbox="allow-scripts allow-downloads" referrerpolicy="no-referrer" allowfullscreen></iframe></section>
 </main>
+<script src="../assets/js/nostralab-visitas.js"></script>
 <script>
 (function(){
 'use strict';
@@ -141,6 +153,7 @@ if(e.compartir && e.compartir==='experiencias/'+id+'/compartir.html'){shareUrl=n
 var frame=document.getElementById('experimento');frame.title=e.titulo+' — Simulador interactivo';frame.src='./'+e.ruta;
 shareTargets(e.titulo);
 loading.hidden=true;document.getElementById('lab').hidden=false;
+document.dispatchEvent(new CustomEvent('nostralab:ready', {detail:{id:id}}));
 }).catch(function(){loading.innerHTML='Esta experiencia todavía no está disponible. <a href="./#experiencias">Ver otros laboratorios</a>.';});
 })();
 </script>

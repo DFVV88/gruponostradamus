@@ -26,6 +26,8 @@ on:
       - "assets/js/nostrachat-admin.js"
       - "assets/js/nostrachat-admin-users.js"
       - "assets/js/nostrachat-admin-images.js"
+      - "assets/js/nostralab-visitas.js"
+      - "nostralab/laboratorio.html"
       - ".github/workflows/validate-culqi-backend.yml"
 
 permissions:
@@ -68,6 +70,7 @@ jobs:
           node --check assets/js/nostrachat-admin.js
           node --check assets/js/nostrachat-admin-users.js
           node --check assets/js/nostrachat-admin-images.js
+          node --check assets/js/nostralab-visitas.js
 
       - name: Validar archivos JSON
         run: |
