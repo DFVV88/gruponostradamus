@@ -1,0 +1,29 @@
+name: NostraLAB preview HTML package
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+permissions:
+  contents: read
+jobs:
+  pack-preview:
+    if: github.event.pull_request.number == 48
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify HTML and assemble preview package
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s nostralab/revisiones/2026-11-08/ondas-armonicas-uni-v1.html
+          test -s nostralab/revisiones/2026-11-08/pulsos-no-armonicos-uni-v1.html
+          test -s nostralab/revisiones/2026-11-08/reflexion-transmision-uni-v1.html
+          mkdir -p paquete-nostralab-uni
+          cp nostralab/revisiones/2026-11-08/*.html paquete-nostralab-uni/
+          cp nostralab/revisiones/2026-11-08/INFORME_QA.md paquete-nostralab-uni/
+          (cd paquete-nostralab-uni && sha256sum *.html > SHA256SUMS.txt)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NostraLAB-3-HTML-UNI-Vista-Previa
+          path: paquete-nostralab-uni/
+          retention-days: 3
+          if-no-files-found: error
