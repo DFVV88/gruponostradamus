@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-label="Pulsos transversales y longitudinales; perfiles suave, triangular y meseta">
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#022D33"/><stop offset="1" stop-color="#075861"/></linearGradient><linearGradient id="trace" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#4AC7D3"/><stop offset="1" stop-color="#00BBE4"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="3"/></filter></defs>
+<rect width="1280" height="720" fill="url(#bg)"/><g opacity=".17" stroke="#3db2bf" stroke-width="1"><path d="M0 130H1280M0 250H1280M0 370H1280M0 490H1280M0 610H1280" fill="none"/><path d="M130 0V720M260 0V720M390 0V720M520 0V720M650 0V720M780 0V720M910 0V720M1040 0V720M1170 0V720" fill="none"/></g>
+<rect x="70" y="56" width="340" height="44" rx="22" fill="#104c56" stroke="#41bbc6" stroke-opacity=".6"/><text x="95" y="85" font-size="24" font-family="DejaVu Sans,sans-serif" font-weight="bold" fill="#b4f3f7">NOSTRALAB · FÍSICA</text>
+<text x="70" y="167" font-size="58" font-weight="bold" font-family="DejaVu Sans,sans-serif" fill="white">PULSOS NO ARMÓNICOS</text>
+<text x="70" y="219" font-size="29" font-family="DejaVu Sans,sans-serif" fill="#b1e0e5">Transversales y longitudinales</text>
+<g transform="translate(70 265)"><rect width="1140" height="370" rx="24" fill="#f3fbfb" fill-opacity=".97"/>
+<text x="34" y="46" font-size="22" font-weight="bold" fill="#075861" font-family="DejaVu Sans,sans-serif">OBSERVA CÓMO VIAJA LA PERTURBACIÓN</text>
+<path d="M38 180 H1105" fill="none" stroke="#c1d9dd" stroke-width="2" stroke-dasharray="9 8"/>
+<path d="M38 180 L205 180 C236 180 241 62 325 62 C409 62 414 180 445 180 L485 180" fill="none" stroke="url(#trace)" stroke-width="9" stroke-linecap="round"/>
+<path d="M485 180 L585 180 L665 70 L745 180 L790 180" fill="none" stroke="#e3aa58" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M790 180 L825 180 Q840 180 851 129 Q863 85 897 85 L950 85 Q984 85 996 129 Q1007 180 1024 180 L1105 180" fill="none" stroke="#118b9b" stroke-width="9" stroke-linecap="round"/>
+<text x="240" y="226" font-family="DejaVu Sans,sans-serif" font-weight="bold" font-size="23" fill="#075861">SUAVE</text>
+<text x="591" y="226" font-family="DejaVu Sans,sans-serif" font-weight="bold" font-size="23" fill="#075861">TRIANGULAR</text>
+<text x="883" y="226" font-family="DejaVu Sans,sans-serif" font-weight="bold" font-size="23" fill="#075861">MESETA</text>
+<line x1="55" y1="285" x2="1084" y2="285" stroke="#aeced1" stroke-width="2"/>
+<g fill="#118b9b"><circle cx="135" cy="285" r="10"/><circle cx="191" cy="285" r="10"/><circle cx="260" cy="285" r="10"/><circle cx="317" cy="285" r="10"/><circle cx="373" cy="285" r="10"/><circle cx="428" cy="285" r="10"/><circle cx="483" cy="285" r="10"/><circle cx="540" cy="285" r="10"/><circle cx="593" cy="285" r="10"/><circle cx="649" cy="285" r="10"/><circle cx="706" cy="285" r="10"/><circle cx="765" cy="285" r="10"/><circle cx="821" cy="285" r="10"/><circle cx="883" cy="285" r="10"/><circle cx="946" cy="285" r="10"/></g>
+<path d="M983 285 H1070" fill="none" stroke="#be813a" stroke-width="6" stroke-linecap="round"/><path d="M1055 275 L1071 285 L1055 295" fill="none" stroke="#be813a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="35" y="343" fill="#58777c" font-family="DejaVu Sans,sans-serif" font-size="20">Movimiento perpendicular o paralelo a la propagación</text></g>
+</svg>

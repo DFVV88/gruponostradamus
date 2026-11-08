@@ -14,6 +14,19 @@
       "sha256": "0f0d45dc30771e3c1fb6827c1f9c98b5bd3914690c44d0b0ae9a84d92386231d",
       "miniatura": "experiencias/ondas-armonicas-transversales-longitudinales-v8/miniatura.svg",
       "compartir": "experiencias/ondas-armonicas-transversales-longitudinales-v8/compartir.html"
+    },
+    {
+      "id": "pulsos-transversales-longitudinales-no-armonicos-v15",
+      "titulo": "Pulsos transversales y longitudinales no armónicos",
+      "curso": "Física",
+      "descripcion": "Explora pulsos viajeros no periódicos. Compara el movimiento perpendicular y paralelo de las partículas, elige perfiles suave, triangular o de meseta y ajusta rapidez, amplitud, ancho y dirección.",
+      "ruta": "experiencias/pulsos-transversales-longitudinales-no-armonicos-v15/index.html",
+      "publicado": true,
+      "publicado_el": "2026-11-07",
+      "version": "v1.5",
+      "sha256": "a4d6bc3463b28104fef7638078d3d29dd7cd52ee65bdaf802f3fca32fc711e7e",
+      "miniatura": "experiencias/pulsos-transversales-longitudinales-no-armonicos-v15/miniatura.svg",
+      "compartir": "experiencias/pulsos-transversales-longitudinales-no-armonicos-v15/compartir.html"
     }
   ]
 }
