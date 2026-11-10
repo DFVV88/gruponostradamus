@@ -28,6 +28,8 @@ on:
       - "assets/js/nostrachat-admin-images.js"
       - "assets/js/nostralab-visitas.js"
       - "nostralab/laboratorio.html"
+      - "nostralab/index.html"
+      - "nostralab/catalogo.json"
       - ".github/workflows/validate-culqi-backend.yml"
 
 permissions:

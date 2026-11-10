@@ -60,3 +60,24 @@ test('las versiones públicas pueden avanzar sin cambiar el ID ni reiniciar las 
     assert.match(lab.sha256, /^[0-9a-f]{64}$/);
   }
 });
+
+test('el catálogo incluye todas las experiencias publicadas aunque cambie la versión', () => {
+  const vm = require('node:vm');
+  const html = fs.readFileSync(path.join(repoRoot, 'nostralab/index.html'), 'utf8');
+  const match = html.match(/function safe\(entry\)\{[\s\S]*?\n\}/);
+  assert.ok(match, 'el catálogo debe conservar un filtro safe auditable');
+  const safe = vm.runInNewContext('(' + match[0] + ')', {
+    allowed: new Set(['Física', 'Química', 'Biología', 'Matemática'])
+  });
+  const published = catalog.experiencias.filter(x => x.publicado === true);
+  assert.ok(published.length >= 4, 'se deben conservar como mínimo los cuatro proyectos ya publicados');
+  for (const entry of published) {
+    assert.equal(safe(entry), true, 'laboratorio público oculto: ' + entry.id);
+  }
+  const revised = published.find(x => x.id === 'circunferencia-trigonometrica-v31');
+  assert.equal(revised.version, 'v32', 'versión científica publicada');
+  assert.equal(safe({ ...revised, publicado: false }), false);
+  assert.equal(safe({ ...revised, ruta: 'experiencias/otro-proyecto-v32/index.html' }), false);
+  assert.equal(safe({ ...revised, ruta: 'experiencias/../secreto/index.html' }), false);
+  assert.equal(safe({ ...revised, version_anterior: undefined }), false);
+});
