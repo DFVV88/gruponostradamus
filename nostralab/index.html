@@ -7,6 +7,7 @@
 <title>NostraLAB | Laboratorio científico interactivo - Grupo Nostradamus</title>
 <meta name="description" content="Explora laboratorios científicos interactivos de Física, Química, Biología y Matemática de Grupo Nostradamus. Experimenta desde tu celular o computadora.">
 <meta name="robots" content="index,follow">
+<meta name="google-adsense-account" content="ca-pub-9810053992087127">
 <link rel="canonical" href="https://gruponostradamus.edu.pe/nostralab/">
 <link rel="icon" href="../assets/img/favicons/iocon-ostradamus.png">
 <style>
@@ -66,6 +67,25 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 @media(max-width:800px){.hero-inner{grid-template-columns:1fr}.hero-visual{min-height:190px}.hero-visual svg{max-width:340px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{padding:50px 0 40px}}
 @media(max-width:550px){.top{min-height:68px}.brand img{width:92px;height:44px}.brand-label{font-size:17px;padding-left:9px}.navlink{font-size:12px}.cards{grid-template-columns:1fr}.hero-visual{display:none}.filters{width:100%}.filters button{flex:1 0 auto}.wrap{width:min(100% - 28px,1150px)}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* Guías didácticas estáticas, rastreables incluso sin JavaScript. */
+section.learning{padding:0 0 88px}
+.learning-head{margin:0 0 24px}
+.learning-head .eyebrow{color:var(--teal);margin-bottom:9px}
+.learning-head p{max-width:780px;margin:8px 0 0;color:var(--muted);font-size:16px}
+.learning-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:19px}
+.learning-card{min-width:0;display:grid;grid-template-columns:150px 1fr;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 8px 22px rgba(0,48,56,.05)}
+.learning-card img{display:block;width:150px;height:100%;min-height:180px;object-fit:cover;background:var(--deep)}
+.learning-card .content{padding:20px}
+.learning-card span{font-size:11px;font-weight:900;color:var(--teal);text-transform:uppercase;letter-spacing:.04em}
+.learning-card h3{margin:5px 0 9px;font-size:19px;line-height:1.28;color:var(--deep)}
+.learning-card p{font-size:13.5px;color:var(--muted);margin:0 0 12px}
+.learning-card .learn-links{display:flex;flex-wrap:wrap;gap:9px 15px}
+.learning-card .learn-links a{font-weight:850;color:var(--teal);font-size:13px;text-decoration:underline;text-underline-offset:3px}
+.learning-method{margin-top:25px;background:#e9f5f6;border-left:4px solid var(--teal);border-radius:12px;padding:17px 21px;color:#345b63;font-size:14px}
+@media(max-width:900px){.learning-grid{grid-template-columns:1fr}.learning-card{grid-template-columns:170px 1fr}.learning-card img{width:170px}}
+@media(max-width:550px){section.learning{padding-bottom:55px}.learning-card{grid-template-columns:1fr}.learning-card img{width:100%;height:150px;min-height:0}.learning-card .content{padding:18px}}
+
 </style>
 
 <!-- Vista previa social Grupo Nostradamus -->
@@ -78,8 +98,18 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 <section class="hero"><div class="wrap hero-inner"><div><div class="eyebrow">Grupo Nostradamus · Ciencia en movimiento</div><h1>La ciencia se<br>experimenta.</h1><p>Explora fenómenos, modifica variables y descubre las leyes que explican nuestro mundo. Tu laboratorio interactivo, desde cualquier dispositivo.</p><a class="primary" href="#experiencias">Explorar experiencias</a></div><div class="hero-visual" aria-hidden="true"><svg viewBox="0 0 460 300" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="w" x1="0" x2="1"><stop stop-color="#68dfe9"/><stop offset="1" stop-color="#fff"/></linearGradient></defs><rect x="20" y="22" width="420" height="252" rx="22" fill="#ffffff" fill-opacity=".07" stroke="#ffffff" stroke-opacity=".22"/><g stroke="#ffffff" stroke-opacity=".13"><path d="M54 65H409M54 110H409M54 155H409M54 200H409M54 245H409M95 49V252M160 49V252M225 49V252M290 49V252M355 49V252"/></g><path d="M50 158H412" stroke="#ffffff" stroke-opacity=".42" stroke-width="1.5"/><path class="trace" d="M50 157 C95 157 95 157 125 157 S172 76 208 82 S261 219 304 219 S355 157 412 157" fill="none" stroke="url(#w)" stroke-width="5" stroke-linecap="round"/><circle cx="208" cy="82" r="7" fill="#00bbe4"/><text x="54" y="45" font-size="12" fill="#d2eef1" font-family="system-ui">y (m)</text><text x="386" y="264" font-size="12" fill="#d2eef1" font-family="system-ui">x (m)</text></svg></div></div></section>
 <section class="catalog wrap" id="experiencias"><div class="section-top"><div><div class="eyebrow" style="color:var(--teal)">Biblioteca científica</div><h2>Experiencias interactivas</h2><p>Selecciona una disciplina y experimenta a tu ritmo.</p></div><span class="count" id="total" aria-live="polite">Cargando experiencias...</span></div>
 <div class="toolbar"><input class="search" id="buscar" type="search" autocomplete="off" maxlength="120" placeholder="Buscar por tema o fenómeno..." aria-label="Buscar simuladores"><div class="filters" aria-label="Filtrar por disciplina" role="group"><button type="button" data-curso="Todos" aria-pressed="true">Todos</button><button type="button" data-curso="Física" aria-pressed="false">Física</button><button type="button" data-curso="Química" aria-pressed="false">Química</button><button type="button" data-curso="Biología" aria-pressed="false">Biología</button><button type="button" data-curso="Matemática" aria-pressed="false">Matemática</button></div></div>
-<div class="cards" id="resultados" aria-live="polite"></div><div class="empty" id="vacio" hidden><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="29" fill="#e6f4f6"/><path d="M26 13h12M29 13v16L17 49a6 6 0 0 0 5 9h20a6 6 0 0 0 5-9L35 29V13M24 43h16" fill="none" stroke="#068695" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><h3 id="vacioTitulo">Próximamente: primeras experiencias</h3><p id="vacioTexto">Estamos preparando el catálogo del laboratorio. Aquí aparecerán únicamente simulaciones científicas revisadas y aprobadas por Grupo Nostradamus.</p></div>
+<div class="cards" id="resultados" aria-live="polite"></div><div class="empty" id="vacio" hidden><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="29" fill="#e6f4f6"/><path d="M26 13h12M29 13v16L17 49a6 6 0 0 0 5 9h20a6 6 0 0 0 5-9L35 29V13M24 43h16" fill="none" stroke="#068695" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><h3 id="vacioTitulo">No se encontraron experiencias</h3><p id="vacioTexto">Prueba otros filtros o consulta las guías científicas disponibles a continuación.</p></div>
 <div class="footnote"><strong>Aprender haciendo.</strong> Cada experiencia incluye controles interactivos, explicaciones científicas y magnitudes con unidades del Sistema Internacional. Algunas simulaciones emplean modelos idealizados, que se identifican dentro de cada laboratorio.</div></section>
+<section class="learning wrap" id="guias" aria-labelledby="guias-titulo">
+<div class="learning-head"><div class="eyebrow">Aprendizaje experimental</div><h2 id="guias-titulo">Guías didácticas para aprender antes y después de experimentar</h2><p>Los simuladores permiten plantear hipótesis, observar variaciones y contrastar resultados. Estas guías gratuitas explican conceptos, proponen actividades y ofrecen preguntas resueltas para que cada experiencia tenga un objetivo de aprendizaje claro.</p></div>
+<div class="learning-grid">
+<article class="learning-card"><img src="experiencias/circunferencia-trigonometrica-v31/miniatura.svg" loading="lazy" decoding="async" alt="Circunferencia trigonométrica y líneas de referencia"><div class="content"><span>Matemática · Trigonometría</span><h3>Circunferencia trigonométrica y seis razones</h3><p>Relaciona el ángulo orientado con seno, coseno y las demás razones. Reconoce signos, identidades y puntos no definidos.</p><nav class="learn-links" aria-label="Recursos de trigonometría"><a href="guias/circunferencia-trigonometrica.html">Leer guía didáctica</a><a href="laboratorio.html?id=circunferencia-trigonometrica-v31">Abrir simulador</a></nav></div></article>
+<article class="learning-card"><img src="experiencias/ondas-armonicas-transversales-longitudinales-v8/miniatura.svg" loading="lazy" decoding="async" alt="Representación de ondas transversales y longitudinales"><div class="content"><span>Física · Ondas periódicas</span><h3>Ondas armónicas transversales y longitudinales</h3><p>Estudia amplitud, longitud de onda, frecuencia, rapidez y movimiento de las partículas del medio.</p><nav class="learn-links" aria-label="Recursos de ondas armónicas"><a href="guias/ondas-armonicas-transversales-longitudinales.html">Leer guía didáctica</a><a href="laboratorio.html?id=ondas-armonicas-transversales-longitudinales-v8">Abrir simulador</a></nav></div></article>
+<article class="learning-card"><img src="experiencias/pulsos-transversales-longitudinales-no-armonicos-v15/miniatura.svg" loading="lazy" decoding="async" alt="Pulsos no periódicos de distintas formas"><div class="content"><span>Física · Pulsos viajeros</span><h3>Pulsos transversales y longitudinales</h3><p>Compara amplitud, ancho, forma y dirección de un pulso y distingue propagación de oscilación local.</p><nav class="learn-links" aria-label="Recursos de pulsos"><a href="guias/pulsos-transversales-longitudinales.html">Leer guía didáctica</a><a href="laboratorio.html?id=pulsos-transversales-longitudinales-no-armonicos-v15">Abrir simulador</a></nav></div></article>
+<article class="learning-card"><img src="experiencias/reflexion-transmision-pulsos-cuerdas-v24/miniatura.svg" loading="lazy" decoding="async" alt="Reflexión y transmisión de un pulso en una cuerda"><div class="content"><span>Física · Interacción de ondas</span><h3>Reflexión y transmisión en cuerdas</h3><p>Observa qué sucede en extremos fijos y libres y en la unión de cuerdas de diferentes propiedades.</p><nav class="learn-links" aria-label="Recursos de reflexión y transmisión"><a href="guias/reflexion-transmision-pulsos-cuerdas.html">Leer guía didáctica</a><a href="laboratorio.html?id=reflexion-transmision-pulsos-cuerdas-v24">Abrir simulador</a></nav></div></article>
+</div>
+<div class="learning-method"><strong>Cómo aprovechar NostraLAB:</strong> plantea una pregunta, anticipa el resultado, cambia una variable cada vez y anota qué ocurrió. Contrasta tu conclusión con la explicación científica y repite con nuevos parámetros.</div>
+</section>
 </main><footer><div class="wrap"><span>© Grupo Nostradamus · NostraLAB</span><a href="../index.html">Volver a la web institucional</a></div></footer>
 <script>
 (function(){
@@ -108,8 +138,8 @@ var q=search.value.trim().toLocaleLowerCase('es');
 var filtered=entries.filter(function(x){return(current==='Todos'||x.curso===current)&&(!q||(x.titulo+' '+x.descripcion+' '+x.curso).toLocaleLowerCase('es').includes(q));});
 total.textContent=filtered.length+' '+(filtered.length===1?'experiencia':'experiencias');
 empty.hidden=filtered.length>0;
-document.getElementById('vacioTitulo').textContent=entries.length===0?'Próximamente: primeras experiencias':'No encontramos experiencias';
-document.getElementById('vacioTexto').textContent=entries.length===0?'Aquí aparecerán las simulaciones científicas revisadas y aprobadas por Grupo Nostradamus.':'Prueba otra disciplina o palabra clave para explorar los laboratorios disponibles.';
+document.getElementById('vacioTitulo').textContent=entries.length===0?'Catálogo temporalmente no disponible':'No encontramos experiencias';
+document.getElementById('vacioTexto').textContent=entries.length===0?'Puedes consultar las guías educativas que aparecen debajo del catálogo.':'Prueba otra disciplina o palabra clave para explorar los laboratorios disponibles.';
 filtered.forEach(function(x){
 var a=document.createElement('a');a.className='lab';a.href='./laboratorio.html?id='+encodeURIComponent(x.id);
 var tag=document.createElement('span');tag.className='tag';tag.textContent=x.curso;
