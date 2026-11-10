@@ -107,8 +107,8 @@ test('los laboratorios públicos exhiben un pie institucional único e íntegro'
     const prevData = fs.readFileSync(original);
     assert.equal(crypto.createHash('sha256').update(prevData).digest('hex'), entry.version_anterior.sha256,
       'se modificó el HTML científico histórico: ' + entry.id);
-    const scripts = html.match(/<script\\b[^>]*>[\\s\\S]*?<\\/script>/gi) || [];
-    const priorScripts = prevData.toString('utf8').match(/<script\\b[^>]*>[\\s\\S]*?<\\/script>/gi) || [];
+    const scripts = html.match(/<script\b[^>]*>[\s\S]*?<\/script>/gi) || [];
+    const priorScripts = prevData.toString('utf8').match(/<script\b[^>]*>[\s\S]*?<\/script>/gi) || [];
     assert.deepEqual(scripts, priorScripts, 'se modificó el código experimental: ' + entry.id);
   }
 });
