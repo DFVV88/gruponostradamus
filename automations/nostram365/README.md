@@ -89,6 +89,16 @@ Variables del ambiente, no secretas:
 La ultima fecha es el corte para procesar eventos; los eventos anteriores
 no se procesan. Configurarla deliberadamente antes de un piloto.
 
+## Dependencias y seguridad
+
+El modulo aislado utiliza Node.js 22, firebase-admin 14.5.0 y
+firebase-functions 7.4.0. Las dependencias fueron actualizadas tras una
+auditoria que encontro 9 vulnerabilidades moderadas en la instalacion anterior.
+Estas versiones requieren reinstalar los paquetes en Cloud Shell y ejecutar
+de nuevo la auditoria. No usar npm audit fix --force ni modificar la codebase
+original functions/. Mantener el despliegue BLOQUEADO hasta 0 vulnerabilidades
+reportadas o hasta analizar y aceptar documentadamente excepciones.
+
 ## Pruebas sin desplegar
 
 En automations/nostram365:
