@@ -7,10 +7,14 @@ No modifica la web, el panel de matriculas, Culqi, asistencia ni NostraCUENTA.
 
 ## Flujo al activarse
 
-Cuando un documento de la coleccion preinscripciones cambia de no elegible
-a matriculaAprobada === true Y pagoValidado === true:
+Cuando una preinscripcion DE LA WEB (origen: web_preinscripcion) cambia
+de no elegible a matriculaAprobada === true Y pagoValidado === true,
+con estadoPago === pago_validado y sin correo institucional previo:
 
 1. Vuelve a leer el documento y comprueba que siga aprobado y pagado.
+   Revalida otra vez justo antes de crear el usuario y de enviar el correo;
+   si la aprobacion o el contacto cambiaron, suspende la operacion.
+   Las fichas de origen registro_manual_admin quedan excluidas del disparador.
 2. Crea nostram365_private/{preId} de forma transaccional; solo se permite
    un intento automatico por registro.
 3. Genera una propuesta de correo primerNombre.primerApellido; si los
@@ -112,7 +116,8 @@ No utilizar el firebase.json principal para desplegar esta codebase.
 Estados de nostram365_private:
 en_revision, requiere_revision, requiere_vinculacion_manual,
 cancelada_antes_de_crear, preparada_para_crear, creada_sin_licencia,
-creada_licenciada, enviando_bienvenida, bienvenida_aceptada.
+creada_licenciada, creada_licenciada_pendiente_contacto,
+enviando_bienvenida, bienvenida_aceptada.
 
 Si una cuenta se crea pero falla la licencia, comprobarla y corregir
 la A1 manualmente. Si hubo timeout enviando correo, revisar la bandeja
