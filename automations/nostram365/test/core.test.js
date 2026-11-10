@@ -49,3 +49,19 @@ test('welcome does not contain temporary password', () => {
   assert.match(body,/Clases en vivo/);
   assert.match(body,/Grupo Nostradamus/);
 });
+
+test('scope defaults locked and pilot requires exact ID plus personal recipient', () => {
+  const id = 'pre1234567890123456';
+  const row = {correo:'personal@example.com'};
+  const config = {NOSTRA_M365_SCOPE_MODE:'pilot', NOSTRA_M365_PILOT_PREID:id,
+    NOSTRA_M365_PILOT_EMAIL:'personal@example.com'};
+  assert.equal(c.scopeAllows(id,row,{}),false);
+  assert.equal(c.scopeAllows(id,row,{NOSTRA_M365_SCOPE_MODE:'other'}),false);
+  assert.equal(c.scopeAllows(id,row,config),true);
+  assert.equal(c.scopeAllows('pre9999999999999999',row,config),false);
+  assert.equal(c.scopeAllows(id,{correo:'someone@example.com'},config),false);
+  assert.equal(c.scopeAllows(id,row,{...config,NOSTRA_M365_PILOT_EMAIL:''}),false);
+  assert.equal(c.scopeAllows(id,row,{...config,NOSTRA_M365_PILOT_PREID:''}),false);
+  assert.equal(c.scopeAllows(id,row,{...config,NOSTRA_M365_PILOT_EMAIL:'x@gruponostradamus.edu.pe'}),false);
+  assert.equal(c.scopeAllows(id,row,{NOSTRA_M365_SCOPE_MODE:'production'}),true);
+});
