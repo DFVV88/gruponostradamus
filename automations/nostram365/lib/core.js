@@ -143,7 +143,10 @@ function welcomeTextDirect(name, upn, password) {
   // Keep the approved copy and replace only obsolete activation instructions.
   if (typeof password !== 'string' || password.length < 20) throw new Error('PASSWORD_TOO_SHORT');
   const placeholder = 'NOSTRAM365_ACTIVATION_LINK_PLACEHOLDER';
-  return welcomeText(name, upn, placeholder)
+  const template = welcomeText(name, upn, placeholder);
+  if (!template.includes(ACTIVATION_PROMPT + '\n' + placeholder) ||
+      !template.includes(ACTIVATION_NOTICE)) throw new Error('WELCOME_TEMPLATE_MISMATCH');
+  return template
     .replace(ACTIVATION_PROMPT + '\n' + placeholder,
       '🔑 Contraseña institucional: ' + password)
     .replace(ACTIVATION_NOTICE,
