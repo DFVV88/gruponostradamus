@@ -32,6 +32,51 @@ de un documento con `origen=piloto_independiente_sin_cobro`, ID y correo
 personal exactos del piloto. Esto NO habilita `nostraM365Alta`.
 La bienvenida del piloto identifica expresamente su carácter de ensayo.
 
+## Puesta en produccion y parada de emergencia
+
+Tras completar el piloto real de Graph, licencia A1, correo de Informes y
+Teams, el propietario puede ACTIVAR la automatizacion para nuevas
+transiciones de matriculas pagadas/aprobadas con:
+
+```bash
+cd ~/gruponostradamus-nostram365
+git pull --ff-only origin feature/nostram365-independent-automation
+cd automations/nostram365
+bash scripts/go-live.sh --activate
+```
+
+**ATENCION:** este comando activa el proceso real. Requiere que .env
+se encuentre aun en modo pilot con ambos interruptores apagados y corte 2099.
+Ejecuta pruebas, comprueba identidades y disparador, guarda copia de .env,
+fija hora UTC de inicio, despliega solo codebase nostram365 y verifica
+la configuracion remota. No procesa retrospectivamente aprobaciones antiguas:
+el disparador onDocumentUpdated exige una NUEVA transicion a elegible.
+Si un despliegue es parcial, intenta pasar a maintenance, para no dejar
+sin activacion a alumnos cuyos mensajes ya fueron enviados.
+
+Ante incidencia tras activar la operacion:
+
+```bash
+cd ~/gruponostradamus-nostram365/automations/nostram365
+bash scripts/maintenance.sh --stop
+```
+
+El modo maintenance detiene **nuevas altas** por scopeAllows, pero mantiene
+habilitada la lectura de contrasenas temporales YA enviadas. Las cuentas
+ya creadas no se borran ni se vuelven a crear. Inspecciona los trabajos en
+nostram365_private; nunca borres un trabajo para forzar reintentos.
+
+Seguimiento de logs (Cloud Shell):
+
+```bash
+gcloud functions logs read nostraM365Alta --gen2 --region us-central1 \
+  --project nostrachat-grupo-nostradamus --limit=30
+```
+
+NOTA: el piloto aislado comprobo Microsoft 365, A1, envio y Teams,
+pero el disparador Firestore/Eventarc debera observarse con la primera
+matricula legitima aprobada y pagada despues del inicio operativo.
+
 ## Flujo al activarse
 
 Cuando una preinscripcion DE LA WEB (origen: web_preinscripcion) cambia
