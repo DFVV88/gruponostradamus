@@ -75,9 +75,40 @@ test('el catálogo incluye todas las experiencias publicadas aunque cambie la ve
     assert.equal(safe(entry), true, 'laboratorio público oculto: ' + entry.id);
   }
   const revised = published.find(x => x.id === 'circunferencia-trigonometrica-v31');
-  assert.equal(revised.version, 'v32', 'versión científica publicada');
+  assert.match(revised.version, /^v[0-9]+(?:\.[0-9]+)?$/, 'versión científica publicada');
   assert.equal(safe({ ...revised, publicado: false }), false);
   assert.equal(safe({ ...revised, ruta: 'experiencias/otro-proyecto-v32/index.html' }), false);
   assert.equal(safe({ ...revised, ruta: 'experiencias/../secreto/index.html' }), false);
   assert.equal(safe({ ...revised, version_anterior: undefined }), false);
+});
+
+test('los laboratorios públicos exhiben un pie institucional único e íntegro', () => {
+  const crypto = require('node:crypto');
+  const published = catalog.experiencias.filter(x => x.publicado === true);
+  assert.ok(published.length >= 4, 'no se pueden perder laboratorios publicados');
+  for (const entry of published) {
+    const file = path.join(repoRoot, 'nostralab', entry.ruta);
+    const data = fs.readFileSync(file);
+    const html = data.toString('utf8');
+    assert.equal(crypto.createHash('sha256').update(data).digest('hex'), entry.sha256,
+      'el catálogo debe guardar el SHA-256 exacto: ' + entry.id);
+    assert.equal((html.match(/data-nostralab-footer="institutional-v1"/g) || []).length, 1,
+      'pie institucional ausente o duplicado: ' + entry.id);
+    assert.match(html, /class="nlf-footer"/, 'estructura premium: ' + entry.id);
+    assert.match(html, /Laboratorio científico interactivo · Grupo Nostradamus/,
+      'identidad institucional: ' + entry.id);
+    assert.match(html, /Predice · Experimenta · Contrasta/, 'ruta experimental: ' + entry.id);
+    assert.doesNotMatch(html, /Versión 7 para revisión|Versión para revisión · Entrada manual/,
+      'texto de producción en pie público: ' + entry.id);
+    assert.ok(entry.version_anterior && entry.version_anterior.sha256,
+      'mantener trazabilidad de cada revisión: ' + entry.id);
+    const original = path.join(repoRoot, 'nostralab', entry.version_anterior.ruta);
+    assert.ok(fs.existsSync(original), 'falta versión anterior: ' + entry.id);
+    const prevData = fs.readFileSync(original);
+    assert.equal(crypto.createHash('sha256').update(prevData).digest('hex'), entry.version_anterior.sha256,
+      'se modificó el HTML científico histórico: ' + entry.id);
+    const scripts = html.match(/<script\\b[^>]*>[\\s\\S]*?<\\/script>/gi) || [];
+    const priorScripts = prevData.toString('utf8').match(/<script\\b[^>]*>[\\s\\S]*?<\\/script>/gi) || [];
+    assert.deepEqual(scripts, priorScripts, 'se modificó el código experimental: ' + entry.id);
+  }
 });
