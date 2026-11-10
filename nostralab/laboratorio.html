@@ -144,7 +144,17 @@ document.addEventListener('pointerdown',function(e){if(menu.open&&!menu.contains
 document.addEventListener('keydown',function(e){if(e.key==='Escape')menu.open=false;});
 if(!id||!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)){loading.textContent='Experiencia no encontrada. Regresa al catálogo de NostraLAB.';return;}
 fetch('./catalogo.json',{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('Catálogo no disponible');return r.json();}).then(function(d){
-var e=Array.isArray(d.experiencias)?d.experiencias.find(function(x){return x.id===id&&x.publicado===true&&x.ruta==='experiencias/'+id+'/index.html';}):null;
+// El identificador público es estable para conservar la URL y el contador histórico.
+// La versión HTML aprobada puede avanzar de v31 a v32 en la ruta publicada.
+function rutaPublicadaValida(x){
+  if(!x||x.id!==id||x.publicado!==true||typeof x.ruta!=='string')return false;
+  var m=x.ruta.match(/^experiencias\/([a-z0-9]+(?:-[a-z0-9]+)*)\/index\.html$/);
+  if(!m)return false;
+  if(m[1]===id)return true;
+  var base=id.replace(/-v[0-9]+$/,'');
+  return base!==id&&m[1].replace(/-v[0-9]+$/,'')===base&&/-v[0-9]+$/.test(m[1]);
+}
+var e=Array.isArray(d.experiencias)?d.experiencias.find(rutaPublicadaValida):null;
 if(!e)throw Error('Experiencia no publicada');
 title=e.titulo+' | NostraLAB';
 document.title=title;
