@@ -15,7 +15,13 @@ const {eligible, shouldHandleTransition, clean, personalEmail, proposedUpn, rand
 const MS_CLIENT_SECRET = defineSecret('NOSTRA_M365_CLIENT_SECRET');
 const ACTIVATION_KEY = defineSecret('NOSTRA_M365_ACTIVATION_KEY');
 const REGION = 'us-central1';
+// Separate service identities: the enrollment worker can read both secrets,
+// while the public activation endpoint can access only the activation key.
+// Never use the project's shared Compute Engine default service account.
+const ALTA_SERVICE_ACCOUNT = 'nostram365-alta@nostrachat-grupo-nostradamus.iam.gserviceaccount.com';
+const ACTIVAR_SERVICE_ACCOUNT = 'nostram365-activar@nostrachat-grupo-nostradamus.iam.gserviceaccount.com';
 const BASE = {region:REGION, memory:'256MiB', timeoutSeconds:90, maxInstances:2,
+  serviceAccount:ALTA_SERVICE_ACCOUNT,
   secrets:[MS_CLIENT_SECRET, ACTIVATION_KEY]};
 const app = getApps().length ? getApp() : initializeApp();
 const db = getFirestore(app);
@@ -160,6 +166,7 @@ function page(title, contents) {
 }
 exports.nostraM365Activar = onRequest({
   region:REGION, memory:'256MiB', timeoutSeconds:30, maxInstances:5,
+  serviceAccount:ACTIVAR_SERVICE_ACCOUNT,
   secrets:[ACTIVATION_KEY]
 }, async (req,res) => {
   securityHeaders(res);
