@@ -3,6 +3,7 @@
 set -Eeuo pipefail
 PROJECT=nostrachat-grupo-nostradamus
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
+bash -n scripts/go-live.sh scripts/maintenance.sh
 if [[ "${1:-}" != "--activate" ]]; then
   echo "Uso: bash scripts/go-live.sh --activate"
   echo "Atencion: crea cuentas M365 reales para nuevas matriculas aprobadas+pagadas."
