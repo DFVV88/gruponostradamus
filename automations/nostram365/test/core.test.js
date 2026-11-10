@@ -141,3 +141,34 @@ test('premium email escapes dynamic name and never embeds an untrusted script', 
   assert.ok(!html.includes('<script>'));
   assert.match(html,/&lt;script&gt;alert\(1\)&lt;\/script&gt;/);
 });
+
+test('direct-password welcome contains the provided credential and retains approved instructions', () => {
+  const password='DemoStrongPass0123456789!$';
+  const body=c.welcomeTextDirect('Daniel','daniel.chi@gruponostradamus.edu.pe',password);
+  assert.ok(body.includes('🔑 Contraseña institucional: '+password));
+  assert.ok(body.includes('No necesitas cambiarla en el primer ingreso'));
+  assert.ok(body.includes('NostraCUENTA'));
+  assert.ok(body.includes('NostraPASOS'));
+  assert.ok(body.includes('Clases en vivo'));
+  assert.ok(!body.includes('48 horas'));
+  assert.ok(!body.includes('ACTIVATION_LINK_PLACEHOLDER'));
+  assert.ok(!body.includes('Activa tu acceso y consulta tu contraseña temporal'));
+});
+test('premium HTML direct delivery shows a safely escaped password, logo HD and no token', () => {
+  const pw='Test<Secure>&Secret12345@$';
+  const html=c.welcomeHtmlDirect('Daniel','daniel.chi@gruponostradamus.edu.pe',pw);
+  assert.ok(html.includes('src="cid:nostradamus-logo-oficial"'));
+  assert.ok(html.includes('Test&lt;Secure&gt;&amp;Secret12345@$'));
+  assert.ok(html.includes('No necesitas cambiarla en el primer ingreso'));
+  assert.ok(html.includes('NostraCUENTA'));
+  assert.ok(html.includes('NostraPASOS'));
+  assert.ok(!html.includes('nostraM365Activar#'));
+  assert.ok(!html.includes('token='));
+  assert.ok(!html.includes('48 horas'));
+});
+test('direct-password renderer rejects very short passwords', () => {
+  assert.throws(()=>c.welcomeHtmlDirect('Test','x@example.com','1234'),/PASSWORD_TOO_SHORT/);
+  const p=c.randomPassword();
+  assert.ok(p.length>=20);
+  assert.ok(c.welcomeTextDirect('Test','t@example.com',p).includes(p));
+});
