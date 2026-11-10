@@ -8,7 +8,7 @@ const logger = require('firebase-functions/logger');
 const crypto = require('node:crypto');
 const {Graph} = require('./lib/graph');
 const {eligible, shouldHandleTransition, clean, personalEmail, proposedUpnCandidates, randomPassword,
-  seal, unseal, tokenHash, safeHtml, welcomeText, STUDENT_SKU, SENDER, scopeAllows,
+  seal, unseal, tokenHash, safeHtml, welcomeText, welcomeHtml, STUDENT_SKU, SENDER, scopeAllows,
   pilotActivationConfigured, pilotActivationAllowed} = require('./lib/core');
 
 // Dedicated Firebase codebase. No imports or writes into the existing Culqi, attendance or web modules.
@@ -144,7 +144,7 @@ exports.nostraM365Alta = onDocumentUpdated({
     // Mark before sending. In an ambiguous Graph 202/timeout, human review prevents double mail.
     await mark(ref,'enviando_bienvenida', {remitente:SENDER, fechaEnvioIntentada:FieldValue.serverTimestamp()});
     await graph.mailStudent(email,'🎉 ¡Bienvenido a Grupo Nostradamus! | Tus accesos institucionales',
-      welcomeText(name.split(' ')[0],upn,link));
+      welcomeHtml(name.split(' ')[0],upn,link),'HTML');
     await mark(ref,'bienvenida_aceptada', {
       bienvenidaEstado:'aceptada_por_exchange', bienvenidaAceptadaAt:FieldValue.serverTimestamp()
     });
