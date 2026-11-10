@@ -43,13 +43,27 @@ function slug(s) {
   return clean(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     .toLowerCase().replace(/[^a-z0-9]/g, '');
 }
-function proposedUpn(fullName) {
+function proposedUpnCandidates(fullName) {
   const words = clean(fullName).split(' ').filter(Boolean);
-  // Three-name combinations are ambiguous: never guess surnames or auto-create.
-  if (words.length !== 2 && words.length < 4) return null;
-  if (words.some(x => !slug(x) || /^(de|del|la|las|los|y)$/i.test(x))) return null;
-  const local = slug(words[0]) + '.' + slug(words.length === 2 ? words[1] : words[words.length - 2]);
-  return /^[a-z0-9]{2,30}\.[a-z0-9]{2,30}$/.test(local) ? local + '@' + DOMAIN : null;
+  // Only unambiguous two-token or >=4-token names. Three tokens may mean
+  // two given names or two surnames; an administrator must resolve them.
+  if (words.length !== 2 && words.length < 4) return [];
+  if (words.some(x => !slug(x) || /^(de|del|la|las|los|y)$/i.test(x))) return [];
+  const given = slug(words[0]);
+  const surname = slug(words.length === 2 ? words[1] : words[words.length - 2]);
+  if (!/^[a-z0-9]{2,30}$/.test(given) || !/^[a-z0-9]{2,30}$/.test(surname)) return [];
+  const primary = given + '.' + surname;
+  const result = [primary + '@' + DOMAIN];
+  if (words.length >= 4) {
+    const secondSurnameInitial = slug(words[words.length - 1]).slice(0,1);
+    if (secondSurnameInitial && primary.length + 1 <= 64) {
+      result.push(primary + secondSurnameInitial + '@' + DOMAIN);
+    }
+  }
+  return result;
+}
+function proposedUpn(fullName) {
+  return proposedUpnCandidates(fullName)[0] || null;
 }
 function randomPassword() {
   const parts = ['ABCDEFGHJKLMNPQRSTUVWXYZ', 'abcdefghijkmnpqrstuvwxyz', '23456789', '!@$%'];
@@ -107,4 +121,4 @@ function welcomeText(name, upn, activationUrl) {
     '💙💛 Grupo Nostradamus\n📚 La ruta que transforma alumnos en cachimbos.';
 }
 module.exports = {STUDENT_SKU, STUDENT_SKU_ID, SENDER, DOMAIN, clean, eligible, shouldHandleTransition, alreadyAssigned, personalEmail, scopeAllows,
-  proposedUpn, randomPassword, seal, unseal, tokenHash, safeHtml, welcomeText};
+  proposedUpn, proposedUpnCandidates, randomPassword, seal, unseal, tokenHash, safeHtml, welcomeText};
