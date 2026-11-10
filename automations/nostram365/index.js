@@ -94,6 +94,14 @@ exports.nostraM365Alta = onDocumentUpdated({
       activacionExpiraMs:expires,
       credencialCifrada:seal(temporaryPassword, ACTIVATION_KEY.value())
     });
+    // Check again immediately before the external side effect: approvals can be revoked.
+    const lastSnapshot = await db.collection('preinscripciones').doc(preId).get();
+    const lastStudent = lastSnapshot.data() || {};
+    if (!eligible(lastStudent) || clean(lastStudent.nombre) !== name ||
+        personalEmail(lastStudent.correo) !== email) {
+      await mark(ref,'cancelada_antes_de_crear', {motivo:'MATRICULA_O_CONTACTO_CAMBIO'});
+      return;
+    }
     // Creating a user is an external side effect. If a crash occurs after it,
     // a repeated trigger is intentionally blocked by the persistent job record.
     const createdUser = await graph.createStudent(upn, name, temporaryPassword);
@@ -111,6 +119,15 @@ exports.nostraM365Alta = onDocumentUpdated({
     const link = 'https://' + REGION + '-' + project +
       '.cloudfunctions.net/nostraM365Activar#id=' + encodeURIComponent(preId) +
       '&token=' + encodeURIComponent(token);
+    // A revoked enrollment or corrected email must not receive credentials automatically.
+    const contactSnapshot = await db.collection('preinscripciones').doc(preId).get();
+    const verifiedContact = contactSnapshot.data() || {};
+    if (!eligible(verifiedContact) || personalEmail(verifiedContact.correo) !== email ||
+        clean(verifiedContact.nombre) !== name) {
+      await mark(ref,'creada_licenciada_pendiente_contacto',
+        {motivo:'MATRICULA_O_CONTACTO_CAMBIO', correoInstitucional:upn});
+      return;
+    }
     // Mark before sending. In an ambiguous Graph 202/timeout, human review prevents double mail.
     await mark(ref,'enviando_bienvenida', {remitente:SENDER, fechaEnvioIntentada:FieldValue.serverTimestamp()});
     await graph.mailStudent(email,'🎉 ¡Bienvenido a Grupo Nostradamus! | Tus accesos institucionales',
