@@ -12,10 +12,12 @@ function alreadyAssigned(r) {
     clean(r.correoInstitucional) || clean(r.institutionalEmail)));
 }
 function eligible(r) {
-  // Only public web enrollments, never manually registered exceptions.
-  // Payment and approval must be explicit and consistent with current workflow.
+  // Admin "Guardar cambios" saves estado=matriculado without setting matriculaAprobada.
+  // The dedicated Approve action and the Culqi webhook set matriculaAprobada=true.
+  // Both paths MUST also have the two explicit, consistent payment approval fields.
   return Boolean(r && r.origen === 'web_preinscripcion' &&
-    r.matriculaAprobada === true && r.pagoValidado === true &&
+    (r.matriculaAprobada === true || r.estado === 'matriculado') &&
+    r.pagoValidado === true &&
     r.estadoPago === 'pago_validado' && r.estado !== 'rechazado' &&
     !alreadyAssigned(r) && clean(r.correo) && clean(r.nombre));
 }
