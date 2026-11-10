@@ -123,3 +123,27 @@ test('Graph can send HTML welcome through the fixed Informes sender', async () =
     assert.match(send.url,/informes%40gruponostradamus\.edu\.pe/);
   });
 });
+
+test('official HD SharePoint logo is embedded inline in HTML welcome', async () => {
+  const {officialLogoAttachment}=require('../lib/graph');
+  const logo=officialLogoAttachment();
+  const png=Buffer.from(logo.contentBytes,'base64');
+  assert.equal(logo.isInline,true);
+  assert.equal(logo.contentId,'nostradamus-logo-oficial');
+  assert.equal(logo.contentType,'image/png');
+  assert.equal(png.readUInt32BE(16),600);
+  assert.equal(png.readUInt32BE(20),288);
+  assert.equal(logo['@odata.type'],'#microsoft.graph.fileAttachment');
+  await mocked([{path:'/sendMail',status:202,body:null}],async calls => {
+    const graph=new Graph(env,'mock');
+    await graph.mailStudent('personal@example.com','Bienvenida',
+      '<img src="cid:nostradamus-logo-oficial" alt="Grupo Nostradamus">','HTML');
+    const send=calls.find(c=>c.url.includes('/sendMail'));
+    const data=JSON.parse(send.opts.body);
+    assert.equal(data.message.body.contentType,'HTML');
+    assert.equal(data.message.attachments.length,1);
+    assert.equal(data.message.attachments[0].contentId,'nostradamus-logo-oficial');
+    assert.ok(data.message.attachments[0].contentBytes.length>8000);
+    assert.match(send.url,/informes%40gruponostradamus\.edu\.pe/);
+  });
+});
