@@ -155,12 +155,12 @@ function welcomeHtml(name, upn, activationUrl) {
     const content = format(p);
     if (i===0) return row('<h1 style="font-size:26px;line-height:1.35;font-weight:700;' +
       'color:#075861;margin:0;' + font + '">' + content + '</h1>');
-    if (i===12) return '<tr><td bgcolor="#075861" style="padding:25px 28px;text-align:center;">' +
+    if (i===8) return '<tr><td bgcolor="#075861" style="padding:25px 28px;text-align:center;">' +
       '<p style="color:#ffffff;font-size:14px;line-height:1.65;margin:0;' + font +
       '">' + content + '</p></td></tr>';
-    const extra = i===2 || i===3 || i===5 || i===7 ? 'font-weight:600;color:#075861;' : '';
+    const extra = i===2 || i===3 || i===5 || i===6 ? 'font-weight:600;color:#075861;' : '';
     const pHtml = '<p style="' + bodyStyle + extra + '">' + content + '</p>';
-    return row((i===2 || i===3 || i===7) ? panel(pHtml) : pHtml);
+    return row((i===2 || i===3 || i===6) ? panel(pHtml) : pHtml);
   }).join('');
   return '<!doctype html><html lang="es"><head><meta charset="utf-8">' +
     '<meta name="viewport" content="width=device-width,initial-scale=1"></head>' +
