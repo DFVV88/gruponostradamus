@@ -51,6 +51,51 @@ mensaje, NO que llego a la bandeja. No enviar password en correo plano.
 - La creacion manual en Microsoft 365 se mantiene operativa.
 - Los resultados se registran en nostram365_private; no aparece una nueva UI.
 
+## Identidades de ejecucion aisladas (obligatorio ANTES de desplegar)
+
+**Motivo:** la primera simulacion mostraba que Firebase concederia acceso a
+ambos secretos M365 a la cuenta predeterminada Compute Engine del proyecto.
+Esta cuenta puede usarse tambien por otras funciones. El codigo ahora exige
+dos cuentas tecnicas propias. No desplegar hasta que existan y tengan roles
+acotados.
+
+- Alta: nostram365-alta@nostrachat-grupo-nostradamus.iam.gserviceaccount.com
+  - Acceso de lectura/escritura a Firestore para procesar preinscripciones
+    (roles/datastore.user en proyecto, sujeto a auditoria de minimo privilegio).
+  - Acceso de lectura SOLO a NOSTRA_M365_CLIENT_SECRET y
+    NOSTRA_M365_ACTIVATION_KEY.
+  - Permisos para recibir eventos Firestore Eventarc si la infraestructura los
+    requiere para la identidad del trigger.
+- Activacion: nostram365-activar@nostrachat-grupo-nostradamus.iam.gserviceaccount.com
+  - Acceso de lectura/escritura a Firestore solo en el alcance que IAM permite
+    (roles/datastore.user en proyecto); el codigo accede solo a la coleccion
+    nostram365_private.
+  - Acceso de lectura SOLO a NOSTRA_M365_ACTIVATION_KEY.
+  - NUNCA acceso al secreto NOSTRA_M365_CLIENT_SECRET.
+
+Comandos iniciales de creacion (sin otorgar permisos ni desplegar):
+
+    gcloud iam service-accounts create nostram365-alta --project=nostrachat-grupo-nostradamus --display-name="NostraM365 - Altas"
+    gcloud iam service-accounts create nostram365-activar --project=nostrachat-grupo-nostradamus --display-name="NostraM365 - Activacion"
+
+Solo despues de verificar identidad y politica IAM, conceder roles y acceso
+individual por secreto. No conceder roles/editor, roles/owner o
+roles/secretmanager.secretAccessor A NIVEL DE PROYECTO a estas identidades.
+No modificar ni quitar roles de la cuenta predeterminada: puede ser utilizada
+por otras funciones actuales.
+
+Antes de un deploy real, ejecutar otra vez firebase deploy --dry-run
+--only functions:nostram365 y verificar que los futuros accesos de Secret
+Manager sean exclusivamente para estas dos identidades, en sus respectivos
+secretos. Comprobar que no liste la cuenta compute predeterminada como
+destinataria de los secretos nuevos.
+
+**Advertencia:** IAM de Firestore con Admin SDK no permite limitar una
+identidad a documentos individuales por reglas de seguridad del cliente.
+Estos accesos requieren auditoria del codigo y monitoreo; un futuro
+aislamiento fuerte implicaria proyecto/base de datos separada y una
+integracion de lectura/escritura muy acotada.
+
 ## Permisos pendientes y consentimiento consciente
 
 Aplicacion de Entra: NostraWEB-Matriculas-M365, tenant unico.
