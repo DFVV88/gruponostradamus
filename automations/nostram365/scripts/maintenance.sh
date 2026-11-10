@@ -3,6 +3,7 @@
 set -Eeuo pipefail
 PROJECT=nostrachat-grupo-nostradamus
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
+bash -n scripts/maintenance.sh
 [[ "${1:-}" == "--stop" ]] || { echo "Uso: bash scripts/maintenance.sh --stop"; exit 2; }
 [[ -f .env ]] || { echo "No se encuentra .env"; exit 2; }
 
