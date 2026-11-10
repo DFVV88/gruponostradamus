@@ -135,5 +135,50 @@ function welcomeText(name, upn, activationUrl) {
     '💪🎯 ¡Vamos con todo por ese ingreso a la UNI!\n' +
     '💙💛 Grupo Nostradamus\n📚 La ruta que transforma alumnos en cachimbos.';
 }
+
+const WELCOME_LOGO_URL = 'https://gruponostradamus.edu.pe/assets/img/logo.png';
+function welcomeHtml(name, upn, activationUrl) {
+  // Preserve every paragraph of the existing welcome; change presentation only.
+  // Email-safe tables, inline styles and system fonts work across Gmail/Outlook.
+  const paragraphs = welcomeText(name,upn,activationUrl).split('\n\n');
+  const format = raw => safeHtml(raw).replace(/https:\/\/[^\s<]+/g, url =>
+    '<a href="' + url + '" style="color:#087d8b;text-decoration:underline;word-break:break-all;">' +
+      url + '</a>').replace(/\n/g,'<br>');
+  const row = content => '<tr><td style="padding:0 28px 18px;">' + content + '</td></tr>';
+  const panel = content =>
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" ' +
+    'style="background-color:#eef7f8;border:1px solid #cfe5e8;border-radius:12px;">' +
+    '<tr><td style="padding:17px 19px;">' + content + '</td></tr></table>';
+  const font = 'font-family:Segoe UI,Arial,Helvetica,sans-serif;';
+  const bodyStyle = 'font-size:15px;line-height:1.65;color:#23464d;margin:0;' + font;
+  const body = paragraphs.map((p,i) => {
+    const content = format(p);
+    if (i===0) return row('<h1 style="font-size:26px;line-height:1.35;font-weight:700;' +
+      'color:#075861;margin:0;' + font + '">' + content + '</h1>');
+    if (i===12) return '<tr><td bgcolor="#075861" style="padding:25px 28px;text-align:center;">' +
+      '<p style="color:#ffffff;font-size:14px;line-height:1.65;margin:0;' + font +
+      '">' + content + '</p></td></tr>';
+    const extra = i===2 || i===3 || i===5 || i===7 ? 'font-weight:600;color:#075861;' : '';
+    const pHtml = '<p style="' + bodyStyle + extra + '">' + content + '</p>';
+    return row((i===2 || i===3 || i===7) ? panel(pHtml) : pHtml);
+  }).join('');
+  return '<!doctype html><html lang="es"><head><meta charset="utf-8">' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1"></head>' +
+    '<body style="margin:0;padding:0;background:#eff6f7;' + font + '">' +
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" ' +
+    'bgcolor="#eff6f7" style="border-collapse:collapse;"><tr><td align="center" style="padding:26px 10px;">' +
+    '<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" ' +
+    'style="width:100%;max-width:600px;border-collapse:separate;border-radius:15px;' +
+    'overflow:hidden;background-color:#ffffff;border:1px solid #d9e8ea;">' +
+    '<tr><td height="6" bgcolor="#0C7D8C" style="height:6px;font-size:0;line-height:6px;">&nbsp;</td></tr>' +
+    '<tr><td align="center" style="padding:27px 28px 22px;background-color:#ffffff;">' +
+    '<a href="https://gruponostradamus.edu.pe/" style="text-decoration:none;">' +
+    '<img src="' + WELCOME_LOGO_URL + '" alt="Grupo Nostradamus" width="194" ' +
+    'style="display:block;width:194px;max-width:100%;height:auto;border:0;"></a></td></tr>' +
+    '<tr><td height="3" bgcolor="#d5b261" style="font-size:0;line-height:3px;">&nbsp;</td></tr>' +
+    '<tr><td height="26" style="font-size:0;line-height:26px;">&nbsp;</td></tr>' +
+    body + '</table></td></tr></table></body></html>';
+}
+
 module.exports = {STUDENT_SKU, STUDENT_SKU_ID, SENDER, DOMAIN, clean, eligible, shouldHandleTransition, alreadyAssigned, personalEmail, scopeAllows, pilotActivationConfigured, pilotActivationAllowed,
-  proposedUpn, proposedUpnCandidates, randomPassword, seal, unseal, tokenHash, safeHtml, welcomeText};
+  proposedUpn, proposedUpnCandidates, randomPassword, seal, unseal, tokenHash, safeHtml, welcomeText, welcomeHtml, WELCOME_LOGO_URL};
