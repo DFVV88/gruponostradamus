@@ -30,10 +30,14 @@ institucional previo:
    Las fichas de origen registro_manual_admin quedan excluidas del disparador.
 2. Crea nostram365_private/{preId} de forma transaccional; solo se permite
    un intento automatico por registro.
-3. Genera una propuesta de correo primerNombre.primerApellido; si los
-   nombres son ambiguos, detiene la operacion para revision manual.
-4. Consulta Microsoft Graph por UPN exacto y displayName completo; si ya
-   existe una cuenta manual, DETIENE la creacion (requiere vinculacion humana).
+3. Genera como primera opcion primerNombre.primerApellido. Si la direccion
+   esta ocupada por otra persona, prueba primerNombre.primerApellido + inicial
+   del segundo apellido, p. ej. luis.perezg@gruponostradamus.edu.pe.
+   Ante nombres o apellidos ambiguos, se requiere revision manual.
+4. Consulta Microsoft Graph primero por nombre completo y luego por las
+   direcciones propuestas; si ya existe la misma identidad, DETIENE
+   la creacion (requiere vinculacion humana). Si ambas direcciones estan
+   ocupadas, no crea la cuenta ni improvisa otro correo.
 5. Verifica exclusivamente Office 365 A1 para estudiantes
    STANDARDWOFFPACK_STUDENT, SKU 314c4481-f395-4525-be8b-2ec4bb1e9d91.
 6. Crea el usuario con cambio obligatorio de clave al primer ingreso;
