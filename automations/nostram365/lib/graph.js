@@ -103,7 +103,7 @@ class Graph {
     return this.call('/users', {method:'POST', body:{
       accountEnabled:true, displayName, mailNickname:upn.split('@')[0],
       userPrincipalName:upn, usageLocation:'PE',
-      passwordProfile:{forceChangePasswordNextSignIn:true, password}
+      passwordProfile:{forceChangePasswordNextSignIn:false, password}
     }});
   }
   async licenseStudent(id, skuId) {
