@@ -84,3 +84,19 @@ test('both admin two-selector save and Culqi webhook cause a single eligible tra
   assert.equal(c.eligible({...admin,origen:'registro_manual_admin'}),false);
   assert.equal(c.eligible({...admin,estado:'rechazado',matriculaAprobada:true}),false);
 });
+
+test('official UPN: first name dot first surname, fallback with next surname initial', () => {
+  assert.deepEqual(c.proposedUpnCandidates('Luis Alberto Pérez García'), [
+    'luis.perez@gruponostradamus.edu.pe',
+    'luis.perezg@gruponostradamus.edu.pe'
+  ]);
+  assert.deepEqual(c.proposedUpnCandidates('Axel Johao QUEZADA Saldaña'), [
+    'axel.quezada@gruponostradamus.edu.pe',
+    'axel.quezadas@gruponostradamus.edu.pe'
+  ]);
+  assert.deepEqual(c.proposedUpnCandidates('Sebastián Ramos'), [
+    'sebastian.ramos@gruponostradamus.edu.pe'
+  ]);
+  assert.deepEqual(c.proposedUpnCandidates('María Condor Huaman'), []);
+  assert.deepEqual(c.proposedUpnCandidates('María del Carmen López'), []);
+});
