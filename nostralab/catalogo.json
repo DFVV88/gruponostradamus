@@ -7,14 +7,19 @@
       "titulo": "Circunferencia trigonométrica y sus seis líneas",
       "curso": "Matemática",
       "descripcion": "Explora las seis líneas trigonométricas, el ángulo y el arco dirigidos. Cambia entre grados y radianes, experimenta con valores exactos y examina las construcciones con zoom y desplazamiento del plano.",
-      "ruta": "experiencias/circunferencia-trigonometrica-v31/index.html",
+      "ruta": "experiencias/circunferencia-trigonometrica-v32/index.html",
       "publicado": true,
       "publicado_el": "2026-11-09",
-      "version": "v31",
-      "sha256": "bcffa0f65838d42fa5c17528e6fb59a56b212a318049d4d76dc82875b6798265",
+      "version": "v32",
+      "sha256": "f12e0034dd2f3edf7f4c96f071aa75319754f13bec79f9658e8e05950fb32d60",
       "miniatura": "experiencias/circunferencia-trigonometrica-v31/miniatura.svg",
       "actualizado_el": "2026-11-09",
-      "compartir": "experiencias/circunferencia-trigonometrica-v31/compartir.html"
+      "compartir": "experiencias/circunferencia-trigonometrica-v31/compartir.html",
+      "version_anterior": {
+        "version": "v31",
+        "sha256": "bcffa0f65838d42fa5c17528e6fb59a56b212a318049d4d76dc82875b6798265",
+        "ruta": "experiencias/circunferencia-trigonometrica-v31/index.html"
+      }
     },
     {
       "id": "ondas-armonicas-transversales-longitudinales-v8",
