@@ -91,12 +91,13 @@ class Graph {
     return this.call('/users/' + encodeURIComponent(id) + '/assignLicense', {
       method:'POST', body:{addLicenses:[{skuId, disabledPlans:[]}],removeLicenses:[]}});
   }
-  async mailStudent(to, subject, content) {
+  async mailStudent(to, subject, content, contentType = 'Text') {
+    if (!['Text','HTML'].includes(contentType)) throw new Error('EMAIL_BODY_TYPE_INVALID');
     if (!to || !to.includes('@') || to.toLowerCase().endsWith('@' + DOMAIN)) throw new Error('PERSONAL_EMAIL_INVALID');
     // Exchange Online Application RBAC must restrict Application Mail.Send to this mailbox.
     await this.call('/users/' + encodeURIComponent(SENDER) + '/sendMail', {
       method:'POST', body:{message:{subject,
-        body:{contentType:'Text',content},
+        body:{contentType,content},
         toRecipients:[{emailAddress:{address:to}}]}, saveToSentItems:true}});
   }
 }
