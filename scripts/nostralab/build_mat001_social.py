@@ -22,7 +22,7 @@ HTML_SOURCE = LAB / "index.html"
 def main() -> None:
     svg = SVG_SOURCE.read_bytes()
     html = HTML_SOURCE.read_text(encoding="utf-8")
-    found = re.search(r'<img\\s+class="brand-logo"[^>]+src="data:image/png;base64,([^"]+)"', html)
+    found = re.search(r'<img\s+class="brand-logo"[^>]+src="data:image/png;base64,([^"]+)"', html)
     if not found:
         raise RuntimeError("No se encontro el logo oficial embebido en el HTML aprobado MAT-001")
     official_logo = Image.open(io.BytesIO(base64.b64decode(found.group(1)))).convert("RGBA")
