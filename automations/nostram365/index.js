@@ -8,7 +8,7 @@ const logger = require('firebase-functions/logger');
 const crypto = require('node:crypto');
 const {Graph} = require('./lib/graph');
 const {eligible, shouldHandleTransition, clean, personalEmail, proposedUpn, randomPassword,
-  seal, unseal, tokenHash, safeHtml, welcomeText, STUDENT_SKU, SENDER} = require('./lib/core');
+  seal, unseal, tokenHash, safeHtml, welcomeText, STUDENT_SKU, SENDER, scopeAllows} = require('./lib/core');
 
 // Dedicated Firebase codebase. No imports or writes into the existing Culqi, attendance or web modules.
 // Off by default; the live switch is deliberately not exposed to browser clients.
@@ -49,9 +49,11 @@ exports.nostraM365Alta = onDocumentUpdated({
   if (!enabled() || !event.data || !eventAfterCutoff(event)) return;
   const before = event.data.before.data() || {};
   const after = event.data.after.data() || {};
+  const preId = event.params.preId;
+  // Pilot: only one explicitly selected document AND recipient; no global processing by default.
+  if (!scopeAllows(preId, after, process.env)) return;
   // Only a transition into approval is eligible; no legacy backfill on deployment.
   if (!shouldHandleTransition(before, after)) return;
-  const preId = event.params.preId;
   const ref = db.collection('nostram365_private').doc(preId);
   const created = await db.runTransaction(async tx => {
     const snap = await tx.get(ref);
@@ -70,7 +72,7 @@ exports.nostraM365Alta = onDocumentUpdated({
     // Re-read current source: never act on an event that was subsequently revoked.
     const currentSnapshot = await db.collection('preinscripciones').doc(preId).get();
     const student = currentSnapshot.data() || {};
-    if (!eligible(student)) {
+    if (!eligible(student) || !scopeAllows(preId, student, process.env)) {
       await mark(ref,'cancelada_antes_de_crear'); return;
     }
     const email = personalEmail(student.correo);
@@ -103,7 +105,8 @@ exports.nostraM365Alta = onDocumentUpdated({
     // Check again immediately before the external side effect: approvals can be revoked.
     const lastSnapshot = await db.collection('preinscripciones').doc(preId).get();
     const lastStudent = lastSnapshot.data() || {};
-    if (!eligible(lastStudent) || clean(lastStudent.nombre) !== name ||
+    if (!eligible(lastStudent) || !scopeAllows(preId, lastStudent, process.env) ||
+        clean(lastStudent.nombre) !== name ||
         personalEmail(lastStudent.correo) !== email) {
       await mark(ref,'cancelada_antes_de_crear', {motivo:'MATRICULA_O_CONTACTO_CAMBIO'});
       return;
@@ -128,7 +131,8 @@ exports.nostraM365Alta = onDocumentUpdated({
     // A revoked enrollment or corrected email must not receive credentials automatically.
     const contactSnapshot = await db.collection('preinscripciones').doc(preId).get();
     const verifiedContact = contactSnapshot.data() || {};
-    if (!eligible(verifiedContact) || personalEmail(verifiedContact.correo) !== email ||
+    if (!eligible(verifiedContact) || !scopeAllows(preId, verifiedContact, process.env) ||
+        personalEmail(verifiedContact.correo) !== email ||
         clean(verifiedContact.nombre) !== name) {
       await mark(ref,'creada_licenciada_pendiente_contacto',
         {motivo:'MATRICULA_O_CONTACTO_CAMBIO', correoInstitucional:upn});
