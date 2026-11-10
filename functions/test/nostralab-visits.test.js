@@ -5,7 +5,8 @@ const { parseVisitRequest, hashSession, validatePreviousTotal, ALLOWED_LABS } = 
 const LAB = 'ondas-armonicas-transversales-longitudinales-v8';
 const SESSION = '550e8400-e29b-41d4-a716-446655440000';
 test('los laboratorios publicados están en whitelist', () => {
-  assert.equal(ALLOWED_LABS.size, 3);
+  assert.equal(ALLOWED_LABS.size, 4);
+  assert.ok(ALLOWED_LABS.has('circunferencia-trigonometrica-v31'));
   assert.ok(ALLOWED_LABS.has(LAB));
 });
 test('la solicitud válida conserva slug y sesión', () => {
