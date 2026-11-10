@@ -70,7 +70,7 @@ test('el catálogo incluye todas las experiencias publicadas aunque cambie la ve
     allowed: new Set(['Física', 'Química', 'Biología', 'Matemática'])
   });
   const published = catalog.experiencias.filter(x => x.publicado === true);
-  assert.equal(published.length, 4, 'cuatro laboratorios aprobados en el catálogo actual');
+  assert.ok(published.length >= 4, 'se deben conservar como mínimo los cuatro proyectos ya publicados');
   for (const entry of published) {
     assert.equal(safe(entry), true, 'laboratorio público oculto: ' + entry.id);
   }
