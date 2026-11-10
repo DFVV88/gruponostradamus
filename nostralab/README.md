@@ -58,3 +58,6 @@ En cada visor de NostraLAB, incluir arriba el botón visible «Matrícula» con 
 ## Visitas acumuladas por simulador (NostraLAB v1.10)
 El visor laboratorio.html?id=<id> muestra el contador individual únicamente tras confirmación real de Firebase. El HTML científico conserva su hash y funciona offline. Cada nuevo proyecto aprobado requiere publicar el slug en catalogo.json y functions/lib/nostralab-approved.json, desplegar la función y validar el registro.
 Ver functions/NOSTRALAB_VISITAS.md para instalación, pruebas, privacidad y activación de Firebase.
+
+## Actualización visual MAT-001 v32 (2026-11-09)
+La URL pública estable conserva `?id=circunferencia-trigonometrica-v31` para no reiniciar el contador Firebase. El catálogo referencia el nuevo HTML autónomo `experiencias/circunferencia-trigonometrica-v32/index.html`, con cabecera DAMUS uniforme. El HTML v31 se mantiene intacto como versión histórica; `version_anterior` registra su SHA-256. Se requiere verificar el despliegue GitHub Pages antes de anunciar la versión visible.
