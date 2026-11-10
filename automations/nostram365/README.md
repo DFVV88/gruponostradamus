@@ -9,8 +9,9 @@ coincidir ID Y correo, antes y durante la operación. Sin un modo expreso,
 la función no procesa alumnos, incluso si los interruptores maestros son true.
 `NOSTRA_M365_SCOPE_MODE=production` permite el alcance general SOLO tras
 la aprobación y los controles de producción. No debe utilizarse en un piloto.
-El código por sí solo no valida la legitimidad de un cobro; exige los estados
-existentes de pago validado y matrícula aprobada de Firestore.
+El código por sí solo no valida la legitimidad de un cobro; exige ambos campos
+pagoValidado=true y estadoPago=pago_validado, además de matrícula aprobada
+(matriculaAprobada=true o estado=matriculado) en la ficha de preinscripción.
 
 Este directorio no es importado por el codigo actual de functions/index.js.
 No modifica la web, el panel de matriculas, Culqi, asistencia ni NostraCUENTA.
@@ -18,8 +19,10 @@ No modifica la web, el panel de matriculas, Culqi, asistencia ni NostraCUENTA.
 ## Flujo al activarse
 
 Cuando una preinscripcion DE LA WEB (origen: web_preinscripcion) cambia
-de no elegible a matriculaAprobada === true Y pagoValidado === true,
-con estadoPago === pago_validado y sin correo institucional previo:
+de no elegible a elegible: pagoValidado === true y estadoPago === pago_validado,
+y además matriculaAprobada === true (Culqi/botón Aprobar) O
+estado === matriculado (selectores del panel administrativo), sin correo
+institucional previo:
 
 1. Vuelve a leer el documento y comprueba que siga aprobado y pagado.
    Revalida otra vez justo antes de crear el usuario y de enviar el correo;
