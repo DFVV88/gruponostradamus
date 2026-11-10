@@ -4,12 +4,19 @@ const assert = require('node:assert/strict');
 const crypto = require('node:crypto');
 const c = require('../lib/core');
 test('requires both explicit approvals', () => {
-  const row = {nombre:'Sebastián Ramos', correo:'personal@example.com',
-    pagoValidado:true, matriculaAprobada:true};
+  const row = {nombre:'Sebastián Ramos', correo:'personal@example.com', origen:'web_preinscripcion',
+    estado:'matriculado', estadoPago:'pago_validado', pagoValidado:true, matriculaAprobada:true};
   assert.equal(c.eligible(row), true);
   assert.equal(c.eligible({...row, pagoValidado:false}), false);
   assert.equal(c.eligible({...row, matriculaAprobada:false}), false);
   assert.equal(c.eligible({...row, pagoValidado:'true'}), false);
+  assert.equal(c.eligible({...row, origen:'registro_manual_admin'}), false);
+  assert.equal(c.eligible({...row, correoInstitucionalAsignado:true}), false);
+  assert.equal(c.eligible({...row, correoInstitucional:'cuenta@gruponostradamus.edu.pe'}), false);
+  assert.equal(c.eligible({...row, estadoPago:'pendiente_pago_online'}), false);
+  assert.equal(c.eligible({...row, estado:'rechazado'}), false);
+  assert.equal(c.shouldHandleTransition({...row, matriculaAprobada:false},row), true);
+  assert.equal(c.shouldHandleTransition(row,{...row, celular:'999999999'}), false);
 });
 test('conservative UPN; ambiguous names require manual review', () => {
   assert.equal(c.proposedUpn('Axel Johao QUEZADA Saldaña'),'axel.quezada@gruponostradamus.edu.pe');
