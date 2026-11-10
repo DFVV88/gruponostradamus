@@ -1,0 +1,54 @@
+name: NostraLAB - empaquetar revisión aprobada MAT-001 v32
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/nostralab-mat001-v32-artifact.yml"
+      - "nostralab/experiencias/circunferencia-trigonometrica-v32/index.html"
+      - "nostralab/catalogo.json"
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtener repositorio exacto
+        uses: actions/checkout@v4
+      - name: Comprobar HTML y hash de catálogo
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json,hashlib,pathlib,shutil,datetime
+          root=pathlib.Path('.')
+          cat=json.loads((root/'nostralab/catalogo.json').read_text())
+          exp=next(x for x in cat['experiencias'] if x['id']=='circunferencia-trigonometrica-v31')
+          assert exp['version']=='v32'
+          assert exp['ruta']=='experiencias/circunferencia-trigonometrica-v32/index.html'
+          src=root/'nostralab'/exp['ruta']
+          blob=src.read_bytes()
+          sha=hashlib.sha256(blob).hexdigest()
+          assert sha==exp['sha256'], (sha, exp['sha256'])
+          assert b'data-nostralab-header="institutional-v1"' in blob
+          assert b'<html' in blob.lower() and b'</html>' in blob.lower()
+          target=root/'dist/nostralab_mat001_v32'
+          target.mkdir(parents=True, exist_ok=True)
+          shutil.copy2(src,target/'mat_001_circunferencia_trigonometrica_v32.html')
+          manifest={
+           'project_id':'MAT-001','artifact_version':'v32',
+           'source_path':exp['ruta'], 'sha256':sha, 'byte_size':len(blob),
+           'approval_status':'approved_for_publication_by_user_2026-11-09',
+           'prior_version':exp.get('version_anterior'),
+           'archival_status':'pending_sharepoint_upload',
+           'publication_branch':'main'
+          }
+          (target/'manifest.json').write_text(json.dumps(manifest,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+          print('VERIFICADO',sha,len(blob))
+          PY
+      - name: Guardar HTML y manifest exactos para archivado
+        uses: actions/upload-artifact@v4
+        with:
+          name: nostralab-mat001-v32-approved
+          path: dist/nostralab_mat001_v32/
+          if-no-files-found: error
+          retention-days: 30
