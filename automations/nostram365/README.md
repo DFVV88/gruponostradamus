@@ -16,6 +16,19 @@ pagoValidado=true y estadoPago=pago_validado, además de matrícula aprobada
 Este directorio no es importado por el codigo actual de functions/index.js.
 No modifica la web, el panel de matriculas, Culqi, asistencia ni NostraCUENTA.
 
+## Logo oficial HD en correo HTML
+
+El correo HTML conserva todo el texto de bienvenida y utiliza el **LOGO.png**
+oficial de SharePoint, biblioteca NOSTRAOS > 00_ACTIVOS_OFICIALES >
+01_LOGO_Y_ESCUDO. Se usa una copia de 600x288 px (3.1x respecto
+al ancho de pantalla de 194 px) en `assets/logo-oficial-email.b64`.
+No se altera el logo maestro y no se publica nada en la web.
+Microsoft Graph adjunta la imagen **CID inline**: funciona sin abrir permisos
+publicos de SharePoint y conserva el texto alternativo de la imagen.
+Tests validan dimensiones, formato e insercion de la imagen.
+No se alteran el contenido de bienvenida, el asunto, las rutas de pago
+ni las condiciones de licencia.
+
 ## Piloto con cuenta real, pero sin pago ficticio
 
 El script `scripts/pilot-test.js --execute` ejecuta una sola alta de ensayo,
