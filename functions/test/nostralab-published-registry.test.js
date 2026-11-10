@@ -27,3 +27,16 @@ test('el navegador utiliza sesión aleatoria y cifra de servidor', () => {
   assert.doesNotMatch(js, /Math\.random/);
   assert.doesNotMatch(js, /localStorage/);
 });
+
+test('toda experiencia pública tiene su página de compartir sin cambiar el simulador', () => {
+  for (const exp of catalog.experiencias.filter(x => x.publicado === true)) {
+    const share = 'experiencias/' + exp.id + '/compartir.html';
+    assert.equal(exp.compartir, share, 'campo compartir: ' + exp.id);
+    const file = path.join(repoRoot, 'nostralab', share);
+    assert.ok(fs.existsSync(file), 'falta compartir.html: ' + exp.id);
+    const html = fs.readFileSync(file, 'utf8');
+    assert.match(html, /property="og:image"/);
+    assert.match(html, /name="twitter:card"/);
+    assert.match(html, /location\.replace/);
+  }
+});
