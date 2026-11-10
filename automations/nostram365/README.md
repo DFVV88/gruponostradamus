@@ -26,6 +26,15 @@ No se altera el logo maestro y no se publica nada en la web.
 Microsoft Graph adjunta la imagen **CID inline**: funciona sin abrir permisos
 publicos de SharePoint y conserva el texto alternativo de la imagen.
 Tests validan dimensiones, formato e insercion de la imagen.
+
+Vista previa al buzon personal de ensayo, sin altas ni pagos:
+
+```bash
+node scripts/preview-email.js
+```
+
+El enlace del mensaje de vista previa es ficticio; no introducir contrasenas.
+
 No se alteran el contenido de bienvenida, el asunto, las rutas de pago
 ni las condiciones de licencia.
 
