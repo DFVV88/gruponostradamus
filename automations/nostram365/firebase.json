@@ -2,8 +2,17 @@
   "functions": {
     "source": ".",
     "codebase": "nostram365",
-    "runtime": "nodejs20",
-    "ignore": ["node_modules", ".git", "*.log", ".env", ".env.*", ".secret.local"],
-    "predeploy": ["npm --prefix \"$RESOURCE_DIR\" test"]
+    "runtime": "nodejs22",
+    "ignore": [
+      "node_modules",
+      ".git",
+      "*.log",
+      ".env",
+      ".env.*",
+      ".secret.local"
+    ],
+    "predeploy": [
+      "npm --prefix \"$RESOURCE_DIR\" test"
+    ]
   }
 }
