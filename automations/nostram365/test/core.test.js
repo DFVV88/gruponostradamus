@@ -125,7 +125,7 @@ test('premium HTML welcome keeps institutional copy and official logo without ex
   const link='https://us-central1-project.cloudfunctions.net/nostraM365Activar#id=pilot&token=test';
   const html=c.welcomeHtml('Daniel','daniel.chi@gruponostradamus.edu.pe',link);
   assert.ok(html.startsWith('<!doctype html>'));
-  assert.match(html,/https:\/\/gruponostradamus\.edu\.pe\/assets\/img\/logo\.png/);
+  assert.match(html,/src="cid:nostradamus-logo-oficial"/);
   assert.match(html,/alt="Grupo Nostradamus"/);
   assert.match(html,/daniel\.chi@gruponostradamus\.edu\.pe/);
   assert.match(html,/NostraCUENTA/);
