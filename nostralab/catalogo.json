@@ -7,18 +7,18 @@
       "titulo": "Circunferencia trigonométrica y sus seis líneas",
       "curso": "Matemática",
       "descripcion": "Explora las seis líneas trigonométricas, el ángulo y el arco dirigidos. Cambia entre grados y radianes, experimenta con valores exactos y examina las construcciones con zoom y desplazamiento del plano.",
-      "ruta": "experiencias/circunferencia-trigonometrica-v32/index.html",
+      "ruta": "experiencias/circunferencia-trigonometrica-v33/index.html",
       "publicado": true,
       "publicado_el": "2026-11-09",
-      "version": "v32",
-      "sha256": "f12e0034dd2f3edf7f4c96f071aa75319754f13bec79f9658e8e05950fb32d60",
+      "version": "v33",
+      "sha256": "40cd51a7f8e1e31c4b39d3704b577fc9426fe9bbbc178fdba26af4146c385c3f",
       "miniatura": "experiencias/circunferencia-trigonometrica-v31/miniatura.svg",
       "actualizado_el": "2026-11-09",
       "compartir": "experiencias/circunferencia-trigonometrica-v31/compartir.html",
       "version_anterior": {
-        "version": "v31",
-        "sha256": "bcffa0f65838d42fa5c17528e6fb59a56b212a318049d4d76dc82875b6798265",
-        "ruta": "experiencias/circunferencia-trigonometrica-v31/index.html"
+        "version": "v32",
+        "ruta": "experiencias/circunferencia-trigonometrica-v32/index.html",
+        "sha256": "f12e0034dd2f3edf7f4c96f071aa75319754f13bec79f9658e8e05950fb32d60"
       }
     },
     {
@@ -26,45 +26,60 @@
       "titulo": "Ondas armónicas transversales y longitudinales",
       "curso": "Física",
       "descripcion": "Compara la vibración perpendicular y paralela de las partículas en ondas armónicas. Ajusta amplitud, longitud de onda y rapidez; destaca entre 1 y 10 partículas.",
-      "ruta": "experiencias/ondas-armonicas-transversales-longitudinales-v8/index.html",
+      "ruta": "experiencias/ondas-armonicas-transversales-longitudinales-v9/index.html",
       "publicado": true,
       "publicado_el": "2026-11-07",
-      "version": "v8",
-      "sha256": "06bacc158c164a9b9971f21f4da7c51e85cdbf43009891a1d9a41c0d318303cd",
+      "version": "v9",
+      "sha256": "1002ab021924a47c93f2db5eb8e734bd530395734e004174e7b9754c7d022ae8",
       "miniatura": "experiencias/ondas-armonicas-transversales-longitudinales-v8/miniatura.svg",
       "compartir": "experiencias/ondas-armonicas-transversales-longitudinales-v8/compartir.html",
       "revision_academica": "UNI-v002",
-      "actualizado_el": "2026-11-08"
+      "actualizado_el": "2026-11-09",
+      "version_anterior": {
+        "version": "v8",
+        "ruta": "experiencias/ondas-armonicas-transversales-longitudinales-v8/index.html",
+        "sha256": "06bacc158c164a9b9971f21f4da7c51e85cdbf43009891a1d9a41c0d318303cd"
+      }
     },
     {
       "id": "pulsos-transversales-longitudinales-no-armonicos-v15",
       "titulo": "Pulsos transversales y longitudinales no armónicos",
       "curso": "Física",
       "descripcion": "Explora pulsos viajeros no periódicos. Compara el movimiento perpendicular y paralelo de las partículas, elige perfiles suave, triangular o de meseta y ajusta rapidez, amplitud, ancho y dirección.",
-      "ruta": "experiencias/pulsos-transversales-longitudinales-no-armonicos-v15/index.html",
+      "ruta": "experiencias/pulsos-transversales-longitudinales-no-armonicos-v16/index.html",
       "publicado": true,
       "publicado_el": "2026-11-07",
-      "version": "v1.5",
-      "sha256": "0971db1786292855795b563d4cd3fbc1c3b4f88e093ae6d3933223aa1ad2a338",
+      "version": "v1.6",
+      "sha256": "e7d66e47ac301de473fb4137327eebc3224e28db103b1b61d26eba20b39ff311",
       "miniatura": "experiencias/pulsos-transversales-longitudinales-no-armonicos-v15/miniatura.svg",
       "compartir": "experiencias/pulsos-transversales-longitudinales-no-armonicos-v15/compartir.html",
       "revision_academica": "UNI-v002",
-      "actualizado_el": "2026-11-08"
+      "actualizado_el": "2026-11-09",
+      "version_anterior": {
+        "version": "v1.5",
+        "ruta": "experiencias/pulsos-transversales-longitudinales-no-armonicos-v15/index.html",
+        "sha256": "0971db1786292855795b563d4cd3fbc1c3b4f88e093ae6d3933223aa1ad2a338"
+      }
     },
     {
       "id": "reflexion-transmision-pulsos-cuerdas-v24",
       "titulo": "Reflexión y transmisión de pulsos en cuerdas",
       "curso": "Física",
       "descripcion": "Compara la reflexión de un pulso en apoyo fijo o deslizable y su reflexión y transmisión entre cuerdas de distinta densidad con unión ideal. Ajusta tensión y rapidez incidente; analiza el reparto de energía y potencia.",
-      "ruta": "experiencias/reflexion-transmision-pulsos-cuerdas-v24/index.html",
+      "ruta": "experiencias/reflexion-transmision-pulsos-cuerdas-v25/index.html",
       "publicado": true,
       "publicado_el": "2026-11-07",
-      "version": "v2.4",
-      "sha256": "1ffe26cf96c8ca3edade424c53b06ad47ee535956ed34305b448a424b4908333",
+      "version": "v2.5",
+      "sha256": "d4a9a3933978afdd3bda75a3b9d956a78eb8671a18d0fc73c1a279ec6f27f860",
       "miniatura": "experiencias/reflexion-transmision-pulsos-cuerdas-v24/miniatura.svg",
       "compartir": "experiencias/reflexion-transmision-pulsos-cuerdas-v24/compartir.html",
       "revision_academica": "UNI-v002",
-      "actualizado_el": "2026-11-08"
+      "actualizado_el": "2026-11-09",
+      "version_anterior": {
+        "version": "v2.4",
+        "ruta": "experiencias/reflexion-transmision-pulsos-cuerdas-v24/index.html",
+        "sha256": "1ffe26cf96c8ca3edade424c53b06ad47ee535956ed34305b448a424b4908333"
+      }
     }
   ]
 }
