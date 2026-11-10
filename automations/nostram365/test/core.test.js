@@ -100,3 +100,23 @@ test('official UPN: first name dot first surname, fallback with next surname ini
   assert.deepEqual(c.proposedUpnCandidates('María Condor Huaman'), []);
   assert.deepEqual(c.proposedUpnCandidates('María del Carmen López'), []);
 });
+
+test('pilot activation only permits exact test job while the normal worker stays off', () => {
+  const env = {NOSTRA_M365_SCOPE_MODE:'pilot',NOSTRA_M365_ENABLED:'false',
+    NOSTRA_M365_EXCHANGE_SCOPE_VERIFIED:'false',
+    NOSTRA_M365_NOT_BEFORE:'2099-01-01T00:00:00Z',
+    NOSTRA_M365_PILOT_ACTIVATION_ENABLED:'true',
+    NOSTRA_M365_PILOT_PREID:'pre1234567890123456',
+    NOSTRA_M365_PILOT_EMAIL:'test@example.com'};
+  const job={preinscripcionId:'pre1234567890123456',
+    origen:'piloto_independiente_sin_cobro',correoDestino:'test@example.com'};
+  assert.equal(c.pilotActivationConfigured(env),true);
+  assert.equal(c.pilotActivationAllowed(env,job.preinscripcionId,job),true);
+  assert.equal(c.pilotActivationAllowed(env,'pre0000000000000000',job),false);
+  assert.equal(c.pilotActivationAllowed(env,job.preinscripcionId,
+    {...job,correoDestino:'another@example.com'}),false);
+  assert.equal(c.pilotActivationAllowed(env,job.preinscripcionId,
+    {...job,origen:'aprobacion_firebase'}),false);
+  assert.equal(c.pilotActivationConfigured({...env,NOSTRA_M365_ENABLED:'true'}),false);
+  assert.equal(c.pilotActivationConfigured({...env,NOSTRA_M365_PILOT_ACTIVATION_ENABLED:'false'}),false);
+});
