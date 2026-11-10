@@ -109,3 +109,17 @@ test('selectAvailableUpn fails closed on Graph errors', async () => {
       'luis.perez@gruponostradamus.edu.pe']), /GRAPH_HTTP_403/);
   });
 });
+
+test('Graph can send HTML welcome through the fixed Informes sender', async () => {
+  await mocked([{path:'/sendMail',status:202,body:null}], async calls => {
+    const graph=new Graph(env,'mock');
+    await graph.mailStudent('personal@example.com','Bienvenida',
+      '<table><tr><td>Hola</td></tr></table>','HTML');
+    const send=calls.find(c=>c.url.includes('/sendMail'));
+    const data=JSON.parse(send.opts.body);
+    assert.equal(data.message.body.contentType,'HTML');
+    assert.equal(data.message.body.content,'<table><tr><td>Hola</td></tr></table>');
+    assert.equal(data.message.toRecipients[0].emailAddress.address,'personal@example.com');
+    assert.match(send.url,/informes%40gruponostradamus\.edu\.pe/);
+  });
+});
