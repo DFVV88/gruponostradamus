@@ -6,7 +6,6 @@ on:
     paths:
       - ".github/workflows/nostralab-mat001-v32-artifact.yml"
       - "nostralab/experiencias/circunferencia-trigonometrica-v32/index.html"
-      - "nostralab/catalogo.json"
 permissions:
   contents: read
 jobs:
@@ -21,14 +20,10 @@ jobs:
           python3 - <<'PY'
           import json,hashlib,pathlib,shutil,datetime
           root=pathlib.Path('.')
-          cat=json.loads((root/'nostralab/catalogo.json').read_text())
-          exp=next(x for x in cat['experiencias'] if x['id']=='circunferencia-trigonometrica-v31')
-          assert exp['version']=='v32'
-          assert exp['ruta']=='experiencias/circunferencia-trigonometrica-v32/index.html'
-          src=root/'nostralab'/exp['ruta']
+          src=root/'nostralab/experiencias/circunferencia-trigonometrica-v32/index.html'
           blob=src.read_bytes()
           sha=hashlib.sha256(blob).hexdigest()
-          assert sha==exp['sha256'], (sha, exp['sha256'])
+          assert sha=='f12e0034dd2f3edf7f4c96f071aa75319754f13bec79f9658e8e05950fb32d60', sha
           assert b'data-nostralab-header="institutional-v1"' in blob
           assert b'<html' in blob.lower() and b'</html>' in blob.lower()
           target=root/'dist/nostralab_mat001_v32'
@@ -36,9 +31,9 @@ jobs:
           shutil.copy2(src,target/'mat_001_circunferencia_trigonometrica_v32.html')
           manifest={
            'project_id':'MAT-001','artifact_version':'v32',
-           'source_path':exp['ruta'], 'sha256':sha, 'byte_size':len(blob),
+           'source_path':'experiencias/circunferencia-trigonometrica-v32/index.html', 'sha256':sha, 'byte_size':len(blob),
            'approval_status':'approved_for_publication_by_user_2026-11-09',
-           'prior_version':exp.get('version_anterior'),
+           'prior_version':{'version':'v31','ruta':'experiencias/circunferencia-trigonometrica-v31/index.html'},
            'archival_status':'pending_sharepoint_upload',
            'publication_branch':'main'
           }
