@@ -7,7 +7,7 @@ const {getFirestore, FieldValue} = require('firebase-admin/firestore');
 const logger = require('firebase-functions/logger');
 const crypto = require('node:crypto');
 const {Graph} = require('./lib/graph');
-const {eligible, shouldHandleTransition, clean, personalEmail, proposedUpn, randomPassword,
+const {eligible, shouldHandleTransition, clean, personalEmail, proposedUpnCandidates, randomPassword,
   seal, unseal, tokenHash, safeHtml, welcomeText, STUDENT_SKU, SENDER, scopeAllows} = require('./lib/core');
 
 // Dedicated Firebase codebase. No imports or writes into the existing Culqi, attendance or web modules.
@@ -77,21 +77,23 @@ exports.nostraM365Alta = onDocumentUpdated({
     }
     const email = personalEmail(student.correo);
     const name = clean(student.nombre);
-    const upn = proposedUpn(name);
-    if (!email || !upn) {
+    const candidates = proposedUpnCandidates(name);
+    if (!email || !candidates.length) {
       await mark(ref,'requiere_revision', {motivo:'DATOS_AMBIGUOS_O_CORREO_INVALIDO'});
       return;
     }
     const graph = new Graph(process.env, MS_CLIENT_SECRET.value());
-    const existing = await graph.findExisting(upn, name);
-    if (existing) {
-      // A manual account may already exist. Do not attach blindly based on name only.
+    const choice = await graph.selectAvailableUpn(name, candidates);
+    if (choice.state !== 'available') {
+      // Existing full name or both addresses used: do not auto-attach or overwrite.
       await mark(ref,'requiere_vinculacion_manual', {
-        motivo:'CUENTA_EXISTENTE_EN_MICROSOFT',
-        correoPropuesto:upn
+        motivo: choice.state === 'existing_name'
+          ? 'CUENTA_EXISTENTE_EN_MICROSOFT' : 'CORREOS_PROPUESTOS_OCUPADOS',
+        correoPropuesto:candidates[0]
       });
       return;
     }
+    const upn = choice.upn;
     const skuId = await graph.studentSku();
     const temporaryPassword = randomPassword();
     const token = crypto.randomBytes(32).toString('base64url');
