@@ -8,14 +8,15 @@ test('requires both explicit approvals', () => {
     estado:'matriculado', estadoPago:'pago_validado', pagoValidado:true, matriculaAprobada:true};
   assert.equal(c.eligible(row), true);
   assert.equal(c.eligible({...row, pagoValidado:false}), false);
-  assert.equal(c.eligible({...row, matriculaAprobada:false}), false);
+  assert.equal(c.eligible({...row, matriculaAprobada:false}), true); // Admin two-select save
   assert.equal(c.eligible({...row, pagoValidado:'true'}), false);
   assert.equal(c.eligible({...row, origen:'registro_manual_admin'}), false);
   assert.equal(c.eligible({...row, correoInstitucionalAsignado:true}), false);
   assert.equal(c.eligible({...row, correoInstitucional:'cuenta@gruponostradamus.edu.pe'}), false);
   assert.equal(c.eligible({...row, estadoPago:'pendiente_pago_online'}), false);
   assert.equal(c.eligible({...row, estado:'rechazado'}), false);
-  assert.equal(c.shouldHandleTransition({...row, matriculaAprobada:false},row), true);
+  assert.equal(c.shouldHandleTransition({...row, matriculaAprobada:false, estado:'nuevo'},row), true);
+  assert.equal(c.shouldHandleTransition({...row, estado:'listo_para_matricula'},row), false); // Culqi before admin finalization
   assert.equal(c.shouldHandleTransition(row,{...row, celular:'999999999'}), false);
 });
 test('conservative UPN; ambiguous names require manual review', () => {
@@ -64,4 +65,22 @@ test('scope defaults locked and pilot requires exact ID plus personal recipient'
   assert.equal(c.scopeAllows(id,row,{...config,NOSTRA_M365_PILOT_PREID:''}),false);
   assert.equal(c.scopeAllows(id,row,{...config,NOSTRA_M365_PILOT_EMAIL:'x@gruponostradamus.edu.pe'}),false);
   assert.equal(c.scopeAllows(id,row,{NOSTRA_M365_SCOPE_MODE:'production'}),true);
+});
+
+test('both admin two-selector save and Culqi webhook cause a single eligible transition', () => {
+  const initial = {nombre:'Alumno Ejemplo',correo:'personal@example.com',origen:'web_preinscripcion',
+    estado:'nuevo',estadoPago:'pendiente_envio_voucher',pagoValidado:false,
+    matriculaAprobada:false,correoInstitucionalAsignado:false};
+  const admin = {...initial,estado:'matriculado',estadoPago:'pago_validado',pagoValidado:true};
+  const culqi = {...initial,estado:'listo_para_matricula',matriculaAprobada:true,
+    estadoPago:'pago_validado',pagoValidado:true};
+  assert.equal(c.shouldHandleTransition(initial,admin),true);
+  assert.equal(c.shouldHandleTransition(initial,culqi),true);
+  assert.equal(c.shouldHandleTransition(admin,{...admin,matriculaAprobada:true}),false);
+  assert.equal(c.shouldHandleTransition(culqi,{...culqi,estado:'matriculado'}),false);
+  assert.equal(c.eligible({...initial,estado:'matriculado',pagoValidado:false,estadoPago:'pago_validado'}),false);
+  assert.equal(c.eligible({...initial,estado:'matriculado',pagoValidado:true,estadoPago:'pendiente_envio_voucher'}),false);
+  assert.equal(c.eligible({...initial,pagoValidado:true,estadoPago:'pago_validado'}),false);
+  assert.equal(c.eligible({...admin,origen:'registro_manual_admin'}),false);
+  assert.equal(c.eligible({...admin,estado:'rechazado',matriculaAprobada:true}),false);
 });
