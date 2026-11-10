@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es-PE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="index,follow">
+<meta name="google-adsense-account" content="ca-pub-9810053992087127">
+<title>Reflexión y transmisión de pulsos en cuerdas: límites y energía | NostraLAB</title>
+<meta name="description" content="Compara extremos fijos y libres, así como la unión de cuerdas con diferentes densidades lineales.">
+<link rel="canonical" href="https://gruponostradamus.edu.pe/nostralab/guias/reflexion-transmision-pulsos-cuerdas.html">
+<link rel="icon" href="../../assets/img/favicons/iocon-ostradamus.png">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="es_PE">
+<meta property="og:site_name" content="Grupo Nostradamus · NostraLAB">
+<meta property="og:title" content="Reflexión y transmisión de pulsos en cuerdas: límites y energía">
+<meta property="og:description" content="Compara extremos fijos y libres, así como la unión de cuerdas con diferentes densidades lineales.">
+<meta property="og:url" content="https://gruponostradamus.edu.pe/nostralab/guias/reflexion-transmision-pulsos-cuerdas.html">
+<meta property="og:image" content="https://gruponostradamus.edu.pe/assets/img/social/nostradamus_og_blanco.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"Reflexión y transmisión de pulsos en cuerdas: límites y energía","description":"Compara extremos fijos y libres, así como la unión de cuerdas con diferentes densidades lineales.","inLanguage":"es-PE","learningResourceType":"guía didáctica","educationalLevel":"Preparación preuniversitaria","about":"Física","publisher":{"@type":"Organization","name":"Grupo Nostradamus","url":"https://gruponostradamus.edu.pe/"},"url":"https://gruponostradamus.edu.pe/nostralab/guias/reflexion-transmision-pulsos-cuerdas.html","isAccessibleForFree":true}</script>
+<style>
+:root{--petrol:#075861;--teal:#0c7d8c;--cyan:#0fafc2;--ink:#19353a;--muted:#4d6870;--line:#d7e7e9;--gold:#dfb56e}
+*{box-sizing:border-box}
+body{margin:0;background:#f5f9fa;color:var(--ink);font:16px/1.7 system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:var(--teal)}a:focus-visible,summary:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+.wrap{width:min(1020px,calc(100% - 36px));margin-inline:auto}
+header{background:#fff;border-bottom:1px solid var(--line)}
+.nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 0}
+.brand{display:flex;align-items:center;gap:13px;font-weight:850;font-size:19px;text-decoration:none;color:var(--petrol)}
+.brand img{width:112px;height:52px;object-fit:contain}
+.nav>a:last-child{font-weight:700;text-decoration:none}
+.hero{background:radial-gradient(circle at 88% 24%,#157b8438,transparent 32%),linear-gradient(120deg,#052a32,#075861);color:#fff;padding:56px 0 60px}
+.eyebrow{color:#a9e9ec;text-transform:uppercase;font-size:12px;font-weight:900;letter-spacing:.12em}
+h1{max-width:850px;font-size:clamp(33px,5vw,52px);line-height:1.1;letter-spacing:-.035em;margin:11px 0 18px}
+.lead{font-size:clamp(16px,1.7vw,19px);max-width:770px;color:#d9eeee}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.button{display:inline-flex;align-items:center;justify-content:center;padding:12px 19px;min-height:47px;border-radius:11px;background:#fff;color:#075861;text-decoration:none;font-weight:800}
+.button.primary{background:#0fafc2;color:#032a32}
+main{padding:36px 0 66px}
+.crumb{font-size:13px;color:#54747a;margin-bottom:20px}
+.crumb a{text-decoration:none}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:22px;align-items:start}
+.content>section{background:#fff;border:1px solid var(--line);border-radius:17px;padding:26px;margin-bottom:17px;box-shadow:0 8px 22px #04343a08}
+h2{font-size:25px;line-height:1.24;color:#063e48;margin:0 0 14px}
+h3{font-size:18px;color:#075861;margin:23px 0 8px}
+p{margin:0 0 13px}
+ul,ol{padding-left:23px;margin:0}li{margin:0 0 10px}
+.side{position:sticky;top:20px;background:#fff;border:1px solid var(--line);border-radius:17px;overflow:hidden}
+.side img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#075861}
+.side-inner{padding:18px}
+.side h2{font-size:19px;margin:0 0 8px}
+.side p{font-size:13px;color:var(--muted);line-height:1.5}
+.side .button{display:flex;margin-top:12px}
+details{border-top:1px solid var(--line);padding:14px 0}
+details:first-of-type{border-top:0}
+summary{font-weight:700;cursor:pointer;color:#0c5963}
+.answer{padding:11px 14px;margin-top:10px;border-left:3px solid var(--teal);background:#f0f9fa;color:#244850;border-radius:6px}
+.note{background:#f1f8f8!important;border-left:4px solid var(--gold)!important}
+footer{border-top:1px solid var(--line);padding:28px 0;background:#fff;color:#61777b;font-size:13px}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media(max-width:750px){.layout{grid-template-columns:1fr}.side{position:static;order:-1}.content>section{padding:21px}.hero{padding:42px 0}.brand img{width:85px;height:44px}.nav>a:last-child{font-size:13px}}
+</style>
+</head>
+<body>
+<header><div class="wrap nav"><a class="brand" href="../"><img src="../../assets/img/logo.png" alt="Grupo Nostradamus">NostraLAB</a><a href="../#experiencias">Ver laboratorios</a></div></header>
+<section class="hero"><div class="wrap"><span class="eyebrow">Guía didáctica · Física · Preuniversitario UNI</span><h1>Reflexión y transmisión de pulsos en cuerdas: límites y energía</h1><p class="lead">Esta simulación permite estudiar qué sucede cuando un pulso alcanza un extremo o una unión entre cuerdas. Puedes comparar las ondas reflejada y transmitida y analizar cómo influyen la tensión y las propiedades del medio.</p><div class="actions"><a class="button primary" href="../laboratorio.html?id=reflexion-transmision-pulsos-cuerdas-v24">Abrir simulador interactivo</a><a class="button" href="../#experiencias">Explorar experiencias</a></div></div></section>
+<main class="wrap">
+<nav class="crumb" aria-label="Ruta de navegación"><a href="../../index.html">Grupo Nostradamus</a> / <a href="../">NostraLAB</a> / Física</nav>
+<div class="layout">
+<article class="content">
+<section><h2>Objetivos de aprendizaje</h2><ul><li>Explicar la inversión de un pulso reflejado en un extremo fijo.</li><li>Distinguir la respuesta de un extremo libre y de una unión de cuerdas.</li><li>Relacionar la rapidez de propagación con tensión y densidad lineal.</li></ul></section>
+<section><h2>Fundamentos científicos</h2><h3>Extremo fijo y extremo libre</h3><p>Cuando un pulso transversal llega a un extremo idealmente fijo, el desplazamiento del punto terminal es cero y el pulso reflejado aparece invertido. En un extremo libre ideal, la reflexión conserva el signo del desplazamiento. El sentido de propagación cambia en ambos casos.</p><h3>Unión de dos cuerdas</h3><p>Si dos cuerdas están unidas y comparten una misma tensión, una perturbación incidente puede dividirse en un pulso reflejado y otro transmitido. Su velocidad de propagación cambia con la densidad lineal del material. El signo y la amplitud reflejados dependen de las propiedades relativas de ambas cuerdas.</p><h3>Rapidez y conservación de energía</h3><p>Para una cuerda ideal sometida a tensión T y con densidad lineal μ, la rapidez es v = √(T/μ). A tensión constante, una cuerda con mayor μ transmite pulsos más lentamente. En una unión ideal sin pérdidas, la energía incidente se reparte entre reflexión y transmisión; no basta comparar solo amplitudes para medir energía.</p></section>
+<section><h2>Experimento guiado: observa y comprueba</h2><p>Antes de abrir el laboratorio, formula una hipótesis. Cambia una variable cada vez, observa qué sucede y registra tus conclusiones en una tabla de datos o en tu cuaderno.</p><ol><li>Lanza un pulso positivo hacia un extremo fijo y registra el signo del pulso reflejado.</li><li>Repite el experimento con el extremo libre; compara signos y sentido de propagación.</li><li>Selecciona la unión de dos cuerdas y observa de forma simultánea los pulsos reflejado y transmitido.</li><li>Varía la densidad lineal de una cuerda o las variables disponibles de tensión y rapidez; compara el movimiento en ambos medios.</li><li>Utiliza las indicaciones de energía o potencia del simulador para analizar el reparto ideal sin pérdidas.</li></ol><p><a href="../laboratorio.html?id=reflexion-transmision-pulsos-cuerdas-v24"><strong>Realizar la experiencia interactiva en NostraLAB</strong></a></p></section>
+<section><h2>Preguntas de autoevaluación</h2><p>Intenta resolver cada pregunta antes de desplegar la respuesta y explica con tus palabras lo observado.</p><details><summary>¿Se invierte un pulso al reflejarse en un extremo fijo ideal?</summary><div class="answer">Sí. La condición de desplazamiento nulo en el extremo produce la inversión de signo.</div></details><details><summary>Si se cuadruplica la tensión y la densidad lineal permanece fija, ¿qué ocurre con la rapidez?</summary><div class="answer">Se duplica: √(4T/μ) = 2√(T/μ).</div></details><details><summary>¿Que la amplitud transmitida sea menor implica una pérdida de energía en la unión ideal?</summary><div class="answer">No necesariamente. Para evaluar energía o potencia intervienen también las propiedades de cada cuerda.</div></details></section>
+<section class="note"><h2>Alcance del modelo</h2><p>Los resultados teóricos corresponden a cuerdas ideales y uniones sin pérdidas; sistemas reales pueden presentar disipación y deformaciones adicionales.</p><p>Las simulaciones son recursos de apoyo al aprendizaje y no sustituyen mediciones experimentales reales. Este material está preparado para acompañar el trabajo académico de estudiantes preuniversitarios.</p></section>
+</article>
+<aside class="side"><img src="../experiencias/reflexion-transmision-pulsos-cuerdas-v24/miniatura.svg" alt="Vista del laboratorio de Física"><div class="side-inner"><h2>Aprende experimentando</h2><p>Consulta esta guía mientras modificas las variables del simulador. Acceso gratuito y sin registro para explorar la experiencia.</p><a class="button primary" href="../laboratorio.html?id=reflexion-transmision-pulsos-cuerdas-v24">Entrar al laboratorio</a><a class="button" href="../#experiencias">Otros experimentos</a></div></aside>
+</div>
+</main>
+<footer><div class="wrap"><span>© Grupo Nostradamus · Contenido educativo NostraLAB</span><span><a href="../../politica-de-privacidad.html">Privacidad</a> · <a href="../../contacto.html">Contacto</a></span></div></footer>
+</body></html>
