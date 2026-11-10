@@ -136,7 +136,7 @@ function welcomeText(name, upn, activationUrl) {
     '💙💛 Grupo Nostradamus\n📚 La ruta que transforma alumnos en cachimbos.';
 }
 
-const WELCOME_LOGO_URL = 'https://gruponostradamus.edu.pe/assets/img/logo.png';
+const WELCOME_LOGO_CID = 'nostradamus-logo-oficial';
 function welcomeHtml(name, upn, activationUrl) {
   // Preserve every paragraph of the existing welcome; change presentation only.
   // Email-safe tables, inline styles and system fonts work across Gmail/Outlook.
@@ -173,7 +173,7 @@ function welcomeHtml(name, upn, activationUrl) {
     '<tr><td height="6" bgcolor="#0C7D8C" style="height:6px;font-size:0;line-height:6px;">&nbsp;</td></tr>' +
     '<tr><td align="center" style="padding:27px 28px 22px;background-color:#ffffff;">' +
     '<a href="https://gruponostradamus.edu.pe/" style="text-decoration:none;">' +
-    '<img src="' + WELCOME_LOGO_URL + '" alt="Grupo Nostradamus" width="194" ' +
+    '<img src="cid:' + WELCOME_LOGO_CID + '" alt="Grupo Nostradamus" width="194" ' +
     'style="display:block;width:194px;max-width:100%;height:auto;border:0;"></a></td></tr>' +
     '<tr><td height="3" bgcolor="#d5b261" style="font-size:0;line-height:3px;">&nbsp;</td></tr>' +
     '<tr><td height="26" style="font-size:0;line-height:26px;">&nbsp;</td></tr>' +
@@ -181,4 +181,4 @@ function welcomeHtml(name, upn, activationUrl) {
 }
 
 module.exports = {STUDENT_SKU, STUDENT_SKU_ID, SENDER, DOMAIN, clean, eligible, shouldHandleTransition, alreadyAssigned, personalEmail, scopeAllows, pilotActivationConfigured, pilotActivationAllowed,
-  proposedUpn, proposedUpnCandidates, randomPassword, seal, unseal, tokenHash, safeHtml, welcomeText, welcomeHtml, WELCOME_LOGO_URL};
+  proposedUpn, proposedUpnCandidates, randomPassword, seal, unseal, tokenHash, safeHtml, welcomeText, welcomeHtml, WELCOME_LOGO_CID};
