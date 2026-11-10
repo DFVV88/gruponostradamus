@@ -16,6 +16,25 @@ pagoValidado=true y estadoPago=pago_validado, además de matrícula aprobada
 Este directorio no es importado por el codigo actual de functions/index.js.
 No modifica la web, el panel de matriculas, Culqi, asistencia ni NostraCUENTA.
 
+## Correo directo de acceso para nuevas matrículas
+
+Por decisión de dirección, para **cuentas nuevas** el correo de bienvenida HTML
+conserva el logotipo HD y muestra el usuario y una contraseña de 24 caracteres
+generada de forma independiente. El alta de Microsoft Graph establece
+`forceChangePasswordNextSignIn: false`: normalmente no solicita un cambio
+de clave en el primer acceso, salvo que lo exijan las políticas del tenant.
+
+**Advertencia:** esta contraseña permanece visible en el buzón personal y
+puede quedar en los elementos enviados del remitente, por lo que cualquiera
+con acceso a esas bandejas podría usarla. Cada alumno recibe una contraseña
+única de alta entropía. El proceso no guarda las contraseñas en Firestore ni
+en registros de ejecución. Si el envío falla, la cuenta queda en revisión
+manual y requerirá restablecer su clave; no se repiten automáticamente las altas.
+
+El endpoint `nostraM365Activar` sigue disponible para los correos antiguos
+que contenían enlaces de activación, sin obligar a migrarlos ni invalidarlos.
+El despliegue debe ser **solo** del codebase `nostram365`.
+
 ## Logo oficial HD en correo HTML
 
 El correo HTML conserva todo el texto de bienvenida y utiliza el **LOGO.png**
@@ -33,7 +52,7 @@ Vista previa al buzon personal de ensayo, sin altas ni pagos:
 node scripts/preview-email.js
 ```
 
-El enlace del mensaje de vista previa es ficticio; no introducir contrasenas.
+La contraseña que aparece en la vista previa es ficticia y NO funciona para acceder.
 
 No se alteran el contenido de bienvenida, el asunto, las rutas de pago
 ni las condiciones de licencia.
