@@ -1,6 +1,16 @@
 # NostraM365 - automatizacion independiente (fase de preparacion)
 
-**ESTADO: NO DESPLEGADO / DESACTIVADO POR DEFECTO.**
+**ESTADO: AMBAS FUNCIONES DESPLEGADAS; DESACTIVADAS POR DEFECTO.**
+
+Para activar un piloto, es obligatorio usar `NOSTRA_M365_SCOPE_MODE=pilot`,
+`NOSTRA_M365_PILOT_PREID` (ID exacto de preinscripción) y
+`NOSTRA_M365_PILOT_EMAIL` (correo personal exacto). En modo piloto deben
+coincidir ID Y correo, antes y durante la operación. Sin un modo expreso,
+la función no procesa alumnos, incluso si los interruptores maestros son true.
+`NOSTRA_M365_SCOPE_MODE=production` permite el alcance general SOLO tras
+la aprobación y los controles de producción. No debe utilizarse en un piloto.
+El código por sí solo no valida la legitimidad de un cobro; exige los estados
+existentes de pago validado y matrícula aprobada de Firestore.
 
 Este directorio no es importado por el codigo actual de functions/index.js.
 No modifica la web, el panel de matriculas, Culqi, asistencia ni NostraCUENTA.
