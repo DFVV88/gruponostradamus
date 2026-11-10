@@ -26,6 +26,17 @@ function personalEmail(value) {
   const s = clean(value).toLowerCase();
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s) && !s.endsWith('@' + DOMAIN) ? s : null;
 }
+// A pilot must match BOTH the exact pre-enrollment ID and its personal email.
+// No scope configured => fail closed, even if the two master switches are true.
+function scopeAllows(preId, student, env) {
+  const mode = clean(env && env.NOSTRA_M365_SCOPE_MODE);
+  if (mode === 'production') return true;
+  if (mode !== 'pilot') return false;
+  const id = clean(env.NOSTRA_M365_PILOT_PREID);
+  const email = personalEmail(env.NOSTRA_M365_PILOT_EMAIL);
+  return /^[A-Za-z0-9_-]{16,100}$/.test(id) && preId === id &&
+    Boolean(email) && personalEmail(student && student.correo) === email;
+}
 function slug(s) {
   return clean(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     .toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -93,5 +104,5 @@ function welcomeText(name, upn, activationUrl) {
     '💪🎯 ¡Vamos con todo por ese ingreso a la UNI!\n' +
     '💙💛 Grupo Nostradamus\n📚 La ruta que transforma alumnos en cachimbos.';
 }
-module.exports = {STUDENT_SKU, STUDENT_SKU_ID, SENDER, DOMAIN, clean, eligible, shouldHandleTransition, alreadyAssigned, personalEmail,
+module.exports = {STUDENT_SKU, STUDENT_SKU_ID, SENDER, DOMAIN, clean, eligible, shouldHandleTransition, alreadyAssigned, personalEmail, scopeAllows,
   proposedUpn, randomPassword, seal, unseal, tokenHash, safeHtml, welcomeText};
