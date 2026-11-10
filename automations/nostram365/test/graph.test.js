@@ -58,3 +58,54 @@ test('Graph failure does not become absent user', async () => {
       /GRAPH_HTTP_403/);
   });
 });
+
+test('selectAvailableUpn prefers primary when free', async () => {
+  await mocked([
+    {path:'/users?',status:200,body:{value:[]}},
+    {path:'/users/luis.perez%40',status:404,body:{error:{}}}
+  ], async calls => {
+    const graph = new Graph(env,'mock');
+    const choice = await graph.selectAvailableUpn('Luis Alberto Pérez García',[
+      'luis.perez@gruponostradamus.edu.pe','luis.perezg@gruponostradamus.edu.pe']);
+    assert.deepEqual(choice,{state:'available',upn:'luis.perez@gruponostradamus.edu.pe'});
+    assert.equal(calls.filter(x => x.url.includes('/users/luis.perezg%40')).length,0);
+  });
+});
+test('selectAvailableUpn uses second surname initial when primary is occupied', async () => {
+  await mocked([
+    {path:'/users?',status:200,body:{value:[]}},
+    {path:'/users/luis.perezg%40',status:404,body:{error:{}}},
+    {path:'/users/luis.perez%40',status:200,body:{id:'existing-primary',displayName:'Otro Alumno'}}
+  ], async () => {
+    const graph = new Graph(env,'mock');
+    assert.deepEqual(await graph.selectAvailableUpn('Luis Alberto Pérez García',[
+      'luis.perez@gruponostradamus.edu.pe','luis.perezg@gruponostradamus.edu.pe']),
+    {state:'available',upn:'luis.perezg@gruponostradamus.edu.pe'});
+  });
+});
+test('selectAvailableUpn stops on exact display name or two taken addresses', async () => {
+  await mocked([{path:'/users?',status:200,body:{value:[{id:'manual',displayName:'Luis Alberto Pérez García'}]}}],
+    async () => {
+      const graph = new Graph(env,'mock');
+      assert.deepEqual(await graph.selectAvailableUpn('Luis Alberto Pérez García',[
+        'luis.perez@gruponostradamus.edu.pe','luis.perezg@gruponostradamus.edu.pe']),
+      {state:'existing_name'});
+    });
+  await mocked([
+    {path:'/users?',status:200,body:{value:[]}},
+    {path:'/users/luis.perezg%40',status:200,body:{id:'second'}},
+    {path:'/users/luis.perez%40',status:200,body:{id:'first'}}
+  ], async () => {
+    const graph = new Graph(env,'mock');
+    assert.deepEqual(await graph.selectAvailableUpn('Luis Alberto Pérez García',[
+      'luis.perez@gruponostradamus.edu.pe','luis.perezg@gruponostradamus.edu.pe']),
+    {state:'both_occupied'});
+  });
+});
+test('selectAvailableUpn fails closed on Graph errors', async () => {
+  await mocked([{path:'/users?',status:403,body:{error:{}}}], async () => {
+    const graph = new Graph(env,'mock');
+    await assert.rejects(()=>graph.selectAvailableUpn('Luis Alberto Pérez García',[
+      'luis.perez@gruponostradamus.edu.pe']), /GRAPH_HTTP_403/);
+  });
+});
