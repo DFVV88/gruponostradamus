@@ -93,7 +93,14 @@ if(typeof entry.id!=='string'||!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry.id))retu
 if(typeof entry.titulo!=='string'||!entry.titulo.trim()||entry.titulo.length>130)return false;
 if(typeof entry.descripcion!=='string'||entry.descripcion.length>320)return false;
 if(entry.miniatura!==undefined&&!['svg','webp','png','jpg','jpeg'].some(function(ext){return entry.miniatura==='experiencias/'+entry.id+'/miniatura.'+ext;}))return false;
-return entry.ruta==='experiencias/'+entry.id+'/index.html';
+// Validar la ruta real y conservar el identificador público (URL y visitas).
+// Una actualización del mismo proyecto puede pasar de carpeta v31 a v32.
+if(typeof entry.ruta!=='string')return false;
+var m=entry.ruta.match(/^experiencias\/([a-z0-9]+(?:-[a-z0-9]+)*)\/index\.html$/);
+if(!m)return false;
+if(m[1]===entry.id)return true;
+var base=entry.id.replace(/-v[0-9]+$/,'');
+return base!==entry.id&&m[1].replace(/-v[0-9]+$/,'')===base&&/-v[0-9]+$/.test(m[1])&&!!entry.version_anterior&&typeof entry.version_anterior.sha256==='string'&&/^[0-9a-f]{64}$/.test(entry.version_anterior.sha256);
 }
 function draw(){
 list.replaceChildren();
