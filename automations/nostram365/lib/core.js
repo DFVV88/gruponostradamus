@@ -39,6 +39,21 @@ function scopeAllows(preId, student, env) {
   return /^[A-Za-z0-9_-]{16,100}$/.test(id) && preId === id &&
     Boolean(email) && personalEmail(student && student.correo) === email;
 }
+// During pilot the password endpoint is allowed only for an explicitly scoped
+// test record. Both global account-creation switches remain disabled.
+function pilotActivationConfigured(env) {
+  return Boolean(env && env.NOSTRA_M365_SCOPE_MODE === 'pilot' &&
+    env.NOSTRA_M365_PILOT_ACTIVATION_ENABLED === 'true' &&
+    env.NOSTRA_M365_ENABLED === 'false' &&
+    env.NOSTRA_M365_EXCHANGE_SCOPE_VERIFIED === 'false' &&
+    env.NOSTRA_M365_NOT_BEFORE === '2099-01-01T00:00:00Z');
+}
+function pilotActivationAllowed(env, preId, job) {
+  return pilotActivationConfigured(env) && Boolean(job) &&
+    job.origen === 'piloto_independiente_sin_cobro' &&
+    job.preinscripcionId === preId &&
+    scopeAllows(preId, {correo:job.correoDestino}, env);
+}
 function slug(s) {
   return clean(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     .toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -120,5 +135,5 @@ function welcomeText(name, upn, activationUrl) {
     '💪🎯 ¡Vamos con todo por ese ingreso a la UNI!\n' +
     '💙💛 Grupo Nostradamus\n📚 La ruta que transforma alumnos en cachimbos.';
 }
-module.exports = {STUDENT_SKU, STUDENT_SKU_ID, SENDER, DOMAIN, clean, eligible, shouldHandleTransition, alreadyAssigned, personalEmail, scopeAllows,
+module.exports = {STUDENT_SKU, STUDENT_SKU_ID, SENDER, DOMAIN, clean, eligible, shouldHandleTransition, alreadyAssigned, personalEmail, scopeAllows, pilotActivationConfigured, pilotActivationAllowed,
   proposedUpn, proposedUpnCandidates, randomPassword, seal, unseal, tokenHash, safeHtml, welcomeText};
