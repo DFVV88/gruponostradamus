@@ -66,13 +66,27 @@ NODE
 rollback() {
   trap - ERR
   set +e
-  echo "ERROR: restaurando configuracion piloto y reimplantando SOLO NostraM365..."
-  cp "$backup" .env
+  echo "ERROR: cambiando a modo MANTENIMIENTO (sin nuevas cuentas, pero con acceso a claves ya enviadas)..."
+  # After a partial deploy, students MAY already exist. Never shut down the
+  # password endpoint and strand sent activation links.
+  node <<'NODE'
+const fs=require('fs');
+const changes={
+  NOSTRA_M365_ENABLED:'true',
+  NOSTRA_M365_EXCHANGE_SCOPE_VERIFIED:'true',
+  NOSTRA_M365_SCOPE_MODE:'maintenance',
+  NOSTRA_M365_PILOT_ACTIVATION_ENABLED:'false',
+  NOSTRA_M365_NOT_BEFORE:process.env.NOSTRA_PROD_CUTOFF
+};
+const lines=fs.readFileSync('.env','utf8').split(/\r?\n/).filter(x=>x.trim() &&
+  !Object.keys(changes).some(k=>x.startsWith(k+'=')));
+fs.writeFileSync('.env',lines.concat(Object.entries(changes).map(([k,v])=>k+'='+v)).join('\n')+'\n',{mode:0o600});
+NODE
   firebase deploy --config firebase.json --only functions:nostram365 --project "$PROJECT"
   if [[ $? -ne 0 ]]; then
-    echo "ALERTA CRITICA: no se pudo confirmar la reversion; requiere revisar NostraM365."
+    echo "ALERTA CRITICA: no se confirmo el modo mantenimiento; revisar Cloud Functions inmediatamente."
   else
-    echo "Version piloto apagada restaurada."
+    echo "Modo mantenimiento activo: no nuevas altas. Enlaces previos siguen disponibles."
   fi
   exit 1
 }
