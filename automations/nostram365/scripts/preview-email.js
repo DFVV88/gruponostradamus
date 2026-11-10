@@ -3,7 +3,7 @@
 const fs = require('node:fs');
 const {execFileSync} = require('node:child_process');
 const {Graph} = require('../lib/graph');
-const {welcomeHtml, personalEmail} = require('../lib/core');
+const {welcomeHtmlDirect, personalEmail} = require('../lib/core');
 
 const raw = fs.readFileSync('.env','utf8').split(/\r?\n/)
   .filter(x=>x.includes('=')&&!x.startsWith('#'));
@@ -25,9 +25,8 @@ if (recipient !== 'sonap17381@jysnk.com') {
     '--project=nostrachat-grupo-nostradamus'
   ],{encoding:'utf8'}).trim();
   const graph=new Graph(env,secret);
-  const example='https://us-central1-nostrachat-grupo-nostradamus.cloudfunctions.net/' +
-    'nostraM365Activar#id=VISTA_PREVIA&token=NO_VALIDO';
-  const html=welcomeHtml('Daniel',
+  const example='SOLO_DEMO_NO_FUNCIONA_12345!';
+  const html=welcomeHtmlDirect('Daniel',
     'daniel.chi@gruponostradamus.edu.pe',example);
   await graph.mailStudent(recipient,
     'VISTA PREVIA | Bienvenida Grupo Nostradamus - Logo oficial HD',
@@ -35,7 +34,7 @@ if (recipient !== 'sonap17381@jysnk.com') {
   console.log('VISTA PREVIA ACEPTADA: mensaje HTML con logo oficial HD integrado.');
   console.log('Destinatario de ensayo:',recipient);
   console.log('No se ha creado cuenta ni validado pago.');
-  console.log('El enlace de esta vista previa es deliberadamente ficticio.');
+  console.log('La contraseña mostrada en la vista previa es deliberadamente ficticia.');
 })().catch(err=>{
   console.error('No se pudo enviar vista previa:',err.message);
   process.exitCode=1;
