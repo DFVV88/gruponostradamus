@@ -120,3 +120,24 @@ test('pilot activation only permits exact test job while the normal worker stays
   assert.equal(c.pilotActivationConfigured({...env,NOSTRA_M365_ENABLED:'true'}),false);
   assert.equal(c.pilotActivationConfigured({...env,NOSTRA_M365_PILOT_ACTIVATION_ENABLED:'false'}),false);
 });
+
+test('premium HTML welcome keeps institutional copy and official logo without external fonts', () => {
+  const link='https://us-central1-project.cloudfunctions.net/nostraM365Activar#id=pilot&token=test';
+  const html=c.welcomeHtml('Daniel','daniel.chi@gruponostradamus.edu.pe',link);
+  assert.ok(html.startsWith('<!doctype html>'));
+  assert.match(html,/https:\/\/gruponostradamus\.edu\.pe\/assets\/img\/logo\.png/);
+  assert.match(html,/alt="Grupo Nostradamus"/);
+  assert.match(html,/daniel\.chi@gruponostradamus\.edu\.pe/);
+  assert.match(html,/NostraCUENTA/);
+  assert.match(html,/NostraPASOS/);
+  assert.match(html,/Clases en vivo/);
+  assert.match(html,/#id=pilot&amp;token=test/);
+  assert.match(html,/font-family:Segoe UI,Arial,Helvetica,sans-serif/);
+  assert.match(html,/¡Bienvenido, Daniel, al Grupo Nostradamus!/);
+});
+test('premium email escapes dynamic name and never embeds an untrusted script', () => {
+  const html=c.welcomeHtml('<script>alert(1)</script>','x@gruponostradamus.edu.pe',
+    'https://example.com/activate#id=pilot&token=test');
+  assert.ok(!html.includes('<script>'));
+  assert.match(html,/&lt;script&gt;alert\(1\)&lt;\/script&gt;/);
+});
