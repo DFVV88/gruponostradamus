@@ -1,6 +1,25 @@
 'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
 // Graph app-only API. Fail closed: API failures never authorize new accounts.
-const {STUDENT_SKU, STUDENT_SKU_ID, SENDER, DOMAIN} = require('./core');
+const {STUDENT_SKU, STUDENT_SKU_ID, SENDER, DOMAIN, WELCOME_LOGO_CID} = require('./core');
+function officialLogoAttachment() {
+  // Official SharePoint original: 01_LOGO_Y_ESCUDO/LOGO.png.
+  // Downscaled to 600 px, >3x the displayed width, with intact colors.
+  const b64 = fs.readFileSync(path.join(__dirname,'../assets/logo-oficial-email.b64'),'utf8').trim();
+  const binary = Buffer.from(b64,'base64');
+  if (binary.length < 5000 || binary.subarray(0,8).toString('hex') !== '89504e470d0a1a0a') {
+    throw new Error('EMAIL_LOGO_INVALID');
+  }
+  return {
+    '@odata.type':'#microsoft.graph.fileAttachment',
+    name:'Grupo-Nostradamus-Logo-Oficial.png',
+    contentType:'image/png',
+    isInline:true,
+    contentId:WELCOME_LOGO_CID,
+    contentBytes:b64
+  };
+}
 
 function assertConfig(env) {
   const tenant = env.NOSTRA_M365_TENANT_ID, client = env.NOSTRA_M365_CLIENT_ID;
@@ -95,10 +114,14 @@ class Graph {
     if (!['Text','HTML'].includes(contentType)) throw new Error('EMAIL_BODY_TYPE_INVALID');
     if (!to || !to.includes('@') || to.toLowerCase().endsWith('@' + DOMAIN)) throw new Error('PERSONAL_EMAIL_INVALID');
     // Exchange Online Application RBAC must restrict Application Mail.Send to this mailbox.
+    const message = {subject,
+      body:{contentType,content},
+      toRecipients:[{emailAddress:{address:to}}]};
+    if (contentType === 'HTML' && content.includes('src="cid:' + WELCOME_LOGO_CID + '"')) {
+      message.attachments = [officialLogoAttachment()];
+    }
     await this.call('/users/' + encodeURIComponent(SENDER) + '/sendMail', {
-      method:'POST', body:{message:{subject,
-        body:{contentType,content},
-        toRecipients:[{emailAddress:{address:to}}]}, saveToSentItems:true}});
+      method:'POST', body:{message, saveToSentItems:true}});
   }
 }
-module.exports = {Graph,assertConfig};
+module.exports = {Graph,assertConfig,officialLogoAttachment};
