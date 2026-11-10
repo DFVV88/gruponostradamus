@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+<title id="title">Circunferencia trigonométrica — NostraLAB</title>
+<desc id="desc">Representación vectorial de una circunferencia unitaria con arco dirigido, radio y proyecciones trigonométricas.</desc>
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#042f3a"/><stop offset="1" stop-color="#075862"/></linearGradient>
+<linearGradient id="gold" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#d9a74f"/><stop offset="1" stop-color="#f4d28d"/></linearGradient>
+<pattern id="grid" width="49" height="49" patternUnits="userSpaceOnUse"><path d="M49 0H0V49" fill="none" stroke="#8cd4de" stroke-opacity=".09" stroke-width="1"/></pattern>
+</defs>
+<rect width="960" height="540" rx="0" fill="url(#bg)"/>
+<rect width="960" height="540" fill="url(#grid)"/>
+<circle cx="262" cy="265" r="166" fill="#ebfeff" fill-opacity=".055" stroke="#31c1d0" stroke-width="2.5"/>
+<path d="M60 265H475M262 64V466" stroke="#a4e5ea" stroke-opacity=".42" stroke-width="2"/>
+<path d="M428 265 A166 166 0 0 0 143 149" fill="none" stroke="#5968f3" stroke-width="7" stroke-linecap="round"/>
+<path d="M143 149 l23 4 -12 19Z" fill="#5968f3"/>
+<path d="M262 265 L143 149" stroke="#e8f9fa" stroke-width="3.5" stroke-linecap="round"/>
+<path d="M143 149 V265" stroke="#21bbc9" stroke-width="5.5"/>
+<path d="M143 265 H262" stroke="url(#gold)" stroke-width="5.5"/>
+<path d="M302 265 A40 40 0 0 0 233 237" fill="none" stroke="#6becf0" stroke-width="3"/>
+<circle cx="143" cy="149" r="9" fill="#eaffff" stroke="#045765" stroke-width="3"/>
+<circle cx="262" cy="265" r="5" fill="#eaffff"/>
+<rect x="502" y="105" width="388" height="42" rx="21" fill="#64dce6" fill-opacity=".13" stroke="#77e1ec" stroke-opacity=".3"/>
+<text x="526" y="132" font-family="Arial,Helvetica,sans-serif" font-size="19" font-weight="700" letter-spacing="3" fill="#7de3ec">NOSTRALAB · MATEMÁTICA</text>
+<text x="499" y="215" font-family="Arial,Helvetica,sans-serif" font-size="44" font-weight="800" fill="#ffffff">Circunferencia</text>
+<text x="499" y="270" font-family="Arial,Helvetica,sans-serif" font-size="44" font-weight="800" fill="#ffffff">trigonométrica</text>
+<path d="M500 308H856" stroke="url(#gold)" stroke-width="3" stroke-linecap="round"/>
+<text x="501" y="360" font-family="Arial,Helvetica,sans-serif" font-size="25" fill="#c3eaf0">Las seis líneas, en movimiento</text>
+<text x="501" y="409" font-family="Arial,Helvetica,sans-serif" font-size="19" fill="#f7d999">Gira · Explora · Comprueba</text>
+<text x="501" y="472" font-family="Arial,Helvetica,sans-serif" font-size="16" letter-spacing="1.6" fill="#9bbfc4">GRUPO NOSTRADAMUS · UNI</text>
+</svg>
