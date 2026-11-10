@@ -49,6 +49,28 @@ class Graph {
     const found = await this.call('/users?' + params);
     return found && found.value && found.value.length ? found.value[0] : null;
   }
+  // Never auto-create a second user when an identical full display name exists.
+  // If the primary address belongs to someone else, try the approved fallback.
+  async selectAvailableUpn(fullName, candidates) {
+    if (!Array.isArray(candidates) || candidates.length === 0 ||
+        candidates.length > 2 || candidates.some(x => typeof x !== 'string' ||
+        !/^[a-z0-9]{2,30}\.[a-z0-9]{2,31}@gruponostradamus\.edu\.pe$/.test(x))) {
+      throw new Error('UPN_CANDIDATES_INVALID');
+    }
+    const escaped = fullName.replace(/'/g, "''");
+    const params = new URLSearchParams({'$filter':"displayName eq '" + escaped + "'",
+      '$select':'id,displayName,userPrincipalName', '$top':'10'});
+    const matches = await this.call('/users?' + params);
+    if (matches && Array.isArray(matches.value) && matches.value.length) {
+      return {state:'existing_name'};
+    }
+    for (const upn of candidates) {
+      const existing = await this.call('/users/' + encodeURIComponent(upn) +
+        '?$select=id,displayName,userPrincipalName', {allow404:true});
+      if (!existing) return {state:'available',upn};
+    }
+    return {state:'both_occupied'};
+  }
   async studentSku() {
     const result = await this.call('/subscribedSkus');
     const sku = (result.value || []).find(s => s.skuPartNumber === STUDENT_SKU && s.skuId === STUDENT_SKU_ID);
