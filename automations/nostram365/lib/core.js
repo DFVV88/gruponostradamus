@@ -7,9 +7,20 @@ const SENDER = 'informes@gruponostradamus.edu.pe';
 const DOMAIN = 'gruponostradamus.edu.pe';
 
 function clean(v) { return String(v == null ? '' : v).trim().replace(/\s+/g, ' '); }
+function alreadyAssigned(r) {
+  return Boolean(r && (r.correoInstitucionalAsignado === true ||
+    clean(r.correoInstitucional) || clean(r.institutionalEmail)));
+}
 function eligible(r) {
-  return Boolean(r && r.matriculaAprobada === true &&
-    r.pagoValidado === true && clean(r.correo) && clean(r.nombre));
+  // Only public web enrollments, never manually registered exceptions.
+  // Payment and approval must be explicit and consistent with current workflow.
+  return Boolean(r && r.origen === 'web_preinscripcion' &&
+    r.matriculaAprobada === true && r.pagoValidado === true &&
+    r.estadoPago === 'pago_validado' && r.estado !== 'rechazado' &&
+    !alreadyAssigned(r) && clean(r.correo) && clean(r.nombre));
+}
+function shouldHandleTransition(before, after) {
+  return !eligible(before) && eligible(after);
 }
 function personalEmail(value) {
   const s = clean(value).toLowerCase();
@@ -82,5 +93,5 @@ function welcomeText(name, upn, activationUrl) {
     '💪🎯 ¡Vamos con todo por ese ingreso a la UNI!\n' +
     '💙💛 Grupo Nostradamus\n📚 La ruta que transforma alumnos en cachimbos.';
 }
-module.exports = {STUDENT_SKU, STUDENT_SKU_ID, SENDER, DOMAIN, clean, eligible, personalEmail,
+module.exports = {STUDENT_SKU, STUDENT_SKU_ID, SENDER, DOMAIN, clean, eligible, shouldHandleTransition, alreadyAssigned, personalEmail,
   proposedUpn, randomPassword, seal, unseal, tokenHash, safeHtml, welcomeText};
