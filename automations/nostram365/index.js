@@ -8,7 +8,7 @@ const logger = require('firebase-functions/logger');
 const crypto = require('node:crypto');
 const {Graph} = require('./lib/graph');
 const {eligible, shouldHandleTransition, clean, personalEmail, proposedUpnCandidates, randomPassword,
-  seal, unseal, tokenHash, safeHtml, welcomeText, welcomeHtml, STUDENT_SKU, SENDER, scopeAllows,
+  unseal, tokenHash, safeHtml, welcomeText, welcomeHtml, welcomeHtmlDirect, STUDENT_SKU, SENDER, scopeAllows,
   pilotActivationConfigured, pilotActivationAllowed} = require('./lib/core');
 
 // Dedicated Firebase codebase. No imports or writes into the existing Culqi, attendance or web modules.
@@ -96,14 +96,12 @@ exports.nostraM365Alta = onDocumentUpdated({
     }
     const upn = choice.upn;
     const skuId = await graph.studentSku();
-    const temporaryPassword = randomPassword();
-    const token = crypto.randomBytes(32).toString('base64url');
-    const expires = Date.now() + 48*60*60*1000;
+    // The generated password is retained in memory for the one outbound email,
+    // never saved to Firestore or logged. Existing activation links remain valid.
+    const initialPassword = randomPassword();
     await mark(ref,'preparada_para_crear', {
       correoPropuesto:upn, correoDestino:email, nombreAlumno:name,
-      activacionHash:tokenHash(token),
-      activacionExpiraMs:expires,
-      credencialCifrada:seal(temporaryPassword, ACTIVATION_KEY.value())
+      entregaCredenciales:'correo_directo_sin_cambio_obligatorio'
     });
     // Check again immediately before the external side effect: approvals can be revoked.
     const lastSnapshot = await db.collection('preinscripciones').doc(preId).get();
@@ -116,7 +114,7 @@ exports.nostraM365Alta = onDocumentUpdated({
     }
     // Creating a user is an external side effect. If a crash occurs after it,
     // a repeated trigger is intentionally blocked by the persistent job record.
-    const createdUser = await graph.createStudent(upn, name, temporaryPassword);
+    const createdUser = await graph.createStudent(upn, name, initialPassword);
     if (!createdUser || !createdUser.id) throw new Error('CREATE_NO_USER_ID');
     graphUserId = createdUser.id;
     await mark(ref,'creada_sin_licencia', {microsoftUserId:graphUserId,
@@ -125,12 +123,8 @@ exports.nostraM365Alta = onDocumentUpdated({
     await mark(ref,'creada_licenciada', {licenciaSku:STUDENT_SKU,
       licenciaSkuId:skuId, licenciaAsignadaAt:FieldValue.serverTimestamp()});
 
-    // URL fragment not sent to HTTP server during GET; token submitted only upon user action.
-    const project = process.env.GCLOUD_PROJECT || process.env.GCP_PROJECT;
-    if (!project || !/^[a-z0-9-]+$/.test(project)) throw new Error('PROJECT_ID_INVALID');
-    const link = 'https://' + REGION + '-' + project +
-      '.cloudfunctions.net/nostraM365Activar#id=' + encodeURIComponent(preId) +
-      '&token=' + encodeURIComponent(token);
+    // New accounts use direct email delivery. The existing activation endpoint
+    // still serves older links but no new link is minted here.
     // A revoked enrollment or corrected email must not receive credentials automatically.
     const contactSnapshot = await db.collection('preinscripciones').doc(preId).get();
     const verifiedContact = contactSnapshot.data() || {};
@@ -144,7 +138,7 @@ exports.nostraM365Alta = onDocumentUpdated({
     // Mark before sending. In an ambiguous Graph 202/timeout, human review prevents double mail.
     await mark(ref,'enviando_bienvenida', {remitente:SENDER, fechaEnvioIntentada:FieldValue.serverTimestamp()});
     await graph.mailStudent(email,'🎉 ¡Bienvenido a Grupo Nostradamus! | Tus accesos institucionales',
-      welcomeHtml(name.split(' ')[0],upn,link),'HTML');
+      welcomeHtmlDirect(name.split(' ')[0],upn,initialPassword),'HTML');
     await mark(ref,'bienvenida_aceptada', {
       bienvenidaEstado:'aceptada_por_exchange', bienvenidaAceptadaAt:FieldValue.serverTimestamp()
     });
