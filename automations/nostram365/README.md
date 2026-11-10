@@ -1,6 +1,6 @@
-# NostraM365 - automatizacion independiente (fase de preparacion)
+# NostraM365 - automatización independiente
 
-**ESTADO: AMBAS FUNCIONES DESPLEGADAS; DESACTIVADAS POR DEFECTO.**
+**ESTADO: ambas funciones desplegadas.** El modo efectivo (producción, piloto o mantenimiento) depende de las variables de entorno cargadas por Firebase.
 
 Para activar un piloto, es obligatorio usar `NOSTRA_M365_SCOPE_MODE=pilot`,
 `NOSTRA_M365_PILOT_PREID` (ID exacto de preinscripción) y
@@ -54,8 +54,7 @@ node scripts/preview-email.js
 
 La contraseña que aparece en la vista previa es ficticia y NO funciona para acceder.
 
-No se alteran el contenido de bienvenida, el asunto, las rutas de pago
-ni las condiciones de licencia.
+El diseño premium, el logo y las demás instrucciones se conservan; la sección de activación cambió por entrega directa de la contraseña, sin modificar rutas de pago ni condiciones de licencia.
 
 ## Piloto con cuenta real, pero sin pago ficticio
 
