@@ -136,11 +136,25 @@ function welcomeText(name, upn, activationUrl) {
     '💙💛 Grupo Nostradamus\n📚 La ruta que transforma alumnos en cachimbos.';
 }
 
+
+const ACTIVATION_PROMPT = '🔒 Activa tu acceso y consulta tu contraseña temporal de un solo uso aquí:';
+const ACTIVATION_NOTICE = 'La clave debe cambiarse en tu primer inicio de sesión. El enlace expira en 48 horas y solo puede usarse una vez.';
+function welcomeTextDirect(name, upn, password) {
+  // Keep the approved copy and replace only obsolete activation instructions.
+  if (typeof password !== 'string' || password.length < 20) throw new Error('PASSWORD_TOO_SHORT');
+  const placeholder = 'NOSTRAM365_ACTIVATION_LINK_PLACEHOLDER';
+  return welcomeText(name, upn, placeholder)
+    .replace(ACTIVATION_PROMPT + '\n' + placeholder,
+      '🔑 Contraseña institucional: ' + password)
+    .replace(ACTIVATION_NOTICE,
+      'Puedes iniciar sesión directamente con esta contraseña. No necesitas cambiarla en el primer ingreso. Consérvala de forma segura y no la compartas.');
+}
+
 const WELCOME_LOGO_CID = 'nostradamus-logo-oficial';
-function welcomeHtml(name, upn, activationUrl) {
-  // Preserve every paragraph of the existing welcome; change presentation only.
+function welcomeHtmlFromCopy(copy) {
+  // The same premium HTML and official logo render both old and new greetings.
   // Email-safe tables, inline styles and system fonts work across Gmail/Outlook.
-  const paragraphs = welcomeText(name,upn,activationUrl).split('\n\n');
+  const paragraphs = copy.split('\n\n');
   const format = raw => safeHtml(raw).replace(/https:\/\/[^\s<]+/g, url =>
     '<a href="' + url + '" style="color:#087d8b;text-decoration:underline;word-break:break-all;">' +
       url + '</a>').replace(/\n/g,'<br>');
@@ -180,5 +194,12 @@ function welcomeHtml(name, upn, activationUrl) {
     body + '</table></td></tr></table></body></html>';
 }
 
+function welcomeHtml(name, upn, activationUrl) {
+  return welcomeHtmlFromCopy(welcomeText(name, upn, activationUrl));
+}
+function welcomeHtmlDirect(name, upn, password) {
+  return welcomeHtmlFromCopy(welcomeTextDirect(name, upn, password));
+}
 module.exports = {STUDENT_SKU, STUDENT_SKU_ID, SENDER, DOMAIN, clean, eligible, shouldHandleTransition, alreadyAssigned, personalEmail, scopeAllows, pilotActivationConfigured, pilotActivationAllowed,
-  proposedUpn, proposedUpnCandidates, randomPassword, seal, unseal, tokenHash, safeHtml, welcomeText, welcomeHtml, WELCOME_LOGO_CID};
+  proposedUpn, proposedUpnCandidates, randomPassword, seal, unseal, tokenHash, safeHtml,
+  welcomeText, welcomeHtml, welcomeTextDirect, welcomeHtmlDirect, WELCOME_LOGO_CID};
