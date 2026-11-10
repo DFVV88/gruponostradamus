@@ -147,3 +147,17 @@ test('official HD SharePoint logo is embedded inline in HTML welcome', async () 
     assert.match(send.url,/informes%40gruponostradamus\.edu\.pe/);
   });
 });
+
+test('Microsoft Graph creates student without forced password change', async () => {
+  await mocked([{path:'/users',status:201,body:{id:'created-user'}}],async calls=>{
+    const graph=new Graph(env,'mock');
+    await graph.createStudent('luis.perez@gruponostradamus.edu.pe',
+      'Luis Pérez','SomeUniqueStrongPassword1!');
+    const call=calls.find(c=>c.url.endsWith('/users'));
+    const data=JSON.parse(call.opts.body);
+    assert.equal(data.passwordProfile.forceChangePasswordNextSignIn,false);
+    assert.equal(data.passwordProfile.password,'SomeUniqueStrongPassword1!');
+    assert.equal(data.userPrincipalName,'luis.perez@gruponostradamus.edu.pe');
+    assert.equal(data.accountEnabled,true);
+  });
+});
