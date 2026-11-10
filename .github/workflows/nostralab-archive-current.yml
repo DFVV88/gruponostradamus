@@ -1,0 +1,60 @@
+name: NostraLAB - validar y empaquetar simuladores vigentes
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/nostralab-archive-current.yml"
+permissions:
+  contents: read
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+      - name: Verificar versiones, SHA-256, footer y fuentes anteriores
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,json,shutil
+          root=Path('.')
+          catalog=json.loads((root/'nostralab/catalogo.json').read_text(encoding='utf-8'))
+          public=[e for e in catalog['experiencias'] if e.get('publicado')]
+          assert len(public)>=4, 'No deben desaparecer laboratorios aprobados'
+          for e in public:
+              path=root/'nostralab'/e['ruta']
+              original=path.read_bytes()
+              checksum=hashlib.sha256(original).hexdigest()
+              assert checksum==e['sha256'], (e['id'],checksum,e['sha256'])
+              assert original.count(b'data-nostralab-footer="institutional-v1"')==1, e['id']
+              assert b'Predice' in original and b'NostraLAB' in original, e['id']
+              prior=e['version_anterior']
+              legacy=(root/'nostralab'/prior['ruta']).read_bytes()
+              assert hashlib.sha256(legacy).hexdigest()==prior['sha256'], e['id']
+              dest=root/'dist'/e['id']
+              dest.mkdir(parents=True,exist_ok=True)
+              shutil.copyfile(path,dest/'simulador.html')
+              manifest={
+                  'schema':'NOSTRALAB_ARCHIVE_V1',
+                  'project_id':e['id'],
+                  'course':e['curso'],
+                  'version':e['version'],
+                  'source_path':e['ruta'],
+                  'sha256':checksum,
+                  'byte_size':len(original),
+                  'approved_change':'uniformar_mejorar_pie_de_pagina_todos_laboratorios',
+                  'archival_status':'pending_remote_integrity_verification',
+                  'previous':prior,
+                  'publication_url':'https://gruponostradamus.edu.pe/nostralab/laboratorio.html?id='+e['id']
+              }
+              (dest/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+              print('OK',e['id'],e['version'],checksum,len(original))
+          PY
+      - name: Empaquetar HTML y manifiestos para NOSTRAOS
+        uses: actions/upload-artifact@v4
+        with:
+          name: nostralab-cuatro-laboratorios-footer-unificado
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30
