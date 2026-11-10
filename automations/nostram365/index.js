@@ -7,7 +7,7 @@ const {getFirestore, FieldValue} = require('firebase-admin/firestore');
 const logger = require('firebase-functions/logger');
 const crypto = require('node:crypto');
 const {Graph} = require('./lib/graph');
-const {eligible, clean, personalEmail, proposedUpn, randomPassword,
+const {eligible, shouldHandleTransition, clean, personalEmail, proposedUpn, randomPassword,
   seal, unseal, tokenHash, safeHtml, welcomeText, STUDENT_SKU, SENDER} = require('./lib/core');
 
 // Dedicated Firebase codebase. No imports or writes into the existing Culqi, attendance or web modules.
@@ -44,7 +44,7 @@ exports.nostraM365Alta = onDocumentUpdated({
   const before = event.data.before.data() || {};
   const after = event.data.after.data() || {};
   // Only a transition into approval is eligible; no legacy backfill on deployment.
-  if (eligible(before) || !eligible(after)) return;
+  if (!shouldHandleTransition(before, after)) return;
   const preId = event.params.preId;
   const ref = db.collection('nostram365_private').doc(preId);
   const created = await db.runTransaction(async tx => {
