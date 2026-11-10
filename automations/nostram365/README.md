@@ -16,6 +16,22 @@ pagoValidado=true y estadoPago=pago_validado, además de matrícula aprobada
 Este directorio no es importado por el codigo actual de functions/index.js.
 No modifica la web, el panel de matriculas, Culqi, asistencia ni NostraCUENTA.
 
+## Piloto con cuenta real, pero sin pago ficticio
+
+El script `scripts/pilot-test.js --execute` ejecuta una sola alta de ensayo,
+leyendo la preinscripción autorizada, siempre que los dos interruptores
+generales permanezcan en `false` y el corte sea 2099. Comprueba nombre,
+correo, ausencia de pago aprobado, duplicados en Microsoft y cupos A1;
+reserva transaccionalmente por ID con la creación exclusiva de documento
+`nostram365_private`, sin modificar pagos ni la ficha administrativa.
+En caso de resultado ambiguo NO se reintenta: requiere revisión manual.
+
+El enlace de contraseña temporal del ensayo se habilita con
+`NOSTRA_M365_PILOT_ACTIVATION_ENABLED=true` y solo puede consumir el token
+de un documento con `origen=piloto_independiente_sin_cobro`, ID y correo
+personal exactos del piloto. Esto NO habilita `nostraM365Alta`.
+La bienvenida del piloto identifica expresamente su carácter de ensayo.
+
 ## Flujo al activarse
 
 Cuando una preinscripcion DE LA WEB (origen: web_preinscripcion) cambia
