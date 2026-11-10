@@ -8,7 +8,8 @@ const logger = require('firebase-functions/logger');
 const crypto = require('node:crypto');
 const {Graph} = require('./lib/graph');
 const {eligible, shouldHandleTransition, clean, personalEmail, proposedUpnCandidates, randomPassword,
-  seal, unseal, tokenHash, safeHtml, welcomeText, STUDENT_SKU, SENDER, scopeAllows} = require('./lib/core');
+  seal, unseal, tokenHash, safeHtml, welcomeText, STUDENT_SKU, SENDER, scopeAllows,
+  pilotActivationConfigured, pilotActivationAllowed} = require('./lib/core');
 
 // Dedicated Firebase codebase. No imports or writes into the existing Culqi, attendance or web modules.
 // Off by default; the live switch is deliberately not exposed to browser clients.
@@ -176,7 +177,10 @@ exports.nostraM365Activar = onRequest({
   secrets:[ACTIVATION_KEY]
 }, async (req,res) => {
   securityHeaders(res);
-  if (!enabled()) {res.status(503).send(page('Servicio no habilitado','<p>Contacta a Coordinación Académica.</p>'));return;}
+  const generalEnabled = enabled();
+  if (!generalEnabled && !pilotActivationConfigured(process.env)) {
+    res.status(503).send(page('Servicio no habilitado','<p>Contacta a Coordinación Académica.</p>'));return;
+  }
   if (req.method === 'GET') {
     res.status(200).send(page('Activación de acceso institucional',
       '<p>Consulta tu contraseña temporal una sola vez. Dispones de 48 horas desde el envío.</p>' +
@@ -205,7 +209,8 @@ exports.nostraM365Activar = onRequest({
       const supplied = Buffer.from(tokenHash(token),'hex');
       const stored = /^[a-f0-9]{64}$/i.test(d.activacionHash || '')
         ? Buffer.from(d.activacionHash,'hex') : Buffer.alloc(32);
-      if (!crypto.timingSafeEqual(supplied,stored) ||
+      if ((!generalEnabled && !pilotActivationAllowed(process.env,id,d)) ||
+          !crypto.timingSafeEqual(supplied,stored) ||
           d.estado !== 'bienvenida_aceptada' || d.activacionUsadaAt ||
           !Number.isFinite(d.activacionExpiraMs) || Date.now() > d.activacionExpiraMs ||
           !d.credencialCifrada) return null;
