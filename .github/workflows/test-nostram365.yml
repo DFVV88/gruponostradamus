@@ -1,0 +1,27 @@
+name: NostraM365 - pruebas aisladas (sin deploy)
+
+on:
+  pull_request:
+    paths:
+      - 'automations/nostram365/**'
+      - '.github/workflows/test-nostram365.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: automations/nostram365
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: automations/nostram365/package-lock.json
+      - run: npm install --ignore-scripts --no-audit --no-fund
+      - run: npm test
