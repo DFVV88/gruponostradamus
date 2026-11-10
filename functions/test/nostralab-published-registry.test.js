@@ -40,3 +40,23 @@ test('toda experiencia pública tiene su página de compartir sin cambiar el sim
     assert.match(html, /location\.replace/);
   }
 });
+
+test('las versiones públicas pueden avanzar sin cambiar el ID ni reiniciar las visitas', () => {
+  const viewer = fs.readFileSync(path.join(repoRoot, 'nostralab/laboratorio.html'), 'utf8');
+  assert.match(viewer, /function rutaPublicadaValida/);
+  for (const lab of catalog.experiencias.filter(x => x.publicado === true)) {
+    const normal = 'experiencias/' + lab.id + '/index.html';
+    const route = lab.ruta;
+    assert.match(route, /^experiencias\/[a-z0-9-]+\/index\.html$/);
+    if (route !== normal) {
+      const baseId = lab.id.replace(/-v[0-9]+$/, '');
+      const routeId = route.split('/')[1].replace(/-v[0-9]+$/, '');
+      assert.notEqual(baseId, lab.id, 'requiere identificador histórico versionado');
+      assert.equal(routeId, baseId, 'la ruta nueva debe ser del mismo proyecto');
+      assert.ok(lab.version_anterior && lab.version_anterior.sha256, 'conservar trazabilidad');
+      assert.ok(fs.existsSync(path.join(repoRoot, 'nostralab', lab.version_anterior.ruta)), 'mantener HTML anterior');
+    }
+    assert.ok(fs.existsSync(path.join(repoRoot, 'nostralab', route)), 'falta HTML publicado: ' + lab.id);
+    assert.match(lab.sha256, /^[0-9a-f]{64}$/);
+  }
+});
