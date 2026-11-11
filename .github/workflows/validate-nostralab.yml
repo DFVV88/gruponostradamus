@@ -19,13 +19,6 @@ permissions:
   contents: read
 jobs:
   regression:
-  push:
-    branches: [main]
-    paths:
-      - "nostralab/**"
-      - "scripts/test-nostralab-browser.py"
-      - "functions/test/nostralab-*.test.js"
-      - ".github/workflows/validate-nostralab.yml"
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
