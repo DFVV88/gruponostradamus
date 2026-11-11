@@ -39,6 +39,14 @@ const els = {
   saveBtn: $('save-btn'), approveBtn: $('approve-btn'), rejectBtn: $('reject-btn'), deleteBtn: $('delete-btn'), whatsappWelcome: $('whatsapp-welcome-btn'), modalMsg: $('modal-message')
 };
 
+function refreshWhatsAppWelcomeButton(record){
+  if(!els.whatsappWelcome) return;
+  const ready = welcomeApproved(record);
+  els.whatsappWelcome.disabled = !ready;
+  els.whatsappWelcome.title = ready
+    ? 'Preparar y copiar mensaje para envío manual'
+    : 'Disponible después de aprobar matrícula y validar pago';
+}
 function message(el, type, text){ if(el){ el.className = 'msg ' + type; el.innerHTML = text; } }
 function clean(value){ return String(value || '').trim(); }
 function dniDigits(value){ return clean(value).replace(/\D/g,'').slice(0,12); }
@@ -138,6 +146,11 @@ async function loadRecords(){
     const snap = await getDocs(q);
     records = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     renderStats(); renderTable();
+    // Si el administrador acaba de aprobar la matrícula, habilitar WhatsApp
+    // inmediatamente sin obligarle a cerrar y volver a abrir la ficha.
+    if(currentId && els.modalBack.classList.contains('show')){
+      refreshWhatsAppWelcomeButton(records.find(r => r.id === currentId));
+    }
   }catch(err){
     console.error(err);
     els.rows.innerHTML = '<tr><td colspan="8">No se pudo cargar. Verifica login y reglas de Firebase.</td></tr>';
@@ -417,7 +430,7 @@ function openModal(id, mode='ficha'){
   els.approveBtn.style.display = mode === 'pago' ? 'none' : '';
   els.rejectBtn.textContent = mode === 'pago' ? 'Observar pago' : 'Rechazar';
   if(els.deleteBtn) els.deleteBtn.style.display = mode === 'ficha' && canDeletePreinscripcion(r) ? '' : 'none';
-  if(els.whatsappWelcome){ els.whatsappWelcome.disabled = !welcomeApproved(r); els.whatsappWelcome.title = welcomeApproved(r) ? 'Preparar y copiar mensaje para envío manual' : 'Disponible después de aprobar matrícula y validar pago'; }
+  refreshWhatsAppWelcomeButton(r);
   if(mode === 'pago'){
     els.editEstadoPago.value = 'pago_validado';
     els.editEstado.value = 'listo_para_matricula';
