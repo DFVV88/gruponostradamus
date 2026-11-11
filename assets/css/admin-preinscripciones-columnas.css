@@ -1,0 +1,167 @@
+/* Grupo Nostradamus | Preinscripciones
+   Distribución adaptativa de columnas, sin afectar otras tablas ni módulos.
+   2026-11-11 */
+body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table-wrap{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  overflow-x:hidden;
+  overflow-y:auto;
+}
+body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table{
+  width:100%;
+  min-width:0!important;
+  max-width:100%;
+  table-layout:fixed;
+}
+body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table th,
+body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table td{
+  min-width:0;
+  padding:11px 8px;
+  overflow-wrap:anywhere;
+}
+body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table th:nth-child(1){width:18%!important}
+body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table th:nth-child(2){width:17%!important}
+body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table th:nth-child(3){width:16%!important}
+body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table th:nth-child(4){width:15%!important}
+body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table th:nth-child(5){width:14%!important}
+body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table th:nth-child(6){width:8%!important}
+/* El asesor ya se oculta en la lista por admin-plan-display.js. Sigue en la ficha. */
+body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table th:nth-child(7),
+body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table td.col-asesor{
+  display:none!important;
+}
+body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table th:nth-child(8){width:12%!important}
+body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table .cell-date-created,
+body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table .cell-date-updated{
+  white-space:normal!important;
+  overflow-wrap:normal;
+}
+body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table .cell-payment-method{
+  font-size:12px;
+  line-height:1.25;
+}
+body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table .badge{
+  box-sizing:border-box;
+  max-width:100%;
+  white-space:normal;
+  overflow-wrap:anywhere;
+}
+body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table .row-actions{
+  display:flex;
+  flex-direction:column!important;
+  flex-wrap:nowrap!important;
+  align-items:stretch;
+  gap:6px;
+}
+body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table .row-actions .mini{
+  box-sizing:border-box;
+  display:block;
+  width:100%!important;
+  min-width:0;
+  flex:0 0 auto!important;
+  margin:0;
+  padding:8px 6px;
+  border-radius:9px;
+  font-size:11px;
+  line-height:1.2;
+  white-space:normal;
+  overflow-wrap:break-word;
+  text-align:center;
+}
+body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table .row-actions [data-welcome-wa]{
+  border-color:#a8e4d1;
+  background:#e9faf2;
+  color:#086c46;
+}
+body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table .row-actions [data-welcome-wa]:hover{
+  background:#d6f4e4;
+}
+
+/* Cuando el panel principal se estrecha por el menú lateral, convertir
+   cada inscripción en una tarjeta de dos columnas: sin scroll horizontal. */
+@media (max-width:1350px){
+  body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table-wrap{
+    max-height:none!important;
+    overflow:visible!important;
+    border:0;
+    background:transparent;
+  }
+  body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table,
+  body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table tbody{
+    display:block;
+    width:100%;
+  }
+  body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table thead{
+    display:none;
+  }
+  body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table tbody tr.pre-row{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:0 16px;
+    width:100%;
+    margin:0 0 13px;
+    padding:12px 15px;
+    border:1px solid #dce9ed;
+    border-radius:16px;
+    background:#fff;
+    box-shadow:0 5px 20px rgba(6,20,38,.04);
+  }
+  body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table tbody tr.pre-row td{
+    display:block!important;
+    width:auto!important;
+    padding:9px 3px;
+    border:0;
+    border-bottom:1px solid #edf3f4;
+    min-width:0;
+  }
+  body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table tbody tr.pre-row td::before{
+    display:block;
+    margin-bottom:5px;
+    color:#627683;
+    font:800 10px/1.25 Jost,Arial,sans-serif;
+    letter-spacing:.065em;
+    text-transform:uppercase;
+  }
+  body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table .col-alumno::before{content:"Alumno"}
+  body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table .col-ciclo::before{content:"Ciclo / plan"}
+  body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table .col-contacto::before{content:"Contacto"}
+  body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table .col-registro::before{content:"Registro"}
+  body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table .col-pago::before{content:"Pago"}
+  body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table .col-estado::before{content:"Estado"}
+  body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table tbody tr.pre-row td.col-asesor{
+    display:none!important;
+  }
+  body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table tbody tr.pre-row td.col-actions{
+    grid-column:1/-1;
+    padding:11px 3px 3px;
+    border:0;
+  }
+  body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table .col-actions::before{content:"Acciones"}
+  body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table .row-actions{
+    display:flex;
+    flex-direction:row!important;
+    flex-wrap:wrap!important;
+  }
+  body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table .row-actions .mini{
+    width:auto!important;
+    flex:1 1 110px!important;
+    padding:9px 12px;
+    white-space:nowrap;
+  }
+  body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table .row-actions .badge{
+    align-self:center;
+  }
+}
+@media (max-width:600px){
+  body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table tbody tr.pre-row{
+    grid-template-columns:minmax(0,1fr);
+    padding:11px 14px;
+  }
+  body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table .row-actions .mini{
+    flex:1 1 100%!important;
+  }
+  body.admin-dashboard-ready #admin-view-preinscripciones .preinscripciones-table .row-actions .badge{
+    align-self:flex-start;
+  }
+}
