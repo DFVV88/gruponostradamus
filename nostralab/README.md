@@ -61,3 +61,8 @@ Ver functions/NOSTRALAB_VISITAS.md para instalación, pruebas, privacidad y acti
 
 ## Actualización visual MAT-001 v32 (2026-11-09)
 La URL pública estable conserva `?id=circunferencia-trigonometrica-v31` para no reiniciar el contador Firebase. El catálogo referencia el nuevo HTML autónomo `experiencias/circunferencia-trigonometrica-v32/index.html`, con cabecera DAMUS uniforme. El HTML v31 se mantiene intacto como versión histórica; `version_anterior` registra su SHA-256. Se requiere verificar el despliegue GitHub Pages antes de anunciar la versión visible.
+
+## Imágenes institucionales NostraLAB (actualización 2026-11-11)
+Para cada laboratorio publicado existen dos imágenes independientes derivadas de una composición maestra común: miniatura 16:9 PNG de 1280×720 en `nostralab/miniaturas/` y portada social JPEG de 1200×630 en `assets/img/social/`, referenciada mediante `compartir.html` con metadatos Open Graph estáticos. Se conservan las imágenes anteriores para compatibilidad y caché.
+**Fuente de marca obligatoria:** usar exclusivamente el archivo `LOGO.png` de SharePoint NOSTRAOS, carpeta `General/05_COMERCIAL/01_MARKETING/00_ACTIVOS_OFICIALES/01_LOGO_Y_ESCUDO/`, como imagen original sin redibujar ni alterar proporciones. El texto, diagramas, títulos y ecuaciones se dibujan en una capa vectorial separada, con ejes y notación científica claros tipo LaTeX/TikZ. Está prohibido aceptar logotipos reconstruidos por IA.
+La actualización de miniaturas no cambia el HTML científico aprobado, el ID público ni el contador Firebase. El manifiesto catalogado siempre debe apuntar a las miniaturas centralizadas y la página social a la portada JPEG del mismo proyecto.
