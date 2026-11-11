@@ -5,6 +5,7 @@
 import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
 import { getFirestore, collection, query, orderBy, limit, where, getDocs, getDoc, doc, updateDoc, writeBatch, runTransaction, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
+import { openWhatsAppWelcome, welcomeApproved } from './admin-whatsapp-bienvenida.mjs?v=2026-11-11-1';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCO5jiS9vcEMmBMkGoD5XnNPm_OQILehkM',
@@ -35,7 +36,7 @@ const els = {
   statTotal: $('stat-total'), statNuevos: $('stat-nuevos'), statPagos: $('stat-pagos'), statValidados: $('stat-validados'),
   modalBack: $('modal-back'), closeModal: $('close-modal'), modalTitle: $('modal-title'), modalSubtitle: $('modal-subtitle'), detailGrid: $('detail-grid'),
   editEstado: $('edit-estado'), editAsesor: $('edit-asesor'), editEstadoPago: $('edit-estado-pago'), editPagoObs: $('edit-pago-observacion'),
-  saveBtn: $('save-btn'), approveBtn: $('approve-btn'), rejectBtn: $('reject-btn'), deleteBtn: $('delete-btn'), modalMsg: $('modal-message')
+  saveBtn: $('save-btn'), approveBtn: $('approve-btn'), rejectBtn: $('reject-btn'), deleteBtn: $('delete-btn'), whatsappWelcome: $('whatsapp-welcome-btn'), modalMsg: $('modal-message')
 };
 
 function message(el, type, text){ if(el){ el.className = 'msg ' + type; el.innerHTML = text; } }
@@ -276,7 +277,7 @@ function renderTable(){
       <td class="col-pago"><span class="cell-payment-method">${esc(r.metodoPagoLabel)}</span>${paymentBadge(r.estadoPago)}</td>
       <td class="col-estado">${estadoBadge(r.estado)}</td>
       <td class="col-asesor">${esc(r.asesorAsignado) || '-'}</td>
-      <td class="col-actions"><div class="row-actions"><button class="mini" data-open="${r.id}">Ver ficha</button>${paymentAction(r)}</div></td>
+      <td class="col-actions"><div class="row-actions"><button class="mini" data-open="${r.id}">Ver ficha</button>${paymentAction(r)}${welcomeApproved(r) ? `<button class="mini" data-welcome-wa="${esc(r.id)}" title="Preparar bienvenida manual por WhatsApp">WhatsApp</button>` : ""}</div></td>
     </tr>`).join('');
 }
 function detail(label, value){ return `<div class="detail"><b>${esc(label)}</b><span>${esc(value) || '-'}</span></div>`; }
@@ -416,6 +417,7 @@ function openModal(id, mode='ficha'){
   els.approveBtn.style.display = mode === 'pago' ? 'none' : '';
   els.rejectBtn.textContent = mode === 'pago' ? 'Observar pago' : 'Rechazar';
   if(els.deleteBtn) els.deleteBtn.style.display = mode === 'ficha' && canDeletePreinscripcion(r) ? '' : 'none';
+  if(els.whatsappWelcome){ els.whatsappWelcome.disabled = !welcomeApproved(r); els.whatsappWelcome.title = welcomeApproved(r) ? 'Preparar y copiar mensaje para envío manual' : 'Disponible después de aprobar matrícula y validar pago'; }
   if(mode === 'pago'){
     els.editEstadoPago.value = 'pago_validado';
     els.editEstado.value = 'listo_para_matricula';
@@ -458,12 +460,15 @@ els.googleLogin.addEventListener('click', async () => { try{ message(els.authMsg
 els.logout.addEventListener('click', () => signOut(auth));
 els.refresh.addEventListener('click', () => { loadRecords(); loadAccounts(); }); els.search.addEventListener('input', renderTable); els.estadoFilter.addEventListener('change', renderTable); els.pagoFilter.addEventListener('change', renderTable);
 els.closeModal.addEventListener('click', closeModal); els.modalBack.addEventListener('click', e => { if(e.target === els.modalBack) closeModal(); }); els.saveBtn.addEventListener('click', saveChanges); els.approveBtn.addEventListener('click', approveMatricula); els.rejectBtn.addEventListener('click', rejectCurrent); if(els.deleteBtn) els.deleteBtn.addEventListener('click', deleteCurrent);
+if(els.whatsappWelcome) els.whatsappWelcome.addEventListener('click', () => { const r = records.find(x => x.id === currentId); if(r) openWhatsAppWelcome(r); });
 document.addEventListener('click', e => {
   const open = e.target.closest('[data-open]');
   const pay = e.target.closest('[data-pay]');
   const accountBtn = e.target.closest('[data-account-action]');
+  const waWelcome = e.target.closest('[data-welcome-wa]');
   if(open) openModal(open.dataset.open, 'ficha');
   if(pay) openModal(pay.dataset.pay, 'pago');
+  if(waWelcome){ const r = records.find(x => x.id === waWelcome.dataset.welcomeWa); if(r) openWhatsAppWelcome(r); }
   if(accountBtn) updateAccountStatus(accountBtn.dataset.accountUid, accountBtn.dataset.accountAction);
 });
 onAuthStateChanged(auth, async user => { if(!user){ showApp(false); return; } if((user.email || '').toLowerCase() !== ADMIN_EMAIL){ showApp(false); message(els.authMsg,'err','Este correo no está autorizado: ' + (user.email || 'sin correo')); await signOut(auth); return; } showApp(true); ensureAccountsPanel(); await loadRecords(); await loadAccounts(); });
