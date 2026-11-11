@@ -1,0 +1,33 @@
+name: Validar bienvenida manual WhatsApp (admin)
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'assets/js/admin-whatsapp-bienvenida.mjs'
+      - 'assets/js/admin-preinscripciones.js'
+      - 'admin-preinscripciones.html'
+      - 'scripts/test-admin-whatsapp-bienvenida.mjs'
+      - '.github/workflows/validate-admin-whatsapp-bienvenida.yml'
+  pull_request:
+    paths:
+      - 'assets/js/admin-whatsapp-bienvenida.mjs'
+      - 'assets/js/admin-preinscripciones.js'
+      - 'admin-preinscripciones.html'
+      - 'scripts/test-admin-whatsapp-bienvenida.mjs'
+      - '.github/workflows/validate-admin-whatsapp-bienvenida.yml'
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Sintaxis del editor
+        run: node --check assets/js/admin-whatsapp-bienvenida.mjs
+      - name: Sintaxis del modulo del panel
+        run: node --input-type=module --check < assets/js/admin-preinscripciones.js
+      - name: Pruebas de seguridad y funcionalidad
+        run: node --test scripts/test-admin-whatsapp-bienvenida.mjs
