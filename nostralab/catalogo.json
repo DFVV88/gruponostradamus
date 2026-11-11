@@ -7,19 +7,20 @@
       "titulo": "Circunferencia trigonométrica y sus seis líneas",
       "curso": "Matemática",
       "descripcion": "Explora las seis líneas trigonométricas, el ángulo y el arco dirigidos. Cambia entre grados y radianes, experimenta con valores exactos y examina las construcciones con zoom y desplazamiento del plano.",
-      "ruta": "experiencias/circunferencia-trigonometrica-v33/index.html",
+      "ruta": "experiencias/circunferencia-trigonometrica-v34/index.html",
       "publicado": true,
       "publicado_el": "2026-11-09",
-      "version": "v33",
-      "sha256": "40cd51a7f8e1e31c4b39d3704b577fc9426fe9bbbc178fdba26af4146c385c3f",
+      "version": "v34",
+      "sha256": "05b927895881e24e25969cea18882d221c5b9737fedb9d9acde1b7fb5eaf64ed",
       "miniatura": "miniaturas/circunferencia-trigonometrica-v31.svg",
-      "actualizado_el": "2026-11-09",
+      "actualizado_el": "2026-11-11",
       "compartir": "experiencias/circunferencia-trigonometrica-v31/compartir.html",
       "version_anterior": {
-        "version": "v32",
-        "ruta": "experiencias/circunferencia-trigonometrica-v32/index.html",
-        "sha256": "f12e0034dd2f3edf7f4c96f071aa75319754f13bec79f9658e8e05950fb32d60"
-      }
+        "version": "v33",
+        "ruta": "experiencias/circunferencia-trigonometrica-v33/index.html",
+        "sha256": "40cd51a7f8e1e31c4b39d3704b577fc9426fe9bbbc178fdba26af4146c385c3f"
+      },
+      "revision_funcional": "revisiones/auditoria-20261111.json"
     },
     {
       "id": "ondas-armonicas-transversales-longitudinales-v8",
@@ -66,35 +67,42 @@
       "titulo": "Reflexión y transmisión de pulsos en cuerdas",
       "curso": "Física",
       "descripcion": "Compara la reflexión de un pulso en apoyo fijo o deslizable y su reflexión y transmisión entre cuerdas de distinta densidad con unión ideal. Ajusta tensión y rapidez incidente; analiza el reparto de energía y potencia.",
-      "ruta": "experiencias/reflexion-transmision-pulsos-cuerdas-v25/index.html",
+      "ruta": "experiencias/reflexion-transmision-pulsos-cuerdas-v26/index.html",
       "publicado": true,
       "publicado_el": "2026-11-07",
-      "version": "v2.5",
-      "sha256": "d4a9a3933978afdd3bda75a3b9d956a78eb8671a18d0fc73c1a279ec6f27f860",
+      "version": "v2.6",
+      "sha256": "27322868fc4fa7938548ee94285273262b9484c0a99c61a90637a4f8476934cb",
       "miniatura": "miniaturas/reflexion-transmision-pulsos-cuerdas-v24.svg",
       "compartir": "experiencias/reflexion-transmision-pulsos-cuerdas-v24/compartir.html",
       "revision_academica": "UNI-v002",
-      "actualizado_el": "2026-11-09",
+      "actualizado_el": "2026-11-11",
       "version_anterior": {
-        "version": "v2.4",
-        "ruta": "experiencias/reflexion-transmision-pulsos-cuerdas-v24/index.html",
-        "sha256": "1ffe26cf96c8ca3edade424c53b06ad47ee535956ed34305b448a424b4908333"
-      }
+        "version": "v2.5",
+        "ruta": "experiencias/reflexion-transmision-pulsos-cuerdas-v25/index.html",
+        "sha256": "d4a9a3933978afdd3bda75a3b9d956a78eb8671a18d0fc73c1a279ec6f27f860"
+      },
+      "revision_funcional": "revisiones/auditoria-20261111.json"
     },
     {
       "id": "superposicion-interferencia-ondas-v009",
       "titulo": "Superposición e interferencia de ondas",
       "curso": "Física",
       "descripcion": "Explora la superposición de dos ondas coherentes en 1D y la interferencia de dos fuentes circulares en 2D. Ajusta amplitud, fase, frecuencia, longitud de onda y separación desde cero.",
-      "ruta": "experiencias/superposicion-interferencia-ondas-v009/index.html",
+      "ruta": "experiencias/superposicion-interferencia-ondas-v010/index.html",
       "publicado": true,
       "publicado_el": "2026-11-11",
-      "version": "v009",
-      "sha256": "ffa6be97a2e32fc1482163d5e02e1ca62bf04cc0f284536569f83f9e4d849ba7",
-      "miniatura": "miniaturas/superposicion-interferencia-ondas-v009.jpg",
+      "version": "v010",
+      "sha256": "1e88924207c1f2e95c8af385394d15230ea9981403135b26dfa13c22d192184b",
+      "miniatura": "miniaturas/superposicion-interferencia-ondas-v009.png",
       "compartir": "experiencias/superposicion-interferencia-ondas-v009/compartir.html",
       "revision_academica": "UNI-Experimental",
-      "actualizado_el": "2026-11-11"
+      "actualizado_el": "2026-11-11",
+      "version_anterior": {
+        "version": "v009",
+        "ruta": "experiencias/superposicion-interferencia-ondas-v009/index.html",
+        "sha256": "ffa6be97a2e32fc1482163d5e02e1ca62bf04cc0f284536569f83f9e4d849ba7"
+      },
+      "revision_funcional": "revisiones/auditoria-20261111.json"
     }
   ]
 }

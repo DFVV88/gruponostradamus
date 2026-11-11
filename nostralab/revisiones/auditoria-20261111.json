@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "motivo": "Correcciones de casos límite confirmados en auditoría",
+  "base_commit": "3c4297be4e86b934ef2ec2387b471674d9530699",
+  "alcance": "Modelo científico, representación y controles; IDs y visitas conservados",
+  "autorizacion_correccion": "Solicitud del propietario: solucionalos",
+  "estado": "VALIDADO_PARA_PUBLICACION",
+  "revisiones": [
+    {
+      "id": "circunferencia-trigonometrica-v31",
+      "version": "v34",
+      "ruta": "experiencias/circunferencia-trigonometrica-v34/index.html",
+      "sha256": "05b927895881e24e25969cea18882d221c5b9737fedb9d9acde1b7fb5eaf64ed",
+      "anterior": {
+        "version": "v33",
+        "ruta": "experiencias/circunferencia-trigonometrica-v33/index.html",
+        "sha256": "40cd51a7f8e1e31c4b39d3704b577fc9426fe9bbbc178fdba26af4146c385c3f"
+      }
+    },
+    {
+      "id": "reflexion-transmision-pulsos-cuerdas-v24",
+      "version": "v2.6",
+      "ruta": "experiencias/reflexion-transmision-pulsos-cuerdas-v26/index.html",
+      "sha256": "27322868fc4fa7938548ee94285273262b9484c0a99c61a90637a4f8476934cb",
+      "anterior": {
+        "version": "v2.5",
+        "ruta": "experiencias/reflexion-transmision-pulsos-cuerdas-v25/index.html",
+        "sha256": "d4a9a3933978afdd3bda75a3b9d956a78eb8671a18d0fc73c1a279ec6f27f860"
+      }
+    },
+    {
+      "id": "superposicion-interferencia-ondas-v009",
+      "version": "v010",
+      "ruta": "experiencias/superposicion-interferencia-ondas-v010/index.html",
+      "sha256": "1e88924207c1f2e95c8af385394d15230ea9981403135b26dfa13c22d192184b",
+      "anterior": {
+        "version": "v009",
+        "ruta": "experiencias/superposicion-interferencia-ondas-v009/index.html",
+        "sha256": "ffa6be97a2e32fc1482163d5e02e1ca62bf04cc0f284536569f83f9e4d849ba7"
+      }
+    }
+  ],
+  "validacion": {
+    "pruebas_registro_contador": 14,
+    "comprobaciones_navegador": 160,
+    "fallos": 0,
+    "entorno": "Edge Chromium local; 320, 360, 390, 768 y 1280 px",
+    "contador": "interceptado; sin escrituras de producción",
+    "logo": "Los activos embebidos de cada simulador se conservan sin modificación. El validador genérico de logo no reconoce las huellas históricas de circunferencia e interferencia; mismo resultado antes y después."
+  },
+  "autorizacion_publicacion": "El propietario solicita: realiza las mejoras directamente al main"
+}

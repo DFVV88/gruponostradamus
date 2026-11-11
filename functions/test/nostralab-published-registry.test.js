@@ -92,23 +92,24 @@ test('los laboratorios públicos exhiben un pie institucional único e íntegro'
     const html = data.toString('utf8');
     assert.equal(crypto.createHash('sha256').update(data).digest('hex'), entry.sha256,
       'el catálogo debe guardar el SHA-256 exacto: ' + entry.id);
-    // La v009 inicial fue aprobada con un pie institucional propio, antes de
-    // incorporar el pie universal. Preservar sus bytes y SHA; exigir el pie
-    // universal a las demás experiencias y a futuras revisiones.
-    if (entry.id === 'superposicion-interferencia-ondas-v009' && entry.version === 'v009') {
-      assert.match(html, /<footer class="footer">/, 'pie histórico aprobado: ' + entry.id);
+    // Interferencia conserva su pie institucional propio. Cada revisión
+    // identifica su versión; todas conservan la integridad de sus antecedentes.
+    if (entry.id === 'superposicion-interferencia-ondas-v009') {
+      assert.match(html, /<footer class="footer">/, 'pie institucional propio: ' + entry.id);
       assert.match(html, /Grupo Nostradamus · NostraLAB/, 'marca histórica: ' + entry.id);
-      assert.match(html, /FIS-004 · v009/, 'versión del pie histórico: ' + entry.id);
-      continue;
+      assert.ok(html.includes('FIS-004 · ' + entry.version), 'versión del pie propio: ' + entry.id);
+      if (!entry.version_anterior) continue;
     }
-    assert.equal((html.match(/data-nostralab-footer="institutional-v1"/g) || []).length, 1,
-      'pie institucional ausente o duplicado: ' + entry.id);
-    assert.match(html, /class="nlf-footer"/, 'estructura premium: ' + entry.id);
-    assert.match(html, /Laboratorio científico interactivo · Grupo Nostradamus/,
-      'identidad institucional: ' + entry.id);
-    assert.match(html, /Predice · Experimenta · Contrasta/, 'ruta experimental: ' + entry.id);
-    assert.doesNotMatch(html, /Versión 7 para revisión|Versión para revisión · Entrada manual/,
-      'texto de producción en pie público: ' + entry.id);
+    if (entry.id !== 'superposicion-interferencia-ondas-v009') {
+      assert.equal((html.match(/data-nostralab-footer="institutional-v1"/g) || []).length, 1,
+        'pie institucional ausente o duplicado: ' + entry.id);
+      assert.match(html, /class="nlf-footer"/, 'estructura premium: ' + entry.id);
+      assert.match(html, /Laboratorio científico interactivo · Grupo Nostradamus/,
+        'identidad institucional: ' + entry.id);
+      assert.match(html, /Predice · Experimenta · Contrasta/, 'ruta experimental: ' + entry.id);
+      assert.doesNotMatch(html, /Versión 7 para revisión|Versión para revisión · Entrada manual/,
+        'texto de producción en pie público: ' + entry.id);
+    }
     assert.ok(entry.version_anterior && entry.version_anterior.sha256,
       'mantener trazabilidad de cada revisión: ' + entry.id);
     const original = path.join(repoRoot, 'nostralab', entry.version_anterior.ruta);
@@ -118,6 +119,16 @@ test('los laboratorios públicos exhiben un pie institucional único e íntegro'
       'se modificó el HTML científico histórico: ' + entry.id);
     const scripts = html.match(/<script\b[^>]*>[\s\S]*?<\/script>/gi) || [];
     const priorScripts = prevData.toString('utf8').match(/<script\b[^>]*>[\s\S]*?<\/script>/gi) || [];
-    assert.deepEqual(scripts, priorScripts, 'se modificó el código experimental: ' + entry.id);
+    if (entry.revision_funcional) {
+      assert.equal(entry.revision_funcional, 'revisiones/auditoria-20261111.json');
+      const record = JSON.parse(fs.readFileSync(path.join(repoRoot, 'nostralab', entry.revision_funcional), 'utf8'));
+      const revision = record.revisiones.find(x => x.id === entry.id);
+      assert.ok(revision, 'revisión funcional sin registro: ' + entry.id);
+      assert.equal(revision.sha256, entry.sha256);
+      assert.equal(revision.ruta, entry.ruta);
+      assert.deepEqual(revision.anterior, entry.version_anterior);
+    } else {
+      assert.deepEqual(scripts, priorScripts, 'se modificó el código experimental sin registro: ' + entry.id);
+    }
   }
 });

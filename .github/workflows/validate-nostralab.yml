@@ -1,0 +1,47 @@
+name: Validar NostraLAB
+on:
+  push:
+    branches: [main]
+    paths:
+      - "nostralab/**"
+      - "scripts/test-nostralab-browser.py"
+      - "functions/test/nostralab-*.test.js"
+      - ".github/workflows/validate-nostralab.yml"
+  pull_request:
+    paths:
+      - 'nostralab/**'
+      - 'assets/js/nostralab-visitas.js'
+      - 'functions/test/nostralab-*.test.js'
+      - 'scripts/test-nostralab-browser.py'
+      - '.github/workflows/validate-nostralab.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  regression:
+  push:
+    branches: [main]
+    paths:
+      - "nostralab/**"
+      - "scripts/test-nostralab-browser.py"
+      - "functions/test/nostralab-*.test.js"
+      - ".github/workflows/validate-nostralab.yml"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: node --test functions/test/nostralab-visits.test.js functions/test/nostralab-published-registry.test.js
+      - run: python -m pip install playwright==1.65.0
+      - run: python -m playwright install --with-deps chromium
+      - run: python scripts/test-nostralab-browser.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nostralab-regression
+          path: test-results/nostralab

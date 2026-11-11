@@ -14,6 +14,7 @@ vendor/
 .firebase/
 dist/
 build/
+test-results/
 
 firebase-debug.log
 firebase-debug.*.log

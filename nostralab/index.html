@@ -175,5 +175,5 @@ search.addEventListener('input',draw);
 fetch('./catalogo.json',{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('Catálogo no disponible');return r.json();}).then(function(d){entries=Array.isArray(d.experiencias)?d.experiencias.filter(safe):[];entries.sort(function(a,b){return String(b.publicado_el||'').localeCompare(String(a.publicado_el||''));});draw();}).catch(function(){entries=[];draw();});
 })();
 </script>
-  <script defer src="assets/js/nostra-footer-universal.js?v=2026-91" data-nostra-universal-footer="1"></script>
+
 </body></html>
