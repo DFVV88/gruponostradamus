@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-09",
+  "updated_at": "2026-11-11",
   "experiencias": [
     {
       "id": "circunferencia-trigonometrica-v31",
@@ -80,6 +80,21 @@
         "ruta": "experiencias/reflexion-transmision-pulsos-cuerdas-v24/index.html",
         "sha256": "1ffe26cf96c8ca3edade424c53b06ad47ee535956ed34305b448a424b4908333"
       }
+    },
+    {
+      "id": "superposicion-interferencia-ondas-v009",
+      "titulo": "Superposición e interferencia de ondas",
+      "curso": "Física",
+      "descripcion": "Explora la superposición de dos ondas coherentes en 1D y la interferencia de dos fuentes circulares en 2D. Ajusta amplitud, fase, frecuencia, longitud de onda y separación desde cero.",
+      "ruta": "experiencias/superposicion-interferencia-ondas-v009/index.html",
+      "publicado": true,
+      "publicado_el": "2026-11-11",
+      "version": "v009",
+      "sha256": "ffa6be97a2e32fc1482163d5e02e1ca62bf04cc0f284536569f83f9e4d849ba7",
+      "miniatura": "../assets/img/social/superposicion_interferencia_ondas_og.jpg",
+      "compartir": "experiencias/superposicion-interferencia-ondas-v009/compartir.html",
+      "revision_academica": "UNI-Experimental",
+      "actualizado_el": "2026-11-11"
     }
   ]
 }
