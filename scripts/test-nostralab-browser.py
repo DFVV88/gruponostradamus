@@ -163,6 +163,7 @@ with sync_playwright() as pw:
     image=page.locator(f'.lab img[src="./{thumbnail}"]')
     image.scroll_into_view_if_needed();image.evaluate('e=>e.decode()')
     check('thumbnail 16:9',image.evaluate('e=>e.naturalWidth/e.naturalHeight'),16/9,1e-12)
+    check('premium thumbnails have no overlay',page.locator('.lab').filter(has=page.locator('img[src*="-premium-"]')).locator('.media-corner').count(),0)
     page.locator('#experiencias').screenshot(path=str(OUT/'catalog-mobile.png'))
     check('catalog one institutional footer',page.locator('footer').count(),1)
     for i,lab in enumerate(CAT):

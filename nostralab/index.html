@@ -164,10 +164,11 @@ var corner=document.createElement('span');corner.className='media-corner';corner
 var fallback=document.createElement('span');fallback.className='media-placeholder';fallback.textContent=x.curso;
 if(x.miniatura&&miniaturaSegura(x)){
 var img=document.createElement('img');img.src='./'+x.miniatura;img.alt='Miniatura de '+x.titulo;img.loading='lazy';img.decoding='async';img.width=960;img.height=540;
-img.addEventListener('error',function(){img.remove();media.insertBefore(fallback,corner);});
+img.addEventListener('error',function(){img.remove();media.insertBefore(fallback,media.firstChild);});
 media.appendChild(img);
 }else{media.appendChild(fallback);}
-media.appendChild(corner);
+// Las portadas premium ya contienen su invitación y fórmulas; evitar superposiciones.
+if((x.miniatura||'').indexOf('-premium-')===-1)media.appendChild(corner);
 var body=document.createElement('div');body.className='lab-body';body.append(tag,title,desc,go);
 a.append(media,body);list.appendChild(a);
 });
