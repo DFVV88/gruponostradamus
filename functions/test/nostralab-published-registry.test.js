@@ -6,6 +6,21 @@ const path = require('node:path');
 const registry = require('../lib/nostralab-approved.json');
 const catalog = require('../../nostralab/catalogo.json');
 const repoRoot = path.join(__dirname, '../..');
+
+test('el catálogo admite revisiones visuales propias y rechaza rutas ajenas', () => {
+  const html = fs.readFileSync(path.join(repoRoot, 'nostralab/index.html'), 'utf8');
+  const source = html.slice(html.indexOf('function miniaturaSegura('), html.indexOf('\nfunction safe('));
+  const accepts = require('node:vm').runInNewContext(source + '\nminiaturaSegura');
+  const id = 'superposicion-interferencia-ondas-v009';
+  for (const suffix of ['.png', '-premium-v2-20261112.png']) {
+    assert.equal(accepts({ id, miniatura: 'miniaturas/' + id + suffix }), true);
+  }
+  for (const miniatura of ['miniaturas/otro-premium-v2.png', 'miniaturas/' + id + '-../x.png',
+    'https://example.com/x.png', 'miniaturas/' + id + '-x.png?bad', 'miniaturas/' + id + '-.png']) {
+    assert.equal(accepts({ id, miniatura }), false, miniatura);
+  }
+  for (const entry of catalog.experiencias) assert.equal(accepts(entry), true, entry.id);
+});
 test('la whitelist coincide con el catálogo publicado', () => {
   const expected = catalog.experiencias.filter(x => x.publicado === true).map(x => x.id).sort();
   assert.deepEqual([...registry].sort(), expected);

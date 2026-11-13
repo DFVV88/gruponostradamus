@@ -117,7 +117,7 @@ section.learning{padding:0 0 88px}
 var allowed=new Set(['Física','Química','Biología','Matemática']);
 var entries=[],current='Todos';
 var list=document.getElementById('resultados'),empty=document.getElementById('vacio'),total=document.getElementById('total'),search=document.getElementById('buscar');
-// Carpeta canónica: nostralab/miniaturas/<id>.<ext>.
+// Carpeta canónica: nostralab/miniaturas/<id>.<ext> o <id>-<revision>.<ext>.
  // Se conservan miniaturas históricas para no romper páginas antiguas.
  // Una miniatura inválida nunca oculta un laboratorio publicado.
 function miniaturaSegura(entry){
@@ -127,7 +127,9 @@ function miniaturaSegura(entry){
   var central=ext.some(function(e){return p==='miniaturas/'+entry.id+'.'+e;});
   var legacy=ext.some(function(e){return p==='experiencias/'+entry.id+'/miniatura.'+e;});
   var social=/^\.\.\/assets\/img\/social\/[a-z0-9_-]+\.(?:svg|webp|png|jpg|jpeg)$/.test(p);
-  return central||legacy||social;
+  var prefix='miniaturas/'+entry.id+'-';
+  var versionada=p.indexOf(prefix)===0&&/^[a-z0-9]+(?:-[a-z0-9]+)*\.(?:svg|webp|png|jpg|jpeg)$/.test(p.slice(prefix.length));
+  return central||versionada||legacy||social;
 }
 function safe(entry){
 if(!entry||typeof entry!=='object'||entry.publicado!==true||!allowed.has(entry.curso))return false;
