@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-11",
+  "updated_at": "2026-11-12",
   "experiencias": [
     {
       "id": "circunferencia-trigonometrica-v31",
@@ -93,16 +93,17 @@
       "publicado_el": "2026-11-11",
       "version": "v010",
       "sha256": "1e88924207c1f2e95c8af385394d15230ea9981403135b26dfa13c22d192184b",
-      "miniatura": "miniaturas/superposicion-interferencia-ondas-v009.png",
+      "miniatura": "miniaturas/superposicion-interferencia-premium-v2-20261112.png",
       "compartir": "experiencias/superposicion-interferencia-ondas-v009/compartir.html",
       "revision_academica": "UNI-Experimental",
-      "actualizado_el": "2026-11-11",
+      "actualizado_el": "2026-11-12",
       "version_anterior": {
         "version": "v009",
         "ruta": "experiencias/superposicion-interferencia-ondas-v009/index.html",
         "sha256": "ffa6be97a2e32fc1482163d5e02e1ca62bf04cc0f284536569f83f9e4d849ba7"
       },
-      "revision_funcional": "revisiones/auditoria-20261111.json"
+      "revision_funcional": "revisiones/auditoria-20261111.json",
+      "revision_visual": "revisiones/interferencia-premium-20261112.json"
     }
   ]
 }
