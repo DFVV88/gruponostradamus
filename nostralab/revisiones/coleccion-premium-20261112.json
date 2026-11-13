@@ -1,0 +1,100 @@
+{
+  "date": "2026-11-12",
+  "plugin_version": "1.20.0",
+  "scope": "Cuatro parejas premium; se conserva la pareja de interferencia publicada",
+  "graphics": "LaTeX/TikZ compilado",
+  "projects": [
+    {
+      "id": "circunferencia-trigonometrica-v31",
+      "hook": "UN GIRO SEIS RAZONES",
+      "miniatura": "nostralab/miniaturas/circunferencia-trigonometrica-v31-premium-v1-20261112.png",
+      "social": "assets/img/social/circunferencia-trigonometrica-v31-premium-v1-20261112.jpg",
+      "share": "nostralab/experiencias/circunferencia-trigonometrica-v31/compartir.html",
+      "model": "P=(cos(theta),sin(theta)); radio=1; theta=35 grados; tan=sin/cos, cot=cos/sin, sec=1/cos, csc=1/sin; denominadores no nulos.",
+      "files": {
+        "nostralab/miniaturas/circunferencia-trigonometrica-v31-premium-v1-20261112.png": {
+          "sha256": "f74be3d87d4aa25d4b55084772dfa0d76adac9fc0b8bcbd52d75713fec17336a",
+          "bytes": 200136
+        },
+        "assets/img/social/circunferencia-trigonometrica-v31-premium-v1-20261112.jpg": {
+          "sha256": "cddb761dafd1b7f5ae0798658a601a3878ddeafc70c63bfcd16f286560af279e",
+          "bytes": 210906
+        }
+      },
+      "sources": {
+        "diagram_sha256": "96fb36790afb0470126be96471eedfd0657f980aeb0683a9678b90641f6d869e",
+        "headline_sha256": "e951c7d8e799dbbd0f6e89faca101bf59a4d733e66dd09277c14cbabc6b5f034",
+        "template_sha256": "6d63d34fbc36602b9e9ef2135760eb597abe3aa52425e90f08be22570471617b"
+      }
+    },
+    {
+      "id": "ondas-armonicas-transversales-longitudinales-v8",
+      "hook": "LA ONDA AVANZA. ¿Y EL MEDIO?",
+      "miniatura": "nostralab/miniaturas/ondas-armonicas-transversales-longitudinales-v8-premium-v1-20261112.png",
+      "social": "assets/img/social/ondas-armonicas-transversales-longitudinales-v8-premium-v1-20261112.jpg",
+      "share": "nostralab/experiencias/ondas-armonicas-transversales-longitudinales-v8/compartir.html",
+      "model": "Transversal y=A sin(kx); longitudinal x_n=n*d+B sin(k*n*d), B*k<1; esquema de instante fijo; v=lambda*f.",
+      "files": {
+        "nostralab/miniaturas/ondas-armonicas-transversales-longitudinales-v8-premium-v1-20261112.png": {
+          "sha256": "f04dfa263c08309cb8dd90ef37b98fc1b1eacd486ff103e0250fb0889a1087de",
+          "bytes": 209179
+        },
+        "assets/img/social/ondas-armonicas-transversales-longitudinales-v8-premium-v1-20261112.jpg": {
+          "sha256": "8da7cea3ce14646afa026b5623f13c73b8b7318f1a1dd5f0efd4e0a6cb4fbec8",
+          "bytes": 224124
+        }
+      },
+      "sources": {
+        "diagram_sha256": "96fc271ab6056f66cf9dbffaedc09bb52df3490980357f023e14c3437831392d",
+        "headline_sha256": "942687350703bd7a8fa641cae2915e8274572035f78a09d4daa8cee7aae73c9a",
+        "template_sha256": "dd3ed26555135a908f21d488aefecaf661f0eeb9aa46461ae36ebbdcee755d49"
+      }
+    },
+    {
+      "id": "pulsos-transversales-longitudinales-no-armonicos-v15",
+      "hook": "UN PULSO. MUCHAS FORMAS.",
+      "miniatura": "nostralab/miniaturas/pulsos-transversales-longitudinales-no-armonicos-v15-premium-v1-20261112.png",
+      "social": "assets/img/social/pulsos-transversales-longitudinales-no-armonicos-v15-premium-v1-20261112.jpg",
+      "share": "nostralab/experiencias/pulsos-transversales-longitudinales-no-armonicos-v15/compartir.html",
+      "model": "y=A f((x-vt-x0)/sigma). Suave f=(1-xi^2)^3 para |xi|<=1; triangular=max(0,1-|xi|); meseta=1 para |xi|<=.35, .5*(1+cos(pi*(|xi|-.35)/.65)) hasta1; cero fuera.",
+      "files": {
+        "nostralab/miniaturas/pulsos-transversales-longitudinales-no-armonicos-v15-premium-v1-20261112.png": {
+          "sha256": "d166e233176a6f49fa8d9c84809eb95c1b13cd4134e11cbcfb4ec553248bec2a",
+          "bytes": 188254
+        },
+        "assets/img/social/pulsos-transversales-longitudinales-no-armonicos-v15-premium-v1-20261112.jpg": {
+          "sha256": "4e94ab123b90fcfaefa00b94d531a67786117d62b1774778c585aff2cbdc0b6d",
+          "bytes": 207444
+        }
+      },
+      "sources": {
+        "diagram_sha256": "44b0f84f4d5474261291e7c21d5d65ab7492d95e4523f26738947a5526da56b0",
+        "headline_sha256": "89d25130c05515fadf4926555bc4e83db8ebd602e5327a61dd687e04198b6636",
+        "template_sha256": "8adde80713bd20a7912bc63e647cec6cf9344b2436099ce321d0b460845a2465"
+      }
+    },
+    {
+      "id": "reflexion-transmision-pulsos-cuerdas-v24",
+      "hook": "¿REBOTA O SIGUE SU CAMINO?",
+      "miniatura": "nostralab/miniaturas/reflexion-transmision-pulsos-cuerdas-v24-premium-v1-20261112.png",
+      "social": "assets/img/social/reflexion-transmision-pulsos-cuerdas-v24-premium-v1-20261112.jpg",
+      "share": "nostralab/experiencias/reflexion-transmision-pulsos-cuerdas-v24/compartir.html",
+      "model": "T constante; mu2=4*mu1; v2=v1/2; r=-1/3,t=2/3; anchura transmitida=1/2; R=1/9,Tenergy=8/9. Dos instantes simétricos antes/después de la unión; pulso compacto (1-xi^2)^2.",
+      "files": {
+        "nostralab/miniaturas/reflexion-transmision-pulsos-cuerdas-v24-premium-v1-20261112.png": {
+          "sha256": "1ecda5f2d5c3c27e4f39b3c12295ab118b6cbc32cfbd8cf576eadb0d8d1b883f",
+          "bytes": 183516
+        },
+        "assets/img/social/reflexion-transmision-pulsos-cuerdas-v24-premium-v1-20261112.jpg": {
+          "sha256": "6186daa76cc623d1dc5a6bf34093184414b76a08f2c493e7d8ded587bc5b529b",
+          "bytes": 209089
+        }
+      },
+      "sources": {
+        "diagram_sha256": "012f97fc3198c3a60095617c11a5e927390d32fbf307b0bb0d4bd802d9064708",
+        "headline_sha256": "ae97250ac37c7d26763abca89f90c582046120ebad4a39e7cb24b8eb364d4e97",
+        "template_sha256": "d492370efb3a59530bef8ee56ad632a3d945acc3e13cb32543dcb932ead0df8e"
+      }
+    }
+  ]
+}
