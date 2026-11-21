@@ -9,6 +9,7 @@
     resumen:{title:'Resumen',description:'Vista general de la gestión académica y comercial.'},
     ciclos:{title:'Ciclos y planes',description:'Administra precios, matrículas, horarios, beneficios y promociones.'},
     preinscripciones:{title:'Preinscripciones',description:'Revisa solicitudes, valida pagos y aprueba matrículas.'},
+    encuestas:{title:'NostraENCUESTAS',description:'Evalúa la atención de matrícula y envía encuestas por WhatsApp.'},
     cuentas:{title:'NostraCUENTAS',description:'Administra accesos institucionales de alumnos y docentes.'},
     finanzas:{title:'Finanzas',description:'Control de ingresos, egresos, saldos y reportes financieros.'}
   };
@@ -52,6 +53,7 @@
         navButton('ciclos','▦','Ciclos y planes') +
         '<div class="admin-pro-nav-label">Gestión</div>' +
         navButton('preinscripciones','◎','Preinscripciones') +
+        navButton('encuestas','☆','NostraENCUESTAS') +
         navButton('cuentas','◇','NostraCUENTAS') +
         '<button type="button" onclick="window.location.href=\'admin-asistencia.html\'"><span class="admin-pro-nav-icon">✓</span><span>Asistencia</span></button>' +
         '<div class="admin-pro-nav-label">Finanzas</div>' +
@@ -82,7 +84,8 @@
     grid.innerHTML =
       '<button class="admin-pro-quick-card" type="button" data-admin-view="ciclos"><span class="icon">▦</span><strong>Ciclos y planes</strong><span>Edita precios, matrículas, promociones, beneficios y horarios.</span><em>Abrir tarifario →</em></button>' +
       '<button class="admin-pro-quick-card" type="button" data-admin-view="preinscripciones"><span class="icon">◎</span><strong>Preinscripciones</strong><span>Revisa solicitudes, pagos pendientes y matrículas listas.</span><em>Revisar solicitudes →</em></button>' +
-      '<button class="admin-pro-quick-card" type="button" data-admin-view="cuentas"><span class="icon">◇</span><strong>NostraCUENTAS</strong><span>Activa, bloquea o revisa accesos institucionales.</span><em>Administrar cuentas →</em></button>';
+      '<button class="admin-pro-quick-card" type="button" data-admin-view="cuentas"><span class="icon">◇</span><strong>NostraCUENTAS</strong><span>Activa, bloquea o revisa accesos institucionales.</span><em>Administrar cuentas →</em></button>' +
+      '<button class="admin-pro-quick-card" type="button" data-admin-view="encuestas"><span class="icon">☆</span><strong>NostraENCUESTAS</strong><span>Consulta satisfacción y envía encuestas a las familias.</span><em>Ver encuestas →</em></button>';
     return grid;
   }
 
@@ -127,6 +130,12 @@
     pre.innerHTML = sectionHead('Preinscripciones','Busca alumnos, valida pagos y administra el proceso de matrícula.','Hasta 200 registros recientes');
     if(prePanel) pre.appendChild(prePanel);
 
+    var surveys = create('section','admin-pro-view');
+    surveys.id = 'admin-view-encuestas';
+    surveys.dataset.adminViewPanel = 'encuestas';
+    surveys.innerHTML = sectionHead('NostraENCUESTAS','Resultados y envío asistido por WhatsApp a las familias.','Solo administrador') +
+      '<div class="admin-pro-empty">Cargando módulo de encuestas…</div>';
+
     var accounts = create('section','admin-pro-view');
     accounts.id = 'admin-view-cuentas';
     accounts.dataset.adminViewPanel = 'cuentas';
@@ -142,6 +151,7 @@
     views.appendChild(overview);
     views.appendChild(cycles);
     views.appendChild(pre);
+    views.appendChild(surveys);
     views.appendChild(accounts);
     views.appendChild(finances);
     main.appendChild(buildTopbar());
