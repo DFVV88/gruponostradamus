@@ -1,0 +1,47 @@
+name: Validar NostraPORTAL fase 2
+
+on:
+  pull_request:
+    paths:
+      - 'admin-nostraportal.html'
+      - 'assets/js/admin-nostraportal.js'
+      - 'assets/js/admin-dashboard-pro.js'
+      - 'assets/js/nostraportal-data.mjs'
+      - 'assets/js/cuenta-nostra.js'
+      - 'assets/css/nostraportal.css'
+      - 'functions/index.js'
+      - 'functions/nostraportal.js'
+      - 'functions/lib/nostraportal-policy.js'
+      - 'functions/test/nostraportal-policy.test.js'
+      - 'scripts/test-nostraportal-phase2.mjs'
+      - '.github/workflows/validate-nostraportal-phase2.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'functions/nostraportal.js'
+      - 'assets/js/nostraportal-data.mjs'
+      - 'scripts/test-nostraportal-phase2.mjs'
+permissions:
+  contents: read
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax check
+        run: |
+          node --check functions/index.js
+          node --check functions/nostraportal.js
+          node --check functions/lib/nostraportal-policy.js
+          node --input-type=module --check < assets/js/cuenta-nostra.js
+          node --input-type=module --check < assets/js/nostraportal-data.mjs
+          node --input-type=module --check < assets/js/admin-nostraportal.js
+          node --check assets/js/admin-dashboard-pro.js
+      - name: Tests de identidad, privacidad y visualización
+        run: |
+          node --test functions/test/nostraportal-policy.test.js
+          node --test scripts/test-nostraportal-phase1.mjs
+          node --test scripts/test-nostraportal-phase2.mjs
