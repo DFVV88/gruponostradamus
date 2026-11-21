@@ -19,7 +19,7 @@ import {
   writeBatch,
   runTransaction
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
-import {matriculaOriginal,matriculaAcordada,leerMatriculaAcordada} from './admin-matricula-acordada.mjs?v=2026-11-21-1';
+import {matriculaOriginal,matriculaAcordada,leerMatriculaAcordada} from './admin-matricula-acordada.mjs?v=2026-11-21-regularizacion-1';
 
 const firebaseConfig = {
   apiKey:'AIzaSyCO5jiS9vcEMmBMkGoD5XnNPm_OQILehkM',
