@@ -25,6 +25,7 @@ export async function refreshPortalLinkStates(user,accounts,render){
   }
 }
 export function portalLinkCell(account){
+  if(account.role!=='student')return '<span style="font-size:11px;color:#6b7d85">No corresponde</span>';
   const state=portalLinkInfo(account.id);
   const cell=document.createElement('td');
   const mark=document.createElement('span');
