@@ -16,6 +16,7 @@ import {
   writeBatch,
   serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
+import {pagoInicialAcordado,matriculaOriginal,matriculaAcordada,tieneMatriculaPersonalizada} from './admin-matricula-acordada.mjs?v=2026-11-21-1';
 
 const firebaseConfig = {
   apiKey:'AIzaSyCO5jiS9vcEMmBMkGoD5XnNPm_OQILehkM',
@@ -604,7 +605,9 @@ async function openPaymentModal(id){
     const alreadyLinked = clean(paymentRecord.ingresoFinancieroId);
     document.getElementById('npm-payment-title').textContent = alreadyLinked ? 'Pago ya integrado' : ((paymentRecord.pagoValidado === true || paymentRecord.estadoPago === 'pago_validado') ? 'Regularizar ingreso financiero' : 'Validar pago e integrar ingreso');
     document.getElementById('npm-payment-target').innerHTML = `<strong>${esc(paymentRecord.nombre)}</strong> · DNI ${esc(paymentRecord.dni)}<br>${esc(paymentRecord.ciclo)} · ${esc(paymentRecord.planNombre)}<br><b>Grupo/salón:</b> ${esc(group.salonNombre)} · ${esc(group.turno)}`;
-    document.getElementById('npm-payment-amount').value = paymentAmount(paymentRecord).toFixed(2);
+    const totalOriginal = paymentAmount(paymentRecord);
+    const totalSugerido = pagoInicialAcordado(paymentRecord,totalOriginal);
+    document.getElementById('npm-payment-amount').value = totalSugerido.toFixed(2);
     document.getElementById('npm-payment-date').max = todayIso();
     document.getElementById('npm-payment-date').value = paymentDate(paymentRecord);
     document.getElementById('npm-payment-category').value = categoryFor(paymentRecord,'');
@@ -614,9 +617,16 @@ async function openPaymentModal(id){
     document.getElementById('npm-payment-note').value = clean(paymentRecord.pagoObservacion);
     const save = document.getElementById('npm-payment-save');
     if(save) save.disabled = Boolean(alreadyLinked);
+    const agreementNote = tieneMatriculaPersonalizada(paymentRecord) && !alreadyLinked
+      ? ' Matrícula original: ' + money(matriculaOriginal(paymentRecord))
+        + '; matrícula acordada: ' + money(matriculaAcordada(paymentRecord))
+        + '. Verifica el importe realmente recibido.'
+      : '';
     setMessage('npm-payment-message',alreadyLinked ? 'ok' : 'info',alreadyLinked
       ? `Este pago ya generó el movimiento ${alreadyLinked}. No se creará un duplicado.`
-      : 'Confirma el monto, la cuenta receptora y el número de operación.');
+      : totalSugerido === 0
+        ? 'El importe acordado es S/ 0.00. No se registra un ingreso ficticio: tramita la exoneración administrativa.' 
+        : 'Confirma el monto, la cuenta receptora y el número de operación.' + agreementNote);
     document.getElementById('npm-payment-back')?.classList.add('show');
   }catch(error){
     console.error(error);
