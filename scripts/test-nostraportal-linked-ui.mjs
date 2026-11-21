@@ -34,8 +34,8 @@ test('importes nulos no se convierten en importes cero y siguen existiendo guard
 test('scripts contienen una versión nueva para invalidar caché del navegador',()=>{
   const html=read('cuenta-nostra.html');
   const auth=read('assets/js/cuenta-nostra.js');
-  assert.match(html,/cuenta-nostra\.js\?v=2026-11-21-np3/);
-  assert.match(auth,/nostraportal-data\.mjs\?v=2026-11-21-3/);
+  assert.match(html,/cuenta-nostra\.js\?v=2026-11-21-publicador-1/);
+  assert.match(auth,/nostraportal-data\.mjs\?v=2026-11-21-publicador-1/);
   assert.match(auth,/nostraportal-dashboard\.mjs\?v=2026-11-21-3/);
   assert.match(auth,/clearStudentPrivateData\(\)/);
 });

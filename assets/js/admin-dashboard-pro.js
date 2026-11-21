@@ -55,6 +55,7 @@
         navButton('preinscripciones','◎','Preinscripciones') +
         navButton('encuestas','☆','NostraENCUESTAS') +
         navButton('cuentas','◇','NostraCUENTAS') +
+        '<button type="button" onclick="window.location.href=\'admin-nostrapublicador.html\'"><span class="admin-pro-nav-icon">▤</span><span>NostraPUBLICADOR</span></button>' +
         '<button type="button" onclick="window.location.href=\'admin-asistencia.html\'"><span class="admin-pro-nav-icon">✓</span><span>Asistencia</span></button>' +
         '<div class="admin-pro-nav-label">Finanzas</div>' +
         navButton('finanzas','S/','Finanzas') +
