@@ -239,13 +239,11 @@ async function prepareInvite(){
       if(existing&&validInvite(existing)){
         const changed={asesor:worker,telefonoDestino:number,ciclo:text(student.ciclo),updatedAt:serverTimestamp()};
         tx.update(inviteRef,changed);
-        tx.update(doc(db,'encuestas_matricula_tokens',existing.token),{asesor:worker,ciclo:text(student.ciclo)});
         return {token:existing.token,expiresAt:existing.expiresAt,asesor:worker,telefonoDestino:number,estado:existing.estado||'preparado',ciclo:text(student.ciclo)};
       }
       const token=randomToken();
       const expiry=Timestamp.fromDate(new Date(Date.now()+30*86400000));
       tx.set(doc(db,'encuestas_matricula_tokens',token),{
-        preinscripcionId:student.id,ciclo:text(student.ciclo),asesor:worker,
         createdAt:serverTimestamp(),expiresAt:expiry
       });
       tx.set(inviteRef,{
