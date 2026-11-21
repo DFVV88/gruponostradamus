@@ -1,0 +1,37 @@
+name: Validar ajuste individual de matrícula
+on:
+  pull_request:
+    paths:
+      - 'assets/js/admin-matricula-acordada.mjs'
+      - 'assets/js/admin-alumnos-manuales-editor.js'
+      - 'assets/js/admin-alumno-pagos.js'
+      - 'assets/js/admin-plan-display.js'
+      - 'scripts/test-admin-matricula-acordada.mjs'
+      - '.github/workflows/validate-admin-matricula-acordada.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'assets/js/admin-matricula-acordada.mjs'
+      - 'assets/js/admin-alumnos-manuales-editor.js'
+      - 'assets/js/admin-alumno-pagos.js'
+      - 'assets/js/admin-plan-display.js'
+      - 'scripts/test-admin-matricula-acordada.mjs'
+      - '.github/workflows/validate-admin-matricula-acordada.yml'
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Comprobar sintaxis de módulos
+        run: |
+          node --check assets/js/admin-matricula-acordada.mjs
+          node --input-type=module --check < assets/js/admin-alumnos-manuales-editor.js
+          node --input-type=module --check < assets/js/admin-alumno-pagos.js
+          node --input-type=module --check < assets/js/admin-plan-display.js
+      - name: Pruebas de importes, bloqueos y no-regresión
+        run: node --test scripts/test-admin-matricula-acordada.mjs
