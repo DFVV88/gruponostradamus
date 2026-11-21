@@ -107,6 +107,17 @@ test('los laboratorios públicos exhiben un pie institucional único e íntegro'
     const html = data.toString('utf8');
     assert.equal(crypto.createHash('sha256').update(data).digest('hex'), entry.sha256,
       'el catálogo debe guardar el SHA-256 exacto: ' + entry.id);
+    // Un proyecto recién publicado no tiene versión anterior: su primer HTML
+    // conserva el SHA aprobado y puede usar su pie institucional original.
+    if (!entry.version_anterior) {
+      assert.equal((html.match(/<p class="footer">/g) || []).length, 1,
+        'pie institucional original ausente o duplicado: ' + entry.id);
+      assert.match(html, /NostraLAB · Grupo de Estudio Nostradamus/,
+        'identidad institucional de primera publicación: ' + entry.id);
+      assert.match(html, /alt="Logo oficial de Grupo Nostradamus"/,
+        'logo institucional original: ' + entry.id);
+      continue;
+    }
     // Interferencia conserva su pie institucional propio. Cada revisión
     // identifica su versión; todas conservan la integridad de sus antecedentes.
     if (entry.id === 'superposicion-interferencia-ondas-v009') {

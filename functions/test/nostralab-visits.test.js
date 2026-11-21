@@ -5,7 +5,9 @@ const { parseVisitRequest, hashSession, validatePreviousTotal, ALLOWED_LABS } = 
 const LAB = 'ondas-armonicas-transversales-longitudinales-v8';
 const SESSION = '550e8400-e29b-41d4-a716-446655440000';
 test('los laboratorios publicados están en whitelist', () => {
-  assert.equal(ALLOWED_LABS.size, 5);
+  const registry = require('../lib/nostralab-approved.json');
+  assert.equal(ALLOWED_LABS.size, registry.length);
+  assert.ok(ALLOWED_LABS.has('poliedros-regulares-v41'));
   assert.ok(ALLOWED_LABS.has('circunferencia-trigonometrica-v31'));
   assert.ok(ALLOWED_LABS.has(LAB));
   assert.ok(ALLOWED_LABS.has('superposicion-interferencia-ondas-v009'));
