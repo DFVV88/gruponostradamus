@@ -70,7 +70,7 @@ test('administrative UI has the table and record-level button; WhatsApp URL neve
   assert.match(admin,/data-welcome-wa/);
   assert.match(admin,/whatsapp-welcome-btn/);
   assert.match(html,/id="whatsapp-welcome-btn"/);
-  assert.match(html,/2026-11-11-whatsapp-1/);
+  assert.match(html,/assets\/js\/admin-preinscripciones\.js\?v=[^"\s]+/);
   assert.match(whatsapp,/https:\/\/wa\.me\/' \+ phone/);
   assert.doesNotMatch(whatsapp,/wa\.me\/' \+ phone \+.*(?:password|encodeURIComponent)/);
   assert.doesNotMatch(whatsapp,/localStorage|sessionStorage|sendBeacon|updateDoc\(/);

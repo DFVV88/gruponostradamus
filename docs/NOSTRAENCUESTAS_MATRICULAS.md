@@ -58,3 +58,9 @@ Es indispensable confirmar el proyecto antes de desplegar. La publicación de la
 - No se confirma entrega real de WhatsApp.
 - El estado de respuesta no se actualiza por push; se muestra al pulsar **Actualizar resultados** o al abrir el módulo tras iniciar sesión.
 - Para preservar la integridad y evitar duplicados, el enlace se reutiliza mientras esté vigente. Si vence sin respuesta, puede prepararse otro.
+
+## Pruebas internas aisladas
+
+El botón **Crear prueba interna** genera un enlace de una hora y una invitación marcada `isTest` en las colecciones de encuestas. No crea ni modifica preinscripciones, matrículas, pagos, cuentas ni movimientos financieros, y no prepara mensajes de WhatsApp. Las respuestas se muestran en **Pruebas internas** y se excluyen de los indicadores, comentarios y valoraciones de las familias. Se conservan como evidencia de diagnóstico.
+
+Los tokens públicos aceptan exclusivamente `createdAt` y `expiresAt`, también para escrituras administrativas. El formulario aclara que la respuesta es privada y está vinculada con la matrícula. Al cerrar sesión se limpia el estado del módulo y se invalidan las cargas pendientes.

@@ -2,7 +2,7 @@
    WhatsApp se abre con mensaje preparado; la plataforma no confirma entregas. */
 import {initializeApp,getApp,getApps} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import {getAuth,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
-import {getFirestore,collection,doc,getDocs,query,orderBy,limit,runTransaction,updateDoc,serverTimestamp,Timestamp} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
+import {getFirestore,collection,doc,getDocs,query,orderBy,limit,runTransaction,writeBatch,updateDoc,serverTimestamp,Timestamp} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
 
 const config={apiKey:'AIzaSyCO5jiS9vcEMmBMkGoD5XnNPm_OQILehkM',authDomain:'nostrachat-grupo-nostradamus.firebaseapp.com',projectId:'nostrachat-grupo-nostradamus',storageBucket:'nostrachat-grupo-nostradamus.firebasestorage.app',messagingSenderId:'869749182265',appId:'1:869749182265:web:5f5c9174680585f142e2e8'};
 const app=getApps().length?getApp():initializeApp(config);
@@ -14,6 +14,7 @@ const esc=value=>String(value==null?'':value).replace(/[&<>"']/g,c=>({'&':'&amp;
 const text=value=>String(value==null?'':value).trim();
 let students=[],invites=[],responses=[],invitesById=new Map(),responsesByToken=new Map();
 let activeStudent=null,lastInvitation=null,loading=false;
+let authGeneration=0,initTimer=null;
 
 function matriculado(record){return record.matriculaAprobada===true||record.estado==='matriculado'}
 function phone(value){
@@ -49,7 +50,7 @@ function getFullResponses(){
     const invite=invites.find(e=>e.token===resp.id);
     const record=invite?students.find(s=>s.id===invite.id):null;
     return {resp:resp,invite:invite,record:record};
-  }).filter(x=>x.invite);
+  }).filter(x=>x.invite&&!x.invite.isTest);
 }
 function createUI(){
   const panel=$('admin-view-encuestas');
@@ -63,6 +64,7 @@ function createUI(){
       '<div class="ne-table-wrap"><table class="ne-table"><thead><tr><th>Alumno</th><th>Ciclo</th><th>Trabajador evaluado</th><th>WhatsApp apoderado</th><th>Estado</th><th>Valoración</th><th>Acción</th></tr></thead><tbody id="ne-rows"><tr><td colspan="7">Cargando…</td></tr></tbody></table></div>'+
     '</section>'+
     '<div class="ne-columns"><section class="ne-card"><h3 class="ne-strong">Valoración por trabajador</h3><div id="ne-advisors"></div></section><section class="ne-card" id="ne-comentarios"><h3 class="ne-strong">Comentarios y alertas</h3><div id="ne-comments" class="ne-comments"></div></section></div>'+
+    '<section class="ne-card"><h3 class="ne-strong">Pruebas internas</h3><p class="ne-note">Sin matrículas ni mensajes a familias. Los resultados de prueba no cuentan en las estadísticas. Enlaces válidos por una hora.</p><button id="ne-test-create" class="ne-button light" type="button">Crear prueba interna</button><div id="ne-tests" class="ne-comments"></div></section>'+
     '</div>'+
     '<div id="ne-back" class="ne-modal-back" hidden><div class="ne-modal" role="dialog" aria-modal="true" aria-labelledby="ne-modal-title">'+
       '<h3 id="ne-modal-title">Preparar encuesta</h3><p id="ne-modal-subtitle"></p>'+
@@ -77,6 +79,7 @@ function createUI(){
     '</div></div>';
 
   $('ne-refresh').addEventListener('click',loadData);
+  $('ne-test-create').addEventListener('click',createInternalTest);
   ['ne-search','ne-cycle','ne-advisor','ne-state'].forEach(function(id){
     $(id).addEventListener(id==='ne-search'?'input':'change',renderTable);
   });
@@ -110,6 +113,8 @@ function message(textValue,error){
 }
 async function loadData(){
   if(loading)return;
+  if(!auth.currentUser||text(auth.currentUser.email).toLowerCase()!==ADMIN)return;
+  const generation=authGeneration;
   loading=true;
   message('Actualizando datos de encuestas…');
   try{
@@ -118,12 +123,13 @@ async function loadData(){
       getDocs(query(collection(db,'encuestas_matricula_envios'),limit(1000))),
       getDocs(query(collection(db,'encuestas_matricula_respuestas'),limit(1000)))
     ]);
+    if(generation!==authGeneration)return;
     students=results[0].docs.map(s=>({id:s.id,...s.data()})).filter(matriculado);
     invites=results[1].docs.map(s=>({id:s.id,...s.data()}));
     responses=results[2].docs.map(s=>({id:s.id,...s.data()}));
     invitesById=new Map(invites.map(i=>[i.id,i]));
     responsesByToken=new Map(responses.map(r=>[r.id,r]));
-    populateFilters();renderStats();renderTable();renderAdvisors();renderComments();
+    populateFilters();renderStats();renderTable();renderAdvisors();renderComments();renderTests();
     message('Datos actualizados. '+students.length+' matrículas aprobadas en los últimos 500 registros.');
   }catch(err){
     console.error('NostraENCUESTAS carga',err);
@@ -143,7 +149,7 @@ function renderStats(){
   const all=getFullResponses().map(x=>x.resp);
   const high=all.filter(r=>r.atencion>=4).length;
   $('ne-stats').innerHTML=[
-    [students.length,'Matrículas visibles'],[invites.length,'Encuestas preparadas'],
+    [students.length,'Matrículas visibles'],[invites.filter(i=>!i.isTest).length,'Encuestas preparadas'],
     [all.length,'Respuestas recibidas'],[all.length?Math.round(100*high/all.length)+'%':'—','Atención buena o excelente']
   ].map(x=>'<div class="ne-stat"><strong>'+x[0]+'</strong><span>'+x[1]+'</span></div>').join('');
 }
@@ -268,20 +274,53 @@ async function prepareInvite(){
     $('ne-wa-link').href='https://wa.me/51'+number+'?text='+encodeURIComponent(messageText);
     $('ne-share-actions').hidden=false;
     setSendMessage('Enlace listo. Abre WhatsApp y presiona Enviar en la conversación. El panel solo registrará que se abrió el chat.','');
-    renderStats();renderTable();renderAdvisors();
+    populateFilters();renderStats();renderTable();renderAdvisors();
   }catch(err){
     console.error('No se pudo preparar encuesta',err);
     setSendMessage(err.message==='ENCUESTA_YA_RESPONDIDA'?'La familia ya respondió esta encuesta. Actualiza los resultados.':err.message==='MATRICULA_NO_APROBADA'?'La matrícula ya no está aprobada. Actualiza el panel.':'No se pudo preparar el enlace. Verifica las reglas Firestore y vuelve a intentar.','error');
   }finally{button.disabled=false;button.textContent='Preparar enlace'}
 }
 
+function renderTests(){
+  const tests=invites.filter(i=>i.isTest).sort((a,b)=>clientDate(b.createdAt)-clientDate(a.createdAt));
+  $('ne-tests').innerHTML=tests.map(function(inv){
+    const answer=byToken(inv.token);
+    return '<div class="ne-comment"><b>PRUEBA INTERNA</b> · '+esc(inv.id)+'<br>'+
+      (answer?'<span>Respuesta recibida: atención '+answer.atencion+'/5 · personal '+answer.personal+'/5 · '+esc(answer.claridad)+'</span><p>'+esc(answer.comentario)+'</p><small>WhatsApp autorizado: '+(answer.autorizaContacto?esc(answer.whatsapp):'No')+'</small>'+(answer.atencion<=2||answer.personal<=2?badge('alerta'):''):
+        '<a href="'+esc(surveyUrl(inv.token))+'" target="_blank" rel="noopener noreferrer">Abrir formulario de prueba</a>')+'</div>';
+  }).join('')||'<p class="ne-note">No hay pruebas internas.</p>';
+}
+async function createInternalTest(){
+  const button=$('ne-test-create');button.disabled=true;
+  try{
+    const token=randomToken(),id='prueba_'+token;
+    const expiresAt=Timestamp.fromDate(new Date(Date.now()+3600000));
+    const batch=writeBatch(db);
+    batch.set(doc(db,'encuestas_matricula_tokens',token),{createdAt:serverTimestamp(),expiresAt:expiresAt});
+    batch.set(doc(db,'encuestas_matricula_envios',id),{
+      token:token,isTest:true,nombreAlumno:'PRUEBA INTERNA',ciclo:'PRUEBA',asesor:'PRUEBA INTERNA',
+      telefonoDestino:'',estado:'preparado',createdAt:serverTimestamp(),updatedAt:serverTimestamp(),expiresAt:expiresAt
+    });
+    await batch.commit();await loadData();
+    message('Prueba creada. Abre el formulario en Pruebas internas; no se enviará ningún mensaje.');
+  }catch(err){console.error('NostraENCUESTAS prueba',err);message('No se pudo crear la prueba interna.',true)}
+  finally{button.disabled=false}
+}
+
 onAuthStateChanged(auth,function(user){
-  if(!user||text(user.email).toLowerCase()!==ADMIN)return;
+  authGeneration++;
+  clearInterval(initTimer);
+  if(!user||text(user.email).toLowerCase()!==ADMIN){
+    students=[];invites=[];responses=[];invitesById.clear();responsesByToken.clear();
+    activeStudent=null;lastInvitation=null;loading=false;
+    const panel=$('admin-view-encuestas');if(panel)panel.innerHTML='';
+    return;
+  }
   let attempts=0;
-  const timer=setInterval(function(){
+  initTimer=setInterval(function(){
     attempts++;
     if(createUI()||$('ne-root')){
-      clearInterval(timer);loadData();
-    }else if(attempts>=60){clearInterval(timer);console.error('NostraENCUESTAS: no se encontró vista de administración')}
+      clearInterval(initTimer);loadData();
+    }else if(attempts>=60){clearInterval(initTimer);console.error('NostraENCUESTAS: no se encontró vista de administración')}
   },250);
 });

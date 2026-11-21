@@ -1,4 +1,5 @@
 .ne-panel{display:grid;gap:18px}
+#admin-view-encuestas [hidden]{display:none!important}
 .ne-head{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
 .ne-head p{margin:4px 0;color:#607787}
 .ne-button{border:0;border-radius:12px;background:#087b83;color:white;font:700 14px Jost,sans-serif;padding:11px 16px;cursor:pointer}
