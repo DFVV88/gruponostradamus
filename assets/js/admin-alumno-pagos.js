@@ -19,6 +19,7 @@ import {
   writeBatch,
   runTransaction
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
+import {matriculaOriginal,matriculaAcordada,puedeAjustarMatricula,leerMatriculaAcordada} from './admin-matricula-acordada.mjs?v=2026-11-21-1';
 
 const firebaseConfig = {
   apiKey:'AIzaSyCO5jiS9vcEMmBMkGoD5XnNPm_OQILehkM',
@@ -50,6 +51,7 @@ const db = getFirestore(app);
 let currentUser = null;
 let currentRecordId = '';
 let currentRecord = null;
+let matriculaLedgerBlocked = true;
 let installments = [];
 let selectedInstallment = null;
 let busy = false;
@@ -145,6 +147,7 @@ function ensurePanel(){
       <div class="student-price-reference" id="student-price-reference">Abre la ficha de un alumno matriculado.</div>
       <label class="field"><span>Plan asignado</span><input id="student-plan-name" placeholder="Ej. Presencial - FULL"></label>
       <label class="field"><span>Pensión mensual acordada (S/)</span><input id="student-monthly-price" type="number" min="0" step="0.01" placeholder="0.00"></label>
+      <label class="field"><span>Matrícula acordada (S/)</span><input id="student-enrollment-price" type="number" min="0" max="100000" step="0.01" required><small id="student-enrollment-original"></small></label>
       <label class="field wide"><span>Motivo o condición especial</span><input id="student-price-reason" placeholder="Ej. convenio, beca parcial o descuento por hermanos"></label>
     </div>
     <div class="student-price-actions"><button class="btn btn-green" type="button" id="student-price-save">Guardar condiciones generales</button></div>
@@ -162,7 +165,7 @@ function ensurePanel(){
       <button class="btn btn-blue" type="submit">Agregar cuota</button>
     </form>
     <div class="table-wrap student-installment-table"><table><thead><tr><th>N.°</th><th>Concepto</th><th>Vencimiento</th><th>Programado</th><th>Pagado</th><th>Saldo</th><th>Estado</th><th>Acción</th></tr></thead><tbody id="student-installment-rows"><tr><td colspan="8">Abre la ficha de un alumno matriculado.</td></tr></tbody></table></div>
-    <div class="student-price-warning">Los pagos confirmados no se eliminan ni se sobrescriben. Las correcciones financieras deberán realizarse mediante anulación y un nuevo registro.</div>
+    <div class="student-price-warning">La matrícula acordada es individual y no reescribe el tarifario, el cargo inicial de Culqi ni las cuotas o pagos existentes. Si hay pagos confirmados u online, la matrícula se bloquea aquí y cualquier regularización requiere el procedimiento de Finanzas.</div>
     <div class="msg" id="student-price-message"></div>`;
   modalGrid.insertAdjacentElement('afterend',panel);
 
@@ -200,7 +203,7 @@ function ensurePanel(){
 
 function setDisabled(disabled){
   [
-    'student-plan-name','student-monthly-price','student-price-reason','student-price-save',
+    'student-plan-name','student-monthly-price','student-enrollment-price','student-price-reason','student-price-save',
     'student-installment-concept','student-installment-amount','student-installment-date'
   ].forEach(id => { const el = document.getElementById(id); if(el) el.disabled = disabled; });
   const submit = document.querySelector('#student-installment-form button[type="submit"]');
@@ -293,9 +296,25 @@ async function loadRecord(id){
     const enabled = isMatriculated(currentRecord);
     document.getElementById('student-plan-name').value = currentRecord.planAsignado || currentRecord.planNombre || '';
     document.getElementById('student-monthly-price').value = num(currentRecord.pensionAcordada) || '';
+    document.getElementById('student-enrollment-price').value = matriculaAcordada(currentRecord);
     document.getElementById('student-price-reason').value = '';
+    matriculaLedgerBlocked = true;
+    try{
+      const [finance,abonos] = await Promise.all([
+        getDocs(query(collection(db,FINANCE_COLLECTION),where('preinscripcionId','==',id),limit(1))),
+        getDocs(query(collection(db,PAYMENT_COLLECTION),where('preinscripcionId','==',id),limit(1)))
+      ]);
+      matriculaLedgerBlocked = !finance.empty || !abonos.empty;
+    }catch(error){
+      console.warn('No fue posible comprobar el historial de pagos de la matrícula:',error);
+    }
     document.getElementById('student-installment-date').min = MIN_DATE;
     setDisabled(!enabled);
+    const editableEnrollment = enabled && puedeAjustarMatricula(currentRecord) && !matriculaLedgerBlocked;
+    document.getElementById('student-enrollment-price').disabled = !editableEnrollment;
+    document.getElementById('student-enrollment-original').textContent =
+      'Tarifa inicial: ' + money(matriculaOriginal(currentRecord))
+      + (editableEnrollment ? '. Los cobros anteriores no cambian.' : '. Bloqueada por pago o cobro online.');
     await Promise.all([officialReference(currentRecord),loadInstallments(id)]);
     message(enabled ? 'ok' : 'info',enabled
       ? 'Puedes agregar cuotas y registrar sus pagos manualmente.'
@@ -312,22 +331,41 @@ async function saveEconomicTerms(){
   if(!isMatriculated(currentRecord)) return message('err','Primero debes aprobar la matrícula del alumno.');
   const planAsignado = clean(document.getElementById('student-plan-name').value);
   const pensionAcordada = num(document.getElementById('student-monthly-price').value);
+  let nuevaMatricula;
+  try{ nuevaMatricula = leerMatriculaAcordada(document.getElementById('student-enrollment-price').value); }
+  catch(error){ return message('err',error.message); }
+  const matriculaAnterior = matriculaAcordada(currentRecord);
+  const cambioMatricula = nuevaMatricula !== matriculaAnterior;
+  if(cambioMatricula && (!puedeAjustarMatricula(currentRecord) || matriculaLedgerBlocked))
+    return message('err','La matrícula tiene pagos o un cobro online. No puede editarse aquí.');
   const motivo = clean(document.getElementById('student-price-reason').value);
-  if((planAsignado || pensionAcordada > 0) && motivo.length < 3){
+  if((planAsignado || pensionAcordada > 0 || cambioMatricula) && motivo.length < (cambioMatricula ? 5 : 3)){
     return message('err','Escribe brevemente el motivo o condición del acuerdo.');
   }
   const entry = {
     fecha:new Date().toISOString(),
     administrador:currentUser.email || ADMIN_EMAIL,
     motivo:motivo || 'Actualización administrativa',
-    anterior:{planAsignado:clean(currentRecord.planAsignado || currentRecord.planNombre),pensionAcordada:num(currentRecord.pensionAcordada)},
-    nuevo:{planAsignado,pensionAcordada}
+    anterior:{planAsignado:clean(currentRecord.planAsignado || currentRecord.planNombre),pensionAcordada:num(currentRecord.pensionAcordada),matriculaAcordada:matriculaAnterior},
+    nuevo:{planAsignado,pensionAcordada,matriculaAcordada:nuevaMatricula}
   };
   if(!confirm('¿Guardar estas condiciones económicas generales?')) return;
   try{
     busy = true;
     message('info','Guardando condiciones generales...');
-    await updateDoc(doc(db,'preinscripciones',currentRecordId),{
+    const recordRef = doc(db,'preinscripciones',currentRecordId);
+    if(cambioMatricula){
+      const fresh = await getDoc(recordRef);
+      if(!fresh.exists() || !puedeAjustarMatricula(fresh.data()) ||
+          matriculaAcordada(fresh.data()) !== matriculaAnterior)
+        throw new Error('La ficha o el estado del pago cambió. Actualiza los datos antes de continuar.');
+      const [finance,abonos] = await Promise.all([
+        getDocs(query(collection(db,FINANCE_COLLECTION),where('preinscripcionId','==',currentRecordId),limit(1))),
+        getDocs(query(collection(db,PAYMENT_COLLECTION),where('preinscripcionId','==',currentRecordId),limit(1)))
+      ]);
+      if(!finance.empty || !abonos.empty) throw new Error('Existe un pago registrado. No se modificó la matrícula.');
+    }
+    const patch = {
       planAsignado,
       pensionAcordada,
       ajustePagoMotivo:motivo,
@@ -335,8 +373,18 @@ async function saveEconomicTerms(){
       ajustePagoUpdatedAt:serverTimestamp(),
       ajustesPagoHistorial:arrayUnion(entry),
       updatedAt:serverTimestamp()
-    });
+    };
+    if(cambioMatricula){
+      Object.assign(patch,{
+        matriculaAcordada:nuevaMatricula,
+        matriculaAcordadaMotivo:motivo,
+        matriculaAcordadaActualizadaPor:currentUser.email || ADMIN_EMAIL,
+        matriculaAcordadaActualizadaAt:serverTimestamp()
+      });
+    }
+    await updateDoc(recordRef,patch);
     message('ok','Condiciones generales guardadas.');
+    document.getElementById('refresh-btn')?.click();
     await loadRecord(currentRecordId);
   }catch(error){
     console.error(error);
