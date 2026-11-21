@@ -37,8 +37,10 @@ server = ThreadingHTTPServer(('127.0.0.1', 0), functools.partial(QuietServer, di
 threading.Thread(target=server.serve_forever, daemon=True).start()
 BASE = f'http://127.0.0.1:{server.server_port}'
 snapshots = ['NostraLABMat001Test.getState()', '__nostralabQA.snapshot()', '({...p,...s})',
-             'NostraLABReflectionTest.snapshot()', 'NostraLABTest.getState()']
-buttons = [('startBtn','resetBtn'),('btnPlay','btnReset'),('play','reset'),('play','reset'),('playBtn','resetBtn')]
+             'NostraLABReflectionTest.snapshot()', 'NostraLABTest.getState()',
+             '({t:Number(document.getElementById("clock").textContent.split(" ")[0].replace(",","."))})']
+buttons = [('startBtn','resetBtn'),('btnPlay','btnReset'),('play','reset'),('play','reset'),('playBtn','resetBtn'),('startBtn','resetBtn')]
+assert len(CAT) == len(snapshots) == len(buttons), 'Cada laboratorio necesita contrato de prueba explícito'
 
 with sync_playwright() as pw:
     launch = {'headless': True}
@@ -156,8 +158,8 @@ with sync_playwright() as pw:
     page=context.new_page()
     page.on('response',lambda r:responses.append(r.url) if r.status==404 else None)
     page.goto(BASE+'/nostralab/');page.locator('.lab').first.wait_for()
-    check('catalog five labs',page.locator('.lab').count(),5)
-    page.locator('[data-curso="Física"]').click();check('physics filter',page.locator('.lab').count(),4)
+    check('catalog all labs',page.locator('.lab').count(),len(CAT))
+    page.locator('[data-curso="Física"]').click();check('physics filter',page.locator('.lab').count(),sum(x['curso']=='Física' for x in CAT))
     page.locator('[data-curso="Todos"]').click()
     thumbnail=next(x['miniatura'] for x in CAT if x['id']=='superposicion-interferencia-ondas-v009')
     image=page.locator(f'.lab img[src="./{thumbnail}"]')
@@ -177,7 +179,7 @@ with sync_playwright() as pw:
         check(f'viewer {i}: stable session',mocked[-1]['sessionId'],token)
     unavailable[0]=True;page.reload();page.wait_for_timeout(300)
     check('counter unavailable: badge hidden',page.locator('#nostralab-visitas').is_visible(),False)
-    button=page.frame_locator('#experimento').locator('#playBtn');button.click()
+    button=page.frame_locator('#experimento').locator('#'+buttons[-1][0]);button.click()
     check('counter unavailable: science works','Pausar' in button.inner_text())
     check('portal no 404',responses,[])
     browser.close()
