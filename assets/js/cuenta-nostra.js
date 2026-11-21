@@ -4,6 +4,7 @@ import { getAuth, OAuthProvider, signInWithPopup, signOut, createUserWithEmailAn
 import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
 import { isActiveStudent } from './nostraportal-model.mjs?v=2026-11-21-1';
 import { renderNostraPortal, clearNostraPortal } from './nostraportal-dashboard.mjs?v=2026-11-21-1';
+import { loadStudentPrivateData, clearStudentPrivateData } from './nostraportal-data.mjs?v=2026-11-21-2';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCO5jiS9vcEMmBMkGoD5XnNPm_OQILehkM',
@@ -416,8 +417,10 @@ function showStudent(profile){
   document.body.classList.add('np-signed-in');
   if(studentName) studentName.textContent = (profile.name || profile.username) + ' · ' + (profile.institutionalEmail || '');
   renderNostraPortal(profile);
+  loadStudentPrivateData(auth.currentUser);
 }
 function resetStudentPortal(){
+  clearStudentPrivateData();
   document.body.classList.remove('np-signed-in');
   studentPanel.classList.add('hidden');
   authBox.classList.remove('hidden');
