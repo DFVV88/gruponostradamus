@@ -60,6 +60,39 @@ async function verifiedLink(uid){
 }
 const docRef=(uid,id)=>db.collection('reportes_alumnos').doc(uid).collection('documentos').doc(id);
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
+async function allowedPilotUids(){
+  const snap=await db.collection('nostrapublicador_config').doc('publicacion').get();
+  const value=snap.exists?snap.data():null;
+  return new Set(value?.enabled===true && Array.isArray(value.permitidos)
+    ? value.permitidos.filter(validUid):[]);
+}
+function requirePilotUid(uid,allowed){
+  if(!allowed.has(uid))throw new PublicError(403,'SOLO_PILOTO',
+    'Publicación deshabilitada para esta cuenta. Activa únicamente tu NostraCUENTA de pruebas en la configuración del piloto.');
+}
+async function adminPilotStatus(caller){
+  requireAdmin(caller);
+  const allowed=await allowedPilotUids();
+  return {pilotoHabilitado:allowed.size>0,cuentasPermitidas:allowed.size};
+}
+async function adminRecipients(caller){
+  requireAdmin(caller);
+  const users=await db.collection('users').where('role','==','student').limit(500).get();
+  const linked=await Promise.all(users.docs.filter(s=>isStudent(s.data())).map(async snap=>{
+    try{
+      const link=await verifiedLink(snap.id);
+      const dni=String(link.enrollment.dni||'');
+      return {
+        uid:snap.id,preinscripcionId:link.preinscripcionId,
+        nombre:String(link.enrollment.nombre||'').slice(0,120),
+        dniFinal: /^\d{8,12}$/.test(dni)?dni.slice(-4):'—',
+        cuenta:String(link.account.institutionalEmail||'').slice(0,120),
+        ciclo:String(link.enrollment.ciclo||link.enrollment.programaNombre||'').slice(0,100)
+      };
+    }catch(_){return null}
+  }));
+  return {alumnos:linked.filter(Boolean).sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'))};
+}
 
 async function adminPublish(body,caller){
   requireAdmin(caller);
@@ -67,6 +100,9 @@ async function adminPublish(body,caller){
   if(!validUid(uid)||!validReportId(id)||!meta)
     throw new PublicError(400,'DATOS_INVALIDOS','Selecciona alumno, evaluación y fecha válidos, y confirma la revisión del informe.');
   const link=await verifiedLink(uid);
+  requirePilotUid(uid,await allowedPilotUids());
+  if(body.preinscripcionId!==link.preinscripcionId)
+    throw new PublicError(409,'MATRICULA_INCORRECTA','La matrícula seleccionada ya no corresponde a esta NostraCUENTA.');
   const stage=storage.file(stagePath(uid,id));
   const [exists]=await stage.exists();
   if(!exists)throw new PublicError(404,'ARCHIVO_NO_SUBIDO','Carga primero el PDF desde el panel administrativo.');
@@ -124,9 +160,7 @@ async function adminBatch(body,caller,doPublish){
     throw new PublicError(413,'LOTE_GRANDE','Divide el lote en paquetes de hasta 16 MB.');
   if(doPublish&&(body.qaRevisado!==true||body.confirmarPublicacion!==true))
     throw new PublicError(400,'CONFIRMACION_PENDIENTE','Confirma la revisión NostraQA y los destinatarios del lote.');
-  const control=doPublish?(await db.collection('nostrapublicador_config').doc('publicacion').get()):null;
-  const allow=new Set(control?.exists&&control.data().enabled===true&&Array.isArray(control.data().permitidos)
-    ?control.data().permitidos.filter(validUid):[]);
+  const allow=doPublish?await allowedPilotUids():new Set();
   const output=[];
   let totalBytes=0;
   for(const row of bundle.rows){
@@ -258,6 +292,8 @@ exports.nostrareportesApi=onRequest(OPTIONS,async(req,res)=>{
     const caller=await identity(req),body=bodyOf(req);
     const action=clean(body.action);
     if(action==='admin_report_publish')return send(res,200,{data:await adminPublish(body,caller)});
+    if(action==='admin_recipients')return send(res,200,{data:await adminRecipients(caller)});
+    if(action==='admin_pilot_status')return send(res,200,{data:await adminPilotStatus(caller)});
     if(action==='admin_batch_preview')return send(res,200,{data:await adminBatch(body,caller,false)});
     if(action==='admin_batch_publish')return send(res,200,{data:await adminBatch(body,caller,true)});
     if(action==='admin_report_list')return send(res,200,{data:await adminList(body,caller)});
