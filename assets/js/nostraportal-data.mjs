@@ -71,6 +71,7 @@ function table(headers,rows){
 }
 async function downloadPrivateReport(user,item,button){
   if(!user||!item?.id||button.disabled)return;
+  const requestGeneration=generation;
   button.disabled=true;
   const previous=button.textContent;
   button.textContent='Verificando descarga...';
@@ -89,7 +90,7 @@ async function downloadPrivateReport(user,item,button){
       throw Error('El servidor no devolvió un PDF.');
     const file=await response.blob();
     if(!file.size||file.size>8*1024*1024)throw Error('El archivo no supera la verificación de tamaño.');
-    if(user.uid!==window?.firebaseAuth?.currentUser?.uid && window?.firebaseAuth?.currentUser)
+    if(generation!==requestGeneration)
       throw Error('La sesión cambió durante la descarga.');
     const url=URL.createObjectURL(file);
     try{
