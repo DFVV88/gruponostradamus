@@ -2787,14 +2787,7 @@ service cloud.firestore {
      * Una sola respuesta por enlace. Lectura de resultados solo admin.
      */
     match /encuestas_matricula_tokens/{token} {
-      allow get: if token.matches('^[A-Za-z0-9_-]{32}
-     */
-    match /{document=**} {
-      allow read, write: if false;
-    }
-  }
-}
-);
+      allow get: if token.matches('^[A-Za-z0-9_-]{32}$');
       allow list, create, update, delete: if isAdmin();
     }
 
@@ -2804,14 +2797,7 @@ service cloud.firestore {
 
     match /encuestas_matricula_respuestas/{token} {
       allow get, list, update, delete: if isAdmin();
-      allow create: if token.matches('^[A-Za-z0-9_-]{32}
-     */
-    match /{document=**} {
-      allow read, write: if false;
-    }
-  }
-}
-)
+      allow create: if token.matches('^[A-Za-z0-9_-]{32}$')
         && exists(/databases/$(database)/documents/encuestas_matricula_tokens/$(token))
         && get(/databases/$(database)/documents/encuestas_matricula_tokens/$(token)).data.expiresAt > request.time
         && request.resource.data.keys().hasOnly([
@@ -2835,14 +2821,7 @@ service cloud.firestore {
         && request.resource.data.whatsapp is string
         && (
           (request.resource.data.autorizaContacto == true
-            && request.resource.data.whatsapp.matches('^9[0-9]{8}
-     */
-    match /{document=**} {
-      allow read, write: if false;
-    }
-  }
-}
-))
+            && request.resource.data.whatsapp.matches('^9[0-9]{8}$'))
           || (request.resource.data.autorizaContacto == false
             && request.resource.data.whatsapp == '')
         )
