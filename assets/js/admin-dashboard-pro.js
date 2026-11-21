@@ -56,6 +56,7 @@
         navButton('encuestas','☆','NostraENCUESTAS') +
         navButton('cuentas','◇','NostraCUENTAS') +
         '<button type="button" onclick="window.location.href=\'admin-asistencia.html\'"><span class="admin-pro-nav-icon">✓</span><span>Asistencia</span></button>' +
+        '<button type="button" onclick="window.location.href=\'admin-nostraportal.html\'"><span class="admin-pro-nav-icon">⇄</span><span>Vincular NostraPORTAL</span></button>' +
         '<div class="admin-pro-nav-label">Finanzas</div>' +
         navButton('finanzas','S/','Finanzas') +
       '</nav>' +
