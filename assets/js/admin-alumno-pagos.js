@@ -384,6 +384,7 @@ async function saveEconomicTerms(){
     }
     await updateDoc(recordRef,patch);
     message('ok','Condiciones generales guardadas.');
+    document.getElementById('refresh-btn')?.click();
     await loadRecord(currentRecordId);
   }catch(error){
     console.error(error);
