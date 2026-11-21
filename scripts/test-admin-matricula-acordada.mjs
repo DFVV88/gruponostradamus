@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {matriculaOriginal, matriculaAcordada, tieneMatriculaPersonalizada, puedeAjustarMatricula, leerMatriculaAcordada} from '../assets/js/admin-matricula-acordada.mjs';
+import {matriculaOriginal, matriculaAcordada, tieneMatriculaPersonalizada, puedeAjustarMatricula, leerMatriculaAcordada, pagoInicialAcordado} from '../assets/js/admin-matricula-acordada.mjs';
 
 test('conserva el tarifario original y permite matrícula personalizada cero', () => {
   const original={matriculaReferencia:400,tarifarioSnapshot:{matricula:400},precioReferencia:400};
@@ -39,12 +39,25 @@ test('la integración no sustituye montos históricos por el acuerdo',()=>{
   const editor=fs.readFileSync(new URL('../assets/js/admin-alumnos-manuales-editor.js',import.meta.url),'utf8');
   const economy=fs.readFileSync(new URL('../assets/js/admin-alumno-pagos.js',import.meta.url),'utf8');
   const display=fs.readFileSync(new URL('../assets/js/admin-plan-display.js',import.meta.url),'utf8');
+  const payment=fs.readFileSync(new URL('../assets/js/admin-pagos-matriculas.js',import.meta.url),'utf8');
   assert.match(editor,/matriculaAcordada/);
   assert.match(editor,/ajustesPagoHistorial/);
   assert.match(economy,/matriculaAcordada/);
   assert.match(economy,/ajustesPagoHistorial/);
   assert.match(display,/matriculaAcordada/);
+  assert.match(payment,/pagoInicialAcordado/);
   assert.doesNotMatch(editor,/precioReferencia\s*:/);
   assert.doesNotMatch(editor,/matriculaReferencia\s*:/);
   assert.doesNotMatch(economy,/matriculaReferencia\s*:/);
+});
+
+test('el pago manual sugerido respeta el concepto sin alterar el inicial histórico', () => {
+  const base={matriculaReferencia:400,matriculaAcordada:200,estadoPago:'pendiente_envio_voucher'};
+  assert.equal(pagoInicialAcordado({...base,cobroInicial:'matricula_y_primera_cuota'},800),600);
+  assert.equal(pagoInicialAcordado({...base,cobroInicial:'solo_matricula'},400),200);
+  assert.equal(pagoInicialAcordado({...base,cobroInicial:'primera_cuota'},400),400);
+  assert.equal(pagoInicialAcordado({...base,cobroInicial:'pago_total'},800),600);
+  assert.equal(pagoInicialAcordado({...base,cobroInicial:'solo_matricula',matriculaAcordada:0},400),0);
+  assert.equal(pagoInicialAcordado({...base,cobroInicial:'solo_matricula',metodoPagoPreferido:'pago_online'},400),400);
+  assert.equal(pagoInicialAcordado({...base,cobroInicial:'solo_matricula',pagoValidado:true},400),400);
 });
