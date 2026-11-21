@@ -20,9 +20,14 @@ export function tieneMatriculaPersonalizada(record = {}) {
 }
 
 export function puedeAjustarMatricula(record = {}) {
-  // Culqi determina el cargo en backend a partir del tarifario original.
-  // Nunca mostrar un descuento administrativo como si modificase un cargo online.
-  if (record.metodoPagoPreferido === 'pago_online' || record.estadoPago === 'pendiente_pago_online') return false;
+  // Solo controla si puede SUGERIR un importe en una validación manual aún pendiente.
+  // La regularización administrativa de matrícula siempre se guarda por separado y no modifica pagos ni cargos Culqi.
+  // Un registro por voucher puede conservar accidentalmente el estado "pendiente online".
+  // No tratamos esa etiqueta como cobro Culqi si el método documentado es voucher.
+  const esVoucher = record.metodoPagoPreferido === 'voucher_whatsapp'
+    || record.metodoPagoLabel === 'Voucher por WhatsApp';
+  if (record.metodoPagoPreferido === 'pago_online') return false;
+  if (['pendiente_pago_online','procesando_pago_online'].includes(record.estadoPago) && !esVoucher) return false;
   if (record.intentoPagoCreado === true || record.pagoValidado === true || record.estadoPago === 'pago_validado') return false;
   if (numberOrZero(record.montoPagoValidado) > 0 || numberOrZero(record.montoPagadoCentimos) > 0) return false;
   if (record.culqiChargeId || record.ingresoFinancieroId) return false;

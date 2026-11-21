@@ -1,8 +1,8 @@
 /* Grupo Nostradamus - Visibilidad de programa, plan y pago inicial en administración */
 import './admin-reclamos-panel.js?v=2026-01';
-import './admin-pagos-matriculas.js?v=2026-11-21-matricula-1';
+import './admin-pagos-matriculas.js?v=2026-11-21-regularizacion-1';
 import './admin-preinscripciones-acordeon.js?v=2026-08-02-1';
-import {matriculaOriginal,matriculaAcordada,tieneMatriculaPersonalizada} from './admin-matricula-acordada.mjs?v=2026-11-21-1';
+import {matriculaOriginal,matriculaAcordada,tieneMatriculaPersonalizada} from './admin-matricula-acordada.mjs?v=2026-11-21-regularizacion-1';
 import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
 import { getFirestore, collection, query, orderBy, limit, getDocs, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
@@ -249,9 +249,13 @@ function detail(label,value){
 function yesNo(value){ return value === true ? 'Sí' : 'No'; }
 
 async function getRecord(id){
-  if(records.has(id)) return records.get(id);
+  // Leer siempre el documento más reciente: un ajuste en otra ventana
+  // o recién guardado no debe quedar oculto por la caché de la tabla.
   const snapDoc = await getDoc(doc(db,'preinscripciones',id));
-  if(!snapDoc.exists()) return null;
+  if(!snapDoc.exists()){
+    records.delete(id);
+    return null;
+  }
   const record = {id:snapDoc.id,...snapDoc.data()};
   records.set(id,record);
   return record;

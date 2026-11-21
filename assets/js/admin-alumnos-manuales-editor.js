@@ -18,7 +18,7 @@ import {
   serverTimestamp,
   arrayUnion
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
-import {matriculaOriginal,matriculaAcordada,puedeAjustarMatricula,leerMatriculaAcordada} from './admin-matricula-acordada.mjs?v=2026-11-21-1';
+import {matriculaOriginal,matriculaAcordada,leerMatriculaAcordada} from './admin-matricula-acordada.mjs?v=2026-11-21-regularizacion-1';
 
 const firebaseConfig = {
   apiKey:'AIzaSyCO5jiS9vcEMmBMkGoD5XnNPm_OQILehkM',
@@ -53,7 +53,6 @@ let currentUser = null;
 let currentRecordId = '';
 let currentRecord = null;
 let busy = false;
-let matriculaLedgerBlocked = true;
 
 const clean = value => String(value == null ? '' : value).replace(/\s+/g,' ').trim();
 const esc = value => clean(value).replace(/[&<>'"]/g,char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
@@ -145,7 +144,7 @@ function ensureUi(){
             </div>
           </div>
           <div class="manual-editor-note">Editar nombre, teléfonos, correo, programa, turno, plan o salón no crea otra preinscripción. La ficha conserva el mismo ID interno.</div>
-          <div class="manual-editor-warning">Los acuerdos de pensión y matrícula son referencias administrativas individuales. El importe inicial del tarifario, los pagos de Culqi, las cuotas ya creadas y los movimientos de Finanzas no se recalculan ni modifican. Si existe un cobro confirmado o online, la matrícula queda bloqueada.</div>
+          <div class="manual-editor-warning">Los acuerdos de pensión y matrícula se guardan en Firebase como referencias individuales, incluso si la alumna ya pagó. No recalculan el total inicial del tarifario, no reembolsan diferencias ni alteran cuotas, pagos de Culqi o Finanzas. Comprueba por separado que el dinero realmente recibido esté registrado.</div>
           <div class="manual-editor-actions"><button type="button" class="btn btn-light" id="manual-editor-cancel">Cancelar</button><button type="submit" class="btn btn-green" id="manual-editor-save">Guardar cambios</button></div>
           <div class="manual-editor-msg" id="manual-editor-message"></div>
         </form>
@@ -191,12 +190,11 @@ function fillEditor(data){
   set('manual-edit-price',Number.isFinite(Number(data.pensionAcordada)) ? Number(data.pensionAcordada) : 0);
   set('manual-edit-matricula',matriculaAcordada(data));
   set('manual-edit-matricula-reason','');
-  const enrollmentAllowed = puedeAjustarMatricula(data) && !matriculaLedgerBlocked;
   const enrollmentInput = document.getElementById('manual-edit-matricula');
-  if(enrollmentInput) enrollmentInput.disabled = !enrollmentAllowed;
+  if(enrollmentInput) enrollmentInput.disabled = false;
   const enrollmentInfo = document.getElementById('manual-edit-matricula-original');
   if(enrollmentInfo) enrollmentInfo.textContent = 'Tarifa original: S/ ' + matriculaOriginal(data).toFixed(2)
-    + (enrollmentAllowed ? '. No altera cobros anteriores.' : '. Edición bloqueada por pagos o verificación pendiente.');
+    + '. Este acuerdo se guarda en Firebase; NO cambia pagos registrados, saldos históricos ni cargos de Culqi.';
   set('manual-edit-advisor',data.asesorAsignado);
   set('manual-edit-note',data.comentario || data.ajustePagoMotivo || '');
   const dniText = document.getElementById('manual-edit-dni-current');
@@ -209,7 +207,6 @@ async function loadManualRecord(id){
   ensureUi();
   currentRecordId = '';
   currentRecord = null;
-  matriculaLedgerBlocked = true;
   const entry = document.getElementById('manual-edit-entry');
   if(entry) entry.classList.remove('show');
   if(!id || !currentUser) return;
@@ -219,17 +216,6 @@ async function loadManualRecord(id){
     const data = snapshot.data() || {};
     currentRecordId = id;
     currentRecord = {id,...data};
-    try{
-      const [finance,abonos] = await Promise.all([
-        getDocs(query(collection(db,'finanzas_movimientos'),where('preinscripcionId','==',id),limit(1))),
-        getDocs(query(collection(db,'alumno_abonos'),where('preinscripcionId','==',id),limit(1)))
-      ]);
-      matriculaLedgerBlocked = !finance.empty || !abonos.empty;
-    }catch(error){
-      // Ante fallo de verificación financiera solo se bloquea la edición de matrícula.
-      matriculaLedgerBlocked = true;
-      console.warn('No se pudo verificar el historial de pagos:',error);
-    }
     if(entry) entry.classList.add('show');
   }catch(error){
     console.warn('No se pudo comprobar si la ficha es manual:',error);
@@ -301,8 +287,6 @@ async function saveEditor(event){
     const cambioMatricula = nuevoImporteMatricula !== anteriorImporteMatricula;
     const motivoMatricula = clean(document.getElementById('manual-edit-matricula-reason')?.value);
     if(cambioMatricula){
-      if(!puedeAjustarMatricula(currentRecord) || matriculaLedgerBlocked)
-        throw new Error('La matrícula tiene cobros registrados o un proceso online. No puede editarse aquí.');
       if(motivoMatricula.length < 5) throw new Error('Indica el motivo del ajuste de matrícula (mínimo cinco caracteres).');
     }
     const oldDni = dniDigits(currentRecord.dni);
@@ -327,14 +311,8 @@ async function saveEditor(event){
     const recordRef = doc(db,PRE_COLLECTION,currentRecordId);
     if(cambioMatricula){
       const fresh = await getDoc(recordRef);
-      if(!fresh.exists() || !puedeAjustarMatricula(fresh.data()) ||
-          matriculaAcordada(fresh.data()) !== anteriorImporteMatricula)
-        throw new Error('La matrícula o su estado de pago cambió. Actualiza la ficha antes de continuar.');
-      const [finance,abonos] = await Promise.all([
-        getDocs(query(collection(db,'finanzas_movimientos'),where('preinscripcionId','==',currentRecordId),limit(1))),
-        getDocs(query(collection(db,'alumno_abonos'),where('preinscripcionId','==',currentRecordId),limit(1)))
-      ]);
-      if(!finance.empty || !abonos.empty) throw new Error('Existe un pago registrado. No se cambió la matrícula.');
+      if(!fresh.exists() || matriculaAcordada(fresh.data()) !== anteriorImporteMatricula)
+        throw new Error('Otro administrador modificó la matrícula. Actualiza la ficha antes de continuar.');
       Object.assign(patch,{
         matriculaAcordada:nuevoImporteMatricula,
         matriculaAcordadaMotivo:motivoMatricula,
@@ -344,6 +322,8 @@ async function saveEditor(event){
           fecha:new Date().toISOString(),
           administrador:clean(currentUser.email || ADMIN_EMAIL),
           concepto:'matricula_acordada',
+          tipo:'regularizacion_administrativa_sin_movimiento_financiero',
+          estadoPagoAlAjustar:clean(fresh.data().estadoPago),
           motivo:motivoMatricula,
           anterior:{matriculaAcordada:anteriorImporteMatricula},
           nuevo:{matriculaAcordada:nuevoImporteMatricula}
@@ -391,7 +371,7 @@ async function saveEditor(event){
 
     setMessage('ok',dniChanged
       ? 'Datos guardados y DNI corregido correctamente. El índice anti-duplicados también fue actualizado.'
-      : 'Datos del alumno actualizados correctamente. Cuotas y pagos existentes permanecen sin cambios.');
+      : 'Ficha guardada en Firebase. Matrícula acordada y su historial actualizados si cambiaste el importe. Los pagos y Finanzas no se modificaron.');
 
     currentRecord = {...currentRecord,...patch,dni:dniChanged ? newDni : currentRecord.dni};
     document.getElementById('refresh-btn')?.click();

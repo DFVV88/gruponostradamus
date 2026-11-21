@@ -24,7 +24,7 @@ test('validación exacta de importes', () => {
   }
 });
 
-test('no permite ajustar matrícula desde la interfaz con cobro confirmado o flujo online',()=>{
+test('no sugiere un nuevo cobro manual cuando ya hay un pago confirmado o flujo Culqi',()=>{
   const cases=[
     {pagoValidado:true},{estadoPago:'pago_validado'},{metodoPagoPreferido:'pago_online'},
     {estadoPago:'pendiente_pago_online'},{intentoPagoCreado:true},{montoPagoValidado:200},
@@ -32,6 +32,8 @@ test('no permite ajustar matrícula desde la interfaz con cobro confirmado o flu
   ];
   assert.equal(puedeAjustarMatricula({estadoPago:'pendiente_envio_voucher'}),true);
   assert.equal(puedeAjustarMatricula({origen:'registro_manual_admin',estadoPago:'sin_pago_registrado'}),true);
+  assert.equal(puedeAjustarMatricula({metodoPagoPreferido:'voucher_whatsapp',estadoPago:'pendiente_pago_online'}),true);
+  assert.equal(puedeAjustarMatricula({metodoPagoLabel:'Voucher por WhatsApp',estadoPago:'pendiente_pago_online'}),true);
   for(const record of cases) assert.equal(puedeAjustarMatricula(record),false,JSON.stringify(record));
 });
 
@@ -60,4 +62,30 @@ test('el pago manual sugerido respeta el concepto sin alterar el inicial histór
   assert.equal(pagoInicialAcordado({...base,cobroInicial:'solo_matricula',matriculaAcordada:0},400),0);
   assert.equal(pagoInicialAcordado({...base,cobroInicial:'solo_matricula',metodoPagoPreferido:'pago_online'},400),400);
   assert.equal(pagoInicialAcordado({...base,cobroInicial:'solo_matricula',pagoValidado:true},400),400);
+  assert.equal(pagoInicialAcordado({...base,cobroInicial:'solo_matricula',metodoPagoPreferido:'voucher_whatsapp',estadoPago:'pendiente_pago_online'},400),200);
+});
+
+test('regularización 400 a 200 queda como campo administrativo, conservando histórico 400',()=>{
+  const antes={matriculaReferencia:400,totalInicial:400,tarifarioSnapshot:{matricula:400,cobroInicial:'solo_matricula'},pagoValidado:true,montoPagoValidado:200};
+  const despues={...antes,matriculaAcordada:200};
+  assert.equal(matriculaOriginal(despues),400);
+  assert.equal(matriculaAcordada(despues),200);
+  assert.equal(despues.totalInicial,400);
+  assert.equal(despues.montoPagoValidado,200);
+  assert.equal(pagoInicialAcordado(despues,400),400); // Nunca recalcula cobros ya pagados
+});
+
+test('los editores permiten corregir el acuerdo sin tocar pagos ni cuotas, y la ficha consulta Firestore al abrir',()=>{
+  const editor=fs.readFileSync(new URL('../assets/js/admin-alumnos-manuales-editor.js',import.meta.url),'utf8');
+  const economy=fs.readFileSync(new URL('../assets/js/admin-alumno-pagos.js',import.meta.url),'utf8');
+  const display=fs.readFileSync(new URL('../assets/js/admin-plan-display.js',import.meta.url),'utf8');
+  assert.match(editor,/matriculaAcordada:nuevoImporteMatricula/);
+  assert.match(editor,/ajustesPagoHistorial:arrayUnion/);
+  assert.match(editor,/Otro administrador modificó la matrícula/);
+  assert.doesNotMatch(editor,/matriculaLedgerBlocked/);
+  assert.doesNotMatch(economy,/matriculaLedgerBlocked/);
+  assert.doesNotMatch(economy,/Existe un pago registrado\. No se modificó la matrícula/);
+  assert.match(economy,/await updateDoc\(recordRef,patch\)/);
+  assert.match(display,/const snapDoc = await getDoc\(doc\(db,'preinscripciones',id\)\)/);
+  assert.doesNotMatch(display,/if\(records\.has\(id\)\) return records\.get\(id\)/);
 });
