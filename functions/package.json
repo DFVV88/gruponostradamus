@@ -5,7 +5,7 @@
   "description": "Backend seguro de Grupo Nostradamus para pagos, conciliación y control de asistencia.",
   "main": "index.js",
   "engines": {
-    "node": "20"
+    "node": "22"
   },
   "scripts": {
     "check": "node --check index.js && node --check backend.js && node --check nostralab-visits.js && node --check lib/nostralab-visit-utils.js && node --check webhook.js && node --check asistencia.js && node --check nostraportal.js && node --check lib/nostraportal-policy.js && node --check lib/common.js && node --check lib/pricing.js && node --check lib/culqi3ds.js && node --check lib/culqi-webhook.js && node --check lib/culqi-finance.js && node --check scripts/nostrachat-retention-backfill.js && node --test test/*.test.js",
