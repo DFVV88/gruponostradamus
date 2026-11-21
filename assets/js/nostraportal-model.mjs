@@ -7,7 +7,7 @@ export function isActiveStudent(profile) {
   return !!profile
     && profile.role === 'student'
     && profile.status === 'active'
-    && profile.blocked === false;
+    && profile.blocked !== true;
 }
 
 export function safeLab(entry) {
