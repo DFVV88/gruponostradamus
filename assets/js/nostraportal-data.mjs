@@ -1,6 +1,7 @@
 /* NostraPORTAL fase 2: la sesión consulta únicamente la API por UID verificado.
    Prohibido leer colecciones administrativas desde el navegador. */
 const API='https://us-central1-nostrachat-grupo-nostradamus.cloudfunctions.net/nostraportalApi';
+const REPORT_API='https://us-central1-nostrachat-grupo-nostradamus.cloudfunctions.net/nostrareportesApi';
 let generation=0;
 const $=id=>document.getElementById(id);
 const el=(tag,className,value)=>{
@@ -68,7 +69,48 @@ function table(headers,rows){
   tbl.append(tbody);box.append(tbl);
   return box;
 }
-function renderLinked(data){
+async function downloadPrivateReport(user,item,button){
+  if(!user||!item?.id||button.disabled)return;
+  button.disabled=true;
+  const previous=button.textContent;
+  button.textContent='Verificando descarga...';
+  try{
+    const token=await user.getIdToken();
+    if(!token)throw Error('Sesión no disponible.');
+    const response=await fetch(REPORT_API,{method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body:JSON.stringify({action:'student_report_download',reportId:item.id})
+    });
+    if(!response.ok){
+      const error=await response.json().catch(()=>null);
+      throw Error(error?.message||'No se pudo descargar el informe.');
+    }
+    if(!(response.headers.get('Content-Type')||'').includes('application/pdf'))
+      throw Error('El servidor no devolvió un PDF.');
+    const file=await response.blob();
+    if(!file.size||file.size>8*1024*1024)throw Error('El archivo no supera la verificación de tamaño.');
+    if(user.uid!==window?.firebaseAuth?.currentUser?.uid && window?.firebaseAuth?.currentUser)
+      throw Error('La sesión cambió durante la descarga.');
+    const url=URL.createObjectURL(file);
+    try{
+      const anchor=document.createElement('a');
+      anchor.href=url;
+      anchor.download='NostraREPORTES-'+item.id+'.pdf';
+      document.body.append(anchor);
+      anchor.click();
+      anchor.remove();
+    }finally{
+      setTimeout(()=>URL.revokeObjectURL(url),120000);
+    }
+  }catch(error){
+    button.textContent=error.message||'Error de descarga';
+    setTimeout(()=>{if(button.isConnected)button.textContent=previous},5000);
+  }finally{
+    button.disabled=false;
+    if(button.textContent==='Verificando descarga...')button.textContent=previous;
+  }
+}
+function renderLinked(data,user){
   const m=data.matricula||{};
   setStatus('mi-matricula','Datos verificados','Ficha académica vinculada a tu NostraCUENTA.');
   updateLinkedCard('mi-matricula',null,'Datos sincronizados con NostraADMIN');
@@ -131,8 +173,10 @@ function renderLinked(data){
     grades.forEach(item=>{
       const card=el('article','np-report-item');
       card.append(el('strong','',item.titulo||item.evaluacion),el('span','',item.fecha||'Fecha no indicada'));
-      const note=el('small','','Documento registrado. Consulta con Coordinación para obtener una copia mientras se habilita la descarga privada.');
-      card.append(note);list.append(card);
+      const button=el('button','np-report-download','Descargar PDF');
+      button.type='button';
+      button.addEventListener('click',()=>downloadPrivateReport(user,item,button));
+      card.append(button);list.append(card);
     });
     reports.append(list);
   }else reports.append(el('p','np-empty','Todavía no se han publicado reportes de notas en tu cuenta.'));
@@ -155,7 +199,7 @@ export async function loadStudentPrivateData(user){
       ['mis-asistencias','mis-notas','mis-pagos','mi-matricula'].forEach(id=>setStatus(id,'Vinculación pendiente','Coordinación debe asociar tu cuenta a una matrícula oficial antes de mostrar datos personales.'));
       return;
     }
-    renderLinked(data);
+    renderLinked(data,user);
   }catch(error){
     if(current!==generation)return;
     ['mis-asistencias','mis-notas','mis-pagos','mi-matricula'].forEach(id=>setStatus(id,'Conexión pendiente','El servicio de datos personales todavía no está disponible. Tus datos administrativos permanecen protegidos.'));
