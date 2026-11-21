@@ -249,9 +249,13 @@ function detail(label,value){
 function yesNo(value){ return value === true ? 'Sí' : 'No'; }
 
 async function getRecord(id){
-  if(records.has(id)) return records.get(id);
+  // Leer siempre el documento más reciente: un ajuste en otra ventana
+  // o recién guardado no debe quedar oculto por la caché de la tabla.
   const snapDoc = await getDoc(doc(db,'preinscripciones',id));
-  if(!snapDoc.exists()) return null;
+  if(!snapDoc.exists()){
+    records.delete(id);
+    return null;
+  }
   const record = {id:snapDoc.id,...snapDoc.data()};
   records.set(id,record);
   return record;
