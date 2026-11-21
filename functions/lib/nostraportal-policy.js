@@ -22,6 +22,7 @@ function canLink(account,record,confirmedDni,confirmedEmail){
     &&text(account.institutionalEmail,120).toLowerCase()===text(confirmedEmail,120).toLowerCase();
 }
 function amount(value){
+  if(value===null||value===undefined||value==='')return null;
   const n=Number(value);
   return Number.isFinite(n)&&n>=0&&n<=100000000?Math.round(n*100)/100:null;
 }
