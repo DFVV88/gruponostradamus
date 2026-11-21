@@ -3,6 +3,7 @@
 import {initializeApp,getApps,getApp} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
 import {getFirestore,collection,getDocs,limit,query,orderBy} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
+import {identityFromSelectedRecords} from './nostraportal-link-identity.mjs?v=2026-11-21-1';
 
 const firebaseConfig={
   apiKey:'AIzaSyCO5jiS9vcEMmBMkGoD5XnNPm_OQILehkM',
@@ -36,6 +37,28 @@ function fillDetails(){
   const u=accounts.find(x=>x.id===uid),r=enrollments.find(x=>x.id===pre);
   $('account-preview').textContent=u?'Cuenta: '+labelAccount(u):'Cuenta no encontrada en la lista reciente. Revisa manualmente el UID.';
   $('student-preview').textContent=r?'Matrícula: '+labelEnrollment(r)+' · '+(r.matriculaAprobada===true||r.estado==='matriculado'?'Oficial':'Sin aprobación'):'La matrícula debe ser oficial y estar verificada en NostraADMIN.';
+  const identity=identityFromSelectedRecords(u,r);
+  const dniInput=$('confirmed-dni'),emailInput=$('confirmed-email');
+  if(identity.dniFromRecord){
+    dniInput.value=identity.dni;
+    dniInput.readOnly=true;
+    dniInput.placeholder=identity.dni?'DNI obtenido de la matrícula':'La matrícula no tiene un DNI válido';
+  }else{
+    if(dniInput.readOnly)dniInput.value='';
+    dniInput.readOnly=false;
+    dniInput.placeholder='DNI de la matrícula (solo si no aparece en la lista)';
+  }
+  if(identity.emailFromAccount){
+    emailInput.value=identity.email;
+    emailInput.readOnly=true;
+  }else{
+    if(emailInput.readOnly)emailInput.value='';
+    emailInput.readOnly=false;
+  }
+  $('accept').checked=false;
+  if(r&&!identity.dni){
+    message('La ficha seleccionada no tiene un DNI válido. Corrígelo en NostraADMIN antes de vincular.',true);
+  }
 }
 async function refresh(){
   if(!user)return;
@@ -54,7 +77,7 @@ async function refresh(){
       if(account){
         $('account-select').value=requestedUid;
         $('uid').value=requestedUid;
-        $('confirmed-email').value=clean(account.institutionalEmail).toLowerCase();
+
       }
     }
     fillDetails();
@@ -85,8 +108,8 @@ $('link-form').addEventListener('submit',async event=>{
   const confirmedDni=clean($('confirmed-dni').value);
   const confirmedEmail=clean($('confirmed-email').value).toLowerCase();
   const a=accounts.find(x=>x.id===uid),e=enrollments.find(x=>x.id===preinscripcionId);
-  if(a && (a.institutionalEmail||'').toLowerCase()!==confirmedEmail)return message('El correo escrito no coincide con la cuenta seleccionada.',true);
-  if(e && clean(e.dni)!==confirmedDni)return message('El DNI escrito no coincide con la ficha seleccionada.',true);
+  if(a && (a.institutionalEmail||'').toLowerCase()!==confirmedEmail)return message('El correo institucional no coincide con la cuenta seleccionada.',true);
+  if(e && clean(e.dni)!==confirmedDni)return message('El DNI obtenido no coincide con la ficha seleccionada.',true);
   if(!window.confirm('¿Confirmas que la cuenta '+(a?.name||uid)+' pertenece a la matrícula '+(e?.nombre||preinscripcionId)+'? Esta operación no cambia pagos ni notas.'))return;
   busy=true;$('save').disabled=true;message('Vinculando identidad en Firebase...');
   try{

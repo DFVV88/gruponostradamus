@@ -6,12 +6,14 @@ on:
       - 'assets/js/admin-nostracuentas-portal.mjs'
       - 'assets/js/admin-preinscripciones.js'
       - 'assets/js/admin-nostraportal.js'
+      - 'assets/js/nostraportal-link-identity.mjs'
       - 'assets/js/admin-dashboard-pro.js'
       - 'admin-preinscripciones.html'
       - 'admin-nostraportal.html'
       - 'functions/nostraportal.js'
       - 'scripts/test-nostracuentas-portal-vinculacion.mjs'
       - 'scripts/test-nostracuentas-link-diagnostic.mjs'
+      - 'scripts/test-nostraportal-autofill-identity.mjs'
       - '.github/workflows/validate-nostracuentas-portal.yml'
   push:
     branches: [main]
@@ -36,11 +38,13 @@ jobs:
           node --input-type=module --check < assets/js/admin-preinscripciones.js
           node --input-type=module --check < assets/js/admin-nostraportal.js
           node --check assets/js/admin-nostracuentas-portal.mjs
+          node --check assets/js/nostraportal-link-identity.mjs
           node --check assets/js/admin-dashboard-pro.js
           node --check functions/nostraportal.js
       - name: Tests de identidad y separación de acceso
         run: |
           node --test scripts/test-nostracuentas-portal-vinculacion.mjs
           node --test scripts/test-nostracuentas-link-diagnostic.mjs
+          node --test scripts/test-nostraportal-autofill-identity.mjs
           node --test functions/test/nostraportal-policy.test.js
           node --test scripts/test-nostraportal-phase2.mjs
