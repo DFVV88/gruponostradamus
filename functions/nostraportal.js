@@ -73,15 +73,19 @@ async function adminLinkStatuses(body,caller){
   const uniques=[...new Set(ids)];
   const direct=await db.getAll(...uniques.map(uid=>db.collection('nostraportal_vinculos').doc(uid)));
   const possible=direct.filter(snap=>snap.exists&&RECORD.test(String(snap.data().preinscripcionId||'')));
-  const inverse=possible.length?await db.getAll(...possible.map(snap=>db.collection('nostraportal_vinculos_inversos').doc(snap.data().preinscripcionId))):[];
+  const [inverse,records]=possible.length?await Promise.all([
+    db.getAll(...possible.map(snap=>db.collection('nostraportal_vinculos_inversos').doc(snap.data().preinscripcionId))),
+    db.getAll(...possible.map(snap=>db.collection('preinscripciones').doc(snap.data().preinscripcionId)))
+  ]):[[],[]];
   const inverseById=new Map(inverse.map(snap=>[snap.id,snap]));
+  const recordsById=new Map(records.map(snap=>[snap.id,snap]));
   const result=Object.create(null);
   for(let i=0;i<direct.length;i++){
     const entry=direct[i],uid=uniques[i];
     if(!entry.exists){result[uid]={estado:'pendiente'};continue}
     const id=entry.data().preinscripcionId;
-    const back=inverseById.get(id);
-    result[uid]=back?.exists&&back.data().uid===uid
+    const back=inverseById.get(id),record=recordsById.get(id);
+    result[uid]=back?.exists&&back.data().uid===uid&&record?.exists&&isEnrolled(record.data())
       ? {estado:'vinculado',preinscripcionId:id}
       : {estado:'revisar'};
   }
