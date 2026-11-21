@@ -7,6 +7,7 @@ const {getApps,initializeApp,getApp}=require('firebase-admin/app');
 const {getAuth}=require('firebase-admin/auth');
 const {getFirestore,FieldValue}=require('firebase-admin/firestore');
 const {PublicError,bodyOf,requirePost,send,clean}=require('./lib/common');
+const {authorizedDoc}=require('./lib/nostrareportes-policy');
 const {
   DNI,RECORD,UID,isStudent,isEnrolled,isValidLinkRequest,canLink,
   safeEnrollment,safeAttendance,safeQuota,safePublishedReport
@@ -121,7 +122,8 @@ async function studentState(caller){
     .sort((a,b)=>b.fecha.localeCompare(a.fecha)).slice(0,120);
   const dues=quotas.docs.map(x=>safeQuota(x.data()))
     .sort((a,b)=>a.fechaVencimiento.localeCompare(b.fechaVencimiento));
-  const docs=reports.docs.map(x=>safePublishedReport(x.data(),x.id))
+  const docs=reports.docs.filter(x=>authorizedDoc(x.data(),caller.uid,linked.id,x.id))
+    .map(x=>safePublishedReport(x.data(),x.id))
     .filter(Boolean).sort((a,b)=>b.fecha.localeCompare(a.fecha));
   return {vinculado:true,matricula:safeEnrollment(linked.record),asistencias:attendRows,cuotas:dues,reportes:docs};
 }
