@@ -37,8 +37,8 @@ function surveyStatus(record){
   return 'pendiente';
 }
 function badge(s){
-  const value=s==='respondida'?'Respondida':s==='chat_abierto'?'Chat abierto':s==='preparada'?'Enlace preparado':'Pendiente';
-  return '<span class="ne-status '+(s==='respondida'?'green':s==='chat_abierto'?'amber':'')+'">'+value+'</span>';
+  const value=s==='alerta'?'Atención requerida':s==='respondida'?'Respondida':s==='chat_abierto'?'Chat abierto':s==='preparada'?'Enlace preparado':'Pendiente';
+  return '<span class="ne-status '+(s==='alerta'?'red':s==='respondida'?'green':s==='chat_abierto'?'amber':'')+'">'+value+'</span>';
 }
 function avg(records,field){
   if(!records.length)return '—';
