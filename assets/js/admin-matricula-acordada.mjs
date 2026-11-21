@@ -29,6 +29,16 @@ export function puedeAjustarMatricula(record = {}) {
   return true;
 }
 
+export function pagoInicialAcordado(record = {}, totalInicial = 0) {
+  const original = numberOrZero(totalInicial);
+  // Solo se propone el nuevo monto en validaciones MANUALES pendientes.
+  // No tocar montos del backend, cargos existentes ni pagos confirmados.
+  if (!tieneMatriculaPersonalizada(record) || !puedeAjustarMatricula(record)) return original;
+  const mode = record.cobroInicial || record.tarifarioSnapshot?.cobroInicial;
+  if (!['solo_matricula','matricula_y_primera_cuota','pago_total'].includes(mode)) return original;
+  return Math.max(0,Math.round((original + matriculaAcordada(record) - matriculaOriginal(record)) * 100) / 100);
+}
+
 export function leerMatriculaAcordada(value) {
   const raw = String(value ?? '').trim().replace(',', '.');
   if (!/^\d+(?:\.\d{1,2})?$/.test(raw)) {
