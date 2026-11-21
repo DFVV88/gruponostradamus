@@ -167,6 +167,9 @@ async function loadAccounts(){
   try{
     const snap = await getDocs(query(collection(db, 'users'), orderBy('createdAt', 'desc'), limit(500)));
     accounts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const accountFilter=document.getElementById('account-filter');
+    if(accountFilter?.value==='pending' && !accounts.some(a => getAccountStatus(a)==='pending'))
+      accountFilter.value='active';
     renderAccountStats();
     renderAccountsTable();
     message(accountsMsg, 'info', 'NostraCUENTAS actualizadas. Consultando vínculos académicos...');
