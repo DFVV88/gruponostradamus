@@ -6,7 +6,7 @@ import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebase
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
 import { getFirestore, collection, query, orderBy, limit, where, getDocs, getDoc, doc, updateDoc, writeBatch, runTransaction, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
 import { openWhatsAppWelcome, welcomeApproved } from './admin-whatsapp-bienvenida.mjs?v=2026-11-11-1';
-import { refreshPortalLinkStates, portalLinkCell } from './admin-nostracuentas-portal.mjs?v=2026-11-21-1';
+import { refreshPortalLinkStates, portalLinkCell } from './admin-nostracuentas-portal.mjs?v=2026-11-21-2';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCO5jiS9vcEMmBMkGoD5XnNPm_OQILehkM',
@@ -175,7 +175,7 @@ async function loadAccounts(){
     message(accountsMsg, 'info', 'NostraCUENTAS actualizadas. Consultando vínculos académicos...');
     const portalResult = await refreshPortalLinkStates(auth.currentUser,accounts,renderAccountsTable);
     message(accountsMsg, portalResult?.failed ? 'info' : 'ok', portalResult?.failed
-      ? 'Las cuentas se cargaron, pero no fue posible comprobar algunos vínculos académicos. No se ha asociado ninguna ficha.'
+      ? 'Las cuentas se cargaron, pero no se pudo verificar el vínculo académico (' + (portalResult.reason || 'Error no especificado') + '). No se ha asociado ninguna ficha. Si persiste, revisa los registros de nostraportalApi.'
       : 'NostraCUENTAS y estados académicos actualizados.');
   }catch(err){
     console.error(err);

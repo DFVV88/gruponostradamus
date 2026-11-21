@@ -11,6 +11,7 @@ on:
       - 'admin-nostraportal.html'
       - 'functions/nostraportal.js'
       - 'scripts/test-nostracuentas-portal-vinculacion.mjs'
+      - 'scripts/test-nostracuentas-link-diagnostic.mjs'
       - '.github/workflows/validate-nostracuentas-portal.yml'
   push:
     branches: [main]
@@ -40,5 +41,6 @@ jobs:
       - name: Tests de identidad y separación de acceso
         run: |
           node --test scripts/test-nostracuentas-portal-vinculacion.mjs
+          node --test scripts/test-nostracuentas-link-diagnostic.mjs
           node --test functions/test/nostraportal-policy.test.js
           node --test scripts/test-nostraportal-phase2.mjs
