@@ -234,8 +234,14 @@ async function prepareInvite(){
     const student=activeStudent;
     const inviteRef=doc(db,'encuestas_matricula_envios',student.id);
     const data=await runTransaction(db,async function(tx){
+      const preSnap=await tx.get(doc(db,'preinscripciones',student.id));
       const prior=await tx.get(inviteRef);
       const existing=prior.exists()?prior.data():null;
+      if(!preSnap.exists()||!matriculado(preSnap.data()))throw new Error('MATRICULA_NO_APROBADA');
+      if(existing&&existing.token){
+        const answerSnap=await tx.get(doc(db,'encuestas_matricula_respuestas',existing.token));
+        if(answerSnap.exists())throw new Error('ENCUESTA_YA_RESPONDIDA');
+      }
       if(existing&&validInvite(existing)){
         const changed={asesor:worker,telefonoDestino:number,ciclo:text(student.ciclo),updatedAt:serverTimestamp()};
         tx.update(inviteRef,changed);
@@ -265,7 +271,7 @@ async function prepareInvite(){
     renderStats();renderTable();renderAdvisors();
   }catch(err){
     console.error('No se pudo preparar encuesta',err);
-    setSendMessage('No se pudo preparar el enlace. Verifica las reglas Firestore y vuelve a intentar.','error');
+    setSendMessage(err.message==='ENCUESTA_YA_RESPONDIDA'?'La familia ya respondió esta encuesta. Actualiza los resultados.':err.message==='MATRICULA_NO_APROBADA'?'La matrícula ya no está aprobada. Actualiza el panel.':'No se pudo preparar el enlace. Verifica las reglas Firestore y vuelve a intentar.','error');
   }finally{button.disabled=false;button.textContent='Preparar enlace'}
 }
 
