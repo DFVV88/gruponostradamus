@@ -10,7 +10,7 @@ function element(tag, cls, content){
   return node;
 }
 function externalAttrs(anchor){
-  if(anchor.href.startsWith('https://')){anchor.target='_blank';anchor.rel='noopener noreferrer';}
+  if((anchor.getAttribute('href') || '').startsWith('https://')){anchor.target='_blank';anchor.rel='noopener noreferrer';}
   return anchor;
 }
 function link(text, href, style){
