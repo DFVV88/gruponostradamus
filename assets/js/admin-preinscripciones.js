@@ -170,8 +170,10 @@ async function loadAccounts(){
     renderAccountStats();
     renderAccountsTable();
     message(accountsMsg, 'info', 'NostraCUENTAS actualizadas. Consultando vínculos académicos...');
-    await refreshPortalLinkStates(auth.currentUser,accounts,renderAccountsTable);
-    message(accountsMsg, 'ok', 'NostraCUENTAS y estados académicos actualizados.');
+    const portalResult = await refreshPortalLinkStates(auth.currentUser,accounts,renderAccountsTable);
+    message(accountsMsg, portalResult?.failed ? 'info' : 'ok', portalResult?.failed
+      ? 'Las cuentas se cargaron, pero no fue posible comprobar algunos vínculos académicos. No se ha asociado ninguna ficha.'
+      : 'NostraCUENTAS y estados académicos actualizados.');
   }catch(err){
     console.error(err);
     if(body) body.innerHTML = '<tr><td colspan="6">No se pudo cargar NostraCUENTAS. Revisa permisos.</td></tr>';
