@@ -1,0 +1,53 @@
+name: Validar NostraPUBLICADOR 1.0
+
+on:
+  pull_request:
+    paths:
+      - 'admin-nostrapublicador.html'
+      - 'assets/js/admin-nostrapublicador.js'
+      - 'assets/js/nostraportal-data.mjs'
+      - 'assets/js/admin-dashboard-pro.js'
+      - 'functions/nostrareportes.js'
+      - 'functions/lib/nostrareportes-policy.js'
+      - 'functions/lib/nostrapublicador-policy.js'
+      - 'functions/nostraportal.js'
+      - 'functions/index.js'
+      - 'functions/package.json'
+      - 'storage.rules'
+      - 'scripts/test-nostrapublicador.mjs'
+      - '.github/workflows/validate-nostrapublicador.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'functions/nostrareportes.js'
+      - 'functions/lib/nostrareportes-policy.js'
+      - 'functions/lib/nostrapublicador-policy.js'
+      - 'storage.rules'
+      - 'scripts/test-nostrapublicador.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  seguridad-y-funciones:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar sintaxis frontend y backend
+        run: |
+          node --check functions/index.js
+          node --check functions/nostrareportes.js
+          node --check functions/nostraportal.js
+          node --check functions/lib/nostrareportes-policy.js
+          node --check functions/lib/nostrapublicador-policy.js
+          node --check assets/js/admin-nostrapublicador.js
+          node --check assets/js/nostraportal-data.mjs
+          node --check assets/js/admin-dashboard-pro.js
+      - name: Ejecutar pruebas de seguridad y regresión
+        run: |
+          node --test scripts/test-nostrapublicador.mjs
+          node --test scripts/test-nostraportal-phase2.mjs
+          node --test scripts/test-nostracuentas-portal-vinculacion.mjs
