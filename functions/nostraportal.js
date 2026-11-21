@@ -64,6 +64,30 @@ async function adminLink(body,caller){
   });
   return {vinculado:true,uid,preinscripcionId:id};
 }
+async function adminLinkStatuses(body,caller){
+  if(!caller.token.email_verified||String(caller.token.email||'').toLowerCase()!==ADMIN_EMAIL)
+    throw new PublicError(403,'NO_AUTORIZADO','Se requiere sesión administrativa.');
+  const ids=body.uids;
+  if(!Array.isArray(ids)||ids.length<1||ids.length>100||ids.some(uid=>typeof uid!=='string'||!UID.test(uid)))
+    throw new PublicError(400,'UIDS_INVALIDOS','Consulta entre 1 y 100 UID válidos.');
+  const uniques=[...new Set(ids)];
+  const direct=await db.getAll(...uniques.map(uid=>db.collection('nostraportal_vinculos').doc(uid)));
+  const possible=direct.filter(snap=>snap.exists&&RECORD.test(String(snap.data().preinscripcionId||'')));
+  const inverse=possible.length?await db.getAll(...possible.map(snap=>db.collection('nostraportal_vinculos_inversos').doc(snap.data().preinscripcionId))):[];
+  const inverseById=new Map(inverse.map(snap=>[snap.id,snap]));
+  const result=Object.create(null);
+  for(let i=0;i<direct.length;i++){
+    const entry=direct[i],uid=uniques[i];
+    if(!entry.exists){result[uid]={estado:'pendiente'};continue}
+    const id=entry.data().preinscripcionId;
+    const back=inverseById.get(id);
+    result[uid]=back?.exists&&back.data().uid===uid
+      ? {estado:'vinculado',preinscripcionId:id}
+      : {estado:'revisar'};
+  }
+  return {estados:result};
+}
+
 async function ownLink(caller){
   if(!isStudent(caller.profile))throw new PublicError(403,'CUENTA_INACTIVA','Tu NostraCUENTA de alumno no está activa.');
   const link=await db.collection('nostraportal_vinculos').doc(caller.uid).get();
@@ -103,6 +127,7 @@ exports.nostraportalApi=onRequest(OPTIONS,async(req,res)=>{
     const caller=await identity(req),body=bodyOf(req);
     const action=clean(body.action);
     if(action==='admin_link')return send(res,200,{data:await adminLink(body,caller)});
+    if(action==='admin_link_status')return send(res,200,{data:await adminLinkStatuses(body,caller)});
     if(action==='student_state')return send(res,200,{data:await studentState(caller)});
     throw new PublicError(400,'ACCION_INVALIDA','Operación no permitida.');
   }catch(error){return fail(res,error,'NostraPORTAL API')}
