@@ -94,6 +94,26 @@ async function adminRecipients(caller){
   return {alumnos:linked.filter(Boolean).sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'))};
 }
 
+async function adminManualPreview(body,caller){
+  requireAdmin(caller);
+  const uid=body.uid,id=body.reportId,meta=reportMeta(body);
+  if(!validUid(uid)||!validReportId(id)||!meta)
+    throw new PublicError(400,'DATOS_INVALIDOS','Selecciona un informe PDF, título, evaluación, fecha y destinatario válidos.');
+  const link=await verifiedLink(uid);
+  if(body.preinscripcionId!==link.preinscripcionId)
+    throw new PublicError(409,'MATRICULA_INCORRECTA','No coincide la matrícula oficial.');
+  const exists=await docRef(uid,id).get();
+  if(exists.exists)throw new PublicError(409,'REPORTE_EXISTENTE','El reporte ya existe y no se puede sobrescribir.');
+  const allowed=await allowedPilotUids();
+  return {
+    uid,preinscripcionId:link.preinscripcionId,
+    nombre:String(link.enrollment.nombre||'').slice(0,120),
+    ciclo:String(link.enrollment.ciclo||link.enrollment.programaNombre||'').slice(0,100),
+    dniFinal:String(link.enrollment.dni||'').slice(-4),
+    listoParaPublicacion:allowed.has(uid),
+    motivo:allowed.has(uid)?'Cuenta piloto autorizada.':'Cuenta no habilitada para pruebas. No se publicará el PDF.'
+  };
+}
 async function adminPublish(body,caller){
   requireAdmin(caller);
   const uid=body.uid,id=body.reportId,meta=reportMeta(body);
@@ -294,6 +314,7 @@ exports.nostrareportesApi=onRequest(OPTIONS,async(req,res)=>{
     if(action==='admin_report_publish')return send(res,200,{data:await adminPublish(body,caller)});
     if(action==='admin_recipients')return send(res,200,{data:await adminRecipients(caller)});
     if(action==='admin_pilot_status')return send(res,200,{data:await adminPilotStatus(caller)});
+    if(action==='admin_manual_preview')return send(res,200,{data:await adminManualPreview(body,caller)});
     if(action==='admin_batch_preview')return send(res,200,{data:await adminBatch(body,caller,false)});
     if(action==='admin_batch_publish')return send(res,200,{data:await adminBatch(body,caller,true)});
     if(action==='admin_report_list')return send(res,200,{data:await adminList(body,caller)});
