@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Encuesta de atención | Grupo Nostradamus</title>
+  <meta name="description" content="Encuesta privada de satisfacción sobre el proceso de matrícula de Grupo Nostradamus.">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="referrer" content="no-referrer">
+  <link rel="icon" href="assets/img/favicons/iocon-ostradamus.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--navy:#0c2635;--teal:#078c95;--ink:#1a3344;--muted:#617783;--line:#dbe8eb;--gold:#e0ab3d}
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(145deg,#e7f6f7,#f7fbfc 42%,#eaf2f6);color:var(--ink);font-family:Jost,Arial,sans-serif;min-height:100vh}
+    .layout{width:min(620px,calc(100% - 28px));margin:32px auto 48px}
+    .survey{background:white;border-radius:26px;overflow:hidden;box-shadow:0 20px 70px rgba(12,38,53,.12);border:1px solid rgba(7,140,149,.13)}
+    .hero{background:radial-gradient(circle at 85% 15%,rgba(21,202,195,.22),transparent 40%),linear-gradient(125deg,#091c2b,#0c3542);color:white;padding:34px 28px 30px;text-align:center}
+    .brand{width:74px;height:74px;border-radius:20px;background:white;margin:0 auto 17px;display:grid;place-items:center;padding:9px}
+    .brand img{max-width:100%;max-height:100%;object-fit:contain}
+    .eyebrow{text-transform:uppercase;letter-spacing:2px;color:#6de0d7;font-size:12px;font-weight:800;margin:0 0 8px}
+    h1{font:800 clamp(28px,5vw,38px)/1.13 'Baloo 2',sans-serif;margin:0 0 8px}
+    .hero p:last-child{margin:0;color:#cae0e5;line-height:1.5}
+    .body{padding:30px}
+    .intro{color:var(--muted);margin:0 0 25px;line-height:1.6}
+    .pill{display:inline-block;border:1px solid var(--line);padding:5px 11px;border-radius:999px;color:var(--teal);font-size:12px;font-weight:700;margin-bottom:14px}
+    .question{padding:0 0 23px;margin:0 0 23px;border:0;border-bottom:1px solid var(--line)}
+    .question:last-of-type{margin-bottom:10px}
+    .question legend{font-weight:800;color:var(--navy);font-size:16px;line-height:1.4;margin-bottom:13px;width:100%}
+    .number{display:inline-grid;place-items:center;width:25px;height:25px;background:#dff5f4;color:#08757b;border-radius:8px;font-size:12px;margin-right:7px}
+    .stars{display:flex;gap:9px}
+    .star{width:48px;height:48px;border:1px solid #e3e9ec;border-radius:13px;background:#f7fafb;color:#a8b5bd;font-size:29px;line-height:1;cursor:pointer;transition:.15s}
+    .star:hover,.star:focus-visible{border-color:var(--gold);outline:2px solid transparent}
+    .star.active{color:var(--gold);background:#fff7e7;border-color:#edd39c}
+    .rating-help{font-size:13px;color:var(--muted);margin:9px 0 0}
+    .options{display:grid;gap:10px}
+    .option{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:13px;padding:12px 14px;cursor:pointer;font-weight:500}
+    .option:has(input:checked){border-color:var(--teal);background:#effafa}
+    .option input{accent-color:var(--teal);width:18px;height:18px;margin:0}
+    textarea,input[type=tel]{width:100%;font:inherit;border:1px solid #cbdfe3;border-radius:14px;padding:13px 14px;outline:0;background:white;color:var(--ink)}
+    textarea{min-height:96px;resize:vertical}
+    textarea:focus,input[type=tel]:focus{border-color:var(--teal);box-shadow:0 0 0 3px #d9f3f1}
+    .phone{display:flex;gap:9px}
+    .prefix{display:flex;align-items:center;padding:0 14px;border:1px solid var(--line);border-radius:13px;background:#f6fafb;font-weight:700}
+    .consent{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5;color:#526876;margin-top:12px;cursor:pointer}
+    .consent input{margin-top:3px;accent-color:var(--teal)}
+    .optional{font-size:12px;color:var(--muted);font-weight:500}
+    .submit{width:100%;border:0;border-radius:14px;background:linear-gradient(120deg,#066c75,#0b384a);color:white;font:800 16px Jost,sans-serif;padding:15px;cursor:pointer}
+    .submit:disabled{opacity:.65;cursor:wait}
+    .status{padding:15px 17px;border-radius:13px;background:#edf7f9;color:#225766;line-height:1.5}
+    .status.error{background:#fff0ed;color:#a33321}
+    .status.success{background:#eaf8ef;color:#1d713f}
+    .foot{text-align:center;color:#6c808b;font-size:12px;line-height:1.6;margin:20px 12px}
+    a{color:#087b83}
+    [hidden]{display:none!important}
+    @media(max-width:480px){.layout{margin:12px auto 24px}.hero{padding:28px 18px}.body{padding:22px 18px}.star{width:45px;height:45px}.stars{gap:6px}}
+  </style>
+</head>
+<body>
+  <main class="layout">
+    <article class="survey">
+      <header class="hero">
+        <div class="brand"><img src="assets/img/logo.png" alt="Logo de Grupo Nostradamus"></div>
+        <p class="eyebrow">Grupo Nostradamus</p>
+        <h1>Tu opinión nos ayuda a mejorar</h1>
+        <p>Encuesta de satisfacción sobre nuestra atención de matrícula</p>
+      </header>
+      <div class="body">
+        <div class="status" id="loading" role="status">Verificando el enlace de tu encuesta…</div>
+        <section id="survey-content" hidden>
+          <span class="pill">⏱ Aproximadamente 1 minuto</span>
+          <p class="intro">Gracias por confiar en nosotros. Queremos conocer tu experiencia para seguir mejorando el servicio a las familias.</p>
+          <form id="survey-form">
+            <fieldset class="question">
+              <legend><span class="number">1</span> ¿Cómo calificarías la atención durante la matrícula?</legend>
+              <div class="stars" role="group" aria-label="Calificación de atención" data-rating="atencion">
+                <button class="star" type="button" data-value="1" aria-label="1 estrella">★</button><button class="star" type="button" data-value="2" aria-label="2 estrellas">★</button><button class="star" type="button" data-value="3" aria-label="3 estrellas">★</button><button class="star" type="button" data-value="4" aria-label="4 estrellas">★</button><button class="star" type="button" data-value="5" aria-label="5 estrellas">★</button>
+              </div>
+              <p class="rating-help" id="atencion-help">Selecciona de 1 a 5 estrellas.</p>
+            </fieldset>
+            <fieldset class="question">
+              <legend><span class="number">2</span> ¿Cómo calificarías al trabajador que te atendió?</legend>
+              <div class="stars" role="group" aria-label="Calificación del personal" data-rating="personal">
+                <button class="star" type="button" data-value="1" aria-label="1 estrella">★</button><button class="star" type="button" data-value="2" aria-label="2 estrellas">★</button><button class="star" type="button" data-value="3" aria-label="3 estrellas">★</button><button class="star" type="button" data-value="4" aria-label="4 estrellas">★</button><button class="star" type="button" data-value="5" aria-label="5 estrellas">★</button>
+              </div>
+              <p class="rating-help" id="personal-help">Selecciona de 1 a 5 estrellas.</p>
+            </fieldset>
+            <fieldset class="question">
+              <legend><span class="number">3</span> ¿La información sobre ciclos, horarios y pagos fue clara?</legend>
+              <div class="options">
+                <label class="option"><input type="radio" name="claridad" value="si" required> Sí, completamente</label>
+                <label class="option"><input type="radio" name="claridad" value="parcialmente"> Parcialmente</label>
+                <label class="option"><input type="radio" name="claridad" value="no"> No fue clara</label>
+              </div>
+            </fieldset>
+            <fieldset class="question">
+              <legend><span class="number">4</span> ¿Qué podríamos mejorar? <span class="optional">Opcional</span></legend>
+              <textarea name="comentario" maxlength="1000" placeholder="Compártenos tu sugerencia…"></textarea>
+            </fieldset>
+            <fieldset class="question">
+              <legend><span class="number">5</span> WhatsApp de contacto <span class="optional">Opcional</span></legend>
+              <div class="phone"><span class="prefix">🇵🇪 +51</span><input type="tel" name="whatsapp" id="whatsapp" inputmode="numeric" autocomplete="tel-national" maxlength="9" placeholder="Número de 9 dígitos" aria-label="WhatsApp de contacto"></div>
+              <label class="consent"><input type="checkbox" name="autorizaContacto" id="autorizaContacto"><span>Autorizo a Grupo Nostradamus a comunicarse conmigo por WhatsApp únicamente para dar seguimiento a esta encuesta.</span></label>
+              <p class="rating-help">El número se guardará solo si autorizas el contacto.</p>
+            </fieldset>
+            <button type="submit" class="submit" id="submit-btn">Enviar mi opinión</button>
+          </form>
+          <div class="status" id="form-status" role="status" aria-live="polite" hidden></div>
+        </section>
+      </div>
+    </article>
+    <p class="foot">Tu respuesta es privada y solo será revisada por la administración. Se vincula con tu matrícula; no es anónima.<br><a href="politica-de-privacidad.html" target="_blank" rel="noopener noreferrer">Política de privacidad</a> · Grupo Nostradamus</p>
+  </main>
+  <script type="module">
+    import {initializeApp,getApp,getApps} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
+    import {getFirestore,doc,getDoc,setDoc,serverTimestamp} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
+    const config={apiKey:'AIzaSyCO5jiS9vcEMmBMkGoD5XnNPm_OQILehkM',authDomain:'nostrachat-grupo-nostradamus.firebaseapp.com',projectId:'nostrachat-grupo-nostradamus',storageBucket:'nostrachat-grupo-nostradamus.firebasestorage.app',messagingSenderId:'869749182265',appId:'1:869749182265:web:5f5c9174680585f142e2e8'};
+    const app=getApps().length?getApp():initializeApp(config);
+    const db=getFirestore(app);
+    const token=new URLSearchParams(location.search).get('t')||'';
+    const loading=document.getElementById('loading');
+    const content=document.getElementById('survey-content');
+    const form=document.getElementById('survey-form');
+    const status=document.getElementById('form-status');
+    const submit=document.getElementById('submit-btn');
+    const ratings={atencion:0,personal:0};
+    const labels=['','Muy mala','Mala','Regular','Buena','Excelente'];
+    function notice(text,kind){
+      status.hidden=false;status.textContent=text;status.className='status'+(kind?' '+kind:'');
+    }
+    document.querySelectorAll('[data-rating]').forEach(function(group){
+      group.addEventListener('click',function(event){
+        const button=event.target.closest('[data-value]');
+        if(!button)return;
+        const key=group.dataset.rating;
+        ratings[key]=Number(button.dataset.value);
+        group.querySelectorAll('button').forEach(function(star){
+          const chosen=Number(star.dataset.value)<=ratings[key];
+          star.classList.toggle('active',chosen);
+          star.setAttribute('aria-pressed',String(Number(star.dataset.value)===ratings[key]));
+        });
+        document.getElementById(key+'-help').textContent=labels[ratings[key]]+' · '+ratings[key]+' de 5';
+      });
+    });
+    const phone=document.getElementById('whatsapp');
+    phone.addEventListener('input',function(){phone.value=phone.value.replace(/\D/g,'').slice(0,9)});
+    async function validateLink(){
+      if(!/^[A-Za-z0-9_-]{32}$/.test(token)){
+        loading.textContent='El enlace no es válido. Solicita uno nuevo a Grupo Nostradamus.';
+        loading.classList.add('error');return;
+      }
+      try{
+        const snapshot=await getDoc(doc(db,'encuestas_matricula_tokens',token));
+        if(!snapshot.exists()||!snapshot.data().expiresAt||snapshot.data().expiresAt.toMillis()<=Date.now()){
+          loading.textContent='Este enlace venció o ya no está disponible. Solicita uno nuevo.';
+          loading.classList.add('error');return;
+        }
+        loading.hidden=true;content.hidden=false;
+      }catch(error){
+        console.error('Error al consultar encuesta',error.code||error);
+        loading.textContent='No pudimos abrir la encuesta. Inténtalo nuevamente.';
+        loading.classList.add('error');
+      }
+    }
+    form.addEventListener('submit',async function(event){
+      event.preventDefault();status.hidden=true;
+      const claridad=form.elements.claridad.value;
+      if(!ratings.atencion||!ratings.personal||!['si','parcialmente','no'].includes(claridad)){
+        notice('Por favor responde las tres primeras preguntas.','error');return;
+      }
+      const autorizaContacto=form.elements.autorizaContacto.checked;
+      const numero=phone.value.trim();
+      if(autorizaContacto&&!/^9[0-9]{8}$/.test(numero)){
+        notice('Para autorizar contacto, escribe un WhatsApp peruano válido de 9 dígitos.','error');phone.focus();return;
+      }
+      submit.disabled=true;submit.textContent='Guardando respuesta…';
+      try{
+        await setDoc(doc(db,'encuestas_matricula_respuestas',token),{
+          atencion:ratings.atencion,personal:ratings.personal,claridad:claridad,
+          comentario:form.elements.comentario.value.trim().slice(0,1000),
+          whatsapp:autorizaContacto?numero:'',
+          autorizaContacto:autorizaContacto,
+          createdAt:serverTimestamp()
+        });
+        form.hidden=true;
+        notice('¡Gracias! Tu opinión fue registrada correctamente. Nos ayuda a mejorar cada día.','success');
+      }catch(error){
+        console.error('Error al guardar encuesta',error.code||error);
+        notice('No se pudo guardar. Es posible que este enlace ya haya sido utilizado o vencido. Si continúa el problema, contáctanos.','error');
+      }finally{submit.disabled=false;submit.textContent='Enviar mi opinión'}
+    });
+    validateLink();
+  </script>
+</body>
+</html>

@@ -2687,6 +2687,59 @@ service cloud.firestore {
       allow delete: if false;
     }
     /*
+     * NOSTRAENCUESTAS: enlaces aleatorios de 192 bits, sin DNI, nombre ni
+     * teléfono en documentos públicamente consultables.
+     * Una sola respuesta por enlace. Lectura de resultados solo admin.
+     */
+    match /encuestas_matricula_tokens/{token} {
+      allow get: if token.matches('^[A-Za-z0-9_-]{32}$');
+      allow list, delete: if isAdmin();
+      allow create, update: if isAdmin()
+        && token.matches('^[A-Za-z0-9_-]{32}$')
+        && request.resource.data.keys().hasOnly(['createdAt','expiresAt'])
+        && request.resource.data.keys().hasAll(['createdAt','expiresAt'])
+        && request.resource.data.createdAt is timestamp
+        && request.resource.data.expiresAt is timestamp;
+    }
+
+    match /encuestas_matricula_envios/{preinscripcionId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /encuestas_matricula_respuestas/{token} {
+      allow get, list, update, delete: if isAdmin();
+      allow create: if token.matches('^[A-Za-z0-9_-]{32}$')
+        && exists(/databases/$(database)/documents/encuestas_matricula_tokens/$(token))
+        && get(/databases/$(database)/documents/encuestas_matricula_tokens/$(token)).data.expiresAt > request.time
+        && request.resource.data.keys().hasOnly([
+          'atencion','personal','claridad','comentario','whatsapp',
+          'autorizaContacto','createdAt'
+        ])
+        && request.resource.data.keys().hasAll([
+          'atencion','personal','claridad','comentario','whatsapp',
+          'autorizaContacto','createdAt'
+        ])
+        && request.resource.data.atencion is int
+        && request.resource.data.atencion >= 1
+        && request.resource.data.atencion <= 5
+        && request.resource.data.personal is int
+        && request.resource.data.personal >= 1
+        && request.resource.data.personal <= 5
+        && request.resource.data.claridad in ['si','parcialmente','no']
+        && request.resource.data.comentario is string
+        && request.resource.data.comentario.size() <= 1000
+        && request.resource.data.autorizaContacto is bool
+        && request.resource.data.whatsapp is string
+        && (
+          (request.resource.data.autorizaContacto == true
+            && request.resource.data.whatsapp.matches('^9[0-9]{8}$'))
+          || (request.resource.data.autorizaContacto == false
+            && request.resource.data.whatsapp == '')
+        )
+        && request.resource.data.createdAt == request.time;
+    }
+
+    /*
      * CONTINUIDAD FINANCIERA
      * El último cierre operativo bloquea cualquier movimiento nuevo en
      * fechas ya cerradas. Enero-julio de 2026 permanece como historial.
