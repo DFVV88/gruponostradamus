@@ -1,0 +1,59 @@
+name: Validar NostraENCUESTAS
+
+on:
+  push:
+    branches:
+      - feature/nostraencuestas-matricula-20261121
+    paths:
+      - "encuesta-matricula.html"
+      - "assets/js/admin-encuestas-matricula.js"
+      - "assets/js/admin-dashboard-pro.js"
+      - "firestore.rules"
+      - ".nostrachat/firestore-rules-parts/**"
+      - "tests/nostraencuestas-rules.mjs"
+      - ".github/workflows/validate-nostraencuestas.yml"
+  pull_request:
+    paths:
+      - "encuesta-matricula.html"
+      - "assets/js/admin-encuestas-matricula.js"
+      - "assets/js/admin-dashboard-pro.js"
+      - "firestore.rules"
+      - ".nostrachat/firestore-rules-parts/**"
+      - "tests/nostraencuestas-rules.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - name: Revisar sintaxis JavaScript
+        run: |
+          node --check assets/js/admin-encuestas-matricula.js
+          node --check assets/js/admin-dashboard-pro.js
+          node --check tests/nostraencuestas-rules.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          html = Path('encuesta-matricula.html').read_text(encoding='utf8')
+          match = re.search(r'<script type="module">([\s\S]*?)</script>', html)
+          if not match: raise SystemExit('No se encontró el módulo de la encuesta')
+          Path('/tmp/nostraencuestas-form.mjs').write_text(match.group(1))
+          PY
+          node --check /tmp/nostraencuestas-form.mjs
+      - name: Ensamblar reglas oficiales
+        run: bash scripts/build-firestore-rules.sh
+      - name: Instalar dependencias de prueba
+        run: npm install --no-save --no-package-lock firebase@10.12.5 @firebase/rules-unit-testing@3
+      - name: Probar seguridad en emulador Firestore
+        run: npx --yes firebase-tools@13 emulators:exec --only firestore --project demo-nostraencuestas "node tests/nostraencuestas-rules.mjs"
