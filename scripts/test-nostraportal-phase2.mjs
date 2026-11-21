@@ -30,6 +30,8 @@ test('NostraADMIN tiene acceso a vinculación oficial y no altera pagos',()=>{
   const js=source('assets/js/admin-nostraportal.js');
   assert.match(js,/getIdToken\(\)/);
   assert.match(js,/action:'admin_link'/);
-  const nav=source('assets/js/admin-dashboard-pro.js');
-  assert.match(nav,/admin-nostraportal\.html/);
+  const admin=source('assets/js/admin-preinscripciones.js');
+  const bridge=source('assets/js/admin-nostracuentas-portal.mjs');
+  assert.match(admin,/portalLinkCell\(a\)/);
+  assert.match(bridge,/admin-nostraportal\.html\?uid=/);
 });

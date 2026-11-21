@@ -6,6 +6,7 @@ import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebase
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
 import { getFirestore, collection, query, orderBy, limit, where, getDocs, getDoc, doc, updateDoc, writeBatch, runTransaction, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
 import { openWhatsAppWelcome, welcomeApproved } from './admin-whatsapp-bienvenida.mjs?v=2026-11-11-1';
+import { refreshPortalLinkStates, portalLinkCell } from './admin-nostracuentas-portal.mjs?v=2026-11-21-1';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCO5jiS9vcEMmBMkGoD5XnNPm_OQILehkM',
@@ -114,7 +115,7 @@ function ensureAccountsPanel(){
   panel.style.marginTop = '22px';
   panel.innerHTML = `
     <h2 style="font-family:'Baloo 2';font-size:38px;line-height:1;color:#061426;margin:0 0 8px;">NostraCUENTAS</h2>
-    <p style="color:#4b5d70;font-size:17px;margin:0 0 16px;">Administra cuentas creadas con Microsoft 365: activa alumnos, bloquea accesos y reabre cuentas pendientes.</p>
+    <p style="color:#4b5d70;font-size:17px;margin:0 0 16px;">Administra cuentas creadas con Microsoft 365. Toda cuenta activa ya tiene acceso al portal; la vinculación académica permite mostrar sus datos personales.</p>
     <div class="stats" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px;">
       <div class="stat"><strong id="account-stat-total">0</strong><span>Total cuentas</span></div>
       <div class="stat"><strong id="account-stat-pending">0</strong><span>Pendientes</span></div>
@@ -132,7 +133,7 @@ function ensureAccountsPanel(){
       <button class="btn btn-blue" id="accounts-refresh-btn">Actualizar cuentas</button>
     </div>
     <div class="msg" id="accounts-message"></div>
-    <div class="table-wrap"><table><thead><tr><th>Alumno</th><th>Usuario corto</th><th>Correo institucional</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="account-rows"><tr><td colspan="5">Cargando...</td></tr></tbody></table></div>`;
+    <div class="table-wrap"><table><thead><tr><th>Alumno</th><th>Usuario corto</th><th>Correo institucional</th><th>Cuenta</th><th>Datos académicos</th><th>Acciones</th></tr></thead><tbody id="account-rows"><tr><td colspan="5">Cargando...</td></tr></tbody></table></div>`;
   els.adminPanel.appendChild(panel);
   document.getElementById('account-search').addEventListener('input', renderAccountsTable);
   document.getElementById('account-filter').addEventListener('change', renderAccountsTable);
@@ -161,17 +162,24 @@ async function loadAccounts(){
   ensureAccountsPanel();
   const body = document.getElementById('account-rows');
   const accountsMsg = document.getElementById('accounts-message');
-  if(body) body.innerHTML = '<tr><td colspan="5">Cargando NostraCUENTAS...</td></tr>';
+  if(body) body.innerHTML = '<tr><td colspan="6">Cargando NostraCUENTAS...</td></tr>';
   message(accountsMsg, 'info', 'Cargando cuentas...');
   try{
     const snap = await getDocs(query(collection(db, 'users'), orderBy('createdAt', 'desc'), limit(500)));
     accounts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const accountFilter=document.getElementById('account-filter');
+    if(accountFilter?.value==='pending' && !accounts.some(a => getAccountStatus(a)==='pending'))
+      accountFilter.value='active';
     renderAccountStats();
     renderAccountsTable();
-    message(accountsMsg, 'ok', 'NostraCUENTAS actualizadas.');
+    message(accountsMsg, 'info', 'NostraCUENTAS actualizadas. Consultando vínculos académicos...');
+    const portalResult = await refreshPortalLinkStates(auth.currentUser,accounts,renderAccountsTable);
+    message(accountsMsg, portalResult?.failed ? 'info' : 'ok', portalResult?.failed
+      ? 'Las cuentas se cargaron, pero no fue posible comprobar algunos vínculos académicos. No se ha asociado ninguna ficha.'
+      : 'NostraCUENTAS y estados académicos actualizados.');
   }catch(err){
     console.error(err);
-    if(body) body.innerHTML = '<tr><td colspan="5">No se pudo cargar NostraCUENTAS. Revisa permisos.</td></tr>';
+    if(body) body.innerHTML = '<tr><td colspan="6">No se pudo cargar NostraCUENTAS. Revisa permisos.</td></tr>';
     message(accountsMsg, 'err', 'No se pudo cargar NostraCUENTAS. Revisa permisos de Firebase.');
   }
 }
@@ -214,13 +222,14 @@ function renderAccountsTable(){
   if(!body) return;
   renderAccountStats();
   const data = filteredAccounts();
-  if(!data.length){ body.innerHTML = '<tr><td colspan="5">No hay NostraCUENTAS con ese filtro.</td></tr>'; return; }
+  if(!data.length){ body.innerHTML = '<tr><td colspan="6">No hay NostraCUENTAS con ese filtro.</td></tr>'; return; }
   body.innerHTML = data.map(a => `
     <tr>
       <td><b>${esc(a.name)}</b><br><small>${esc(a.roleLabel || 'Alumno')} · ${esc(a.detail || 'NostraCUENTA')}</small></td>
       <td><b>${esc(a.username || a.usernameLower)}</b><br><small>${esc(a.authEmail)}</small></td>
       <td>${esc(a.institutionalEmail)}</td>
       <td>${accountStatusBadge(a)}</td>
+      <td>${portalLinkCell(a)}</td>
       <td>${accountActions(a)}</td>
     </tr>`).join('');
 }

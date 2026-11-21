@@ -48,7 +48,17 @@ async function refresh(){
     accounts=users.docs.map(x=>({id:x.id,...x.data()})).filter(x=>x.role==='student').sort((a,b)=>labelAccount(a).localeCompare(labelAccount(b),'es'));
     enrollments=pre.docs.map(x=>({id:x.id,...x.data()})).filter(x=>x.matriculaAprobada===true||x.estado==='matriculado').sort((a,b)=>labelEnrollment(a).localeCompare(labelEnrollment(b),'es'));
     options($('account-select'),accounts,labelAccount);options($('enrollment-select'),enrollments,labelEnrollment);
-    message('Listas actualizadas. Selecciona una cuenta y una matrícula. Para fichas fuera de los 500 registros cargados, usa sus identificadores.');
+    const requestedUid=new URLSearchParams(location.search).get('uid') || '';
+    if(/^[A-Za-z0-9_-]{12,150}$/.test(requestedUid)){
+      const account=accounts.find(x=>x.id===requestedUid);
+      if(account){
+        $('account-select').value=requestedUid;
+        $('uid').value=requestedUid;
+        $('confirmed-email').value=clean(account.institutionalEmail).toLowerCase();
+      }
+    }
+    fillDetails();
+    message('Listas actualizadas. Confirma la matrícula y el DNI antes de vincular. El acceso al portal ya está activo.');
   }catch(e){message('No se pudieron cargar las listas administrativas. Comprueba los permisos de Firebase.',true)}
 }
 function authState(value){
