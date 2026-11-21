@@ -21,6 +21,8 @@ function validBatch(b){
     || typeof b?.lote_id!=='string'||!BATCH_ID.test(b.lote_id)
     || typeof b?.evaluacion_id!=='string'||!EVAL_ID.test(b.evaluacion_id)
     || !FILE_HASH.test(b?.qa_manifest_sha256||'')
+    || txt(b?.evaluacion_titulo,110).length<5
+    || !/^\d{4}-\d{2}-\d{2}$/.test(b?.evaluacion_fecha||'')
     || !Array.isArray(b?.rows)||b.rows.length<1||b.rows.length>MAX_ROWS)return false;
   const ids=new Set(),uids=new Set();
   for(const row of b.rows){
