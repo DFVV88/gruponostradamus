@@ -9,7 +9,8 @@ const el=(tag,className,value)=>{
   if(value!==undefined&&value!==null)node.textContent=String(value);
   return node;
 };
-const soles=value=>Number.isFinite(Number(value))?'S/ '+Number(value).toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2}):'—';
+const soles=value=>value!==null&&value!==undefined&&value!==''&&Number.isFinite(Number(value))?'S/ '+Number(value).toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2}):'—';
+const solesCentimos=value=>Number.isInteger(value)&&value>=0?soles(value/100):'—';
 const cap=value=>String(value??'').trim()||'No registrado';
 const statusLabel=value=>({puntual:'Puntual',tardanza:'Tardanza',pendiente:'Pendiente',parcial:'Parcial',pagada:'Pagada',anulada:'Anulada'})[value]||cap(value);
 
@@ -22,6 +23,16 @@ function setStatus(id,label,sub){
     const description=card.querySelector('.np-tool-description');
     if(description)description.textContent=sub;
   }
+}
+function updateLinkedCard(id,anchor,label){
+  const card=$(id);
+  const foot=card?.querySelector('.np-tool-pending');
+  if(!foot)return;
+  if(anchor){
+    const a=el('a','np-tool-cta',label||'Ver detalles ↓');
+    a.href=anchor;
+    foot.replaceWith(a);
+  }else foot.textContent=label||'Información sincronizada con NostraADMIN';
 }
 function infoRows(card,rows){
   if(!card)return;
@@ -60,7 +71,17 @@ function table(headers,rows){
 function renderLinked(data){
   const m=data.matricula||{};
   setStatus('mi-matricula','Datos verificados','Ficha académica vinculada a tu NostraCUENTA.');
+  updateLinkedCard('mi-matricula',null,'Datos sincronizados con NostraADMIN');
   infoRows($('mi-matricula'),[['Programa',m.ciclo],['Plan',m.plan],['Turno',m.turno],['Grupo',m.grupo],['Matrícula acordada',soles(m.matriculaAcordada)],['Pensión acordada',soles(m.pensionAcordada)]]);
+  const personalSummary=document.querySelector('#nostraportal-body .np-summary-card:last-child');
+  if(personalSummary){
+    const value=personalSummary.querySelector('.np-summary-value');
+    const subtitle=personalSummary.querySelector('.np-summary-foot');
+    if(value)value.textContent='Vinculados';
+    if(subtitle)subtitle.textContent='Ficha académica verificada';
+  }
+  const sectionNote=document.querySelector('#np-accesos .np-section-title p');
+  if(sectionNote)sectionNote.textContent='Los datos de tu matrícula y los servicios integrados se consultan de forma privada.';
   const summary=$('np-inicio');
   if(summary){
     const card=$('np-linked-information');
@@ -71,15 +92,23 @@ function renderLinked(data){
   }
   const attendance=Array.isArray(data.asistencias)?data.asistencias:[];
   const late=attendance.filter(x=>x.estado==='tardanza').length;
-  setStatus('mis-asistencias','Historial disponible',attendance.length+' registros consultados · '+late+' tardanzas. Solo se muestran tus propias marcaciones.');
+  setStatus('mis-asistencias',attendance.length?'Historial disponible':'Sin marcaciones',attendance.length?attendance.length+' registros consultados · '+late+' tardanzas. Solo se muestran tus propias marcaciones.':'Aún no se registran marcaciones para tu ficha oficial.');
+  updateLinkedCard('mis-asistencias','#np-asistencias-detalle','Ver historial ↓');
   const attendanceCard=$('mis-asistencias');
   if(attendance.length)infoRows(attendanceCard,[['Último registro',attendance[0].fecha],['Última entrada',attendance[0].entrada||'—'],['Estado',statusLabel(attendance[0].estado)]]);
   const dues=Array.isArray(data.cuotas)?data.cuotas:[];
-  const pending=dues.reduce((sum,x)=>sum+(Number(x.saldoCentimos)||0),0)/100;
-  setStatus('mis-pagos','Cuotas disponibles',dues.length+' cuotas programadas · '+soles(pending)+' pendiente (excluye conceptos no programados).');
+  const validBalances=dues.filter(x=>Number.isInteger(x.saldoCentimos)&&x.saldoCentimos>=0);
+  const pending=validBalances.reduce((sum,x)=>sum+x.saldoCentimos,0)/100;
+  setStatus('mis-pagos',dues.length?'Cuotas consultadas':'Sin cuotas programadas',!dues.length
+    ?'No hay cuotas programadas en esta ficha. Esto no equivale a un estado de cuenta ni confirma ausencia de deudas.'
+    :dues.length+' cuotas registradas · '+(validBalances.length===dues.length?soles(pending)+' saldo de cuotas programadas':'Algunos saldos aún no están disponibles')+'. No incluye otros conceptos financieros.');
+  updateLinkedCard('mis-pagos','#np-cuotas-detalle','Ver cuotas ↓');
   const grades=Array.isArray(data.reportes)?data.reportes:[];
   setStatus('mis-notas',grades.length?'Reportes disponibles':'Sin reportes publicados',
     grades.length?grades.length+' informes académicos asociados con tu cuenta.':'Coordinación aún no ha publicado informes individuales.');
+  updateLinkedCard('mis-notas','#np-notas-detalle','Ver reportes ↓');
+  const privacy=document.querySelector('#nostraportal-body .np-privacy p');
+  if(privacy)privacy.textContent='Tu matrícula, asistencias y cuotas se consultan mediante una sesión verificada. Sólo puedes ver datos asociados a tu ficha oficial.';
   const root=$('nostraportal-body'),lab=$('nostralab');
   if(!root||!lab)return;
   const details=el('div','np-personal-sections');
@@ -92,7 +121,7 @@ function renderLinked(data){
   const pay=lineSection('Mis cuotas','Los saldos se leen del cronograma oficial. La matrícula y los abonos anteriores no se recalculan.');
   pay.id='np-cuotas-detalle';
   pay.append(dues.length?
-    table(['Concepto','Vencimiento','Programado','Pagado','Saldo','Estado'],dues.slice(0,35).map(x=>[x.concepto,x.fechaVencimiento,soles(x.programadoCentimos/100),soles(x.pagadoCentimos/100),soles(x.saldoCentimos/100),statusLabel(x.estado)])):
+    table(['Concepto','Vencimiento','Programado','Pagado','Saldo','Estado'],dues.slice(0,35).map(x=>[x.concepto,x.fechaVencimiento,solesCentimos(x.programadoCentimos),solesCentimos(x.pagadoCentimos),solesCentimos(x.saldoCentimos),statusLabel(x.estado)])):
     el('p','np-empty','Coordinación aún no ha creado cuotas para esta ficha.'));
   details.append(pay);
   const reports=lineSection('Mis notas y reportes','Informes individuales publicados por Coordinación tras las verificaciones académicas.');

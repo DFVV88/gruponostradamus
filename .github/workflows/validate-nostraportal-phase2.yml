@@ -7,6 +7,9 @@ on:
       - 'assets/js/admin-nostraportal.js'
       - 'assets/js/admin-dashboard-pro.js'
       - 'assets/js/nostraportal-data.mjs'
+      - 'assets/js/nostraportal-dashboard.mjs'
+      - 'cuenta-nostra.html'
+      - 'scripts/test-nostraportal-linked-ui.mjs'
       - 'assets/js/cuenta-nostra.js'
       - 'assets/css/nostraportal.css'
       - 'functions/index.js'
@@ -45,3 +48,4 @@ jobs:
           node --test functions/test/nostraportal-policy.test.js
           node --test scripts/test-nostraportal-phase1.mjs
           node --test scripts/test-nostraportal-phase2.mjs
+          node --test scripts/test-nostraportal-linked-ui.mjs

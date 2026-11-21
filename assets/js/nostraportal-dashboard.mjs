@@ -33,7 +33,7 @@ function toolCard(module){
   head.append(element('span','np-tool-icon',module.icon),label(available?'Acceso disponible':'Próxima integración','np-tool-status'));
   card.append(head,element('h3','np-tool-title',module.title),element('p','np-tool-description',module.description));
   if(available)card.append(element('span','np-tool-cta','Abrir acceso  ↗'));
-  else card.append(element('span','np-tool-pending','Disponible cuando se vincule la ficha oficial'));
+  else card.append(element('span','np-tool-pending',['mis-asistencias','mis-notas','mis-pagos','mi-matricula'].includes(module.id)?'Esperando verificación de matrícula':'Se habilitará en una próxima actualización'));
   return card;
 }
 function labCard(item){
