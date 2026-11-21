@@ -175,7 +175,7 @@ async function loadAccounts(){
     message(accountsMsg, 'info', 'NostraCUENTAS actualizadas. Consultando vínculos académicos...');
     const portalResult = await refreshPortalLinkStates(auth.currentUser,accounts,renderAccountsTable);
     message(accountsMsg, portalResult?.failed ? 'info' : 'ok', portalResult?.failed
-      ? 'Las cuentas se cargaron, pero no fue posible comprobar algunos vínculos académicos. No se ha asociado ninguna ficha.'
+      ? 'Las cuentas se cargaron, pero no se pudo verificar el vínculo académico (' + (portalResult.reason || 'Error no especificado') + '). No se ha asociado ninguna ficha. Si persiste, revisa los registros de nostraportalApi.'
       : 'NostraCUENTAS y estados académicos actualizados.');
   }catch(err){
     console.error(err);
