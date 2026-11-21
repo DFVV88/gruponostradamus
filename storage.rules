@@ -39,21 +39,14 @@ service firebase.storage {
       allow delete: if isAdmin();
     }
 
-    /* NostraPUBLICADOR: PDF en preparación; sólo administración.
-       Los PDF publicados no se leen con enlaces públicos: se entregan por API con
-       comprobación de UID, matrícula vinculada y huella de archivo. */
+    /* NostraPUBLICADOR: staging temporal visible sólo al administrador.
+       Los informes publicados permanecen bloqueados y se entregan por API. */
     match /nostrareportes-staging/{uid}/{fileName} {
       allow get: if isAdmin();
       allow list: if false;
       allow create: if isAdmin()
-                    && uid.matches('^[A-Za-z0-9_-]{12,150}
-  }
-}
-)
-                    && fileName.matches('^[0-9a-f-]{36}\\.pdf
-  }
-}
-)
+                    && uid.matches('^[A-Za-z0-9_-]{12,150}$')
+                    && fileName.matches('^[0-9a-f-]{36}\\.pdf$')
                     && request.resource.size > 100
                     && request.resource.size <= 8 * 1024 * 1024
                     && request.resource.contentType == 'application/pdf'
