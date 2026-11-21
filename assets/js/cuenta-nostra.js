@@ -3,8 +3,8 @@ import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebase
 import { getAuth, OAuthProvider, signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
 import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
 import { isActiveStudent } from './nostraportal-model.mjs?v=2026-11-21-1';
-import { renderNostraPortal, clearNostraPortal } from './nostraportal-dashboard.mjs?v=2026-11-21-1';
-import { loadStudentPrivateData, clearStudentPrivateData } from './nostraportal-data.mjs?v=2026-11-21-2';
+import { renderNostraPortal, clearNostraPortal } from './nostraportal-dashboard.mjs?v=2026-11-21-3';
+import { loadStudentPrivateData, clearStudentPrivateData } from './nostraportal-data.mjs?v=2026-11-21-3';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCO5jiS9vcEMmBMkGoD5XnNPm_OQILehkM',
