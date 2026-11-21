@@ -2,6 +2,7 @@
 import './admin-reclamos-panel.js?v=2026-01';
 import './admin-pagos-matriculas.js?v=2026-08-21-culqi-finance-1';
 import './admin-preinscripciones-acordeon.js?v=2026-08-02-1';
+import {matriculaOriginal,matriculaAcordada,tieneMatriculaPersonalizada} from './admin-matricula-acordada.mjs?v=2026-11-21-1';
 import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
 import { getFirestore, collection, query, orderBy, limit, getDocs, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
@@ -185,6 +186,10 @@ function decorateRows(){
       priceText
     );
 
+    const enrollmentLabel = tieneMatriculaPersonalizada(record)
+      ? 'Matrícula acordada: ' + money(matriculaAcordada(record)) : '';
+    syncLine(paymentCell,'nostra-admin-enrollment',
+      'display:block;margin-top:4px;color:#075b65;font-weight:850;',enrollmentLabel);
     const initial = totalInitial(record);
     syncLine(
       paymentCell,
@@ -268,9 +273,11 @@ async function decorateModal(id){
     grid.appendChild(detail('Turno',record.turno || pricing.turno));
     grid.appendChild(detail('Concepto del pago inicial',purchaseConcept(record)));
     if(appliedPrice(record)) grid.appendChild(detail('Precio aplicado del plan',money(appliedPrice(record))));
-    const enrollment = num(record.matriculaReferencia) || num(pricing.matricula);
-    grid.appendChild(detail('Matrícula',enrollment ? money(enrollment) : 'No aplica'));
-    if(totalInitial(record)) grid.appendChild(detail('Total inicial registrado',money(totalInitial(record))));
+    const enrollment = matriculaAcordada(record);
+    const hasAgreement = tieneMatriculaPersonalizada(record);
+    grid.appendChild(detail('Matrícula',hasAgreement || enrollment ? money(enrollment) : 'No aplica'));
+    if(hasAgreement) grid.appendChild(detail('Matrícula original del tarifario',money(matriculaOriginal(record))));
+    if(totalInitial(record)) grid.appendChild(detail('Total inicial registrado (sin recalcular)',money(totalInitial(record))));
     grid.appendChild(detail('Pagos posteriores',record.detallePagosPosteriores || pricing.detallePagosPosteriores));
     grid.appendChild(detail('Precio validado por servidor',yesNo(record.precioValidadoServidor)));
     grid.appendChild(detail(
