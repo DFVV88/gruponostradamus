@@ -2,6 +2,8 @@
 import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import { getAuth, OAuthProvider, signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
 import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
+import { isActiveStudent } from './nostraportal-model.mjs?v=2026-11-21-1';
+import { renderNostraPortal, clearNostraPortal } from './nostraportal-dashboard.mjs?v=2026-11-21-1';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCO5jiS9vcEMmBMkGoD5XnNPm_OQILehkM',
@@ -388,8 +390,18 @@ async function login(e){
     const snap = await getDoc(doc(db,'users',cred.user.uid));
     if(!snap.exists()) throw new Error('NO_PROFILE');
     const p = snap.data();
-    if(p.blocked || p.status === 'blocked') return msg(loginMsg,'err','Tu cuenta está bloqueada. Comunícate con Coordinación.');
-    if(p.status !== 'active') return msg(loginMsg,'err','Tu NostraCUENTA existe, pero aún está pendiente de activación administrativa.');
+    if(p.blocked || p.status === 'blocked'){
+      await signOut(auth);
+      return msg(loginMsg,'err','Tu cuenta está bloqueada. Comunícate con Coordinación.');
+    }
+    if(p.status !== 'active'){
+      await signOut(auth);
+      return msg(loginMsg,'err','Tu NostraCUENTA existe, pero aún está pendiente de activación administrativa.');
+    }
+    if(!isActiveStudent(p)){
+      await signOut(auth);
+      return msg(loginMsg,'err','Este portal es exclusivo para alumnos autorizados.');
+    }
     showStudent(p);
   }catch(err){
     console.error(err);
@@ -398,9 +410,18 @@ async function login(e){
 }
 
 function showStudent(profile){
+  if(!isActiveStudent(profile))return;
   authBox.classList.add('hidden');
   studentPanel.classList.remove('hidden');
-  if(studentName) studentName.textContent = (profile.name || profile.username) + ' · ' + profile.institutionalEmail;
+  document.body.classList.add('np-signed-in');
+  if(studentName) studentName.textContent = (profile.name || profile.username) + ' · ' + (profile.institutionalEmail || '');
+  renderNostraPortal(profile);
+}
+function resetStudentPortal(){
+  document.body.classList.remove('np-signed-in');
+  studentPanel.classList.add('hidden');
+  authBox.classList.remove('hidden');
+  clearNostraPortal();
 }
 
 activateForm && activateForm.addEventListener('submit', activate);
@@ -409,9 +430,20 @@ logoutBtn && logoutBtn.addEventListener('click', () => signOut(auth).then(() => 
 patchUI();
 
 onAuthStateChanged(auth, async user => {
-  if(!user || activationInProgress) return;
+  if(!user){
+    resetStudentPortal();
+    return;
+  }
+  if(activationInProgress)return;
   try{
     const snap = await getDoc(doc(db,'users',user.uid));
-    if(snap.exists() && snap.data().status === 'active') showStudent(snap.data());
-  }catch(e){}
+    if(snap.exists() && isActiveStudent(snap.data())){
+      showStudent(snap.data());
+      return;
+    }
+    resetStudentPortal();
+  }catch(e){
+    resetStudentPortal();
+    console.warn('No se pudo comprobar el estado de NostraCUENTA.',e);
+  }
 });
