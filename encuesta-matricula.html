@@ -175,9 +175,6 @@
       if(autorizaContacto&&!/^9[0-9]{8}$/.test(numero)){
         notice('Para autorizar contacto, escribe un WhatsApp peruano válido de 9 dígitos.','error');phone.focus();return;
       }
-      if(numero&&!autorizaContacto){
-        notice('Marca la autorización de contacto para registrar tu WhatsApp, o deja el número vacío.','error');return;
-      }
       submit.disabled=true;submit.textContent='Guardando respuesta…';
       try{
         await setDoc(doc(db,'encuestas_matricula_respuestas',token),{
