@@ -9,6 +9,7 @@ export async function refreshPortalLinkStates(user,accounts,render){
   if(!user){states.clear();render();return}
   const ids=accounts.filter(a=>a.role==='student').map(a=>safeId(a.id)).filter(Boolean);
   states.clear();ids.forEach(uid=>states.set(uid,{estado:'consultando'}));render();
+  let failed=0;
   for(let i=0;i<ids.length;i+=100){
     const uids=ids.slice(i,i+100);
     try{
@@ -19,10 +20,12 @@ export async function refreshPortalLinkStates(user,accounts,render){
       for(const uid of uids)states.set(uid,body.data.estados?.[uid]||{estado:'revisar'});
     }catch(error){
       console.warn('No se pudieron consultar estados NostraPORTAL:',error.message);
+      failed+=uids.length;
       for(const uid of uids)states.set(uid,{estado:'error'});
     }
     render();
   }
+  return {total:ids.length,failed};
 }
 export function portalLinkCell(account){
   if(account.role!=='student')return '<span style="font-size:11px;color:#6b7d85">No corresponde</span>';
