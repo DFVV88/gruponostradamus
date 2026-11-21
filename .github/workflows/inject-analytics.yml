@@ -72,7 +72,7 @@ jobs:
 
           changed = []
           for path in Path('.').glob('*.html'):
-              if path.name.lower() == 'iq100.html':
+              if path.name.lower() in ('iq100.html', 'encuesta-matricula.html', 'admin-preinscripciones.html'):
                   continue
               text = path.read_text(encoding='utf-8', errors='ignore')
               original = text

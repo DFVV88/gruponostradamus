@@ -4,8 +4,12 @@ on:
   push:
     branches:
       - feature/nostraencuestas-matricula-20261121
+      - main
     paths:
       - "encuesta-matricula.html"
+      - "admin-preinscripciones.html"
+      - ".github/workflows/inject-analytics.yml"
+      - "tests/nostraencuestas-privacy.py"
       - "assets/js/admin-encuestas-matricula.js"
       - "assets/js/admin-dashboard-pro.js"
       - "firestore.rules"
@@ -15,6 +19,9 @@ on:
   pull_request:
     paths:
       - "encuesta-matricula.html"
+      - "admin-preinscripciones.html"
+      - ".github/workflows/inject-analytics.yml"
+      - "tests/nostraencuestas-privacy.py"
       - "assets/js/admin-encuestas-matricula.js"
       - "assets/js/admin-dashboard-pro.js"
       - "firestore.rules"
@@ -51,6 +58,8 @@ jobs:
           Path('/tmp/nostraencuestas-form.mjs').write_text(match.group(1))
           PY
           node --check /tmp/nostraencuestas-form.mjs
+      - name: Verificar privacidad frente a métricas automáticas
+        run: python3 tests/nostraencuestas-privacy.py
       - name: Ensamblar reglas oficiales
         run: bash scripts/build-firestore-rules.sh
       - name: Instalar dependencias de prueba
