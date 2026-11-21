@@ -1,0 +1,47 @@
+[
+  {
+    "solid": "TETRAEDRO",
+    "vertices": 4,
+    "edges": 6,
+    "faces": 4,
+    "sides_per_face": 3,
+    "equal_edges": true,
+    "euler": 2
+  },
+  {
+    "solid": "HEXAEDRO",
+    "vertices": 8,
+    "edges": 12,
+    "faces": 6,
+    "sides_per_face": 4,
+    "equal_edges": true,
+    "euler": 2
+  },
+  {
+    "solid": "OCTAEDRO",
+    "vertices": 6,
+    "edges": 12,
+    "faces": 8,
+    "sides_per_face": 3,
+    "equal_edges": true,
+    "euler": 2
+  },
+  {
+    "solid": "DODECAEDRO",
+    "vertices": 20,
+    "edges": 30,
+    "faces": 12,
+    "sides_per_face": 5,
+    "equal_edges": true,
+    "euler": 2
+  },
+  {
+    "solid": "ICOSAEDRO",
+    "vertices": 12,
+    "edges": 30,
+    "faces": 20,
+    "sides_per_face": 3,
+    "equal_edges": true,
+    "euler": 2
+  }
+]

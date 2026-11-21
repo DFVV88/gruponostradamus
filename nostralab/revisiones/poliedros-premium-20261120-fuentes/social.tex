@@ -1,0 +1,50 @@
+\documentclass{article}
+\usepackage[paperwidth=1200bp,paperheight=630bp,margin=0bp]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,amsmath,graphicx,tikz}
+\usetikzlibrary{arrows.meta,calc}
+\renewcommand{\familydefault}{\sfdefault}
+\pagestyle{empty}
+\definecolor{Deep}{HTML}{022D33}
+\definecolor{Teal}{HTML}{068695}
+\definecolor{Cyan}{HTML}{00BBE4}
+\definecolor{Light}{HTML}{E6F4F6}
+\definecolor{Coral}{HTML}{FF735D}
+\definecolor{Warm}{HTML}{FFE2A9}
+\newcommand{\sz}[1]{\pgfmathsetmacro{\fs}{#1*0.9375}\fontsize{\fs bp}{\fs bp}\selectfont}
+\def\hscale{0.9375}
+\begin{document}\null
+\begin{tikzpicture}[remember picture,overlay]
+\begin{scope}[shift={(current page.north west)},x=0.9375bp,y=-0.875bp]
+\fill[Deep] (0,0) rectangle (1280,720);
+% Low-contrast architecture supports the precise scientific curves.
+\fill[Teal,opacity=.12] (610,100)--(1280,100)--(1280,640)--(1120,640)--cycle;
+\foreach \r/\o in {245/.025,190/.035,135/.035}{\fill[Cyan,opacity=\o] (925,302) circle[x radius=\r,y radius=\r];}
+\fill[Light] (0,0) rectangle (1280,96);
+\node[anchor=west,inner sep=0] at (48,47) {\includegraphics[width=135.9375bp]{logo.png}};
+\draw[Teal!35,line width=.7bp] (211,22)--(211,73);
+\node[anchor=west,text=Deep,font=\bfseries\sz{30}] at (235,38) {NostraLAB};
+\node[anchor=west,text=Teal,font=\sz{16}] at (235,68) {LABORATORIO INTERACTIVO};
+\node[anchor=east,text=Deep,font=\bfseries\sz{18}] at (1228,39) {MATEMÁTICA};
+\node[anchor=east,text=Teal,font=\sz{16}] at (1228,67) {GEOMETRÍA \textperiodcentered{} 3D};
+\fill[Cyan] (48,96) rectangle (420,100);
+\draw[Warm,line width=2bp] (56,128)--(80,128);
+\node[anchor=west,text=Light,font=\bfseries\sz{18}] at (90,129) {POLIEDROS REGULARES CONVEXOS};
+\node[anchor=west,text=Cyan,font=\sz{15}] at (55,158) {EXPLORA \textperiodcentered{} EXPERIMENTA \textperiodcentered{} COMPRENDE};
+
+\input{titular.tex}
+\fill[Warm] (58,490) rectangle (63,552);
+\node[anchor=north west,inner sep=0,text=Light,align=left,font=\sz{23}] at (81,486) {En cada vértice, los ángulos\\[5bp]deben sumar \textbf{menos de $360^\circ$.}};
+\fill[black,opacity=.25] (60,581)--(516,581)--(516,614)--(498,632)--(60,632)--cycle;
+\shade[top color=Cyan!90!Light,bottom color=Teal!75!Cyan] (55,575)--(510,575)--(510,608)--(490,626)--(55,626)--cycle;
+\draw[Light!65!Cyan,line width=.9bp] (55,625)--(55,575)--(510,575);
+\node[anchor=west,text=Deep,font=\bfseries\sz{22}] at (73,601) {EXPLORA LOS CINCO};
+\draw[Deep,line width=2bp,-{Latex[length=9bp]}] (465,601)--(489,601);
+\node[text=Light,font=\sz{18}] at (925,146) {CINCO SÓLIDOS \textperiodcentered{} UNA CONDICIÓN};
+\input{solidos.tex}
+\draw[Teal!70,line width=.8bp] (655,590)--(1200,590);
+\node[text=Warm,font=\bfseries\sz{24}] at (925,619) {Caras regulares \textperiodcentered{} Cierre convexo};
+\draw[Teal!60,line width=.8bp] (55,655)--(1225,655);
+\node[anchor=west,text=Light,font=\bfseries\sz{15}] at (55,688) {GRUPO NOSTRADAMUS};
+\node[anchor=east,text=Light,font=\sz{15}] at (1225,688) {GIRA \textperiodcentered{} COMPARA \textperiodcentered{} DESPLIEGA};
+\end{scope}\end{tikzpicture}\end{document}

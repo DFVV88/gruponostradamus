@@ -1,0 +1,26 @@
+{
+  "id": "poliedros-regulares-v41",
+  "code": "GEO · 3D",
+  "course": "Matemática",
+  "academic_title": "Poliedros regulares convexos",
+  "title_lines": [
+    "¿POR QUÉ",
+    "SOLO",
+    "CINCO?"
+  ],
+  "title_sizes": [
+    78,
+    112,
+    108
+  ],
+  "title_baselines": [
+    258,
+    360,
+    462
+  ],
+  "title_x": 55,
+  "title_max_width": 530,
+  "model": "Caras regulares congruentes; igual número q de caras por vértice; q >= 3; q(p-2)180/p < 360",
+  "conditions": "Poliedros regulares convexos. (p,q) = (3,3),(4,3),(3,4),(5,3),(3,5).",
+  "authorization": "Usuario: PROCEDE, 2026-11-20; corregir y publicar pareja conservando HTML e ID."
+}

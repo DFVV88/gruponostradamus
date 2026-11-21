@@ -119,9 +119,10 @@
       "publicado_el": "2026-11-20",
       "version": "v4.1",
       "sha256": "b36834d30310d3b7e4ff62557c3fc16794b1b19c52c354497f7741185c51c5e7",
-      "miniatura": "miniaturas/poliedros-regulares-v41-miniatura.png",
+      "miniatura": "miniaturas/poliedros-regulares-v41-premium-20261120.png",
       "compartir": "experiencias/poliedros-regulares-v41/compartir.html",
-      "revision_academica": "UNI-Geometría"
+      "revision_academica": "UNI-Geometría",
+      "revision_visual": "revisiones/poliedros-premium-20261120.json"
     }
   ]
 }

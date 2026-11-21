@@ -1,0 +1,49 @@
+{
+  "schema": "NOSTRALAB_PREMIUM_PAIR_V1",
+  "project_id": "poliedros-regulares-v41",
+  "style_version": "3.0",
+  "engine": "Tectonic 0.17.0+20260731",
+  "sources": {
+    "contenido.json": "8f4a72b724d9ea029c5871f01afc007b2c31ee9d6fac062b9525c7a665b202de",
+    "contrato.json": "2b750e469b254e409064b7667dcafc4281984ac5a87bf27f2e23592713eb8557",
+    "logo.png": "c251d0647c8d234af27c6f3df4fb3ee958c615df55d5710653e80a837683fe39",
+    "plantilla.tex": "0cd7e4b1c57832bf2de11ac377d5b2e2687aae620e382ebd7b2a64b2123ded09",
+    "solidos.tex": "cc90de155e01feda6ef22e8b1576ff02bc7d94061536056c1e657286db228e70",
+    "titular.tex": "e2ed4c43a3806521f5014de5867c56868f00e1193254227015d10b30bcd4bb07"
+  },
+  "outputs": {
+    "catalog": {
+      "file": "catalog.png",
+      "sha256": "96429c1379664311f31cc62a9edb12e21a702be2478e52fbfc96b32be3926136",
+      "size": [
+        1280,
+        720
+      ],
+      "source": "catalog.tex",
+      "source_sha256": "830fc1844a0b806951e18c9c92435f6664d2630e84fb476adcb0bc2bb047b7ee",
+      "pdf": "catalog.pdf",
+      "pdf_sha256": "c199155e80ac4467440bdab537bfaf905f8f28d10bb13b731ff2fa757e79170b",
+      "svg": "catalog.svg",
+      "svg_sha256": "039630e8964a341f143abe7e833deb906f1a091c6dfbc11d2d6479f033045c7e",
+      "log": "catalog.log",
+      "log_sha256": "bd11552a135380da87a4e82d2613b812889cea4b40e5846544041784f99e58ba"
+    },
+    "social": {
+      "file": "social.jpg",
+      "sha256": "8875461ce87fc440d7ae79fe349ad3452105167a37dce255350916466f955442",
+      "size": [
+        1200,
+        630
+      ],
+      "source": "social.tex",
+      "source_sha256": "2ceda07aafdcebc2d5fba61bb9fe36e81c3b607baa1dcfe2a927a6ca045fb86b",
+      "pdf": "social.pdf",
+      "pdf_sha256": "6f52ca4de1db58f3093cc53e9964d5fabfc9a691f65a6d95c7550d5aea20c434",
+      "svg": "social.svg",
+      "svg_sha256": "f07fa35691ce16d962e2ebc4c875633acfb2425478fa8beae472735e39fde9f6",
+      "log": "social.log",
+      "log_sha256": "e2b29f699e69ac6eb28f04345cd60bf657e844bd42ef67d330cc2d15ccb05af1"
+    }
+  },
+  "visual_review": "Revisados ambos formatos a tamaño completo y 360 px. Cabecera clara, logo oficial, Orbitron con relieve, gancho y respuesta, cinco sólidos completos. Sin recortes ni superposición."
+}

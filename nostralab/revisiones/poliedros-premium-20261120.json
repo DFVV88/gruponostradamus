@@ -1,0 +1,21 @@
+{
+  "date": "2026-11-20",
+  "project_id": "poliedros-regulares-v41",
+  "scope": "Corrección autorizada de pareja premium; HTML aprobado e ID conservados",
+  "plugin_version": "1.20.0",
+  "graphics": "LaTeX/TikZ compilado; caras obtenidas de vértices exactos mediante envolvente convexa",
+  "files": {
+    "nostralab/miniaturas/poliedros-regulares-v41-premium-20261120.png": {
+      "sha256": "96429c1379664311f31cc62a9edb12e21a702be2478e52fbfc96b32be3926136",
+      "bytes": 252602
+    },
+    "assets/img/social/poliedros-regulares-v41-premium-20261120.jpg": {
+      "sha256": "8875461ce87fc440d7ae79fe349ad3452105167a37dce255350916466f955442",
+      "bytes": 246441
+    }
+  },
+  "scientific_html_sha256": "b36834d30310d3b7e4ff62557c3fc16794b1b19c52c354497f7741185c51c5e7",
+  "geometry_checks": "Caras/aristas/vértices de los cinco sólidos, aristas iguales, V-E+F=2; proyección isotrópica en ambos formatos",
+  "visual_review": "Revisados ambos formatos a tamaño completo y 360 px. Cabecera clara, logo oficial, Orbitron con relieve, gancho y respuesta, cinco sólidos completos. Sin recortes ni superposición.",
+  "source_manifest": "revisiones/poliedros-premium-20261120-fuentes/composicion.json"
+}

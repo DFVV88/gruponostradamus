@@ -1,0 +1,32 @@
+{
+  "schema": "NOSTRALAB_PREMIUM_VISUAL_V1",
+  "style_version": "3.0",
+  "approved_on": "2026-11-12",
+  "approved_example": "examples/portadas-premium/interferencia",
+  "renderer": "runtime/compilar_portadas_premium.py",
+  "headline_renderer": "runtime/titular_premium.py",
+  "font": "assets/fonts/Orbitron-variable.ttf",
+  "font_license": "assets/fonts/OFL-Orbitron.txt",
+  "outputs": {
+    "catalog": [
+      1280,
+      720
+    ],
+    "social": [
+      1200,
+      630
+    ]
+  },
+  "invariants": [
+    "logo oficial original",
+    "marca NostraLAB",
+    "cabecera clara compacta",
+    "tipografía geométrica con relieve corto y acabado metálico",
+    "gráficos y fórmulas LaTeX/TikZ compilados",
+    "petróleo/cian con acentos funcionales",
+    "pregunta y respuesta coherentes",
+    "misma fuente para ambos formatos"
+  ],
+  "composition": "Permitir distribución distinta según fenómeno; misma pareja comparte concepto y tratamiento.",
+  "review_width": 360
+}
