@@ -1,0 +1,41 @@
+name: Validar NostraPORTAL fase 1
+
+on:
+  pull_request:
+    paths:
+      - 'cuenta-nostra.html'
+      - 'assets/js/cuenta-nostra.js'
+      - 'assets/js/nostraportal-model.mjs'
+      - 'assets/js/nostraportal-dashboard.mjs'
+      - 'assets/css/nostraportal.css'
+      - 'scripts/test-nostraportal-phase1.mjs'
+      - '.github/workflows/validate-nostraportal.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'cuenta-nostra.html'
+      - 'assets/js/cuenta-nostra.js'
+      - 'assets/js/nostraportal-model.mjs'
+      - 'assets/js/nostraportal-dashboard.mjs'
+      - 'assets/css/nostraportal.css'
+      - 'scripts/test-nostraportal-phase1.mjs'
+      - '.github/workflows/validate-nostraportal.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Comprobar sintaxis de módulos
+        run: |
+          node --input-type=module --check < assets/js/cuenta-nostra.js
+          node --check assets/js/nostraportal-model.mjs
+          node --check assets/js/nostraportal-dashboard.mjs
+      - name: Pruebas de acceso, privacidad, catálogo y regresiones
+        run: node --test scripts/test-nostraportal-phase1.mjs
