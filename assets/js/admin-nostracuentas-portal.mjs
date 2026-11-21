@@ -10,22 +10,27 @@ export async function refreshPortalLinkStates(user,accounts,render){
   const ids=accounts.filter(a=>a.role==='student').map(a=>safeId(a.id)).filter(Boolean);
   states.clear();ids.forEach(uid=>states.set(uid,{estado:'consultando'}));render();
   let failed=0;
+  let reason='';
   for(let i=0;i<ids.length;i+=100){
     const uids=ids.slice(i,i+100);
     try{
       const token=await user.getIdToken();
       const response=await fetch(API,{method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({action:'admin_link_status',uids})});
       const body=await response.json();
-      if(!response.ok||!body.ok)throw Error(body.message||'Servicio no disponible');
+      if(!response.ok||!body.ok){
+        const code=String(body.error||'RESPUESTA_RECHAZADA').replace(/[^A-Z0-9_]/gi,'').slice(0,50);
+        throw Error('HTTP '+response.status+' · '+code);
+      }
       for(const uid of uids)states.set(uid,body.data.estados?.[uid]||{estado:'revisar'});
     }catch(error){
       console.warn('No se pudieron consultar estados NostraPORTAL:',error.message);
       failed+=uids.length;
+      if(!reason)reason=String(error.message||'Error de conexión').slice(0,90);
       for(const uid of uids)states.set(uid,{estado:'error'});
     }
     render();
   }
-  return {total:ids.length,failed};
+  return {total:ids.length,failed,reason};
 }
 export function portalLinkCell(account){
   if(account.role!=='student')return '<span style="font-size:11px;color:#6b7d85">No corresponde</span>';
@@ -35,7 +40,7 @@ export function portalLinkCell(account){
   mark.textContent=statesNames[state.estado]||'Sin verificar';
   mark.style.cssText='font-size:11px;font-weight:850;color:'+(state.estado==='vinculado'?'#167653':state.estado==='revisar'?'#9b2929':'#506d79');
   cell.append(mark);
-  if(account.role==='student'&&state.estado!=='vinculado'){
+  if(account.role==='student'&&state.estado==='pendiente'){
     const link=document.createElement('a');
     const uid=safeId(account.id);
     if(uid){
