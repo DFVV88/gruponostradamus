@@ -151,7 +151,9 @@ function ensureUi(){
         </div>
         <form id="manual-student-form">
           <div class="manual-student-grid">
-            <label><span>Nombres y apellidos *</span><input id="manual-student-name" minlength="5" maxlength="100" required></label>
+            <label><span>Nombres *</span><input id="manual-student-nombres" minlength="2" maxlength="60" required placeholder="Ej. Dania"></label>
+            <label><span>Apellido paterno *</span><input id="manual-student-apellido-paterno" minlength="2" maxlength="50" required placeholder="Ej. Borja"></label>
+            <label><span>Apellido materno *</span><input id="manual-student-apellido-materno" minlength="2" maxlength="50" required placeholder="Ej. Milla"></label>
             <label><span>DNI *</span><input id="manual-student-dni" inputmode="numeric" minlength="8" maxlength="12" required></label>
             <label><span>Celular del alumno *</span><input id="manual-student-phone" inputmode="tel" minlength="9" maxlength="20" required></label>
             <label><span>Correo personal</span><input id="manual-student-email" type="email" maxlength="100" placeholder="Puede completarlo después"></label>
@@ -215,7 +217,10 @@ async function saveStudent(event){
   event.preventDefault();
   if(busy || !currentUser) return;
 
-  const nombre = clean(document.getElementById('manual-student-name')?.value);
+  const nombres = clean(document.getElementById('manual-student-nombres')?.value);
+  const apellidoPaterno = clean(document.getElementById('manual-student-apellido-paterno')?.value);
+  const apellidoMaterno = clean(document.getElementById('manual-student-apellido-materno')?.value);
+  const nombre = [nombres,apellidoPaterno,apellidoMaterno].join(' ');
   const dni = dniDigits(document.getElementById('manual-student-dni')?.value);
   const celular = clean(document.getElementById('manual-student-phone')?.value);
   const correo = clean(document.getElementById('manual-student-email')?.value).toLowerCase();
@@ -228,7 +233,9 @@ async function saveStudent(event){
   const asesor = clean(document.getElementById('manual-student-advisor')?.value);
   const note = clean(document.getElementById('manual-student-note')?.value);
 
-  if(nombre.length < 5 || nombre.length > 100) return message('err','Escribe los nombres y apellidos completos.');
+  if(!nombres || nombres.length > 60 || !apellidoPaterno || apellidoPaterno.length > 50 ||
+     !apellidoMaterno || apellidoMaterno.length > 50 || nombre.length < 5 || nombre.length > 100)
+    return message('err','Completa nombres, apellido paterno y materno correctamente.');
   if(dni.length < 8 || dni.length > 12) return message('err','Escribe un DNI válido.');
   if(celular.length < 9 || celular.length > 20) return message('err','Escribe un celular válido. Este número permitirá vincular el formulario web posteriormente.');
   if(correo && (!correo.includes('@') || correo.length > 100)) return message('err','Revisa el correo personal.');
@@ -259,6 +266,9 @@ async function saveStudent(event){
 
     batch.set(recordRef,{
       nombre,
+      nombres,
+      apellidoPaterno,
+      apellidoMaterno,
       dni,
       celular,
       correo,
