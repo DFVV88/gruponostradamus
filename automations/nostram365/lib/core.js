@@ -92,7 +92,7 @@ function proposedUpnCandidatesForRecord(record) {
       clean(record.nombre) !== [names, paternal, maternal].join(' ')) return [];
 
   // Acepta 1 o varios nombres; apellidos compuestos también son válidos.
-  if (![names, paternal, maternal].every(part => /^[\\p{L}\\p{M} '-]+$/u.test(part))) return [];
+  if (![names, paternal, maternal].every(part => /^[\p{L}\p{M} '-]+$/u.test(part))) return [];
   const first = slug(names.split(' ')[0]);
   const surname = slug(paternal);
   const secondInitial = slug(maternal).slice(0, 1);
