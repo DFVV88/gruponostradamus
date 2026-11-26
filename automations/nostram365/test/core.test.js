@@ -172,3 +172,34 @@ test('direct-password renderer rejects very short passwords', () => {
   assert.ok(p.length>=20);
   assert.ok(c.welcomeTextDirect('Test','t@example.com',p).includes(p));
 });
+
+
+test('nombres estructurados: un solo nombre y dos apellidos crean candidatos seguros', () => {
+  const student={nombre:'Dania Borja Milla',nombres:'Dania',
+    apellidoPaterno:'Borja',apellidoMaterno:'Milla'};
+  assert.deepEqual(c.proposedUpnCandidatesForRecord(student), [
+    'dania.borja@gruponostradamus.edu.pe',
+    'dania.borjam@gruponostradamus.edu.pe'
+  ]);
+  // No se exige un segundo nombre para procesar la matrícula.
+  assert.equal(c.proposedUpnCandidates('Dania Borja Milla').length, 0);
+});
+test('nombres compuestos y apellidos compuestos se leen desde campos independientes', () => {
+  const student={nombre:'María Fernanda de la Cruz López',nombres:'María Fernanda',
+    apellidoPaterno:'de la Cruz',apellidoMaterno:'López'};
+  assert.deepEqual(c.proposedUpnCandidatesForRecord(student), [
+    'maria.delacruz@gruponostradamus.edu.pe',
+    'maria.delacruzl@gruponostradamus.edu.pe'
+  ]);
+});
+test('los registros anteriores siguen siendo compatibles, sin adivinar nombres ambiguos', () => {
+  assert.deepEqual(c.proposedUpnCandidatesForRecord({nombre:'Luis Alberto Pérez García'}),
+    c.proposedUpnCandidates('Luis Alberto Pérez García'));
+  assert.deepEqual(c.proposedUpnCandidatesForRecord({nombre:'Dania Borja Milla'}), []);
+  assert.deepEqual(c.proposedUpnCandidatesForRecord({
+    nombre:'Dania Borja Milla',nombres:'Dania',apellidoPaterno:'Otro',apellidoMaterno:'Milla'
+  }), []);
+  assert.deepEqual(c.proposedUpnCandidatesForRecord({
+    nombre:'Dania Borja Milla',nombres:'Dania',apellidoPaterno:'Borja'
+  }), []);
+});
