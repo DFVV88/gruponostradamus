@@ -7,7 +7,7 @@ const {getFirestore, FieldValue} = require('firebase-admin/firestore');
 const logger = require('firebase-functions/logger');
 const crypto = require('node:crypto');
 const {Graph} = require('./lib/graph');
-const {eligible, shouldHandleTransition, clean, personalEmail, proposedUpnCandidates, randomPassword,
+const {eligible, shouldHandleTransition, clean, personalEmail, proposedUpnCandidatesForRecord, randomPassword,
   unseal, tokenHash, safeHtml, welcomeText, welcomeHtml, welcomeHtmlDirect, STUDENT_SKU, SENDER, scopeAllows,
   pilotActivationConfigured, pilotActivationAllowed} = require('./lib/core');
 
@@ -78,7 +78,7 @@ exports.nostraM365Alta = onDocumentUpdated({
     }
     const email = personalEmail(student.correo);
     const name = clean(student.nombre);
-    const candidates = proposedUpnCandidates(name);
+    const candidates = proposedUpnCandidatesForRecord(student);
     if (!email || !candidates.length) {
       await mark(ref,'requiere_revision', {motivo:'DATOS_AMBIGUOS_O_CORREO_INVALIDO'});
       return;
