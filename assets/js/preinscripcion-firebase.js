@@ -59,6 +59,14 @@
   function money(value){ return 'S/ ' + num(value).toFixed(2); }
   function msg(type,text){ box.className = 'form-message ' + type; box.innerHTML = text; }
   function value(name){ return clean(form.elements[name] && form.elements[name].value); }
+  function syncLegacyNameField(){
+    const nombre=[value('nombres'),value('apellidoPaterno'),value('apellidoMaterno')].filter(Boolean).join(' ');
+    if(form.elements.nombre) form.elements.nombre.value=nombre;
+    return nombre;
+  }
+  ['nombres','apellidoPaterno','apellidoMaterno'].forEach(function(key){
+    if(form.elements[key]) form.elements[key].addEventListener('input',syncLegacyNameField);
+  });
   function normalized(value){
     return clean(value).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
   }
@@ -246,7 +254,10 @@
   });
 
   function validate(data){
-    if(data.nombre.length < 5) return 'Escribe nombres y apellidos completos.';
+    if(!data.nombres || data.nombres.length > 60) return 'Escribe los nombres del alumno (puede tener un solo nombre).';
+    if(!data.apellidoPaterno || data.apellidoPaterno.length > 50) return 'Escribe el apellido paterno.';
+    if(!data.apellidoMaterno || data.apellidoMaterno.length > 50) return 'Escribe el apellido materno.';
+    if(data.nombre.length < 5 || data.nombre.length > 100) return 'Revisa los nombres y apellidos completos.';
     if(data.dni.length < 8) return 'Escribe un DNI válido.';
     if(data.celular.length < 9) return 'Escribe un celular válido.';
     if(data.correo.indexOf('@') === -1) return 'Escribe un correo personal válido.';
@@ -263,7 +274,11 @@
     syncSelectedPlan();
 
     return {
-      nombre:value('nombre'),
+      // Se conserva "nombre" para paneles, pagos e integraciones existentes.
+      nombre:syncLegacyNameField(),
+      nombres:value('nombres'),
+      apellidoPaterno:value('apellidoPaterno'),
+      apellidoMaterno:value('apellidoMaterno'),
       dni:dniDigits(value('dni')),
       celular:value('celular'),
       correo:value('correo').toLowerCase(),

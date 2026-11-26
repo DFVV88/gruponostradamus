@@ -85,6 +85,9 @@ service cloud.firestore {
     function hasAllowedPreinscripcionFields(d) {
       return d.keys().hasOnly([
         'nombre',
+        'nombres',
+        'apellidoPaterno',
+        'apellidoMaterno',
         'dni',
         'celular',
         'correo',
@@ -159,6 +162,25 @@ service cloud.firestore {
         'ciclo-verano-uni',
         'nostra-weekend-uni'
       ];
+    }
+
+    function validPreStructuredName(d) {
+      // Los documentos anteriores sin estos campos siguen siendo válidos.
+      // Si se suministra cualquiera, se exigen los tres y la concatenación exacta.
+      return !d.keys().hasAny(['nombres', 'apellidoPaterno', 'apellidoMaterno'])
+        || (
+          d.keys().hasAll(['nombres', 'apellidoPaterno', 'apellidoMaterno'])
+          && d.nombres is string
+          && d.nombres.size() >= 2
+          && d.nombres.size() <= 60
+          && d.apellidoPaterno is string
+          && d.apellidoPaterno.size() >= 2
+          && d.apellidoPaterno.size() <= 50
+          && d.apellidoMaterno is string
+          && d.apellidoMaterno.size() >= 2
+          && d.apellidoMaterno.size() <= 50
+          && d.nombre == d.nombres + ' ' + d.apellidoPaterno + ' ' + d.apellidoMaterno
+        );
     }
 
     function validPreApplicant(d) {
@@ -361,6 +383,7 @@ service cloud.firestore {
           request.resource.data
         )
         && validPreApplicant(request.resource.data)
+        && validPreStructuredName(request.resource.data)
         && validPreProgram(request.resource.data)
         && validPreAmounts(request.resource.data)
         && validPreInitialState(request.resource.data)
