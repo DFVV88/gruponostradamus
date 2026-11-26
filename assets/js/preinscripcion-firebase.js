@@ -59,6 +59,14 @@
   function money(value){ return 'S/ ' + num(value).toFixed(2); }
   function msg(type,text){ box.className = 'form-message ' + type; box.innerHTML = text; }
   function value(name){ return clean(form.elements[name] && form.elements[name].value); }
+  function syncLegacyNameField(){
+    const nombre=[value('nombres'),value('apellidoPaterno'),value('apellidoMaterno')].filter(Boolean).join(' ');
+    if(form.elements.nombre) form.elements.nombre.value=nombre;
+    return nombre;
+  }
+  ['nombres','apellidoPaterno','apellidoMaterno'].forEach(function(key){
+    if(form.elements[key]) form.elements[key].addEventListener('input',syncLegacyNameField);
+  });
   function normalized(value){
     return clean(value).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
   }
@@ -267,7 +275,7 @@
 
     return {
       // Se conserva "nombre" para paneles, pagos e integraciones existentes.
-      nombre:[value('nombres'),value('apellidoPaterno'),value('apellidoMaterno')].filter(Boolean).join(' '),
+      nombre:syncLegacyNameField(),
       nombres:value('nombres'),
       apellidoPaterno:value('apellidoPaterno'),
       apellidoMaterno:value('apellidoMaterno'),
