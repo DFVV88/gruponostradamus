@@ -246,7 +246,10 @@
   });
 
   function validate(data){
-    if(data.nombre.length < 5) return 'Escribe nombres y apellidos completos.';
+    if(!data.nombres || data.nombres.length > 60) return 'Escribe los nombres del alumno (puede tener un solo nombre).';
+    if(!data.apellidoPaterno || data.apellidoPaterno.length > 50) return 'Escribe el apellido paterno.';
+    if(!data.apellidoMaterno || data.apellidoMaterno.length > 50) return 'Escribe el apellido materno.';
+    if(data.nombre.length < 5 || data.nombre.length > 100) return 'Revisa los nombres y apellidos completos.';
     if(data.dni.length < 8) return 'Escribe un DNI válido.';
     if(data.celular.length < 9) return 'Escribe un celular válido.';
     if(data.correo.indexOf('@') === -1) return 'Escribe un correo personal válido.';
@@ -263,7 +266,11 @@
     syncSelectedPlan();
 
     return {
-      nombre:value('nombre'),
+      // Se conserva "nombre" para paneles, pagos e integraciones existentes.
+      nombre:[value('nombres'),value('apellidoPaterno'),value('apellidoMaterno')].filter(Boolean).join(' '),
+      nombres:value('nombres'),
+      apellidoPaterno:value('apellidoPaterno'),
+      apellidoMaterno:value('apellidoMaterno'),
       dni:dniDigits(value('dni')),
       celular:value('celular'),
       correo:value('correo').toLowerCase(),
