@@ -77,6 +77,32 @@ function proposedUpnCandidates(fullName) {
   }
   return result;
 }
+// El formulario nuevo separa los nombres y apellidos. Nunca inferimos
+// apellidos a partir del número de palabras cuando hay datos estructurados.
+function proposedUpnCandidatesForRecord(record) {
+  if (!record || typeof record !== 'object') return [];
+  const keys = ['nombres', 'apellidoPaterno', 'apellidoMaterno'];
+  const hasStructuredName = keys.some(key => Object.prototype.hasOwnProperty.call(record, key));
+  if (!hasStructuredName) return proposedUpnCandidates(record.nombre); // Compatibilidad histórica.
+
+  const names = clean(record.nombres);
+  const paternal = clean(record.apellidoPaterno);
+  const maternal = clean(record.apellidoMaterno);
+  if (!names || !paternal || !maternal ||
+      clean(record.nombre) !== [names, paternal, maternal].join(' ')) return [];
+
+  // Acepta 1 o varios nombres; apellidos compuestos también son válidos.
+  if (![names, paternal, maternal].every(part => /^[\\p{L}\\p{M} '-]+$/u.test(part))) return [];
+  const first = slug(names.split(' ')[0]);
+  const surname = slug(paternal);
+  const secondInitial = slug(maternal).slice(0, 1);
+  if (!/^[a-z0-9]{2,30}$/.test(first) || !/^[a-z0-9]{2,30}$/.test(surname) ||
+      !/^[a-z0-9]$/.test(secondInitial)) return [];
+  const result = [first + '.' + surname + '@' + DOMAIN];
+  if (surname.length < 30) result.push(first + '.' + surname + secondInitial + '@' + DOMAIN);
+  return result;
+}
+
 function proposedUpn(fullName) {
   return proposedUpnCandidates(fullName)[0] || null;
 }
@@ -204,5 +230,5 @@ function welcomeHtmlDirect(name, upn, password) {
   return welcomeHtmlFromCopy(welcomeTextDirect(name, upn, password));
 }
 module.exports = {STUDENT_SKU, STUDENT_SKU_ID, SENDER, DOMAIN, clean, eligible, shouldHandleTransition, alreadyAssigned, personalEmail, scopeAllows, pilotActivationConfigured, pilotActivationAllowed,
-  proposedUpn, proposedUpnCandidates, randomPassword, seal, unseal, tokenHash, safeHtml,
+  proposedUpn, proposedUpnCandidates, proposedUpnCandidatesForRecord, randomPassword, seal, unseal, tokenHash, safeHtml,
   welcomeText, welcomeHtml, welcomeTextDirect, welcomeHtmlDirect, WELCOME_LOGO_CID};
