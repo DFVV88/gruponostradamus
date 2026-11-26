@@ -1,0 +1,18 @@
+{
+  "functions": {
+    "source": ".",
+    "codebase": "nostram365",
+    "runtime": "nodejs22",
+    "ignore": [
+      "node_modules",
+      ".git",
+      "*.log",
+      ".env",
+      ".env.*",
+      ".secret.local"
+    ],
+    "predeploy": [
+      "npm --prefix \"$RESOURCE_DIR\" test"
+    ]
+  }
+}
