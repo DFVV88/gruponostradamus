@@ -37,7 +37,8 @@ const els = {
   statTotal: $('stat-total'), statNuevos: $('stat-nuevos'), statPagos: $('stat-pagos'), statValidados: $('stat-validados'),
   modalBack: $('modal-back'), closeModal: $('close-modal'), modalTitle: $('modal-title'), modalSubtitle: $('modal-subtitle'), detailGrid: $('detail-grid'),
   editEstado: $('edit-estado'), editAsesor: $('edit-asesor'), editEstadoPago: $('edit-estado-pago'), editPagoObs: $('edit-pago-observacion'),
-  saveBtn: $('save-btn'), approveBtn: $('approve-btn'), rejectBtn: $('reject-btn'), deleteBtn: $('delete-btn'), whatsappWelcome: $('whatsapp-welcome-btn'), modalMsg: $('modal-message')
+  saveBtn: $('save-btn'), approveBtn: $('approve-btn'), rejectBtn: $('reject-btn'), deleteBtn: $('delete-btn'), whatsappWelcome: $('whatsapp-welcome-btn'), modalMsg: $('modal-message'),
+  nameGrid: $('edit-name-grid'), editNombres: $('edit-nombres'), editApellidoPaterno: $('edit-apellido-paterno'), editApellidoMaterno: $('edit-apellido-materno'), nameNote: $('edit-name-note')
 };
 
 function refreshWhatsAppWelcomeButton(record){
@@ -430,6 +431,17 @@ function openModal(id, mode='ficha'){
     detail('Ciclo', r.ciclo), detail('Turno', r.turno), detail('Método de pago', r.metodoPagoLabel), detail('Estado de pago actual', r.estadoPago),
     detail('Comentario', r.comentario)
   ].join('');
+  // Los registros históricos se mantienen intactos; no inferir apellidos de "nombre".
+  if(els.editNombres) els.editNombres.value = clean(r.nombres);
+  if(els.editApellidoPaterno) els.editApellidoPaterno.value = clean(r.apellidoPaterno);
+  if(els.editApellidoMaterno) els.editApellidoMaterno.value = clean(r.apellidoMaterno);
+  if(els.nameGrid) els.nameGrid.style.display = mode === 'pago' ? 'none' : '';
+  if(els.nameNote){
+    els.nameNote.style.display = mode === 'pago' ? 'none' : '';
+    els.nameNote.textContent = r.correoInstitucional || r.correoInstitucionalAsignado
+      ? 'Esta ficha ya podría tener un usuario Microsoft 365. Corregir el nombre no renombra automáticamente esa cuenta.'
+      : 'Completa los tres campos solo para corregir la identidad. El nombre completo se mantendrá sincronizado sin alterar matrícula ni pago.';
+  }
   els.editEstado.value = r.estado || 'nuevo';
   els.editAsesor.value = r.asesorAsignado || '';
   els.editEstadoPago.value = r.estadoPago || 'pendiente_envio_voucher';
@@ -454,14 +466,34 @@ async function updateCurrent(extra={}){
   const patch = { estado: els.editEstado.value, asesorAsignado: clean(els.editAsesor.value), estadoPago, pagoValidado: estadoPago === 'pago_validado', pagoObservacion: clean(els.editPagoObs.value), updatedAt: serverTimestamp(), ...extra };
   await updateDoc(doc(db, 'preinscripciones', currentId), patch);
 }
+function structuredNamePatch(){
+  if(!els.editNombres || !els.editApellidoPaterno || !els.editApellidoMaterno) return {};
+  const nombres = clean(els.editNombres.value);
+  const apellidoPaterno = clean(els.editApellidoPaterno.value);
+  const apellidoMaterno = clean(els.editApellidoMaterno.value);
+  // En fichas antiguas los tres campos vacíos significan no cambiar el nombre.
+  if(!nombres && !apellidoPaterno && !apellidoMaterno) return {};
+  if(!nombres || !apellidoPaterno || !apellidoMaterno) throw new Error('IDENTIDAD_INCOMPLETA');
+  if(nombres.length > 60 || apellidoPaterno.length > 50 || apellidoMaterno.length > 50) throw new Error('IDENTIDAD_INVALIDA');
+  const nombre = [nombres,apellidoPaterno,apellidoMaterno].join(' ');
+  if(nombre.length < 5 || nombre.length > 100) throw new Error('IDENTIDAD_INVALIDA');
+  return {nombre,nombres,apellidoPaterno,apellidoMaterno};
+}
 async function saveChanges(){
   try{
     message(els.modalMsg,'info', currentMode === 'pago' ? 'Validando pago...' : 'Guardando cambios...');
     if(currentMode === 'pago') await updateCurrent({ estado: 'listo_para_matricula', estadoPago: 'pago_validado', pagoValidado: true });
-    else await updateCurrent();
+    else await updateCurrent(structuredNamePatch());
     message(els.modalMsg,'ok', currentMode === 'pago' ? 'Pago validado. La solicitud quedó lista para matrícula.' : 'Cambios guardados correctamente.');
     await loadRecords();
-  }catch(err){ console.error(err); message(els.modalMsg,'err','No se pudo guardar. Revisa reglas o permisos.'); }
+  }catch(err){
+    if(err?.message === 'IDENTIDAD_INCOMPLETA' || err?.message === 'IDENTIDAD_INVALIDA'){
+      message(els.modalMsg,'err','Completa nombres, apellido paterno y apellido materno correctamente; no se guardaron cambios.');
+      return;
+    }
+    console.error(err);
+    message(els.modalMsg,'err','No se pudo guardar. Revisa reglas o permisos.');
+  }
 }
 async function approveMatricula(){
   const r = records.find(x => x.id === currentId);
