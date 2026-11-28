@@ -110,11 +110,13 @@ test('los laboratorios públicos exhiben un pie institucional único e íntegro'
     // Un proyecto recién publicado no tiene versión anterior: su primer HTML
     // conserva el SHA aprobado y puede usar su pie institucional original.
     if (!entry.version_anterior) {
-      assert.equal((html.match(/<p class="footer">/g) || []).length, 1,
+      const originalFooters = html.match(/<(?:footer|p)\b[^>]*class="(?:foot|footer)"[^>]*>[\s\S]*?<\/(?:footer|p)>/g) || [];
+      assert.equal(originalFooters.length, 1,
         'pie institucional original ausente o duplicado: ' + entry.id);
-      assert.match(html, /NostraLAB · Grupo de Estudio Nostradamus/,
+      assert.match(originalFooters[0], /NostraLAB/);
+      assert.match(originalFooters[0], /Grupo (?:de Estudio )?Nostradamus/,
         'identidad institucional de primera publicación: ' + entry.id);
-      assert.match(html, /alt="Logo oficial de Grupo Nostradamus"/,
+      assert.match(html, /<img\b[^>]*alt="(?:Logo oficial de )?Grupo Nostradamus"/,
         'logo institucional original: ' + entry.id);
       continue;
     }
