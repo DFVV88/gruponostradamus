@@ -43,11 +43,16 @@
       "id": "superposicion-interferencia-ondas-v009",
       "version": "v010",
       "ruta": "experiencias/superposicion-interferencia-ondas-v010/index.html",
-      "sha256": "1e88924207c1f2e95c8af385394d15230ea9981403135b26dfa13c22d192184b",
+      "sha256": "57f80e9a649752b78e72685afa444b0046da1ca908db947949f43f3d4074f94a",
       "anterior": {
         "version": "v009",
         "ruta": "experiencias/superposicion-interferencia-ondas-v009/index.html",
         "sha256": "ffa6be97a2e32fc1482163d5e02e1ca62bf04cc0f284536569f83f9e4d849ba7"
+      },
+      "revision_interfaz": {
+        "fecha": "2026-11-28",
+        "sha256_previo": "1e88924207c1f2e95c8af385394d15230ea9981403135b26dfa13c22d192184b",
+        "alcance": "Simulación 1D prioritaria, ajustes laterales, mapa y detector agrupados, navegación, legibilidad y repetición conservando parámetros; modelos, ecuaciones, imágenes, ID, rutas y visitas conservados"
       }
     },
     {
