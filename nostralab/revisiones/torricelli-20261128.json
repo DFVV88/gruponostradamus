@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-28",
+  "project_id": "torricelli-presion-atmosferica-v1012",
+  "scope": "Primera publicación del HTML v10.12 aprobado, movimiento continuo y UI responsive",
+  "scientific_html_sha256": "3680a9737f69abac021f98ffd2f9ee5c2c880955477feda8034fe0fc58205500",
+  "archive_html_sha256_verified": true,
+  "html_unchanged": true,
+  "source_package": "torricelli-20261128-fuentes.zip",
+  "source_package_sha256": "493e2a40392dfbecaf51d2fac2ffe34d34ea205a6835a2426068f78bd5153ce8",
+  "visual_review": "Revisados catálogo y social: composición íntegra; logo sin deformación; vacío sobre mercurio; h desde la superficie libre al menisco; presión atmosférica descendente sobre cubeta.",
+  "qa": {
+    "status": "manual_functional_review_passed_with_static_compatibility_warnings",
+    "manual_checks": [
+      "320–1440 px without horizontal page overflow",
+      "manual pressure, gravity, density, altitude, tube length inputs",
+      "pause, resume, reset",
+      "continuous rigid tube rotation and immersion before uncapping",
+      "mercury standard height 0.760 m; water 10.332 m"
+    ],
+    "static_pass": [
+      "html structure and embedded assets",
+      "notation",
+      "interface",
+      "manual start"
+    ],
+    "static_compatibility_warnings": [
+      "Legacy controls lack auditor-specific data-control-for attributes",
+      "Academic disclosure wrappers and contract fields use older schema",
+      "SVG open path heuristic requires manual interpretation; apparatus renders correctly"
+    ],
+    "approved_html_preserved": true
+  },
+  "static_graphics_review": "Los trazados abiertos sin fill=none son segmentos rectos de área nula o contornos intencionalmente rellenos del vidrio. Las curvas de datos sí usan fill=none.",
+  "backend": "Registry updated in same commit; separate deployment of nostraLabVisits required.",
+  "approved_footer": "Original draft wording retained to preserve the exact approved bytes.",
+  "source_package_note": "Editable TeX sources, official logo, compiler logs and manifest. Full renders and PDFs archived privately."
+}

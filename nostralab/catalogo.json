@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-20",
+  "updated_at": "2026-11-28",
   "experiencias": [
     {
       "id": "circunferencia-trigonometrica-v31",
@@ -125,6 +125,21 @@
       "compartir": "experiencias/poliedros-regulares-v41/compartir.html",
       "revision_academica": "UNI-Geometría",
       "revision_visual": "revisiones/poliedros-premium-20261120.json"
+    },
+    {
+      "id": "torricelli-presion-atmosferica-v1012",
+      "titulo": "Experimento de Torricelli y presión atmosférica",
+      "curso": "Física",
+      "descripcion": "Reproduce el experimento de Torricelli con movimiento continuo. Ajusta presión, densidad, gravedad y altitud, y explora el equilibrio de la columna líquida.",
+      "ruta": "experiencias/torricelli-presion-atmosferica-v1012/index.html",
+      "publicado": true,
+      "publicado_el": "2026-11-28",
+      "version": "v10.12",
+      "sha256": "3680a9737f69abac021f98ffd2f9ee5c2c880955477feda8034fe0fc58205500",
+      "miniatura": "miniaturas/torricelli-presion-atmosferica-v1012-premium-20261128.png",
+      "compartir": "experiencias/torricelli-presion-atmosferica-v1012/compartir.html",
+      "revision_academica": "UNI-Física · Hidrostática",
+      "revision_visual": "revisiones/torricelli-20261128.json"
     }
   ]
 }

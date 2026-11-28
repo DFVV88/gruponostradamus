@@ -38,8 +38,9 @@ threading.Thread(target=server.serve_forever, daemon=True).start()
 BASE = f'http://127.0.0.1:{server.server_port}'
 snapshots = ['NostraLABMat001Test.getState()', '__nostralabQA.snapshot()', '({...p,...s})',
              'NostraLABReflectionTest.snapshot()', 'NostraLABTest.getState()',
-             '({t:Number(document.getElementById("clock").textContent.split(" ")[0].replace(",","."))})']
-buttons = [('startBtn','resetBtn'),('btnPlay','btnReset'),('play','reset'),('play','reset'),('playBtn','resetBtn'),('startBtn','resetBtn')]
+             '({t:Number(document.getElementById("clock").textContent.split(" ")[0].replace(",","."))})',
+             '({t:Number(document.getElementById("time").textContent.replace("t = ","").replace(" s","").replace(",","."))})']
+buttons = [('startBtn','resetBtn'),('btnPlay','btnReset'),('play','reset'),('play','reset'),('playBtn','resetBtn'),('startBtn','resetBtn'),('play','reset')]
 assert len(CAT) == len(snapshots) == len(buttons), 'Cada laboratorio necesita contrato de prueba explícito'
 
 with sync_playwright() as pw:
