@@ -53,7 +53,7 @@
       "publicado": true,
       "publicado_el": "2026-11-07",
       "version": "v1.6",
-      "sha256": "e7d66e47ac301de473fb4137327eebc3224e28db103b1b61d26eba20b39ff311",
+      "sha256": "612d9617dc058d0837e93f9136f9d5c17f5957e75fcab4f9be10b772054e13fd",
       "miniatura": "miniaturas/pulsos-transversales-longitudinales-no-armonicos-v15-premium-v1-20261112.png",
       "revision_visual": "revisiones/coleccion-premium-20261112.json",
       "compartir": "experiencias/pulsos-transversales-longitudinales-no-armonicos-v15/compartir.html",
@@ -63,7 +63,8 @@
         "version": "v1.5",
         "ruta": "experiencias/pulsos-transversales-longitudinales-no-armonicos-v15/index.html",
         "sha256": "0971db1786292855795b563d4cd3fbc1c3b4f88e093ae6d3933223aa1ad2a338"
-      }
+      },
+      "revision_funcional": "revisiones/auditoria-20261111.json"
     },
     {
       "id": "reflexion-transmision-pulsos-cuerdas-v24",
