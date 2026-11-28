@@ -10,11 +10,16 @@
       "id": "circunferencia-trigonometrica-v31",
       "version": "v34",
       "ruta": "experiencias/circunferencia-trigonometrica-v34/index.html",
-      "sha256": "05b927895881e24e25969cea18882d221c5b9737fedb9d9acde1b7fb5eaf64ed",
+      "sha256": "496f9bd8b87fa07dc2a2d1569484f21e247dfa41030c8ab2f4510085016d2cd4",
       "anterior": {
         "version": "v33",
         "ruta": "experiencias/circunferencia-trigonometrica-v33/index.html",
         "sha256": "40cd51a7f8e1e31c4b39d3704b577fc9426fe9bbbc178fdba26af4146c385c3f"
+      },
+      "revision_interfaz": {
+        "fecha": "2026-11-28",
+        "sha256_previo": "05b927895881e24e25969cea18882d221c5b9737fedb9d9acde1b7fb5eaf64ed",
+        "alcance": "Cabecera compacta, navegación, controles legibles, herramientas de vista desplegables, regreso a cero conservando ajustes y pausa al editar el ángulo; geometría, vectores, imágenes, ID, rutas y contador conservados"
       }
     },
     {
