@@ -21,7 +21,13 @@
       "id": "reflexion-transmision-pulsos-cuerdas-v24",
       "version": "v2.6",
       "ruta": "experiencias/reflexion-transmision-pulsos-cuerdas-v26/index.html",
-      "sha256": "27322868fc4fa7938548ee94285273262b9484c0a99c61a90637a4f8476934cb",
+      "sha256": "41ab710d5e9f3c738222b2c33517c7310d0c8693400ac515b7932fec4e230e70",
+      "revision_interfaz": {
+        "fecha": "2026-11-28",
+        "sha256_previo": "27322868fc4fa7938548ee94285273262b9484c0a99c61a90637a4f8476934cb",
+        "alcance": "Interfaz y controles del mismo HTML; modelo físico, imágenes, ID, rutas y contador conservados",
+        "validacion": "Sintaxis JS; fórmulas e imágenes idénticas; reproducción, pausa, repetición, restablecimiento, entrada durante animación, validación de rango y vista adaptable comprobados en navegador"
+      },
       "anterior": {
         "version": "v2.5",
         "ruta": "experiencias/reflexion-transmision-pulsos-cuerdas-v25/index.html",
